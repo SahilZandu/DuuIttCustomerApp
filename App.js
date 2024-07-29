@@ -1,0 +1,95 @@
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+  DeviceEventEmitter,
+} from 'react-native';
+import Root from './src/navigation/Root';
+import {PaperProvider} from 'react-native-paper';
+import AwesomeIcon from 'react-native-vector-icons/Ionicons';
+import {NavigationContainer} from '@react-navigation/native';
+import {setBarColor, setStatusBar} from './src/halpers/SetStatusBarColor'
+import { colors } from './src/theme/colors';
+import { NotifierWrapper } from 'react-native-notifier';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import NetInfo from '@react-native-community/netinfo';
+import NoInternet from './src/components/NoInternet';
+import { rootStore } from './src/stores/rootStore';
+
+
+
+function App() {
+  const [currentScreen, setcurrentScreen] = useState('splash');
+  const [isInternet, setIsInternet] = useState(true);
+  const navigationRef = React.createRef();
+
+  useEffect(()=>{
+    async function setAppStoarge() {
+      await rootStore.commonStore.setAppUserFromStorage();
+      await rootStore.commonStore.setTokenFromStorage();
+    }
+
+    setAppStoarge()
+
+  //   NetInfo.addEventListener(state => {
+  //     console.log('Connection type', state);
+  //     console.log('Is connected?', state?.isConnected);
+  //     if (state?.isInternetReachable != null) {
+  //       setIsInternet(state?.isInternetReachable);
+  //     }
+    
+    // });
+  },[])
+
+
+  return (
+    <PaperProvider
+      settings={{
+        icon: props => <AwesomeIcon {...props} />,
+      }}
+      >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+      <NotifierWrapper >
+        <NavigationContainer
+          ref={navigationRef}
+          onStateChange={() => {
+            focusRoute = navigationRef.current.getCurrentRoute().name;
+            setcurrentScreen(navigationRef.current.getCurrentRoute().name);
+          }}>
+             {!isInternet && <NoInternet />}
+          <SafeAreaView
+            style={{
+              flex: 0,
+              backgroundColor: setBarColor(currentScreen),
+              opacity: 1,
+            }}
+          />
+          <SafeAreaView
+            style={{
+              flex: 1,
+              backgroundColor:
+                currentScreen == 'splash'
+                  ? colors.bottomBarColor
+                  : colors.white
+            }}>
+            <StatusBar
+              animated={true}
+              backgroundColor={setBarColor(currentScreen)}
+              barStyle={
+                setStatusBar(currentScreen)
+              }
+            />
+            <Root />
+          </SafeAreaView>
+        </NavigationContainer>
+      </NotifierWrapper>
+      </GestureHandlerRootView>
+    </PaperProvider>
+  );
+}
+
+export default App;

@@ -1,0 +1,193 @@
+import React, {useState} from 'react';
+import {View,Platform,Text } from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {SvgXml} from 'react-native-svg';
+import {bottomTabIcons} from '../commons/AppImages';
+import {colors} from '../theme/colors';
+import Home from '../screens/Auth/DashboardScreen/Home/Home';
+import Promo from '../screens/Auth/DashboardScreen/Promo/Promo';
+import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
+import Profile from '../screens/Auth/DashboardScreen/Profile/Profile';
+
+
+
+const Tab = createBottomTabNavigator();
+
+const BottomNavigator = () => {
+  const [update, setUpdate] = useState(true);
+
+  const handleAnimation = () => {
+    setUpdate(false);
+    setTimeout(() => {
+      setUpdate(true);
+    }, 200);
+  };
+
+
+  return (
+    <Tab.Navigator
+      initialRouteName="tab1"
+      screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
+        tabBarIcon: ({focused}) => {
+          let iconName;
+          switch (route.name) {
+            case 'tab1':
+              iconName = focused
+                ? bottomTabIcons.focusHomeIcon
+                : bottomTabIcons.homeIcom;
+              break;
+            case 'tab2':
+              iconName = focused
+                ? bottomTabIcons.focusPromoIcon
+                : bottomTabIcons.promoIcon;
+              break;
+            case 'tab3':
+                iconName = focused
+                ? bottomTabIcons.focusOrderIcon
+                : bottomTabIcons.orderIcon;
+              break;
+            case 'tab4':
+                iconName = focused
+                ? bottomTabIcons.focusProfileIcon
+                : bottomTabIcons.profileIcon;
+              break;
+            default:
+              iconName = focused
+                ? bottomTabIcons.focusHomeIcon
+                : bottomTabIcons.homeIcom;
+          }
+          return (
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={iconName}
+              />
+            </View>
+          );
+        },
+        tabBarLabel: ({focused, color}) => {
+          let label;
+          switch (route.name) {
+            case 'tab1':
+              label = 'Home';
+              break;
+            case 'tab2':
+              label = 'Promo';
+              break;
+            case 'tab3':
+              label = 'Orders';
+              break;
+            case 'tab4':
+              label = 'Profile';
+              break;
+            default:
+              label = 'Home';
+          }
+
+          return (
+            <View style={{
+                marginTop:'-5%',
+                justifyContent:'center',
+                alignItems:'center'
+                }}>
+            <Text style={{
+                textAlign:'center',
+                color: focused ? colors.main : colors.colorAF,
+               fontSize:RFValue(11),
+              fontWeight:focused ? '600' :'500',
+              textTransform:'uppercase',
+            }}
+             >
+              {label}
+            </Text>
+            </View>
+          );
+        },
+
+        tabBarActiveTintColor: colors.main,
+        tabBarInactiveTintColor: colors.colorAF,
+        tabBarShowLabel: true,
+        keyboardHidesTabBar: true,
+        headerShown: false,
+        tabBarLabelPosition: 'below-icon',
+        // tabBarLabelStyle: styles.tabBarLabelStyle,
+        tabBarStyle: styles.tabBarStyle,
+      })}>
+      <Tab.Screen
+        name="tab1"
+        component={Home}
+        // options={{tabBarLabel: 'Home'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab2"
+        component={Promo}
+        // options={{tabBarLabel: 'Promo'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab3"
+        component={Orders}
+        // options={{tabBarLabel: 'Orders'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab4"
+        component={Profile}
+        // options={{tabBarLabel: 'Profile'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+
+    </Tab.Navigator>
+  );
+};
+
+export default BottomNavigator;
+
+const styles = {
+  main: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+  
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    // paddingBottom: '0%',
+  },
+//   tabBarLabelStyle:{
+//     fontSize: RFValue(11),
+//     fontFamily: fonts.bold,
+//     letterSpacing: 0.80,
+//     textTransform: 'capitalize',
+//     bottom: '17%',
+//   },
+  tabBarStyle: {
+    borderTopRightRadius:15,
+    borderTopLeftRadius:15,
+    paddingVertical: '2%',
+    height: hp('7%'),
+    backgroundColor:colors.white, // Make the background transparent
+    borderTopWidth:0,
+    paddingBottom: 0,
+    shadowColor: Platform.OS === 'android' ? 'black' : 'rgba(0, 0, 0, 0.2)',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 2,
+    elevation: 20,
+    
+  },
+};
+
+
