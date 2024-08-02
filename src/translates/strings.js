@@ -1,0 +1,21 @@
+export const Strings = {
+    sign_In:'Sign In',
+    login:'Login',
+    accessYourAccount:'Access to your account',
+    Or:'Or',
+    loginWithEmail:'Login with email address',
+    loginWithMobile:'Login with mobile number',
+    verification:'Verification',
+    resend:'Resend',
+    otpVerificationText:'Please Enter the 4 Digit Code Sent To',
+    phoneNumber : "Phone Number",
+    emailAddress :'Email Address',
+    verify:'Verify',
+    chooseYourService:"Choose Your Service",
+    forgotPassword:' Forget Password?',
+    forgotReceiveVerification:"Please Enter Your Email Address To Receive a Verification Code.",
+    send:'Send',
+    setNewPassword:'Set New Password',
+    yourNewPasswordDifferent:"Your New Password Must Be Different from Previously Used Password.",
+    save:'Save'
+}

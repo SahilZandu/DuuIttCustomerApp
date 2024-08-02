@@ -1,0 +1,75 @@
+import Url from './Url';
+import axios from 'axios';
+import { rootStore } from '../stores/rootStore';
+import RNRestart from 'react-native-restart';
+
+const Base_Url = Url.Base_Url;
+
+axios.defaults.baseURL = Base_Url;
+
+axios.interceptors.request.use(
+  config => {
+    config.timeout = 10000;
+    const token = rootStore.commonStore.token;
+    console.log("token----",token)
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
+
+axios.interceptors.response.use(undefined, error => {
+  if (error.message === 'Network Error' && !error.response) {
+    throw error;
+  }
+
+  if (error.code && error.code === 'ECONNABORTED')
+    throw 'Network/Server timeout error';
+
+  const {status} = error.response;
+  if (status === 404) {
+    throw error.response;
+  }
+
+  if (status === 400) {
+    console.log(status);
+    throw error.response;
+  }
+
+  if (status === 401) {
+    rootStore.commonStore.setToken(null);
+    rootStore.commonStore.setAppUser(null);
+    RNRestart.restart();
+    throw error.response;
+  }
+
+  throw error;
+});
+
+const responseBody = response => response.data;
+
+export const agent = {
+  login: body => requests.post(Url.login, body),
+  matchLoginOtp: body  => requests.post(Url.matchLoginOtp,body),
+  register: body => requests.post(Url.register ,body),
+  locationAddress: body => requests.post(Url.locationAddress ,body)
+  
+};
+
+const requests = {
+  get: url => axios.get(url).then(responseBody),
+  post: (url, body) => axios.post(url, body).then(responseBody),
+  // put: (url, body) => axios.put(url, body).then(responseBody),
+  // del: (url) => axios.delete(url).then(responseBody),
+  postForm: (url, formData) => {
+    return axios
+      .post(url, formData, {
+        headers: {'content-type': 'multipart/form-data'},
+      })
+      .then(responseBody);
+  },
+};
+
+
