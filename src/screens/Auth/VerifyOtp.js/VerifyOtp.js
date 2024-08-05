@@ -16,6 +16,7 @@ import {SvgXml} from 'react-native-svg';
 import {appImagesSvg} from '../../../commons/AppImages';
 import Header from '../../../components/header/Header';
 import { rootStore } from '../../../stores/rootStore';
+import AuthScreenContent from '../../../components/AuthScreenContent';
 
 
 
@@ -87,8 +88,13 @@ export default function VerifyOtp({navigation, route}) {
 
   const handleVerify = async otpValue => {
       Keyboard.dismiss();
-       await setToken("true")
-      navigation.navigate("home")
+       if(loginType == 'forgot'){
+        navigation.navigate("setPass")
+       }else{
+        await setToken("true")
+        navigation.navigate("home")
+       }
+      
   };
 
   const handleLoading = v => {
@@ -117,7 +123,7 @@ export default function VerifyOtp({navigation, route}) {
           padding={true}
           keyboardShouldPersistTaps={'handled'}>
           <View style={styles.mainContainer}>
-            <View style={styles.imageTextView}>
+            {/* <View style={styles.imageTextView}>
               <SvgXml xml={appImagesSvg.logoIcon} />
               <Text style={styles.varificationText}>
                 {Strings.verification}
@@ -133,7 +139,17 @@ export default function VerifyOtp({navigation, route}) {
                     : mobileEmail?.email
                 }`}
               </Text>
-            </View>
+            </View> */}
+              <AuthScreenContent title={Strings.verification} 
+              subTitle= {`${Strings.otpVerificationText} ${
+                  loginType == 'Mobile'
+                    ? Strings.phoneNumber
+                    : Strings.emailAddress
+                } ${
+                  loginType == 'Mobile'
+                    ? mobileEmail?.mobile
+                    : mobileEmail?.email
+                }`} />
 
             <Spacer space={'2%'} />
             <OtpInput

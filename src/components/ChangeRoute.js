@@ -31,6 +31,8 @@ const ChangeRoute = ({data, onRoutePress}) => {
           height: hp('18%'),
           backgroundColor: colors.colorDo,
           borderRadius: 10,
+          borderColor:colors.colorD6,
+          borderWidth:1.5,
           marginTop: '2%',
           margin: 6,
         }}>

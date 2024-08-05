@@ -18,11 +18,12 @@ export const loginValidations = type => {
       .matches(
         /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
         'Number not valid',
-      ),
-      // .min(10 ,"Phone number should be 10 digits")
-      // .max(10,"Phone number should not be greater than 10 digits"),
+      )
+      .min(10 ,"Phone number should be 10 digits")
+      .max(10,"Phone number should not be greater than 10 digits"),
       [type == 'Email' ? 'password' : '']: Yup.string('Enter your password')
       .trim()
-      .required('Enter your password'),
+      .required('Enter your password')
+      .min(8, 'Password must be at least 8 characters'),
   });
 };

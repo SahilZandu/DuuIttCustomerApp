@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {Text, TouchableOpacity, View, Image, Dimensions,KeyboardAvoidingView,} from 'react-native';
 import {appImagesSvg, appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
@@ -16,6 +16,8 @@ import RenderOffer from '../../../../components/RenderOffer';
 import { fonts } from '../../../../theme/fonts/fonts';
 import { colors } from '../../../../theme/colors';
 import { offerArray } from '../../../../stores/DummyData/Offers';
+import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -24,7 +26,12 @@ export default function Promo({navigation}) {
   const [isKeyboard, setIskeyboard] = useState(false);
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
- 
+
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton(navigation);
+    }, []),
+  );
 
   const hanldeSearch = async s => {
     console.log('get res:--', s);
@@ -45,6 +52,7 @@ export default function Promo({navigation}) {
   return (
     <View style={styles.container}>
         <DashboardHeader
+           navigation={navigation}
           title={'Home'}
           autoFocus={isKeyboard}
           onPressSecond={() => {

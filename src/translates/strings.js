@@ -11,6 +11,11 @@ export const Strings = {
     phoneNumber : "Phone Number",
     emailAddress :'Email Address',
     verify:'Verify',
-    chooseYourService:"Choose Your Service"
-   
+    chooseYourService:"Choose Your Service",
+    forgotPassword:' Forget Password?',
+    forgotReceiveVerification:"Please Enter Your Email Address To Receive a Verification Code.",
+    send:'Send',
+    setNewPassword:'Set New Password',
+    yourNewPasswordDifferent:"Your New Password Must Be Different from Previously Used Password.",
+    save:'Save'
 }

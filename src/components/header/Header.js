@@ -13,16 +13,16 @@ const Header = ({onPress,title,backArrow}) => {
   return (
     <View style={{flexDirection:'row', 
     backgroundColor:colors.white,
-    alignItems:'center',paddingBottom:'1%' }}>
+    alignItems:'center',paddingBottom:'1%',marginTop:'2.5%' }}>
       {backArrow && <TouchableOpacity 
         activeOpacity={0.9}
         onPress={onPress} 
-        style={{marginLeft:'3%',padding:5,marginTop:'4%'}}>
+        style={{marginLeft:'4%',}}>
         <SvgXml 
            xml={appImagesSvg.backArrow}/>
         </TouchableOpacity> }
-        <Text style={{fontSize:RFValue(15),fontFamily:fonts.semiBold,
-            color:colors.black,marginLeft:'3%',marginTop:'3%'}}>{title}</Text>
+        <Text style={{fontSize:RFValue(12),fontFamily:fonts.semiBold,
+            color:colors.black,marginLeft:'3%'}}>{title}</Text>
      
       </View>
 

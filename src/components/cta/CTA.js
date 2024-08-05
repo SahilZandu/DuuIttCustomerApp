@@ -5,6 +5,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const CTA = ({
   title,
@@ -16,7 +17,8 @@ const CTA = ({
   height,
   labelColor,
   isBottom,
-  bottomCheck
+  bottomCheck,
+  textTransform,
 }) => (
   <Button
     disabled={loading || disable}
@@ -31,16 +33,19 @@ const CTA = ({
       alignSelf: 'center',
       position: isBottom ? 'absolute' : 'relative',
       bottom:bottomCheck?bottomCheck:20,
+      borderColor:'#28B056',
+      borderWidth:1
     }}
     rippleColor={colors.ripleColor}
     labelStyle={{
       color: labelColor ? labelColor : colors.white,
       marginVertical: 0,
-      padding: '3%',
-      textTransform:'uppercase',
-      fontSize:15,
-      fontWeight:'700'
-    }}
+      padding:'3%',
+      textTransform: textTransform ? textTransform: 'uppercase',
+      fontSize:RFValue(12),
+      fontWeight:'700',
+      textAlign:'center'
+    }} 
     mode="contained"
     onPress={onPress}>
     {loading ? 'Please wait' : title}

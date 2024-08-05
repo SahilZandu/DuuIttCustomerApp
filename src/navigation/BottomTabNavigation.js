@@ -12,7 +12,7 @@ import {colors} from '../theme/colors';
 import Home from '../screens/Auth/DashboardScreen/Home/Home';
 import Promo from '../screens/Auth/DashboardScreen/Promo/Promo';
 import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
-import Profile from '../screens/Auth/DashboardScreen/Profile/Profile';
+import SideMenu from '../screens/Auth/DashboardScreen/SideMenu/SideMenu';
 
 
 
@@ -138,7 +138,7 @@ const BottomNavigator = () => {
       />
       <Tab.Screen
         name="tab4"
-        component={Profile}
+        component={SideMenu}
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
       />

@@ -1,0 +1,99 @@
+import React from 'react';
+import {Pressable, TouchableOpacity, View, Text, TextInput} from 'react-native';
+import {useFormikContext} from 'formik';
+import {colors} from '../theme/colors';
+import {RFValue} from 'react-native-responsive-fontsize';
+import FieldErrorMessage from './FieldErrorMessage';
+import {SvgXml} from 'react-native-svg';
+import {appImagesSvg} from '../commons/AppImages';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
+import {fonts} from '../theme/fonts/fonts';
+import { LaunchGallary } from './LaunchGallery';
+
+function FieldInput({
+  name,
+  value,
+  inputLabel,
+  onRightPress,
+  onChange,
+  placeholder,
+  image,
+  onBlur,
+  rightIcon,
+  keyboardType,
+  maxLength,
+  ...otherProps
+}) {
+  const {
+    setFieldTouched,
+    handleChange,
+    values,
+    errors,
+    touched,
+    isValid,
+    dirty,
+    setFieldValue,
+  } = useFormikContext();
+
+
+  return (
+    <>
+      <View style={{marginHorizontal: 22, marginTop: '5%'}}>
+        {inputLabel && (
+          <Text
+            style={{
+              fontSize: RFValue(12),
+              fontFamily: fonts.regular,
+              color: colors.black,
+            }}>
+            {inputLabel}
+          </Text>
+        )}
+        <View
+          style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TextInput
+            editable={rightIcon ? false : true}
+            keyboardType={keyboardType}
+            placeholder={placeholder}
+            placeholderTextColor={colors.black30}
+            value={value ? value : values[name]}
+            onBlur={() => (onBlur ? onBlur() : setFieldTouched(name))}
+            onChangeText={t => {
+              setFieldValue(name, t);
+            }}
+            style={{
+              flex: 1,
+              height: hp('5%'),
+              marginRight: '2%',
+              color: colors.black,
+              fontSize: RFValue(12),
+            }}
+            maxLength={maxLength}
+            {...otherProps}
+          />
+          {rightIcon && (
+            <TouchableOpacity
+            onPress={onRightPress}
+            activeOpacity={0.8}
+              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+              style={{marginRight: 5}}>
+              <SvgXml width={17} height={17} xml={image} />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View
+          style={{
+            height: 2,
+            backgroundColor: '#D9D9D9',
+          }}
+        />
+        <FieldErrorMessage error={errors[name]} visible={touched[name]} />
+      </View>
+    </>
+  );
+}
+
+export default FieldInput;

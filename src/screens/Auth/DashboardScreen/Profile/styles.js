@@ -15,17 +15,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     
   },
-  mainView:{
-    flex:1,
-  },
-  offerTextView:{
-    marginTop:'3%',
-    marginHorizontal:20
-  },
-  offerText:{
-    fontSize:RFValue(13),
-    fontFamily:fonts.semiBold,
-    color:colors.black
-  }
+
+ 
  
 });
