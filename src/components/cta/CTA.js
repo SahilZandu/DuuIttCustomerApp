@@ -49,6 +49,7 @@ const CTA = ({
     mode="contained"
     onPress={onPress}>
     {loading ? 'Please wait' : title}
+    
   </Button>
 );
 
