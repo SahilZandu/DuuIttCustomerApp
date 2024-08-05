@@ -2170,6 +2170,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lunalee/react-native-raw-bottom-sheet@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "@lunalee/react-native-raw-bottom-sheet@npm:2.2.4"
+  checksum: 9afe2d158ad30976af3d0ae108fe31817576c480f3726cfaf5e53118ad493a5d084db7410253726c8878d808202fb67c5efcaa4fa60447db67de6032fdc9bef8
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -3231,6 +3238,7 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@lunalee/react-native-raw-bottom-sheet": ^2.2.4
     "@react-native-async-storage/async-storage": ^1.24.0
     "@react-native-community/netinfo": ^11.3.2
     "@react-native-voice/voice": ^3.2.4
@@ -3251,11 +3259,14 @@ __metadata:
     mobx: 5.15.4
     mobx-react-lite: 3.4.3
     mobx-utils: 6.0.6
+    moment: ^2.30.1
     prettier: 2.8.8
     react: 18.2.0
     react-native: 0.74.3
     react-native-android-sms-listener: ^0.8.0
+    react-native-date-picker: ^5.0.4
     react-native-gesture-handler: ^2.17.1
+    react-native-image-picker: ^7.1.2
     react-native-input-scroll-view: ^1.11.0
     react-native-linear-gradient: ^2.8.3
     react-native-modal: ^13.0.1
@@ -3263,6 +3274,7 @@ __metadata:
     react-native-notifier: ^2.0.0
     react-native-otp-entry: ^1.7.0
     react-native-paper: ^5.12.3
+    react-native-permissions: ^4.1.5
     react-native-responsive-fontsize: ^0.5.1
     react-native-responsive-screen: ^1.4.2
     react-native-restart: ^0.0.27
@@ -7909,6 +7921,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"moment@npm:^2.30.1":
+  version: 2.30.1
+  resolution: "moment@npm:2.30.1"
+  checksum: 859236bab1e88c3e5802afcf797fc801acdbd0ee509d34ea3df6eea21eb6bcc2abd4ae4e4e64aa7c986aa6cba563c6e62806218e6412a765010712e5fa121ba6
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -8741,6 +8760,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-date-picker@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "react-native-date-picker@npm:5.0.4"
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+  checksum: 67db7fba5de613c61a70b5b9274daef8c7d3b6f6cdc5a6063eb61126d4df43252c501c2cb78ebda37fb0997ccb0994e949976d0fb395453580019923100e03ad
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:^2.17.1":
   version: 2.17.1
   resolution: "react-native-gesture-handler@npm:2.17.1"
@@ -8753,6 +8782,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 70da4fc51d92899591aadf03396a8e0b78223fbe71da5b10e76232058c1ef5943d54c1dd8da815d5b6a8b41f259ea9d50457680e2ef7878c88d7396771170ae3
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "react-native-image-picker@npm:7.1.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: af52328b7cb06c28549442f0d923cfa92dde8d5a968a642336df4c882f81adbf0e5e606a14de27f96883a76fa1e03230061c4080011c9107942edebc8e09c478
   languageName: node
   linkType: hard
 
@@ -8842,6 +8881,20 @@ __metadata:
     react-native-safe-area-context: "*"
     react-native-vector-icons: "*"
   checksum: 927a8948d220fb59cb4dae2f12f3b4dc2173b9cd42e38dc74a0f25584a69978555a260c140db973f8401f7fef394dee3ec42c90b6134deeb3aa462291fd0ce5f
+  languageName: node
+  linkType: hard
+
+"react-native-permissions@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "react-native-permissions@npm:4.1.5"
+  peerDependencies:
+    react: ">=18.1.0"
+    react-native: ">=0.70.0"
+    react-native-windows: ">=0.70.0"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: dc4b366a0f561a47f032c027eb703a2be45e801788b915ed583e38f617eea23656eb63a77b17fb3a663fe3199b2ec25788f799e751421634e35a64f5258feed9
   languageName: node
   linkType: hard
 

@@ -3,13 +3,13 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import {Text, TextInput} from 'react-native-paper';
 import {useFormikContext} from 'formik';
-import {colors, fonts} from '../theme/colors';
+import {colors} from '../theme/colors';
 import {RFValue} from 'react-native-responsive-fontsize';
 import FieldErrorMessage from './FieldErrorMessage';
 import { SvgXml } from 'react-native-svg';
 import { appImagesSvg } from '../commons/AppImages';
 import { heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
-
+import { fonts } from '../theme/fonts/fonts';
 
 
 function InputField({
@@ -55,7 +55,7 @@ function InputField({
             style={{
               marginBottom: 10,
               fontSize: RFValue(13),
-              fontFamily: fonts.Regular,
+              fontFamily: fonts.regular,
               color: '#8F8F8F',
             }}>
             {inputLabel}
@@ -92,7 +92,7 @@ function InputField({
                   textStyle={{
                     fontSize: RFValue(12),
                     color: colors.red,
-                    fontFamily: fonts.Regular,
+                    fontFamily: fonts.regular,
                   }}
                 />
               ))
@@ -105,7 +105,7 @@ function InputField({
                     textStyle={{
                       fontSize: RFValue(12),
                       color: colors.red,
-                      fontFamily: fonts.Regular,
+                      fontFamily: fonts.regular,
                     }}
                   />
                 ) : (

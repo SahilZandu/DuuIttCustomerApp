@@ -15,24 +15,5 @@ export const styles = StyleSheet.create({
   mainContainer: {
     marginHorizontal: 30,
   },
-  imageTextView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '12%',
-  },
-  varificationText: {
-    fontSize: RFValue(21),
-    fontFamily: fonts.semiBold,
-    color: colors.main,
-    marginTop: '2.5%',
-  },
-  fourDigitText: {
-    fontSize: RFValue(13),
-    fontFamily: fonts.medium,
-    color: colors.color80,
-    marginTop: '2.5%',
-    textAlign: 'center',
-    marginHorizontal: 30,
-    lineHeight: 22,
-  },
+ 
 });

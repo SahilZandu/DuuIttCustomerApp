@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {Text, TouchableOpacity, View, Image, Dimensions,KeyboardAvoidingView,} from 'react-native';
 import {appImagesSvg, appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
@@ -18,6 +18,8 @@ import {mainArray} from '../../../../stores/DummyData/Home';
 import HomeSlider from '../../../../components/slider/homeSlider';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import RenderOffer from '../../../../components/RenderOffer';
+import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -37,7 +39,13 @@ export default function Home({navigation}) {
   const [isKeyboard, setIskeyboard] = useState(false);
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
- 
+
+
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton();
+    }, []),
+  );
 
   const hanldeSearch = async s => {
     console.log('get res:--', s);
@@ -54,12 +62,12 @@ export default function Home({navigation}) {
   };
 
  
-  
   return (
     <View style={styles.container}>
       {/* <Text style={styles.text}> Under Processing .... </Text> */}
     
         <DashboardHeader
+           navigation={navigation}
           title={'Home'}
           autoFocus={isKeyboard}
           onPressSecond={() => {

@@ -23,6 +23,7 @@ export const ordersArray = [
         qty: 2,
       },
     ],
+    statusOrder:'food'
   },
   {
     id: 2,
@@ -40,6 +41,7 @@ export const ordersArray = [
         drop: 'TDI TAJ PLAZA Block-505',
       },
     ],
+    statusOrder:'parcel'
   },
   {
     id: 3,
@@ -58,6 +60,7 @@ export const ordersArray = [
       },
       
     ],
+    statusOrder:'ride'
   },
 
   {
@@ -82,6 +85,7 @@ export const ordersArray = [
         qty: 2,
       },
     ],
+    statusOrder:'food'
   },
   {
     id: 5,
@@ -100,6 +104,7 @@ export const ordersArray = [
       },
       
     ],
+    statusOrder:'parcel'
   },
   {
     id: 6,
@@ -118,6 +123,7 @@ export const ordersArray = [
       },
      
     ],
+    statusOrder:'ride'
   },
   {
     id: 7,
@@ -141,6 +147,7 @@ export const ordersArray = [
         qty: 2,
       },
     ],
+    statusOrder:'food'
   },
   {
     id: 8,
@@ -159,6 +166,7 @@ export const ordersArray = [
       },
      
     ],
+    statusOrder:'parcel'
   },
   {
     id: 9,
@@ -177,5 +185,6 @@ export const ordersArray = [
       },
      
     ],
+    statusOrder:'ride'
   },
 ];

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useCallback} from 'react';
 import {
   Text,
   View,
@@ -25,6 +25,7 @@ import {appImagesSvg} from '../../../commons/AppImages';
 import Spacer from '../../../halpers/Spacer';
 import { Strings } from '../../../translates/strings';
 import {styles} from './styles';
+import AuthScreenContent from '../../../components/AuthScreenContent';
 
 
 
@@ -33,7 +34,7 @@ export default function Login({navigation}) {
   const [update, setUpdate] = useState(true);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       handleAndroidBackButton();
       clearInputs();
     }, []),
@@ -75,18 +76,7 @@ export default function Login({navigation}) {
         keyboardShouldPersistTaps={'handled'}
         style={{flex: 1}}>
         <View style={styles.screen}>
-          <View
-            style={styles.imageTextView}>
-            <SvgXml xml={appImagesSvg.logoIcon} />
-            <Text
-              style={styles.singInText}>
-              {Strings?.sign_In}
-            </Text>
-            <Text
-              style={styles.accessAccountText}>
-             {Strings?.accessYourAccount}
-            </Text>
-          </View>
+          <AuthScreenContent marginTop={'20%'} title={Strings?.sign_In}  subTitle={Strings?.accessYourAccount} />
           <Spacer space={'6%'} />
           {update && <LoginForm navigation={navigation} type={type} />}
           <Text

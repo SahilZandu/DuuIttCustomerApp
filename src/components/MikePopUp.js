@@ -10,6 +10,7 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Platform,
+  Image,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import Modal from 'react-native-modal';
@@ -20,16 +21,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
+import {appImages, appImagesSvg} from '../commons/AppImages';
 import Voice, {
   SpeechRecognizedEvent,
   SpeechResultsEvent,
   SpeechErrorEvent,
 } from '@react-native-voice/voice';
 import Spacer from '../halpers/Spacer';
-
-
-
 
 const MikePopUp = ({visible, title, text, onCancelBtn, onSuccessResult}) => {
   const [recognized, setRecognized] = useState('');
@@ -201,8 +199,8 @@ const MikePopUp = ({visible, title, text, onCancelBtn, onSuccessResult}) => {
       scale.setValue(1);
       opacity.setValue(1);
       setStartRecording(false);
-     setSearchResult('');
-      stopRecognizing()
+      setSearchResult('');
+      stopRecognizing();
     }, 8000);
   };
 
@@ -277,14 +275,7 @@ const MikePopUp = ({visible, title, text, onCancelBtn, onSuccessResult}) => {
                 }}>
                 <SvgXml
                   style={{
-                    alignSelf: 'center',
-                    // shadowColor: '#000',
-                    // shadowOffset: {
-                    //   width: 1,
-                    //   height: 3,
-                    // },
-                    // shadowOpacity: 0.4,
-                    // shadowRadius: 3,
+                    alignSelf: 'center'
                   }}
                   xml={appImagesSvg.cancelWhiteSvg}
                 />
@@ -300,16 +291,22 @@ const MikePopUp = ({visible, title, text, onCancelBtn, onSuccessResult}) => {
                 <Text numberOfLines={2} style={styles.searchText}>
                   {searchResult}
                 </Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.shadowContainer}
-                 onPress={() => {
-                  onSuccess();
-                }}>
-                <SvgXml
+                  onPress={() => {
+                    onSuccess();
+                  }}>
+                  {/* <SvgXml
                  style={{top:'10%',alignSelf:'center'}}
                   xml={appImagesSvg.successGreenSvg}
-                />
-                <Spacer space={"1%"} />
+                /> */}
+                  <Image
+                    resizeMode="contain"
+                    style={{width: 90, height: 90}}
+                    source={appImages.mikeTick}
+                  />
+
+                  <Spacer space={'1%'} />
                 </TouchableOpacity>
               </View>
             ) : (
@@ -336,19 +333,22 @@ const MikePopUp = ({visible, title, text, onCancelBtn, onSuccessResult}) => {
                           styles.iconContainer,
                           {transform: [{scale}], opacity},
                         ]}>
-                        <SvgXml
+                        <Image
+                          resizeMode="contain"
                           style={{
+                            width: 90,
+                            height: 90,
                             top: 3.5,
                             alignSelf: 'center',
-                            // shadowColor: '#000',
-                            // shadowOffset: {
-                            //   width: 1,
-                            //   height: 3,
-                            // },
-                            // shadowOpacity: 0.4,
-                            // shadowRadius: 3,
+                            shadowColor: '#6BADEB',
+                            shadowOffset: {
+                              width: 1,
+                              height: 3,
+                            },
+                            shadowOpacity: 0.4,
+                            shadowRadius: 3,
                           }}
-                          xml={appImagesSvg.mikeRecordSvg}
+                          source={appImages.mikeRecord}
                         />
                       </Animated.View>
                     </TouchableWithoutFeedback>
@@ -361,10 +361,15 @@ const MikePopUp = ({visible, title, text, onCancelBtn, onSuccessResult}) => {
                     <Text numberOfLines={2} style={styles.textSecond}>
                       {text}
                     </Text>
-                    <TouchableOpacity onPress={() =>{startRecognizing()}} style={styles.shadowContainer}>
-                      <SvgXml
-                      style={{top:'3%'}}
-                        xml={appImagesSvg.mikeRecordSvg}
+                    <TouchableOpacity
+                      onPress={() => {
+                        startRecognizing();
+                      }}
+                      style={styles.shadowContainer}>
+                      <Image
+                        resizeMode="contain"
+                        style={{width: 90, height: 90}}
+                        source={appImages.mikeRecord}
                       />
                     </TouchableOpacity>
                     <Text numberOfLines={1} style={styles.textThird}>
@@ -472,7 +477,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginTop: '8%',
-    backgroundColor: '#FF8A28',
+    backgroundColor: '#1D7CD3',
     padding: 4,
     borderRadius: 100,
     alignSelf: 'center',
@@ -480,23 +485,21 @@ const styles = StyleSheet.create({
   shadowContainer: {
     ...Platform.select({
       ios: {
-        marginTop:'8%',
-        // shadowColor: '#000',
-        // shadowOffset: {
-        //   width: 0,
-        //   height: 3,
-        // },
-        // shadowOpacity: 0.4,
-        // shadowRadius: 3,
+        marginTop: '8%',
+        shadowColor: '#6BADEB',
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
       },
       android: {
-        marginTop:'6%',
-        // elevation:15,
-          padding:1,
-         borderRadius:100,
+        marginTop: '6%',
+        elevation: 50,
+        padding: 1,
+        borderRadius: 100,
       },
     }),
   },
-
-
 });
