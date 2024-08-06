@@ -16,9 +16,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import { rootStore } from '../../../../stores/rootStore';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
 
-export default function SideMenu({navigation}) {
+export default function SideMenu ({navigation}) {
 
 const {setToken}=rootStore.commonStore ;
 
@@ -96,9 +97,15 @@ useFocusEffect(
     {
       title: 'Logout',
       onPress: async() => {
-        // logout(navigation);
-        await setToken(null),
-        navigation.navigate('login');
+        await setToken(null)
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              { name: 'auth' },
+            ],
+          })
+        );
       },
       icon: appImagesSvg.logOutSvg,
       show: true,
@@ -235,3 +242,5 @@ useFocusEffect(
   );
   
 }
+
+

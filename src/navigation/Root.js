@@ -1,11 +1,11 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash from '../screens/Auth/Splash/Splash';
-import Login from '../screens/Auth/Login/Login';
-import VerifyOtp from '../screens/Auth/VerifyOtp.js/VerifyOtp';
-import BottomNavigator from './BottomTabNavigation';
-import Profile from '../screens/Auth/DashboardScreen/Profile/Profile';
-import ForgotPass from '../screens/Auth/ForgotPass/ForgotPass';
-import SetPass from '../screens/Auth/SetPass/SetPass';
+import AuthRoutes from './AuthRoutes';
+import ParcelRoutes from './ParcelRoutes';
+import FoodRoutes from './FoodRoutes';
+import RideRoutes from './RideRoutes';
+import DashboardRoutes from './DashboardRoutes';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -20,16 +20,21 @@ export default function MainNavigator(props) {
       }}
       initialRouteName="splash">
       <Stack.Screen name="splash" component={Splash} />
-       <Stack.Screen name="login" component={Login} />
+      <Stack.Screen name="auth" component={AuthRoutes} />
+       {/* <Stack.Screen name="login" component={Login} />
        <Stack.Screen name="forgotPass" component={ForgotPass} />
-       <Stack.Screen name="setPass" component={SetPass} />
-       <Stack.Screen name="verifyOtp" component={VerifyOtp} />  
-       <Stack.Screen name="home" component={BottomNavigator} />
-       <Stack.Screen name="profile" component={Profile} />
-    
-
-      
-      
+       <Stack.Screen name="setPass" component={SetPass} /> */}
+       {/* <Stack.Screen name="verifyOtp" component={VerifyOtp} />   */}
+       <Stack.Screen name="dashborad" component={DashboardRoutes} />
+       <Stack.Screen name="parcel" component={ParcelRoutes} />
+       <Stack.Screen name="food" component={FoodRoutes} />
+       <Stack.Screen name="ride" component={RideRoutes} />
+       {/* <Stack.Screen name="profile" component={Profile} /> */}
+  
     </Stack.Navigator>
   );
 }
+
+
+
+

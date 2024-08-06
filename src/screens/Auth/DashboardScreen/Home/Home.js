@@ -100,7 +100,7 @@ export default function Home({navigation}) {
             padding={true}
             keyboardShouldPersistTaps={'handled'}>
 
-        <ChangeRoute data={homeCS} />
+        <ChangeRoute data={homeCS} navigation={navigation} />
 
         <HomeSlider data={sliderItems}/>
 

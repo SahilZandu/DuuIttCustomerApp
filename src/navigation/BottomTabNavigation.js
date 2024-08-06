@@ -15,10 +15,9 @@ import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
 import SideMenu from '../screens/Auth/DashboardScreen/SideMenu/SideMenu';
 
 
-
 const Tab = createBottomTabNavigator();
 
-const BottomNavigator = () => {
+export function DashboardBottomNavigator  () {
   const [update, setUpdate] = useState(true);
 
   const handleAnimation = () => {
@@ -147,7 +146,396 @@ const BottomNavigator = () => {
   );
 };
 
-export default BottomNavigator;
+
+export function RideBottomNavigator  () {
+  const [update, setUpdate] = useState(true);
+
+  const handleAnimation = () => {
+    setUpdate(false);
+    setTimeout(() => {
+      setUpdate(true);
+    }, 200);
+  };
+
+
+  return (
+    <Tab.Navigator
+      initialRouteName="tab1"
+      screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
+        tabBarIcon: ({focused}) => {
+          let iconName;
+          switch (route.name) {
+            case 'tab1':
+              iconName = focused
+                ? bottomTabIcons.focusRideIcon
+                : bottomTabIcons.rideIcon;
+              break;
+            case 'tab2':
+              iconName = focused
+                ? bottomTabIcons.focusActivityIcon
+                : bottomTabIcons.activityIcon;
+              break;
+            case 'tab3':
+                iconName = focused
+                ? bottomTabIcons.focusAddresIcon
+                : bottomTabIcons.addressIcon;
+              break;
+            case 'tab4':
+                iconName = focused
+                ? bottomTabIcons.focusProfileIcon
+                : bottomTabIcons.profileIcon;
+              break;
+            default:
+              iconName = focused
+                ? bottomTabIcons.focusHomeIcon
+                : bottomTabIcons.homeIcom;
+          }
+          return (
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={iconName}
+              />
+            </View>
+          );
+        },
+        tabBarLabel: ({focused, color}) => {
+          let label;
+          switch (route.name) {
+            case 'tab1':
+              label = 'Ride';
+              break;
+            case 'tab2':
+              label = 'Activity';
+              break;
+            case 'tab3':
+              label = 'Address';
+              break;
+            case 'tab4':
+              label = 'Profile';
+              break;
+            default:
+              label = 'Home';
+          }
+
+          return (
+            <View style={{
+                marginTop:'-5%',
+                justifyContent:'center',
+                alignItems:'center'
+                }}>
+            <Text style={{
+                textAlign:'center',
+                color: focused ? colors.main : colors.colorAF,
+               fontSize:RFValue(11),
+              fontWeight:focused ? '600' :'500',
+              textTransform:'uppercase',
+            }}
+             >
+              {label}
+            </Text>
+            </View>
+          );
+        },
+
+        tabBarActiveTintColor: colors.main,
+        tabBarInactiveTintColor: colors.colorAF,
+        tabBarShowLabel: true,
+        keyboardHidesTabBar: true,
+        headerShown: false,
+        tabBarLabelPosition: 'below-icon',
+        // tabBarLabelStyle: styles.tabBarLabelStyle,
+        tabBarStyle: styles.tabBarStyle,
+      })}>
+      <Tab.Screen
+        name="tab1"
+        component={Home}
+        // options={{tabBarLabel: 'Home'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab2"
+        component={Promo}
+        // options={{tabBarLabel: 'Promo'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab3"
+        component={Orders}
+        // options={{tabBarLabel: 'Orders'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab4"
+        component={SideMenu}
+        // options={{tabBarLabel: 'Profile'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+
+    </Tab.Navigator>
+  );
+};
+
+export function FoodBottomNavigator  () {
+  const [update, setUpdate] = useState(true);
+
+  const handleAnimation = () => {
+    setUpdate(false);
+    setTimeout(() => {
+      setUpdate(true);
+    }, 200);
+  };
+
+
+  return (
+    <Tab.Navigator
+      initialRouteName="tab1"
+      screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
+        tabBarIcon: ({focused}) => {
+          let iconName;
+          switch (route.name) {
+            case 'tab1':
+              iconName = focused
+                ? bottomTabIcons.focusFoodIcon
+                : bottomTabIcons.foodIcon;
+              break;
+            case 'tab2':
+                iconName = focused
+                ? bottomTabIcons.focusOrderIcon
+                : bottomTabIcons.orderIcon;
+              break;
+              case 'tab3':
+                iconName = focused
+                  ? bottomTabIcons.focusAddresIcon
+                  : bottomTabIcons.addressIcon;
+                break;
+            case 'tab4':
+                iconName = focused
+                ? bottomTabIcons.focusProfileIcon
+                : bottomTabIcons.profileIcon;
+              break;
+            default:
+              iconName = focused
+                ? bottomTabIcons.focusHomeIcon
+                : bottomTabIcons.homeIcom;
+          }
+          return (
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={iconName}
+              />
+            </View>
+          );
+        },
+        tabBarLabel: ({focused, color}) => {
+          let label;
+          switch (route.name) {
+            case 'tab1':
+              label = 'Food';
+              break;
+            case 'tab2':
+              label = 'Orders';
+              break;
+            case 'tab3':
+              label = 'Address';
+              break;
+            case 'tab4':
+              label = 'Profile';
+              break;
+            default:
+              label = 'Home';
+          }
+
+          return (
+            <View style={{
+                marginTop:'-5%',
+                justifyContent:'center',
+                alignItems:'center'
+                }}>
+            <Text style={{
+                textAlign:'center',
+                color: focused ? colors.main : colors.colorAF,
+               fontSize:RFValue(11),
+              fontWeight:focused ? '600' :'500',
+              textTransform:'uppercase',
+            }}
+             >
+              {label}
+            </Text>
+            </View>
+          );
+        },
+
+        tabBarActiveTintColor: colors.main,
+        tabBarInactiveTintColor: colors.colorAF,
+        tabBarShowLabel: true,
+        keyboardHidesTabBar: true,
+        headerShown: false,
+        tabBarLabelPosition: 'below-icon',
+        // tabBarLabelStyle: styles.tabBarLabelStyle,
+        tabBarStyle: styles.tabBarStyle,
+      })}>
+      <Tab.Screen
+        name="tab1"
+        component={Home}
+        // options={{tabBarLabel: 'Home'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab2"
+        component={Promo}
+        // options={{tabBarLabel: 'Promo'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab3"
+        component={Orders}
+        // options={{tabBarLabel: 'Orders'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab4"
+        component={SideMenu}
+        // options={{tabBarLabel: 'Profile'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+
+    </Tab.Navigator>
+  );
+};
+
+export function ParcelBottomNavigator  () {
+  const [update, setUpdate] = useState(true);
+
+  const handleAnimation = () => {
+    setUpdate(false);
+    setTimeout(() => {
+      setUpdate(true);
+    }, 200);
+  };
+
+
+  return (
+    <Tab.Navigator
+      initialRouteName="tab1"
+      screenOptions={({route}) => ({
+        tabBarHideOnKeyboard: true,
+        tabBarIcon: ({focused}) => {
+          let iconName;
+          switch (route.name) {
+            case 'tab1':
+              iconName = focused
+                ? bottomTabIcons.focusParcelIcon
+                : bottomTabIcons.parcelIcon;
+              break;
+            case 'tab2':
+              iconName = focused
+              ? bottomTabIcons.focusOrderIcon
+              : bottomTabIcons.orderIcon;
+              break;
+            case 'tab3':
+                iconName = focused
+                ? bottomTabIcons.focusAddresIcon
+                : bottomTabIcons.addressIcon;
+              break;
+            case 'tab4':
+                iconName = focused
+                ? bottomTabIcons.focusProfileIcon
+                : bottomTabIcons.profileIcon;
+              break;
+            default:
+              iconName = focused
+                ? bottomTabIcons.focusHomeIcon
+                : bottomTabIcons.homeIcom;
+          }
+          return (
+            <View style={styles.iconContainer}>
+              <SvgXml
+                xml={iconName}
+              />
+            </View>
+          );
+        },
+        tabBarLabel: ({focused, color}) => {
+          let label;
+          switch (route.name) {
+            case 'tab1':
+              label = 'Parcel';
+              break;
+            case 'tab2':
+              label = 'Orders';
+              break;
+            case 'tab3':
+              label = 'Address';
+              break;
+            case 'tab4':
+              label = 'Profile';
+              break;
+            default:
+              label = 'Home';
+          }
+
+          return (
+            <View style={{
+                marginTop:'-5%',
+                justifyContent:'center',
+                alignItems:'center'
+                }}>
+            <Text style={{
+                textAlign:'center',
+                color: focused ? colors.main : colors.colorAF,
+               fontSize:RFValue(11),
+              fontWeight:focused ? '600' :'500',
+              textTransform:'uppercase',
+            }}
+             >
+              {label}
+            </Text>
+            </View>
+          );
+        },
+
+        tabBarActiveTintColor: colors.main,
+        tabBarInactiveTintColor: colors.colorAF,
+        tabBarShowLabel: true,
+        keyboardHidesTabBar: true,
+        headerShown: false,
+        tabBarLabelPosition: 'below-icon',
+        // tabBarLabelStyle: styles.tabBarLabelStyle,
+        tabBarStyle: styles.tabBarStyle,
+      })}>
+      <Tab.Screen
+        name="tab1"
+        component={Home}
+        // options={{tabBarLabel: 'Home'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab2"
+        component={Promo}
+        // options={{tabBarLabel: 'Promo'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab3"
+        component={Orders}
+        // options={{tabBarLabel: 'Orders'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+      <Tab.Screen
+        name="tab4"
+        component={SideMenu}
+        // options={{tabBarLabel: 'Profile'}}
+        listeners={{tabPress: handleAnimation}}
+      />
+
+    </Tab.Navigator>
+  );
+};
+
+
+
 
 const styles = {
   main: {
@@ -189,5 +577,8 @@ const styles = {
     
   },
 };
+
+
+
 
 

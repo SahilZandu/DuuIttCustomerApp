@@ -17,12 +17,27 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-const ChangeRoute = ({data, onRoutePress}) => {
+const ChangeRoute = ({data, navigation}) => {
+
+  const onRoutePress =(item)=>{
+    if(item?.name == 'FOOD'){
+      navigation.navigate('food',{screen:'home'})
+    }else if(item?.name == 'RIDE'){
+      navigation.navigate('ride',{screen:'home'})
+    }else if(item?.name == 'PARCEL'){
+      navigation.navigate('parcel',{screen:'home'})
+    }
+    else{
+      navigation.navigate('dashborad',{screen:'home'})
+    }
+    
+
+  }
 
   const renderItem = ({item, i}) => {
     return (
       <TouchableOpacity
-        onPress={onRoutePress}
+        onPress={()=>{onRoutePress(item)}}
         activeOpacity={0.8}
         key={i}
         style={{

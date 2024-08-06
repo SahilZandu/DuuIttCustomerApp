@@ -41,7 +41,6 @@ function App() {
   //     if (state?.isInternetReachable != null) {
   //       setIsInternet(state?.isInternetReachable);
   //     }
-    
     // });
   },[])
 

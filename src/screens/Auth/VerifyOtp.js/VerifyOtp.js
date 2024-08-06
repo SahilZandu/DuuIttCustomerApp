@@ -20,10 +20,9 @@ import AuthScreenContent from '../../../components/AuthScreenContent';
 
 
 
+
 export default function VerifyOtp({navigation, route}) {
-
   const {setToken}=rootStore.commonStore
-
   const {value, loginType} = route.params;
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState(null);
@@ -92,7 +91,7 @@ export default function VerifyOtp({navigation, route}) {
         navigation.navigate("setPass")
        }else{
         await setToken("true")
-        navigation.navigate("home")
+        navigation.navigate('dashborad' , {screen:'home'})
        }
       
   };

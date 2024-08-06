@@ -2,11 +2,13 @@ import {colors} from '../theme/colors';
 
 const primaryScreens = [
   'splash',
+ 
   
 ];
 
 const authScreens = [
   'login',
+  'test'
 
   
 ];

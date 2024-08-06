@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {action, computed, decorate, observable, runInAction} from 'mobx';
+import {action, computed, decorate, observable, runInAction,makeAutoObservable} from 'mobx';
 
 export default class CommonStore {
   constructor() {
