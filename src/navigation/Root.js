@@ -21,15 +21,10 @@ export default function MainNavigator(props) {
       initialRouteName="splash">
       <Stack.Screen name="splash" component={Splash} />
       <Stack.Screen name="auth" component={AuthRoutes} />
-       {/* <Stack.Screen name="login" component={Login} />
-       <Stack.Screen name="forgotPass" component={ForgotPass} />
-       <Stack.Screen name="setPass" component={SetPass} /> */}
-       {/* <Stack.Screen name="verifyOtp" component={VerifyOtp} />   */}
        <Stack.Screen name="dashborad" component={DashboardRoutes} />
        <Stack.Screen name="parcel" component={ParcelRoutes} />
        <Stack.Screen name="food" component={FoodRoutes} />
        <Stack.Screen name="ride" component={RideRoutes} />
-       {/* <Stack.Screen name="profile" component={Profile} /> */}
   
     </Stack.Navigator>
   );
