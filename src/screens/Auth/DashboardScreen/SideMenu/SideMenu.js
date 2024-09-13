@@ -21,7 +21,7 @@ import { CommonActions } from '@react-navigation/native';
 
 export default function SideMenu ({navigation}) {
 
-const {setToken}=rootStore.commonStore ;
+const {setToken,setAppUser}=rootStore.commonStore ;
 
 useFocusEffect(
   useCallback(() => {
@@ -98,6 +98,7 @@ useFocusEffect(
       title: 'Logout',
       onPress: async() => {
         await setToken(null)
+        await setAppUser(null)
         navigation.dispatch(
           CommonActions.reset({
             index: 0,

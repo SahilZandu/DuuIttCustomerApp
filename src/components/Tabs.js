@@ -22,7 +22,7 @@ import { fonts } from '../theme/fonts/fonts';
 
 const size = Dimensions.get('window').height;
 
-export default function Tabs({tabs, tabPress, isRating, isCount}) {
+export default function Tabs({tabs, tabPress, isRating, isCount,showImage}) {
   const scrollViewRef = useRef();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -59,18 +59,14 @@ export default function Tabs({tabs, tabPress, isRating, isCount}) {
       <Pressable
         style={[
           styles.button,
-          // {paddingHorizontal: isCount ? '2.5%' : '3%'},
           isSelected && styles.selectedButton,
         ]}
         onPress={() => {
           onPress(index, text);
-          // if (text == 'Redeemed') {
-          //   scrollViewRef.current.scrollToEnd({animated: true});
-          // } else if (text == 'Allocated') {
-          //   scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true});
-          // }
         }}>
-        {index != 0 && <Image style={{
+        {(index != 0 || showImage) && <Image 
+         resizeMode='contain'
+        style={{
             width:20,height:20 
             ,tintColor:isSelected ?'#28B056':'#00000085'}} 
             source ={onSetImage(index)}/>}
@@ -81,7 +77,7 @@ export default function Tabs({tabs, tabPress, isRating, isCount}) {
               color: !isSelected ? '#00000085' : '#28B056',
               fontFamily: fonts.regular,
               fontSize: isCount ? RFValue(10.5) : RFValue(11),
-              marginLeft: isRating ? index != 0 ? size / 130 : 0 : 0,
+              marginLeft: isRating ? (index != 0 || showImage) ? size / 130 : 0 : 0,
             },
           ]}>
           {text}
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
     height: hp('5%'),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 50,
     marginHorizontal: 3,
     borderWidth: 1,
     borderColor:colors.colorD9,

@@ -13,6 +13,7 @@ import {Strings} from '../translates/strings';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import {forgotValidations} from './formsValidation/forgotValidations';
+import { rootStore } from '../stores/rootStore';
 
 const initialValues = {
   email: '',
@@ -30,12 +31,16 @@ const FormButton = ({loading, onPress}) => {
   );
 };
 
-const ForgotForm = ({navigation, type}) => {
+const ForgotForm = ({navigation}) => {
+
+  const {forgotPass}=rootStore.authStore;
+   
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = values => {
-    // console.log('values', values);
-    navigation.navigate('verifyOtp', {value: values, loginType: 'forgot'});
+  const handleForgot = async(values) => {
+      console.log('values', values);
+       await forgotPass(values,navigation,handleLoading)
+    // navigation.navigate('verifyOtp', {value: values, loginType: 'forgot'});
     // navigation.navigate('setPass',);
   };
 
@@ -56,7 +61,7 @@ const ForgotForm = ({navigation, type}) => {
           placeholder={'example@gmail.com'}
         />
         <Spacer space={'12%'} />
-        <FormButton loading={loading} onPress={handleLogin} />
+        <FormButton loading={loading} onPress={handleForgot} />
       </View>
     </Formik>
   );

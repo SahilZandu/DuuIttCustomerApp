@@ -1,17 +1,8 @@
 import {colors} from '../theme/colors';
 
-const primaryScreens = [
-  'splash',
- 
-  
-];
+const primaryScreens = ['splash'];
 
-const authScreens = [
-  'login',
-  'test'
-
-  
-];
+const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test'];
 
 const DashbordScreens = [
   'home',
@@ -20,35 +11,39 @@ const DashbordScreens = [
   'tab3',
   'tab4',
   'tab5',
-  
+  'profile',
+  'chooseMapLocation',
+  'ParcelHome',
+  'setLocationHistory',
+  'senderReceiverDetails',
+  'priceDetails',
+  'priceConfirmed',
+  'searchingRide',
+  'myWebComponent',
+  'myAddres',
+  'addMyAddress'
 ];
 
-
 export function setBarColor(screen) {
-   if (primaryScreens.includes(screen)) {
+  if (primaryScreens.includes(screen)) {
     return '#28B056';
-  } 
-  else if(authScreens?.includes(screen)){
+  } else if (authScreens?.includes(screen)) {
     return '#FFFFFF';
-  }
-   else if(DashbordScreens?.includes(screen)) {
+  } else if (DashbordScreens?.includes(screen)) {
     return '#FFFFFF';
-  }else{
+  } else {
     return '#FFFFFF';
   }
 }
 
-
-export function setStatusBar(screen){
+export function setStatusBar(screen) {
   if (primaryScreens.includes(screen)) {
     return 'light-content';
-  } 
-  else if(authScreens?.includes(screen)) {
+  } else if (authScreens?.includes(screen)) {
+    return 'dark-content';
+  } else if (DashbordScreens?.includes(screen)) {
+    return 'dark-content';
+  } else {
     return 'dark-content';
   }
-   else if(DashbordScreens?.includes(screen)) {
-    return 'dark-content';
-  }else{
-    return 'dark-content';
-  }
-} 
+}

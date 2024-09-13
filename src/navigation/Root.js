@@ -19,8 +19,8 @@ export default function MainNavigator(props) {
         gestureEnabled: false,
       }}
       initialRouteName="splash">
-      <Stack.Screen name="splash" component={Splash} />
-      <Stack.Screen name="auth" component={AuthRoutes} />
+       <Stack.Screen name="splash" component={Splash} />
+       <Stack.Screen name="auth" component={AuthRoutes} />
        <Stack.Screen name="dashborad" component={DashboardRoutes} />
        <Stack.Screen name="parcel" component={ParcelRoutes} />
        <Stack.Screen name="food" component={FoodRoutes} />

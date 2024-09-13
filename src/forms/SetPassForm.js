@@ -13,11 +13,9 @@ import {Strings} from '../translates/strings';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import {setPassValidations} from './formsValidation/setPassValidations';
+import { rootStore } from '../stores/rootStore';
 
-const initialValues = {
-  password: '',
-  confirm: '',
-};
+
 
 const FormButton = ({loading, onPress}) => {
   const {dirty, isValid, values} = useFormikContext();
@@ -31,15 +29,24 @@ const FormButton = ({loading, onPress}) => {
   );
 };
 
-const SetPassForm = ({navigation, type}) => {
+const SetPassForm = ({navigation, route}) => {
+  const {data}=route.params;
+  const {updatePassword}=rootStore.authStore
   const [loading, setLoading] = useState(false);
   const [secureTextEntry, setsecureTextEntry] = useState(true);
   const [secureTextEntry2, setsecureTextEntry2] = useState(true);
+  const [initialValues,setInitialValues]=useState(
+    {
+    password: '',
+    confirm: '',
+  }
+  );
 
-  const handleLogin = values => {
+  const handleSetPass = async(values) => {
     // console.log('values', values);
     // navigation.navigate('verifyOtp', {value: values, loginType: type});
-    navigation.navigate('login');
+   await updatePassword(data ,values,navigation,handleLoading)
+      // navigation.navigate('login');
   };
   const handleLoading = v => {
     setLoading(v);
@@ -71,7 +78,7 @@ const SetPassForm = ({navigation, type}) => {
           rightIconName={!secureTextEntry2 ? 'eye' : 'eye-off'}
         />
         <Spacer space={'12%'} />
-        <FormButton loading={loading} onPress={handleLogin} />
+        <FormButton loading={loading} onPress={handleSetPass} />
       </View>
     </Formik>
   );

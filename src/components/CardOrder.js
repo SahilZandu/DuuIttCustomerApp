@@ -20,6 +20,7 @@ import CTA from './cta/CTA';
 import {currencyFormat} from '../halpers/currencyFormat';
 import {Surface} from 'react-native-paper';
 import BTN from './cta/BTN';
+import PickDropComp from './PickDropComp';
 
 const CardOrder = ({item, index}) => {
   const setDetailsBtn = status => {
@@ -148,83 +149,14 @@ const CardOrder = ({item, index}) => {
                         fontSize: RFValue(13),
                         fontFamily: fonts.regular,
                         marginLeft: '2%',
-                        width: wp('79%'),
+                        width: wp('75%'),
                       }}>
                       {value?.name}
                       <Text style={{color: '#646464'}}> x {value?.qty}</Text>
                     </Text>
                   </View>
                 ) : (
-                  <View key={i} style={{flexDirection: 'row', marginTop: '5%'}}>
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <View
-                        style={{
-                          height: 13,
-                          width: 13,
-                          borderRadius: 100,
-                          borderWidth: 3,
-                          borderColor: '#28B056',
-                        }}
-                      />
-                      <View
-                        style={{
-                          marginTop: '-2%',
-                          height: 52,
-                          width: 2.5,
-                          backgroundColor: '#28B056',
-                        }}
-                      />
-                      <View
-                        style={{
-                          height: 13,
-                          width: 13,
-                          backgroundColor: '#28B056',
-                          borderRadius: 100,
-                          borderWidth: 3,
-                          borderColor: '#28B056',
-                        }}
-                      />
-                    </View>
-                    {/* <SvgXml xml={appImagesSvg.vegSvg}/> */}
-                    <View style={{flexDirection: 'column', marginLeft: '3%'}}>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: RFValue(12),
-                          fontFamily: fonts.medium,
-                          color: '#838282',
-                        }}>
-                        Pickup point{' '}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          flex: 1,
-                          fontSize: RFValue(12),
-                          fontFamily: fonts.medium,
-                          color: '#838282',
-                          marginTop: '1%',
-                          width: wp('79%'),
-                        }}>
-                        {value?.pickup}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: RFValue(12),
-                          fontFamily: fonts.medium,
-                          color: '#000000',
-                          width: wp('79%'),
-                        }}>
-                        {value?.drop}
-                      </Text>
-                    </View>
-                  </View>
+                  <PickDropComp item={value} lineHeight={48}/>
                 )}
               </>
             );
@@ -239,7 +171,7 @@ const CardOrder = ({item, index}) => {
             <BTN
               backgroundColor={colors.white}
               labelColor={colors.main}
-              width={wp('40%')}
+              width={wp('38%')}
               title={setDetailsBtn(item?.statusOrder)}
               onPress={() => {
                 // handleVerify(otp);
@@ -249,7 +181,7 @@ const CardOrder = ({item, index}) => {
             />
 
             <BTN
-            width={wp('40%')}
+            width={wp('38%')}
             title={setProgressBtn(item?.statusOrder)}
             onPress={() => {
               // handleVerify(otp);

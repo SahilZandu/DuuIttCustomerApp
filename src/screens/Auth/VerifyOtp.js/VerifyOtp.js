@@ -22,7 +22,8 @@ import AuthScreenContent from '../../../components/AuthScreenContent';
 
 
 export default function VerifyOtp({navigation, route}) {
-  const {setToken}=rootStore.commonStore
+  const {setToken}=rootStore.commonStore;
+  const {verifyOtp}=rootStore.authStore;
   const {value, loginType} = route.params;
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState(null);
@@ -76,7 +77,7 @@ export default function VerifyOtp({navigation, route}) {
         disable={otp?.length != 4}
         title={Strings.verify}
         onPress={() => {
-          handleVerify(otp);
+          onPress(otp);
         }}
         loading={loading}
         theme={'primary'}
@@ -87,12 +88,15 @@ export default function VerifyOtp({navigation, route}) {
 
   const handleVerify = async otpValue => {
       Keyboard.dismiss();
-       if(loginType == 'forgot'){
-        navigation.navigate("setPass")
-       }else{
-        await setToken("true")
-        navigation.navigate('dashborad' , {screen:'home'})
-       }
+      //  if(loginType == 'forgot'){
+      //   navigation.navigate("setPass",{value:mobileEmail})
+      //  }else{
+
+         await verifyOtp(mobileEmail,loginType ,otpValue, navigation, handleLoading,onResendClear )
+        
+        // await setToken("true")
+        // navigation.navigate('dashborad' , {screen:'home'})
+      //  }
       
   };
 
@@ -100,7 +104,7 @@ export default function VerifyOtp({navigation, route}) {
     setLoading(v);
   };
 
-  const onResendClear = () => {
+  const onResendClear = async() => {
     console.log('resend');
     setOtp('');
     setClearData(!clearData);
@@ -160,6 +164,7 @@ export default function VerifyOtp({navigation, route}) {
               value={mobileEmail}
               type={loginType}
               onResendClear={onResendClear}
+              handleLoading={handleLoading}
             />
             <View style={{marginTop: '30%'}}>
               <FormButton loading={loading} onPress={handleVerify} />

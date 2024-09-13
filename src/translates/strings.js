@@ -12,7 +12,7 @@ export const Strings = {
     emailAddress :'Email Address',
     verify:'Verify',
     chooseYourService:"Choose Your Service",
-    forgotPassword:' Forget Password?',
+    forgotPassword:' Forgot Password?',
     forgotReceiveVerification:"Please Enter Your Email Address To Receive a Verification Code.",
     send:'Send',
     setNewPassword:'Set New Password',

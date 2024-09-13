@@ -1,0 +1,155 @@
+import React, {useEffect, useState, useRef, useCallback} from 'react';
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  FlatList,
+} from 'react-native';
+import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import {styles} from './styles';
+import {SvgXml} from 'react-native-svg';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {fonts} from '../../../theme/fonts/fonts';
+import {colors} from '../../../theme/colors';
+import AppInputScroll from '../../../halpers/AppInputScroll';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import {useFocusEffect} from '@react-navigation/native';
+import Header from '../../../components/header/Header';
+import CTA from '../../../components/cta/CTA';
+import {insert} from 'formik';
+import AddressCard from '../../../components/AddressCard';
+import {rootStore} from '../../../stores/rootStore';
+import MyAddressLoader from '../../../components/AnimatedLoader/MyAddressLoader';
+import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import PopUp from '../../../components/appPopUp/PopUp';
+
+export default function MyAddress({navigation}) {
+  const {getMyAddress, getAddress, deleteMyAddress} = rootStore.myAddressStore;
+
+  const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
+  const [myAddress, setMyAddress] = useState(getAddress);
+  const [isDelete, setIsDelete] = useState(false);
+  const [isDeleteIndex, setIsDeleteIndex] = useState('');
+  const [isDeleteItem, setIsDeleteItem] = useState('');
+
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton();
+      getAddressDetails();
+    }, []),
+  );
+
+  const getAddressDetails = async () => {
+    const res = await getMyAddress();
+    console.log('res---getAddressDetails', res);
+    setMyAddress(res);
+    setLoading(false);
+  };
+
+  const handleDelete = async () => {
+    //  console.log("isDeleteIndex,isDeleteItem",isDeleteIndex,isDeleteItem)
+    await deleteMyAddress('delete', isDeleteItem, onSuccess, handleLoading);
+  };
+
+  const onSuccess = () => {
+    myAddress.splice(isDeleteIndex, 1);
+    setMyAddress([...myAddress]);
+    setIsDelete(false);
+  };
+
+  const handleLoading = v => {
+    setIsDelete(v);
+  };
+
+  const renderItem = ({item, index}) => {
+    return (
+      <AddressCard
+        item={item}
+        index={index}
+        onPress={() => {
+          navigation.navigate('addMyAddress', {type: 'update', data: item});
+        }}
+        onPressDot={() => {
+          setIsDelete(true), setIsDeleteIndex(index);
+          setIsDeleteItem(item);
+        }}
+      />
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Header
+        title={'My Address'}
+        backArrow={true}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+
+      {loading == true ? (
+        <AnimatedLoader type={'myAddress'} />
+      ) : (
+        <>
+          <View style={styles.main}>
+            {myAddress?.length > 0 ? (
+              <FlatList
+                contentContainerStyle={{paddingBottom: '10%'}}
+                showsVerticalScrollIndicator={false}
+                data={myAddress}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+              />
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: RFValue(15),
+                    fontFamily: fonts.medium,
+                    color: colors.black,
+                  }}>
+                  No Data Found
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={{backgroundColor: colors.white, height: hp('9%')}}>
+            <CTA
+              width={wp('90%')}
+              isBottom={true}
+              title={'ADD NEW ADDRESS'}
+              onPress={() => {
+                navigation.navigate('addMyAddress', {
+                  type: 'add',
+                  data: undefined,
+                });
+              }}
+            />
+          </View>
+        </>
+      )}
+
+      <PopUp
+        visible={isDelete}
+        type={'delete'}
+        onClose={() => setIsDelete(false)}
+        title={'You are about to delete an item'}
+        text={'This will delete your item from the address are your sure?'}
+        onDelete={handleDelete}
+      />
+    </View>
+  );
+}

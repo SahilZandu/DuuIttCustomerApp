@@ -61,10 +61,3 @@ export default class CommonStore {
     }
   };
 }
-
-decorate(CommonStore, {
-  token: computed,
-  appUser: computed,
-  setToken: action,
-  setAppUser: action,
-});

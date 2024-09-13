@@ -26,6 +26,17 @@ export const colors = {
     colorD6:'#D6FFE4',
     color27:'#272525',
     colorD9:'#D9D9D9',
+    colorA9:'#A9A9AA',
+    colorD1: '#D1D1D1',
+    color95:'#959595',
+    color83:'#838282',
+    color72:'#727171',
+    colorB6:'#B6B6B6',
+    colorAA:'#AAAAAA',
+    color43:'#43BA6B',
+    colorFA:'#FAA61A',
+    color24:'#242424',
+    color64:'#646464'
     
    
    

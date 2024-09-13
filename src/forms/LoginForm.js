@@ -12,6 +12,7 @@ import Spacer from '../halpers/Spacer';
 import {Strings} from '../translates/strings';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
+import { rootStore } from '../stores/rootStore';
 
 const initialValues = {
   email: '',
@@ -35,17 +36,12 @@ const LoginForm = ({navigation, type}) => {
   const [loading, setLoading] = useState(false);
   const [secureTextEntry, setsecureTextEntry] = useState(true);
 
-  //   const {emailLogin, sendOtp} = rootStore.authStore;
+    const {login} = rootStore.authStore;
 
-  const handleLogin = values => {
+  const handleLogin = async (values) => {
     // console.log('values', values);
-    navigation.navigate('verifyOtp', {value: values, loginType: type});
-
-    if (type == 'Email') {
-      //   emailLogin(values, navigation, handleLoading);
-    } else {
-      //   sendOtp(values, navigation, handleLoading);
-    }
+    // navigation.navigate('verifyOtp', {value: values, loginType: type});
+        await login(values,type,navigation,handleLoading)
   };
   const handleLoading = v => {
     setLoading(v);

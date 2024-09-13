@@ -46,7 +46,7 @@ function FieldInput({
           <Text
             style={{
               fontSize: RFValue(12),
-              fontFamily: fonts.regular,
+              fontFamily: fonts.semiBold,
               color: colors.black,
             }}>
             {inputLabel}
@@ -58,7 +58,7 @@ function FieldInput({
             editable={rightIcon ? false : true}
             keyboardType={keyboardType}
             placeholder={placeholder}
-            placeholderTextColor={colors.black30}
+            placeholderTextColor={colors.color95}
             value={value ? value : values[name]}
             onBlur={() => (onBlur ? onBlur() : setFieldTouched(name))}
             onChangeText={t => {
@@ -70,11 +70,12 @@ function FieldInput({
               marginRight: '2%',
               color: colors.black,
               fontSize: RFValue(12),
+              fontFamily:fonts.medium,
             }}
             maxLength={maxLength}
             {...otherProps}
           />
-          {rightIcon && (
+          {(rightIcon && image)  && (
             <TouchableOpacity
             onPress={onRightPress}
             activeOpacity={0.8}
@@ -90,7 +91,7 @@ function FieldInput({
             backgroundColor: '#D9D9D9',
           }}
         />
-        <FieldErrorMessage error={errors[name]} visible={touched[name]} />
+        <FieldErrorMessage  error={errors[name]} visible={touched[name]} />
       </View>
     </>
   );

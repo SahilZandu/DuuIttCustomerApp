@@ -13,6 +13,8 @@ import Home from '../screens/Auth/DashboardScreen/Home/Home';
 import Promo from '../screens/Auth/DashboardScreen/Promo/Promo';
 import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
 import SideMenu from '../screens/Auth/DashboardScreen/SideMenu/SideMenu';
+import ParcelHome from '../screens/DUParcel/ParcelHome/ParcelHome';
+import MyAddress from '../screens/DUParcel/MyAddress/MyAddress';
 
 
 const Tab = createBottomTabNavigator();
@@ -507,20 +509,20 @@ export function ParcelBottomNavigator  () {
       })}>
       <Tab.Screen
         name="tab1"
-        component={Home}
+        component={ParcelHome}
         // options={{tabBarLabel: 'Home'}}
         listeners={{tabPress: handleAnimation}}
       />
       <Tab.Screen
         name="tab2"
-        component={Promo}
-        // options={{tabBarLabel: 'Promo'}}
+        component={Orders}
+        // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
       />
       <Tab.Screen
         name="tab3"
-        component={Orders}
-        // options={{tabBarLabel: 'Orders'}}
+        component={MyAddress}
+        // options={{tabBarLabel: 'MyAddress'}}
         listeners={{tabPress: handleAnimation}}
       />
       <Tab.Screen

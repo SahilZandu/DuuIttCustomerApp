@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
+  Alert
 } from 'react-native';
 import {colors} from '../../../theme/colors';
 import LoginForm from '../../../forms/LoginForm';
@@ -48,7 +49,22 @@ export default function Login({navigation}) {
     return userResponse;
   };
 
+  const testBaseURL = async () => {
+    try {
+      const response = await fetch('http://duuitt.hashsoft.io:3001');
+      if (response.ok) {
+        Alert.alert('Success', 'The base URL is accessible.');
+      } else {
+        Alert.alert('Error', 'The base URL returned an error.');
+      }
+    } catch (error) {
+      Alert.alert('Error', `Failed to access the base URL: ${error.message}`);
+    }
+  };
+  
   useEffect(() => {
+    // testBaseURL()
+
     if (Platform.OS === 'android') {
       setTimeout(() => {
         requestSMSpermission();
@@ -99,7 +115,13 @@ export default function Login({navigation}) {
             </Text>
             <View
               style={styles.termsPolicyView}>
-              <TouchableOpacity activeOpacity={0.8} style={{}}>
+              <TouchableOpacity 
+               onPress={()=>{
+                navigation.navigate('myWebComponent', {
+                  type: 'terms',
+                })
+              }}
+               activeOpacity={0.8} >
                 <Text
                   style={styles.termsText}>
                   Terms & Conditions
@@ -110,7 +132,13 @@ export default function Login({navigation}) {
                 {' '}
                 &{' '}
               </Text>
-              <TouchableOpacity activeOpacity={0.8}>
+              <TouchableOpacity 
+               onPress={()=>{
+                navigation.navigate('myWebComponent', {
+                  type: 'policy',
+                })
+              }}
+              activeOpacity={0.8}>
                 <Text
                   style={styles.privacyText}>
                   Privacy Policy

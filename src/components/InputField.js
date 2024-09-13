@@ -47,7 +47,7 @@ function InputField({
         style={{
           justifyContent: 'center',
           marginVertical: '2%',
-          marginTop: '5%',
+          marginTop: '6%',
           opacity: isBlur ? 0.5 : 1,
         }}>
         {inputLabel && (
@@ -66,16 +66,17 @@ function InputField({
             onPress ? onPress() : console.log('press');
           }}>
           <TextInput
-            placeholderTextColor={'#959595'}
-            outlineColor={'#B6B6B6'}
-            activeOutlineColor={'#959595'}
+            placeholderTextColor={colors.color95}
+            outlineColor={colors.colorB6}
+            activeOutlineColor={colors.color95}
             style={{
               paddingLeft: prefix ? '10%' : 0,
               marginTop: '-2%',
-              backgroundColor: 'white',
+              backgroundColor:colors.white,
               paddingVertical: 0,
               fontSize: RFValue(13),
-              height:hp('6%'),
+              height:hp('5.8%'),
+              fontWeight:'600'
             }}
             theme={{roundness: 10}}
             left={
@@ -146,7 +147,7 @@ function InputField({
           </Text>
         )}
       </View>
-      <FieldErrorMessage error={errors[name]} visible={touched[name]} />
+      <FieldErrorMessage errorStyle={{marginTop:0}}  error={errors[name]} visible={touched[name]} />
     </>
   );
 }

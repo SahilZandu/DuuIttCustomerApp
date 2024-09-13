@@ -31,7 +31,7 @@ const BTN = ({
  style={{ backgroundColor: backgroundColor ? backgroundColor : '#28B056',
  width: width ? width : wp('85%'),
  height: height ? height : hp('5.5%'),
- borderRadius: 8,
+ borderRadius: 50,
  justifyContent: 'center',
  opacity: disable ? 0.6 : 1,
  alignSelf: 'center',

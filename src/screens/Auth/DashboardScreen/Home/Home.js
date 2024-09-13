@@ -69,7 +69,7 @@ export default function Home({navigation}) {
     
         <DashboardHeader
            navigation={navigation}
-          title={'Home'}
+          // title={'Home'}
           autoFocus={isKeyboard}
           onPressSecond={() => {
             // alert('second');

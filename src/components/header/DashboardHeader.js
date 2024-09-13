@@ -20,12 +20,6 @@ import {
 
 const DashboardHeader = ({
   navigation,
-  onPress,
-  title,
-  onPressFirst,
-  firstImage,
-  onPressSecond,
-  secondImage,
   value,
   onChangeText,
   onFocus,
@@ -56,14 +50,18 @@ const DashboardHeader = ({
           <Text
             numberOfLines={1}
             style={{
-              fontSize: RFValue(12),
+              fontSize: RFValue(13),
               fontFamily: fonts.semiBold,
               color: colors.main,
+              width:wp("78%")
             }}>
             Home
           </Text>
-          <Text numberOfLines={1}>Phase 5, Sector 59, Sahibzada Ajit...</Text>
-        </View>
+          <Text 
+           style={{fontSize:RFValue(10),fontFamily:fonts.regular,
+            color:colors.colorA9, width:wp("78%")}}
+            numberOfLines={1}>Phase 5, Sector 59, Sahibzada Ajit...</Text>
+          </View>
 
         <TouchableOpacity
           onPress={() => {

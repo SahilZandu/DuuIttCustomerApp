@@ -15,7 +15,7 @@ import SetPassForm from '../../../forms/SetPassForm';
 
 
 
-export default function SetPass({navigation}) {
+export default function SetPass({navigation,route}) {
   
   return (
     <View style={styles.container}>
@@ -32,7 +32,7 @@ export default function SetPass({navigation}) {
         <View style={styles.screen}>
           <AuthScreenContent title={Strings?.setNewPassword}  subTitle={Strings?.yourNewPasswordDifferent} />
           <Spacer space={'6%'} />
-         <SetPassForm navigation={navigation}/>
+         <SetPassForm navigation={navigation} route={route}/>
         </View>
       </ScrollView>
     </View>

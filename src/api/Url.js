@@ -1,9 +1,13 @@
 export default  {
-    Base_Url : 'https://pos.hsdevbox.com/api/',
-    login : 'login',
-    matchLoginOtp:'match-login-otp',
-    register:'registerNow',
-    locationAddress:'userAddress',
+    Base_Url :'https://duuitt.hashsoft.io/',
+    login : 'customers',
+    verifyOtp:'customers/verify-otp',
+    forgetPass:'customers/forget-password',
+    resendOtp:'customers/send-otp',
+    updatePassword:'customers/update-password',
+    myAddress:'customers/address',
+    getMyAddress:'customers/detail'
+   
    
 } 
 

@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, Text,View} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
+import { rootStore } from '../stores/rootStore';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/fonts/fonts';
 import { Strings } from '../translates/strings';
 
-const ResendOtp = ({value, type,onResendClear}) => {
+const ResendOtp = ({value, type,onResendClear,handleLoading}) => {
+  const {resendOtp}=rootStore.authStore;
   const [timerCount, setTimer] = useState(59);
   const [start, setstart] = useState(true);
 
@@ -14,18 +16,17 @@ const ResendOtp = ({value, type,onResendClear}) => {
     setstart(!start);
   };
 
-  const handleResendOtp = () => {
+  const handleResendOtp = async () => {
         onResendClear();
-        setTimeout(()=>{
-            handleTimer()
-        },500)
-
-    // if (type == 'Mobile') {
-    //   reSendOtp(value?.mobile, handleTimer);
-    // } else {
-    //   reSendOtpEmail(value?.email, value?.password, handleTimer);
-    // }
+        // setTimeout(()=>{
+        //     handleTimer()
+        // },500)
+        await resendOtp(value,type, handleTimer,handleLoading)  
   };
+
+  // const handleResend = v => {
+  //   handleLoading(v);
+  // };
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -66,7 +67,7 @@ const ResendOtp = ({value, type,onResendClear}) => {
         </Text>
     <Pressable
       disabled={timerCount != 0}
-      onPress={handleResendOtp}
+      onPress={()=>{handleResendOtp()}}
       style={{
         alignSelf: 'center',
         opacity: timerCount == 0 ? 1 : 0.5,

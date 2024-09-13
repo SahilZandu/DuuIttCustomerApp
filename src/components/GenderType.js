@@ -50,7 +50,7 @@ export default GenderType;
 const styles = StyleSheet.create({
   title: {
     color:colors.black,
-    fontFamily: fonts.regular,
+    fontFamily: fonts.semiBold,
     fontSize: RFValue(12),
   },
   rovView: {

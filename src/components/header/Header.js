@@ -13,7 +13,7 @@ const Header = ({onPress,title,backArrow}) => {
   return (
     <View style={{flexDirection:'row', 
     backgroundColor:colors.white,
-    alignItems:'center',paddingBottom:'1%',marginTop:'2.5%' }}>
+    alignItems:'center',paddingBottom:'2%',marginTop:'1%' }}>
       {backArrow && <TouchableOpacity 
         activeOpacity={0.9}
         onPress={onPress} 

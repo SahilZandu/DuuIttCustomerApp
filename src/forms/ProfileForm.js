@@ -10,13 +10,11 @@ import {
 } from 'react-native';
 import CTA from '../components/cta/CTA';
 import {Formik, useFormikContext} from 'formik';
-import {loginValidations} from './formsValidation/loginValidations';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import {Strings} from '../translates/strings';
 import FieldInput from '../components/FieldInput';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import {SvgXml} from 'react-native-svg';

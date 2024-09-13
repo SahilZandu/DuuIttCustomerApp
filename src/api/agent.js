@@ -52,10 +52,17 @@ const responseBody = response => response.data;
 
 export const agent = {
   login: body => requests.post(Url.login, body),
-  matchLoginOtp: body  => requests.post(Url.matchLoginOtp,body),
-  register: body => requests.post(Url.register ,body),
-  locationAddress: body => requests.post(Url.locationAddress ,body)
+  verifyOtp: body => requests.post(Url.verifyOtp, body),
+  resendOtp: body => requests.post(Url.resendOtp, body),
+  forgetPass: body => requests.post(Url.forgetPass, body),
+  updatePassword: body => requests.post(Url.updatePassword, body),
+  myAddress: body => requests.post(Url.myAddress, body),
+  getMyAddress: () => requests.get(Url.getMyAddress),
+ 
   
+
+
+
 };
 
 const requests = {

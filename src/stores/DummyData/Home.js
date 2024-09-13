@@ -51,3 +51,66 @@ export const homeCS = [
 
  
   ];
+
+  export const pickUpHistory=[
+    {
+      id: '1',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '2',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '3',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '4',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '5',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '6',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '7',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '8',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id:'9',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '10',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '11',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+    {
+      id: '12',
+      name:'TDI TAJ PLAZA Block-505ome',
+      address:'Airport Road, Sector 118, Sector 73, Sahibzada....'
+    },
+  ]
