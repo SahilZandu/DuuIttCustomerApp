@@ -19,6 +19,12 @@ import {fonts} from '../theme/fonts/fonts';
 
 
 const LocationHistoryCard = ({item, index,onPress,bottomLine}) => {
+
+  const getLocationName=(item)=>{
+    const nameData = item?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    return nameData[0]
+  }
   
   return (
     <TouchableOpacity
@@ -34,7 +40,7 @@ const LocationHistoryCard = ({item, index,onPress,bottomLine}) => {
         />
         <Text numberOfLines={1} 
         style={styles.nameText}>
-          {item.name}
+          {getLocationName(item)}
         </Text>
       </View>
       <Text 

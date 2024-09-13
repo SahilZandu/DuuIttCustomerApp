@@ -76,7 +76,7 @@ function InputField({
               paddingVertical: 0,
               fontSize: RFValue(13),
               height:hp('5.8%'),
-              fontWeight:'600'
+              fontWeight:'500'
             }}
             theme={{roundness: 10}}
             left={

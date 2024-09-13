@@ -58,7 +58,8 @@ export const agent = {
   updatePassword: body => requests.post(Url.updatePassword, body),
   myAddress: body => requests.post(Url.myAddress, body),
   getMyAddress: () => requests.get(Url.getMyAddress),
- 
+  parcels: body => requests.post(Url.parcels, body),
+  
   
 
 

@@ -28,6 +28,7 @@ import {Surface} from 'react-native-paper';
 import PickDropLocation from '../components/PickDropLocation';
 import {useFocusEffect} from '@react-navigation/native';
 import TabsTouch from '../components/TabsTouch';
+import { rootStore } from '../stores/rootStore';
 
 let categories = [
   {id: 1, active: 0, name: 'Documents'},
@@ -35,15 +36,15 @@ let categories = [
   {id: 3, active: 0, name: 'Liquid'},
   {id: 4, active: 0, name: 'Food'},
   {id: 5, active: 0, name: 'Electronic'},
-  {id: 6, active: 0, name: 'Other'},
+  {id: 6, active: 0, name: 'Others'},
 ];
 
 const PriceDetailsForm = ({navigation}) => {
+  const {senderAddress , receiverAddress} = rootStore.myAddressStore;
+  const {addRequestParcel} = rootStore.parcelStore;
   const [loading, setLoading] = useState(false);
-  const [pickUpLocation, setPickUpLocation] = useState(
-    'TDI TAJ PLAZA Block-505',
-  );
-  const [dropLocation, setDropLocation] = useState('TDI City Tower');
+  const [pickUpLocation, setPickUpLocation] = useState('');
+  const [dropLocation, setDropLocation] = useState('');
   const [weight, setWeight] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [categoriesShow, setCategoriesShow] = useState(categories);
@@ -52,8 +53,16 @@ const PriceDetailsForm = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       InitailsCate();
+      getCheckSenderReceiverData()
     }, []),
   );
+
+
+  const getCheckSenderReceiverData =()=>{
+    console.log("senderAddress,receiverAddress",senderAddress,receiverAddress)
+    setPickUpLocation(senderAddress?.address)
+    setDropLocation(receiverAddress?.address)
+  }
 
   const InitailsCate = () => {
     categoriesShow?.map((value, i) => {
@@ -64,9 +73,24 @@ const PriceDetailsForm = ({navigation}) => {
     onSelectedCate(categoriesShow);
   };
 
-  const handleLogin = () => {
-    navigation.navigate('priceConfirmed');
+  const handlePrice = async() => {
+   const newdata ={
+    weight:weight,
+    quantity:quantity,
+    type:selectCate[0],
+    sender_address:senderAddress,
+    receiver_address:receiverAddress
+   }
+   console.log("newdata--",newdata)
+
+
+  await addRequestParcel(newdata ,navigation,handleLoading)
+    // navigation.navigate('priceConfirmed',{item:newdata});
   };
+
+  const handleLoading =(v)=>{
+    setLoading(v)
+  }
 
   const onPressCategories = item => {
     categoriesShow?.map((value, i) => {
@@ -192,7 +216,7 @@ const PriceDetailsForm = ({navigation}) => {
         </AppInputScroll>
       </KeyboardAvoidingView>
       <View style={{backgroundColor: colors.white, height: hp('9%')}}>
-        <FormButton loading={loading} onPress={handleLogin} />
+        <FormButton loading={loading} onPress={handlePrice} />
       </View>
     </View>
   );

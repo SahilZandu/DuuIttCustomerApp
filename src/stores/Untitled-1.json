@@ -1,0 +1,27 @@
+{
+    "weight": 1,
+    "type": "others",
+    "quantity": 1,
+    "sender_address": {
+        "primary_address": "myaddress",
+        "custom_address": "my custom address",
+        "landmark": "landmark",
+        "name": "sender's name",
+        "phone": 1234567890,
+        "geo_location": {
+            "lat": "1234",
+            "lng": "1234"
+        }
+    },
+    "receiver_address": {
+        "primary_address": "myaddress",
+        "custom_address": "my custom address",
+        "landmark": "landmark",
+        "name": "sender's name",
+        "phone": 1234567890,
+        "geo_location": {
+            "lat": "1234",
+            "lng": "1234"
+        }
+    }
+}

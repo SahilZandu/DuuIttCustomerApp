@@ -6,7 +6,8 @@ export default  {
     resendOtp:'customers/send-otp',
     updatePassword:'customers/update-password',
     myAddress:'customers/address',
-    getMyAddress:'customers/detail'
+    getMyAddress:'customers/detail',
+    parcels:'parcels'
    
    
 } 

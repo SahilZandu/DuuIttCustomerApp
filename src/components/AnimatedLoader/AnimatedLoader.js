@@ -5,6 +5,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AddMyAddressLoader from './AddMyAddressLoader';
+import LocationHistoryLoader from './LocationHistoryLoader';
 import MyAddressLoader from './MyAddressLoader';
 
 
@@ -13,6 +14,7 @@ const AnimatedLoader = ({type,absolute}) => {
     <View style={{position:absolute ? 'absolute' : 'relative', width: wp('100%')}}>
       {type == 'myAddress' && <MyAddressLoader />}
       {type == 'addMyAddress' && <AddMyAddressLoader />}
+      {type == 'locationHistory' && <LocationHistoryLoader />}
     
     </View>
   );

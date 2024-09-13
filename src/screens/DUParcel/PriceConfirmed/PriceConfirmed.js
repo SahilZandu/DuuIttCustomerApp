@@ -456,12 +456,10 @@ const paymentMethod = ['Cash', 'QR code payment'];
 
 export default function PriceConfirmed({navigation}) {
   const refRBSheet = useRef(null);
-
   const [pickUpLocation, setPickUpLocation] = useState(
     'TDI TAJ PLAZA Block-505',
   );
   const [dropLocation, setDropLocation] = useState('TDI City Tower');
-
   const [initialValues, setInitialValues] = useState({
     paymentMethods: 'Cash',
   });

@@ -1,5 +1,6 @@
+import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
@@ -7,29 +8,97 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {appImages} from '../../../commons/AppImages';
+import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import {getGeoCodes} from '../../../components/GeoCodeAddress';
+import {getCurrentLocation} from '../../../components/GetAppLocation';
 import Header from '../../../components/header/Header';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {pickUpHistory} from '../../../stores/DummyData/Home';
+import {rootStore} from '../../../stores/rootStore';
 import {colors} from '../../../theme/colors';
 import {fonts} from '../../../theme/fonts/fonts';
 import {styles} from './styles';
 
 const SetLocationHistory = ({navigation}) => {
+  const {getMyAddress, getAddress, setSenderAddress, setReceiverAddress} =
+    rootStore.myAddressStore;
+  const getLocation = type => {
+    // console.log('gettt', getCurrentLocation());
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
+  const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
   const [pickDrop, setPickDrop] = useState('pick');
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
-  const [lat, setlat] = useState(30.7076);
-  const [long, setlong] = useState(76.715126);
+  // const [lat, setlat] = useState(30.7076);
+  // const [long, setlong] = useState(76.715126);
+  const [myAddress, setMyAddress] = useState(getAddress);
+  const [geoLocation, setGeoLocation] = useState({
+    lat: getLocation('lat'),
+    lng: getLocation('lng'),
+  });
+  const [currentAddress, setCurrentAddress] = useState('');
+  const [name, setName] = useState('');
+
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton();
+      getAddressDetails();
+      getCurrentAddress();
+      getCheckSenderReciever();
+    }, []),
+  );
+
+  const getCheckSenderReciever = () => {
+    const {senderAddress, receiverAddress} = rootStore.myAddressStore;
+    console.log(
+      'senderAddress,receiverAddress--',
+      senderAddress,
+      receiverAddress,
+    );
+    if (Object?.keys(senderAddress || {})?.length == 0) {
+      setPickUpLocation('');
+      setPickDrop('pick');
+    } else {
+      setPickUpLocation(senderAddress?.address);
+      setPickDrop('drop');
+    }
+
+    if (Object?.keys(receiverAddress || {})?.length == 0) {
+      setDropLocation('');
+    } else {
+      setDropLocation(receiverAddress?.address);
+    }
+  };
 
   useEffect(() => {
-    onGetAddress();
+    setGeoLocation({
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    });
   }, []);
 
-  const onGetAddress = async () => {
-    const resArress = await getGeoCodes(lat, long);
-    console.log('resArress--', resArress);
+  const getAddressDetails = async () => {
+    const res = await getMyAddress();
+    // console.log('res---getAddressDetails', res);
+    setMyAddress(res);
+    setLoading(false);
+  };
+
+  const getCurrentAddress = async () => {
+    const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
+    // console.log('addressData', addressData);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    setName(nameData[0]);
+    setCurrentAddress(addressData?.address);
   };
 
   const renderItem = ({item, index}) => {
@@ -45,6 +114,10 @@ const SetLocationHistory = ({navigation}) => {
             } else {
               setDropLocation(item?.address);
             }
+            navigation.navigate('chooseMapLocation', {
+              pickDrop: pickDrop,
+              item: item,
+            });
           }}
         />
       </>
@@ -52,13 +125,26 @@ const SetLocationHistory = ({navigation}) => {
   };
 
   const onPressPickLocation = () => {
-    navigation.navigate('chooseMapLocation',{pickDrop:pickDrop});
+    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {}});
     // alert('pick')
   };
 
   const onPressDropLocation = () => {
-    navigation.navigate('chooseMapLocation',{pickDrop:pickDrop});
+    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {}});
     // alert('drop')
+  };
+
+  const onCurrentPress = () => {
+    if (pickDrop == 'pick') {
+      setPickUpLocation(currentAddress);
+      setPickDrop('drop');
+    } else {
+      setDropLocation(currentAddress);
+    }
+    navigation.navigate('chooseMapLocation', {
+      pickDrop: pickDrop,
+      item: {name: name, address: currentAddress, geo_location: geoLocation},
+    });
   };
 
   return (
@@ -75,10 +161,10 @@ const SetLocationHistory = ({navigation}) => {
           pickUpLocation={pickUpLocation}
           dropLocation={dropLocation}
           onPressPickUp={() => {
-            setPickUpLocation(''), setPickDrop('pick');
+            setPickUpLocation(''), setPickDrop('pick'), setSenderAddress({});
           }}
           onPressDrop={() => {
-            setDropLocation(''), setPickDrop('pick');
+            setDropLocation(''), setPickDrop('drop'), setReceiverAddress({});
           }}
           onPressPickLocation={onPressPickLocation}
           onPressDropLocation={onPressDropLocation}
@@ -86,7 +172,9 @@ const SetLocationHistory = ({navigation}) => {
         <View style={styles.currentLocView}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => {}}
+            onPress={() => {
+              onCurrentPress();
+            }}
             style={styles.currentLocTouch}>
             <Image
               resizeMode="contain"
@@ -98,17 +186,38 @@ const SetLocationHistory = ({navigation}) => {
         </View>
 
         <View style={styles.middleLineView} />
-
-        <View style={{marginTop: '1%'}}>
-          <FlatList
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: '70%'}}
-            data={pickUpHistory}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-          />
-        </View>
+        {loading == true ? (
+          <AnimatedLoader type={'locationHistory'} />
+        ) : (
+          <View style={{marginTop: '1%'}}>
+            {myAddress?.length > 0 ? (
+              <FlatList
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{paddingBottom: '70%'}}
+                data={myAddress}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+              />
+            ) : (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: hp('25%'),
+                }}>
+                <Text
+                  style={{
+                    fontSize: RFValue(14),
+                    fontFamily: fonts.medium,
+                    color: colors.black,
+                  }}>
+                  No Data Found
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );

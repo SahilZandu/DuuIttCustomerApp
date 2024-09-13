@@ -504,8 +504,8 @@ export default function ParcelHome({navigation}) {
          />
             
        <SearchTextIcon title={'Enter pick up or send location'} onPress={()=>{
-        navigation.navigate('priceDetails')
-        // navigation.navigate('setLocationHistory')
+        // navigation.navigate('priceDetails')
+        navigation.navigate('setLocationHistory')
         }}/>
       <View style={{backgroundColor: colors.white, marginTop: '2%'}}>
         <AppInputScroll

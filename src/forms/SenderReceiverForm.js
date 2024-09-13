@@ -26,6 +26,7 @@ import InputField from '../components/InputField';
 import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
 import {Surface} from 'react-native-paper';
 import PickDropAddressEdit from '../components/PickDropAddressEdit';
+import { rootStore } from '../stores/rootStore';
 
 
 const FormButton = ({loading, onPress}) => {
@@ -45,22 +46,43 @@ const FormButton = ({loading, onPress}) => {
 };
 
 const SenderReceiverForm = ({navigation,route}) => {
-
-    const {pickDrop}=route.params
+  const {setSenderAddress , setReceiverAddress} = rootStore.myAddressStore;
+    const {pickDrop,item}=route.params
     console.log("pickDrop--sr",pickDrop)
   const [loading, setLoading] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
-    address: '',
-    landmark: '',
-    name: '',
-    mobile: '',
+    address_detail: item?.address ? item?.address_detail:'',
+    landmark:  item?.landmark ? item?.landmark:'',
+    name: (item?.name && item?.phone) ? item?.name:'',
+    phone: item?.phone ? item?.phone?.toString() :'',
   });
 
   const handleLogin = values => {
-    console.log('values', values);
-    navigation.navigate('setLocationHistory')
+    console.log('values', values,item,pickDrop);
+    const newData ={
+      ...values ,
+      address:item?.address,
+      geo_location:item?.geo_location,
+      // phone:Number(phone)
+    }
+     console.log("newData--",newData)
+
+    if(pickDrop == 'pick'){
+      setSenderAddress(newData)
+      navigation.navigate('setLocationHistory')
+  
+     } else {
+      setReceiverAddress(newData)
+      navigation.navigate('priceDetails')
+     }
   };
+
+  const getLocationName=(item)=>{
+    const nameData = item?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    return nameData[0]
+  }
 
   return (
     <Formik
@@ -73,7 +95,7 @@ const SenderReceiverForm = ({navigation,route}) => {
           <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
             <View style={styles.main}>
              <PickDropAddressEdit 
-             item={{name:'TDI TAJ PLAZA Block-505',address:' Airport Road, Sector 118....'}}
+             item={{name:getLocationName(item),address:item?.address}}
              onPressEdit ={() => {
               navigation.goBack();
                }} />
@@ -83,30 +105,32 @@ const SenderReceiverForm = ({navigation,route}) => {
               <Spacer space={'3%'}/>
               <InputField
                 textColor={'#000000'}
-                name={'address'}
+                name={'address_detail'}
                 label={''}
+                maxLength={100}
                 placeholder={'Enter Address'}
               />
               <InputField
                 textColor={'#000000'}
-                name={'landmark'}
-                label={''}
-                placeholder={'Landmark (optional)'}
-              />
-              <InputField
-                textColor={'#000000'}
-                keyboardType="number-pad"
                 name={'name'}
                 label={''}
-                placeholder={'Name (optional)'}
+                maxLength={50}
+                placeholder={'Name'}
               />
               <InputField
                 textColor={'#000000'}
                 keyboardType="number-pad"
                 maxLength={10}
-                name={'mobile'}
+                name={'phone'}
                 label={''}
                 placeholder={'Enter mobile number'}
+              />
+                <InputField
+                textColor={'#000000'}
+                name={'landmark'}
+                label={''}
+                maxLength={50}
+                placeholder={'Landmark (optional)'}
               />
             </View>
           </AppInputScroll>

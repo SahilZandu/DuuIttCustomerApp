@@ -6,6 +6,9 @@ import {useToast} from '../halpers/useToast';
 export default class MyAddressStore {
 
   getAddress =[]
+  senderAddress={}
+  receiverAddress={}
+
 
   myAddress = async (type,values,title,address,geoLocation,loactionId,onSuccess,handleLoading) => {
     handleLoading(true);
@@ -102,6 +105,19 @@ export default class MyAddressStore {
       useToast(m, 0);
     }
   };
+  
+
+  setSenderAddress = async(item)=>{
+    this.senderAddress= item
+
+  }
+
+  setReceiverAddress = async(item)=>{
+    this.receiverAddress= item
+
+  }
+
+
 
  
 }

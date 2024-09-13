@@ -101,7 +101,7 @@ if(data){
  setTitle(data?.title)
 setInitialValues({
     name: data?.name,
-    phone: data?.phone,
+    phone: data?.phone?.toString(),
     house: data?.address_detail,
     landmark: data?.landmark,
   });
@@ -254,7 +254,7 @@ setInitialValues({
   return (
     <View style={styles.container}>
       <Header
-        title={'Add My Address'}
+        title={type == 'add' ? 'Add My Address':'Upadate My Address'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();

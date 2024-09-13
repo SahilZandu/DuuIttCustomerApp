@@ -477,7 +477,7 @@ import SenderReceiverForm from '../../../forms/SenderReceiverForm';
 
 
 export default function SenderReceiverDetails({navigation,route}) {
-    const {pickDrop}=route.params
+    const {pickDrop,item}=route.params
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();

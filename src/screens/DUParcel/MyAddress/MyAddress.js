@@ -117,7 +117,7 @@ export default function MyAddress({navigation}) {
                 }}>
                 <Text
                   style={{
-                    fontSize: RFValue(15),
+                    fontSize: RFValue(14),
                     fontFamily: fonts.medium,
                     color: colors.black,
                   }}>
