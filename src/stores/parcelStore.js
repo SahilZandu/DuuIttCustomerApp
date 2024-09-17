@@ -5,6 +5,8 @@ import {useToast} from '../halpers/useToast';
 
 export default class ParcelStore {
 
+  addParcelInfo={}
+
     addRequestParcel = async (value, navigation,handleLoading) => {
     const {setSenderAddress ,setReceiverAddress} = rootStore.myAddressStore;
         handleLoading(true);
@@ -14,6 +16,7 @@ export default class ParcelStore {
           type:value?.type?.name,
           sender_address:value?.sender_address,
           receiver_address:value?.receiver_address,
+          billing_detail:value?.billing_detail
         }
     
         console.log('requestData:-', requestData);
@@ -23,7 +26,8 @@ export default class ParcelStore {
           if (res?.statusCode == 200) {
             setSenderAddress({})
             setReceiverAddress({})
-            // navigation.navigate('priceConfirmed',{item:{price:60}});
+            this.addParcelInfo = res?.data
+            navigation.navigate('priceConfirmed',{item:res?.data});
             useToast(res.message, 1);
           } else {
             const message = res?.message ? res?.message : res?.data?.message;
@@ -40,5 +44,10 @@ export default class ParcelStore {
         }
       };
 
+
+      setAddParcelInfo = async(item)=>{
+        this.addParcelInfo= item
+    
+      }
  
 }

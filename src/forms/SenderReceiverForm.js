@@ -54,7 +54,8 @@ const SenderReceiverForm = ({navigation,route}) => {
   const [initialValues, setInitialValues] = useState({
     address_detail: item?.address ? item?.address_detail:'',
     landmark:  item?.landmark ? item?.landmark:'',
-    name: (item?.name && item?.phone) ? item?.name:'',
+    name:'',
+    // name: (item?.name && item?.phone) ? item?.name:'',
     phone: item?.phone ? item?.phone?.toString() :'',
   });
 

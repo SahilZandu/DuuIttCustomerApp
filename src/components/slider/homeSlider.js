@@ -1,10 +1,6 @@
 import React, {useEffect, useState,useRef} from 'react';
-import {Pressable, Text, TouchableOpacity, View,Image,Dimensions} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
+import {TouchableOpacity, View,Image,Dimensions} from 'react-native';
 import { colors } from '../../theme/colors';
-import {fonts} from '../../theme/fonts/fonts';
-import {Strings} from '../../translates/strings';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -14,7 +10,7 @@ import Carousel from 'react-native-new-snap-carousel';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
-const HomeSlider = ({data ,onSliderPress}) => {
+const HomeSlider = ({data ,onSliderPress,imageWidth,imageHeight}) => {
     const carouselRef = useRef(null);
     const [stateIndex, setStateIndex] = useState(0);
 
@@ -28,7 +24,7 @@ const HomeSlider = ({data ,onSliderPress}) => {
           }}>
           <Image
             resizeMode='stretch'
-            style={{width: wp('90%'), height: hp('18%'), borderRadius: 10}}
+            style={{width:imageWidth?imageWidth: wp('90%'), height:imageHeight?imageHeight :hp('18%'), borderRadius: 10}}
             source={item.image}
           />
         </TouchableOpacity>

@@ -51,10 +51,22 @@ const SetLocationHistory = ({navigation}) => {
     useCallback(() => {
       handleAndroidBackButton();
       getAddressDetails();
-      getCurrentAddress();
       getCheckSenderReciever();
     }, []),
   );
+
+  useEffect(() => {
+    setGeoLocation({
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    });
+
+    setTimeout(()=>{
+      getCurrentAddress();
+    },500)
+
+  }, []);
+
 
   const getCheckSenderReciever = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
@@ -77,13 +89,6 @@ const SetLocationHistory = ({navigation}) => {
       setDropLocation(receiverAddress?.address);
     }
   };
-
-  useEffect(() => {
-    setGeoLocation({
-      lat: getLocation('lat'),
-      lng: getLocation('lng'),
-    });
-  }, []);
 
   const getAddressDetails = async () => {
     const res = await getMyAddress();
@@ -125,12 +130,12 @@ const SetLocationHistory = ({navigation}) => {
   };
 
   const onPressPickLocation = () => {
-    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {}});
+    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item:{name: name, address: pickUpLocation, geo_location: geoLocation}});
     // alert('pick')
   };
 
   const onPressDropLocation = () => {
-    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {}});
+    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {name: name, address: dropLocation, geo_location: geoLocation}});
     // alert('drop')
   };
 
@@ -160,10 +165,10 @@ const SetLocationHistory = ({navigation}) => {
         <PickDropLocation
           pickUpLocation={pickUpLocation}
           dropLocation={dropLocation}
-          onPressPickUp={() => {
+          cancelPickUp={() => {
             setPickUpLocation(''), setPickDrop('pick'), setSenderAddress({});
           }}
-          onPressDrop={() => {
+          cancelDrop={() => {
             setDropLocation(''), setPickDrop('drop'), setReceiverAddress({});
           }}
           onPressPickLocation={onPressPickLocation}

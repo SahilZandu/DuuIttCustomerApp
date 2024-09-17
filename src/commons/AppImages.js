@@ -364,6 +364,7 @@ export const appImages = {
   negativeIcon: require('../assets/negativeIcon.png'),
   positiveIcon: require('../assets/positiveIcon.png'),
   parcelConfirmed: require('../assets/parcelConfirmed.png'),
+  confirmImage: require('../assets/confirmImage.png'),
   cashImage: require('../assets/cashImage.png'),
   qrCodeImage: require('../assets/qrCodeImage.png'),
   searchingRide: require('../assets/searchingRide.png'),

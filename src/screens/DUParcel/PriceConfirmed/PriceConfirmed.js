@@ -451,18 +451,35 @@ import CheckBoxText from '../../../components/CheckBoxText';
 import {Formik} from 'formik';
 import PickDropLocation from '../../../components/PickDropLocation';
 import Spacer from '../../../halpers/Spacer';
+import HomeSlider from '../../../components/slider/homeSlider';
+import { rootStore } from '../../../stores/rootStore';
 
-const paymentMethod = ['Cash', 'QR code payment'];
 
-export default function PriceConfirmed({navigation}) {
+
+const paymentMethod = ['Cash', 'QR Code'];
+let imageArray = [
+  {id: 1, image: appImages.sliderImage1},
+  {id: 2, image: appImages.sliderImage2},
+  {id: 3, image: appImages.sliderImage1},
+  {id: 4, image: appImages.sliderImage2},
+];
+
+export default function PriceConfirmed({navigation,route}) {
+  const {item}=route.params;
+  const {setAddParcelInfo}=rootStore.parcelStore;
   const refRBSheet = useRef(null);
+  console.log("Price item---",item)
   const [pickUpLocation, setPickUpLocation] = useState(
-    'TDI TAJ PLAZA Block-505',
+    '',
   );
-  const [dropLocation, setDropLocation] = useState('TDI City Tower');
+  const [dropLocation, setDropLocation] = useState('');
   const [initialValues, setInitialValues] = useState({
     paymentMethods: 'Cash',
   });
+  const [sliderItems, setSliderItems] = useState(imageArray);
+  const [total ,setTotal]=useState(0)
+  const [parcelId ,setParcelId]=useState('')
+
 
   useFocusEffect(
     useCallback(() => {
@@ -470,23 +487,33 @@ export default function PriceConfirmed({navigation}) {
     }, []),
   );
 
+  useEffect(()=>{
+    if(Object?.keys(item || {})?.length > 0){
+      setTotal(item?.total_amount)
+      setPickUpLocation(item?.sender_address?.address)
+      setDropLocation(item?.receiver_address?.address)
+      setParcelId(item?.customer_id)
+    }
+
+  },[item])
+
   return (
     <View style={styles.container}>
-      <Header
+      {/* <Header
         title={'Price Confirmed'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
+      /> */}
       <View style={styles.main}>
         <Image
           resizeMode="contain"
           style={styles.image}
-          source={appImages.parcelConfirmed}
+          source={appImages.confirmImage}
         />
+        <Text style={styles.amount}>{currencyFormat(Number(total))}</Text>
         <Text style={styles.totalAmount}>Total Estimated Amount</Text>
-        <Text style={styles.amount}>{currencyFormat(45)}</Text>
         <Text style={styles.changeLocationText}>
           This amount is estimated this will vary if you change your locarion or
           weight
@@ -500,11 +527,20 @@ export default function PriceConfirmed({navigation}) {
           />
         </View>
 
-        <TouchableOpacity activeOpacity={0.8} style={styles.BTHView}>
+        <TouchableOpacity onPress={()=>{
+           navigation.navigate('parcel',{screen:'home'})
+           setAddParcelInfo({})
+          }}
+         activeOpacity={0.8} style={styles.BTHView}>
           <Text style={styles.BTHText}>Back To Home</Text>
           <View style={styles.BTHBottomLine} />
         </TouchableOpacity>
+        <View style={{marginHorizontal:-20,}}>
+      <HomeSlider data={sliderItems} imageWidth={wp('84%')} imageHeight={hp("16%")}/>
       </View>
+       
+      </View>
+     
       <RBSheet
         height={hp('42%')}
         ref={refRBSheet}

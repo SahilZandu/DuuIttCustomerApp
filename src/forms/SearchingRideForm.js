@@ -22,7 +22,6 @@ import {fonts} from '../theme/fonts/fonts';
 import {colors} from '../theme/colors';
 import PickDropAddressEdit from '../components/PickDropAddressEdit';
 import * as Progress from 'react-native-progress';
-import MapRoute from '../components/MapRoute';
 import DriverArrivingComp from '../components/DriverArrivingComp';
 import RBSheet from '@lunalee/react-native-raw-bottom-sheet';
 import Rating from '../components/Rating';
@@ -33,8 +32,11 @@ import OtpShowComp from '../components/OtpShowComp';
 import PickDropImageComp from '../components/PickDropImageComp';
 import DriverTrackingProfileComp from '../components/DriverTrackingProfileComp';
 import DriverTrackingComp from '../components/DriverTrackingComp';
+import MapRouteMarker from '../components/MapRouteMarker';
+import { rootStore } from '../stores/rootStore';
 
 const SearchingRideForm = ({navigation, route}) => {
+  const {addParcelInfo}=rootStore.parcelStore;
   const refRBSheet = useRef(null);
   const refRBSheetTrack = useRef(null);
   const refRBSheetCancel = useRef(null);
@@ -43,12 +45,23 @@ const SearchingRideForm = ({navigation, route}) => {
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
   const [trackingDriver, setTrackingDriver] = useState('otp');
+  const [geoLocation ,setGeoLocation]=useState({})
+
+
 
   useEffect(() => {
     setTimeout(() => {
       setSearching(false);
     }, 1000);
-  }, []);
+      
+    if(addParcelInfo){
+      setGeoLocation(addParcelInfo?.sender_address?.geo_location)
+    }
+
+
+  }, [addParcelInfo]);
+
+
 
   const cancelRide = [
     {
@@ -133,7 +146,7 @@ const SearchingRideForm = ({navigation, route}) => {
   return (
     <View style={styles.main}>
       <View style={styles.mapView}>
-        <MapRoute
+        <MapRouteMarker  geoLocation={geoLocation}
           //  mapContainerView={{height: hp('65%')} }
           mapContainerView={{height: hp('82%')}}
         />
@@ -165,7 +178,7 @@ const SearchingRideForm = ({navigation, route}) => {
               />
             </View>
 
-            <Spacer space={'11%'} />
+            {/* <Spacer space={'11%'} />
             <CTA
               onPress={async () => {
                 setSearchArrive('arrive');
@@ -180,7 +193,7 @@ const SearchingRideForm = ({navigation, route}) => {
               bottomCheck={10}
               backgroundColor={colors.white}
               labelColor={colors.main}
-            />
+            /> */}
           </View>
         </View>
       ) : (
@@ -591,7 +604,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     bottom: 0,
     alignSelf: 'center',
-    height: '30%',
+    height: '20%',
   },
   innerSearchingView: {
     paddingHorizontal: 30,

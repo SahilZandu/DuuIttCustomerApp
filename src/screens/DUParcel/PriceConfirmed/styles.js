@@ -13,27 +13,28 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   main: {
-    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    marginTop:'25%',
     marginHorizontal: 30,
   },
   image: {
-    height: 130,
-    width: 130,
+    height: 180,
+    width: 180,
     alignSelf: 'center',
   },
   totalAmount: {
     fontSize: RFValue(21),
     fontFamily: fonts.medium,
     color: colors.black,
-    marginTop: '5%',
+    marginTop: '2%',
+    textAlign:'center'
   },
   amount: {
     fontSize: RFValue(31),
     fontFamily: fonts.medium,
-    color: colors.main,
-    marginTop: '3%',
+    color: colors.black,
+    marginTop: '1%',
+    textAlign:'center'
   },
   changeLocationText: {
     fontSize: RFValue(12),
@@ -44,8 +45,7 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
   BTHView: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf:'center',
     marginTop: '5%',
   },
   BTHText: {

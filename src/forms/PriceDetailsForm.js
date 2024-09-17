@@ -29,6 +29,8 @@ import PickDropLocation from '../components/PickDropLocation';
 import {useFocusEffect} from '@react-navigation/native';
 import TabsTouch from '../components/TabsTouch';
 import { rootStore } from '../stores/rootStore';
+import HomeSlider from '../components/slider/homeSlider';
+
 
 let categories = [
   {id: 1, active: 0, name: 'Documents'},
@@ -38,6 +40,15 @@ let categories = [
   {id: 5, active: 0, name: 'Electronic'},
   {id: 6, active: 0, name: 'Others'},
 ];
+
+
+let imageArray = [
+  {id: 1, image: appImages.sliderImage1},
+  {id: 2, image: appImages.sliderImage2},
+  {id: 3, image: appImages.sliderImage1},
+  {id: 4, image: appImages.sliderImage2},
+];
+
 
 const PriceDetailsForm = ({navigation}) => {
   const {senderAddress , receiverAddress} = rootStore.myAddressStore;
@@ -49,13 +60,19 @@ const PriceDetailsForm = ({navigation}) => {
   const [quantity, setQuantity] = useState(1);
   const [categoriesShow, setCategoriesShow] = useState(categories);
   const [selectCate, setSelectCate] = useState([]);
+  const [sliderItems, setSliderItems] = useState(imageArray);
+
+
 
   useFocusEffect(
     useCallback(() => {
-      InitailsCate();
       getCheckSenderReceiverData()
     }, []),
   );
+
+  useEffect(()=>{
+    InitailsCate();
+  },[])
 
 
   const getCheckSenderReceiverData =()=>{
@@ -79,12 +96,13 @@ const PriceDetailsForm = ({navigation}) => {
     quantity:quantity,
     type:selectCate[0],
     sender_address:senderAddress,
-    receiver_address:receiverAddress
+    receiver_address:receiverAddress,
+    billing_detail:{delivery_fee:9,discount:0,platform_fee:10,gst:18}
    }
    console.log("newdata--",newdata)
 
-
   await addRequestParcel(newdata ,navigation,handleLoading)
+  
     // navigation.navigate('priceConfirmed',{item:newdata});
   };
 
@@ -213,8 +231,12 @@ const PriceDetailsForm = ({navigation}) => {
               />
             </View>
           </View>
+          <View style={{marginHorizontal:10}}>
+          <HomeSlider data={sliderItems}/>
+          </View>
         </AppInputScroll>
       </KeyboardAvoidingView>
+     
       <View style={{backgroundColor: colors.white, height: hp('9%')}}>
         <FormButton loading={loading} onPress={handlePrice} />
       </View>

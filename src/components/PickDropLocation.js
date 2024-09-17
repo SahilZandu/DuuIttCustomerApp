@@ -15,10 +15,10 @@ const dotLineArray = [1, 2, 3];
 
 const PickDropLocation = ({
   pickUpLocation,
-  onPressPickUp,
+  cancelPickUp,
   onPressPickLocation,
   dropLocation,
-  onPressDrop,
+  cancelDrop,
   onPressDropLocation,
 }) => {
   return (
@@ -34,9 +34,9 @@ const PickDropLocation = ({
           <Text numberOfLines={1} style={styles.text}>
             {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
           </Text>
-          {onPressDrop && <>
+          {cancelPickUp && <>
           {pickUpLocation != '' && (
-              <Pressable onPress={onPressPickUp}>
+              <Pressable onPress={cancelPickUp}>
             <SvgXml  xml={appImagesSvg.crossBlackIcon} />
             </Pressable>
           )}
@@ -66,9 +66,9 @@ const PickDropLocation = ({
           <Text numberOfLines={1} style={styles.dropText(pickUpLocation)}>
             {dropLocation == '' ? 'Set drop location' : dropLocation}
           </Text>
-          {onPressDrop && <>
+          {cancelDrop && <>
           {dropLocation != '' && (
-            <Pressable onPress={onPressDrop}>
+            <Pressable onPress={cancelDrop}>
             <SvgXml xml={appImagesSvg.crossBlackIcon} />
             </Pressable>
           )}
