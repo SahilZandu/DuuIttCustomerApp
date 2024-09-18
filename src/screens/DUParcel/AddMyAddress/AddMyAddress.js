@@ -261,7 +261,7 @@ setInitialValues({
         }}
       />
       <View style={styles.main}>
-        <MapRouteMarker mapContainerView={{height: hp('70%')}}  geoLocation={geoLocation}/>
+        <MapRouteMarker mapContainerView={{height: hp('70%')}}  origin={geoLocation}/>
         <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} />
 
         <View

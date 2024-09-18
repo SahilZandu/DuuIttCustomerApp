@@ -31,11 +31,13 @@ const ChooseMapLocation = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (Object?.keys(item)?.length > 0) {
+    setTimeout(()=>{
+    if (Object?.keys(item || {})?.length > 0) {
       setGeoLocation(item?.geo_location);
       setAddress(item?.address);
       setName(item?.name);
     }
+  },10)
   }, [item]);
 
   const onHandleConfirm = () => {
@@ -62,7 +64,7 @@ const ChooseMapLocation = ({navigation, route}) => {
         }}
       />
       <View style={{flex: 1}}>
-        <MapRoute mapContainerView={{height: hp('70%')}} />
+        <MapRoute mapContainerView={{height: hp('70%')}} origin={geoLocation} />
         <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} />
       </View>
       <View style={styles.bottomPopUpContainer}>

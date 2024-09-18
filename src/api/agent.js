@@ -59,6 +59,8 @@ export const agent = {
   myAddress: body => requests.post(Url.myAddress, body),
   getMyAddress: () => requests.get(Url.getMyAddress),
   parcels: body => requests.post(Url.parcels, body),
+  parcels_Cancel: body => requests.post(Url.parcels_Cancel, body),
+  parcels_find_rider: body => requests.post(Url.parcels_find_rider, body),
   
   
 

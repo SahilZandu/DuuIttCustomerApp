@@ -39,7 +39,7 @@ export const appImagesSvg = {
   </svg>`,
 
   cancelWhiteSvg: `<svg xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#ffffff"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>`,
-  duSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" viewBox="0 0 24 14" fill="none">
+  duSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="22" viewBox="0 0 24 14" fill="none">
   <path d="M23.0781 0.216919C23.5851 0.216919 24 0.610688 24 1.09196V8.59982C24 11.2862 21.7046 13.4563 18.8837 13.4563C16.0629 13.4563 13.7675 11.2775 13.7675 8.59982V1.09196C13.7675 0.610688 14.1823 0.216919 14.6894 0.216919H19.6673C20.1743 0.216919 20.5892 0.610688 20.5892 1.09196V6.15846C20.5892 6.40347 20.7827 6.62223 21.0316 6.64848C21.3266 6.67473 21.5755 6.45597 21.5755 6.18471V1.09196C21.5755 0.610688 21.9904 0.216919 22.4974 0.216919H23.0781Z" fill="url(#paint0_linear_625_11916)"/>
   <path d="M12.1223 3.14309C11.5152 2.16277 10.6652 1.39468 9.58249 0.838832C8.49978 0.282979 7.23493 0 5.79806 0H1.04223C0.465464 0 0 0.475001 0 1.05107V12.1984C0 12.7745 0.465464 13.2394 1.04223 13.2394H5.78794C7.22481 13.2394 8.48966 12.9665 9.57237 12.4107C10.6551 11.8548 11.5051 11.0867 12.1122 10.0963C12.7193 9.10587 13.0229 7.95374 13.0229 6.6298C13.033 5.28565 12.7294 4.12341 12.1223 3.14309ZM4.98856 8.69151C4.98856 9.00481 4.73559 9.25747 4.42191 9.25747C4.10823 9.25747 3.85526 9.00481 3.85526 8.69151V3.7899C3.85526 3.4766 4.10823 3.22394 4.42191 3.22394C4.57369 3.22394 4.71535 3.28458 4.81654 3.38565C4.91773 3.48671 4.97844 3.6282 4.97844 3.7798V8.69151H4.98856Z" fill="url(#paint1_linear_625_11916)"/>
   <defs>
@@ -64,7 +64,7 @@ export const appImagesSvg = {
   <path d="M14.6654 1L5.4987 10.1667L1.33203 6" stroke="#28B056" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`,
   crossSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-  <path d="M14.1654 5.83301L5.83203 14.1663M5.83203 5.83301L14.1654 14.1663" stroke="#E70000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14.1654 5.83301L5.83203 14.1663M5.83203 5.83301L14.1654 14.1663" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`,
   vegSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 14 15" fill="none">
   <rect x="0.5" y="1" width="13" height="13" rx="3.5" stroke="#1B951C"/>
@@ -377,6 +377,10 @@ export const appImages = {
   workLocation: require('../assets/workLocation.png'),
   hotelLocation: require('../assets/hotelLocation.png'),
   addressLocation: require('../assets/addressLocation.png'),
+
+  routeRide: require('../assets/routeRide.png'),
+  routeFood: require('../assets/routeFood.png'),
+  routeParcel: require('../assets/routeParcel.png'),
 
 
 };

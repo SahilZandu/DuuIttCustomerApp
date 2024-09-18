@@ -15,6 +15,7 @@ import CardOrder from '../../../../components/CardOrder';
 import Tabs from '../../../../components/Tabs';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
+import Tabs3 from '../../../../components/Tabs3';
 
 
 const tabs = [
@@ -126,7 +127,7 @@ export default function Orders({navigation}) {
         }}
       />
       <View style={styles.mainView}>
-      <Tabs isRating={true} tabs={tabs} 
+      <Tabs3 isRating={true} tabs={tabs} 
             tabPress={handleTabPress}
              />
         <KeyboardAvoidingView

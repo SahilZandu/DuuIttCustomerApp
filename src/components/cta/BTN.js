@@ -26,6 +26,7 @@ const BTN = ({
     isBottom,
     bottomCheck,
     textTransform,
+    padding
 }) => (
  <TouchableOpacity 
  style={{ backgroundColor: backgroundColor ? backgroundColor : '#28B056',
@@ -36,7 +37,7 @@ const BTN = ({
  opacity: disable ? 0.6 : 1,
  alignSelf: 'center',
  position: isBottom ? 'absolute' : 'relative',
- bottom:bottomCheck?bottomCheck:20,
+ bottom:bottomCheck?bottomCheck:10,
  borderColor:'#28B056',
  borderWidth:1
 }}

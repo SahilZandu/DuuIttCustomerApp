@@ -18,23 +18,25 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const MapRouteMarker = ({mapContainerView, geoLocation, markerArray}) => {
+const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
   const mapRef = useRef(null);
-  const [lat, setLat] = useState(geoLocation?.lat);
-  const [long, setLong] = useState(geoLocation?.lng);
+  const [lat, setLat] = useState(origin?.lat);
+  const [long, setLong] = useState(origin?.lng);
   const [coords, setcoords] = useState([]);
 
   useEffect(() => {
-    setLat(geoLocation?.lat);
-    setLong(geoLocation?.lng);
-  }, [geoLocation]);
+    if(Object?.keys(origin || {})?.length > 0){
+    setLat(markerArray?.length > 0 ? markerArray[0]?.geo_location?.lat : origin?.lat);
+    setLong(markerArray?.length > 0 ? markerArray[0]?.geo_location?.lng :origin?.lng);
+    }
+  }, [origin,markerArray]);
 
   return (
     <View style={styles.homeSubContainer}>
       {/* {lat && long && coords && coords?.length > 0 ? ( */}
       <MapView
         onRegionChange={e => {
-          setMpaDalta(e);
+          // setMpaDalta(e);
         }}
         provider={PROVIDER_GOOGLE}
         ref={mapRef}
@@ -58,11 +60,11 @@ const MapRouteMarker = ({mapContainerView, geoLocation, markerArray}) => {
         rotateEnabled={true}
         loadingEnabled={true}
         showsCompass={true}>
-        {markerArray && markerArray.length > 0 ? (
-          markerArray.map((marker, index) => (
+        {markerArray && markerArray?.length > 0 ? (
+          markerArray?.map((marker, index) => (
             <Marker
               key={index}
-              coordinate={{latitude: marker.lat, longitude: marker.lng}}>
+              coordinate={{latitude:marker?.geo_location?.lat, longitude:marker?.geo_location?.lng}}>
               <Image
                 resizeMode="contain"
                 source={appImages.markerImage}

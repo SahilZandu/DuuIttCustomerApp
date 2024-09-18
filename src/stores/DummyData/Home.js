@@ -3,21 +3,27 @@ import { appImagesSvg,appImages } from "../../commons/AppImages";
 export const homeCS = [
     {
       id: 1,
-      image:appImages.rideImage,
+      // image:appImages.rideImage,
+      image:appImages.routeRide,
       name:'RIDE',
-     duIcon:appImagesSvg.duSvg
+     duIcon:appImagesSvg.duSvg,
+     title:'Schedule a Ride'
     },
     {
         id: 2,
-        image:appImages.foodImage,
+        // image:appImages.foodImage,
+        image:appImages.routeFood,
         name:'FOOD',
-       duIcon:appImagesSvg.duSvg
+       duIcon:appImagesSvg.duSvg,
+       title:'Fresh & Full of Flavors'
       },
       {
         id: 3,
-        image:appImages.parcelImage,
+        // image:appImages.parcelImage,
+        image:appImages.routeParcel,
         name:'PARCEL',
-       duIcon:appImagesSvg.duSvg
+       duIcon:appImagesSvg.duSvg,
+       title:'Daily Needs & Essentials'
       },
  
   ];

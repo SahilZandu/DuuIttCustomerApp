@@ -7,7 +7,9 @@ export default  {
     updatePassword:'customers/update-password',
     myAddress:'customers/address',
     getMyAddress:'customers/detail',
-    parcels:'parcels'
+    parcels:'parcels',
+    parcels_Cancel:'parcels/cancel',
+    parcels_find_rider:'parcels/find-rider'
    
    
 } 

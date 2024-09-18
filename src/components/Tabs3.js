@@ -1,4 +1,4 @@
-import react, {useState, useRef, useEffect} from 'react';
+import react, {useState, useRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -22,38 +22,28 @@ import { fonts } from '../theme/fonts/fonts';
 
 const size = Dimensions.get('window').height;
 
-export default function Tabs2({tabs, tabPress, isRating, isCount,title}) {
+export default function Tabs3({tabs, tabPress, isRating, isCount,showImage}) {
   const scrollViewRef = useRef();
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const handleTabPress = (index, text) => {
-    // console.log("index",index)
-    setSelectedIndex(index);
-    if (tabPress){ 
-      tabPress(text)
-    };
-  }
 
-  const onSetIndex =(title)=>{
-    switch (title) {
-        case 'Home':
-          return 0;
-        case 'Work':
-          return 1;
-        case 'Hotel':
-          return 2;
+  const handleTabPress = (index, text) => {
+    setSelectedIndex(index);
+    if (tabPress) tabPress(text);
+  };
+
+  const onSetImage =(index)=>{
+    switch (index) {
+        case 1:
+          return appImages.foodTab;
+        case 2:
+          return appImages.rideTab;
+        case 3:
+          return appImages.parcelTab;
           default :
-          return 3;
+          return appImages.foodTab;
       }
 
   }
-  useEffect(()=>{
-    if(title){
-      setSelectedIndex(onSetIndex(title));
-      if (tabPress){ 
-        tabPress(title)
-      };
-    }
-  },[title])
 
   const TabButton = ({
     index,
@@ -68,36 +58,29 @@ export default function Tabs2({tabs, tabPress, isRating, isCount,title}) {
     return (
       <Pressable
         style={[
-          styles.button,
-          isSelected && styles.selectedButton,
+          styles.button(isSelected)
         ]}
         onPress={() => {
           onPress(index, text);
         }}>
-        {iconName && <Image
-        resizeMode='contain'
+        {(index != 0 || showImage) && <Image 
+         resizeMode='contain'
         style={{
-            width:18,height:18 
-            ,tintColor:isSelected ?colors.main :colors.black85}} 
-            source ={iconName}/>}
+            width:20,height:20 
+            ,tintColor:isSelected ? colors.main :colors.black85}} 
+            source ={onSetImage(index)}/>}
         <Text
           style={[
             styles.tabtext,
             {
               color: !isSelected ? colors.black85 : colors.main,
-              fontSize: isCount ? RFValue(10.5) : RFValue(11),
-              marginLeft:size / 130 ,
+              fontSize: isCount ? RFValue(10.5) : RFValue(13),
+              marginLeft: isRating ? (index != 0 || showImage) ? size / 130 : 0 : 0,
             },
           ]}>
-         {text}
+          {text}
           {isCount ? ' (' + count + ')' : ''}
         </Text>
-        {(isRating && isSelected) && (
-          <SvgXml
-          style={{marginLeft:2}}
-            xml={appImagesSvg.greenCrossSvg}
-          />
-         )} 
       </Pressable>
     );
   };
@@ -118,9 +101,9 @@ export default function Tabs2({tabs, tabPress, isRating, isCount,title}) {
             index={idx}
             text={tab.text}
             count={tab?.count}
-            iconName={tab.icon}
+            iconName={tab.iconName}
             selectedIndex={selectedIndex}
-            onPress={()=>{handleTabPress(idx, tab.text)}}
+            onPress={handleTabPress}
             key={'tab-' + idx}
           />
         ))}
@@ -132,24 +115,20 @@ export default function Tabs2({tabs, tabPress, isRating, isCount,title}) {
 
 const styles = StyleSheet.create({
   tabtext: {
-    fontSize: RFValue(12),
+    fontSize: RFValue(13),
     fontFamily: fonts.medium,
-    textAlign:"center",
   },
-  button: {
+  button:(isSelected)=>({
     flexDirection: 'row',
     height: hp('5%'),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
-    marginHorizontal: 3,
-    borderWidth: 1,
-    borderColor:colors.colorD9,
-    padding:wp("2.5%"),
-  },
+    backgroundColor:colors.white,
+    borderColor:isSelected ? colors.main :colors.white,
+    marginHorizontal: -3,
+    borderBottomWidth: 2,
+    padding:wp("3%"),
+  }),
 
-  selectedButton: {
-    backgroundColor:colors.colorDo,
-    borderColor:colors.main,
-  },
+
 });

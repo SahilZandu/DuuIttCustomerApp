@@ -448,7 +448,7 @@ import CTA from '../../../components/cta/CTA';
 import RBSheet from '@lunalee/react-native-raw-bottom-sheet';
 import {Surface} from 'react-native-paper';
 import CheckBoxText from '../../../components/CheckBoxText';
-import {Formik} from 'formik';
+import {Formik, useFormikContext} from 'formik';
 import PickDropLocation from '../../../components/PickDropLocation';
 import Spacer from '../../../halpers/Spacer';
 import HomeSlider from '../../../components/slider/homeSlider';
@@ -477,8 +477,7 @@ export default function PriceConfirmed({navigation,route}) {
     paymentMethods: 'Cash',
   });
   const [sliderItems, setSliderItems] = useState(imageArray);
-  const [total ,setTotal]=useState(0)
-  const [parcelId ,setParcelId]=useState('')
+  const [total ,setTotal]=useState(0);
 
 
   useFocusEffect(
@@ -492,10 +491,34 @@ export default function PriceConfirmed({navigation,route}) {
       setTotal(item?.total_amount)
       setPickUpLocation(item?.sender_address?.address)
       setDropLocation(item?.receiver_address?.address)
-      setParcelId(item?.customer_id)
     }
 
   },[item])
+
+
+  const BtnForm =({onPress})=>{
+    const {dirty, isValid, values} = useFormikContext();
+    return(
+      <CTA
+      title={'Find a driver'}
+      textTransform={'capitalize'}
+      onPress={() => {
+        onPress(values)
+        // refRBSheet.current.close();
+        // setTimeout(() => {
+        //   navigation.navigate('searchingRide', {paymentMethod: {}});
+        // }, 300);
+      }}
+    />
+    )
+  }
+
+  const handleFindRider =(value)=>{
+ refRBSheet.current.close();
+        setTimeout(() => {
+          navigation.navigate('searchingRide', {paymentMethod:value?.paymentMethods});
+        }, 300);
+  }
 
   return (
     <View style={styles.container}>
@@ -515,7 +538,7 @@ export default function PriceConfirmed({navigation,route}) {
         <Text style={styles.amount}>{currencyFormat(Number(total))}</Text>
         <Text style={styles.totalAmount}>Total Estimated Amount</Text>
         <Text style={styles.changeLocationText}>
-          This amount is estimated this will vary if you change your locarion or
+          This amount is estimated this will vary if you change your location or
           weight
         </Text>
         <View style={{marginTop: '10%'}}>
@@ -574,16 +597,7 @@ export default function PriceConfirmed({navigation,route}) {
             />
 
             <Spacer space={'12%'} />
-            <CTA
-              title={'Find a driver'}
-              textTransform={'capitalize'}
-              onPress={() => {
-                refRBSheet.current.close();
-                setTimeout(() => {
-                  navigation.navigate('searchingRide', {pickDrop: {}});
-                }, 300);
-              }}
-            />
+          <BtnForm onPress={handleFindRider}/>
           </View>
         </Formik>
       </RBSheet>

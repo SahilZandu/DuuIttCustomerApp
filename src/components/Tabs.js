@@ -68,14 +68,14 @@ export default function Tabs({tabs, tabPress, isRating, isCount,showImage}) {
          resizeMode='contain'
         style={{
             width:20,height:20 
-            ,tintColor:isSelected ?'#28B056':'#00000085'}} 
+            ,tintColor:isSelected ?colors.main :colors.black85}} 
             source ={onSetImage(index)}/>}
         <Text
           style={[
             styles.tabtext,
             {
-              color: !isSelected ? '#00000085' : '#28B056',
-              fontFamily: fonts.regular,
+              color: !isSelected ? colors.black85 : colors.main,
+              fontFamily: fonts.medium,
               fontSize: isCount ? RFValue(10.5) : RFValue(11),
               marginLeft: isRating ? (index != 0 || showImage) ? size / 130 : 0 : 0,
             },

@@ -20,12 +20,10 @@ import {SvgXml} from 'react-native-svg';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import {colors} from '../theme/colors';
-import PickDropAddressEdit from '../components/PickDropAddressEdit';
 import * as Progress from 'react-native-progress';
 import DriverArrivingComp from '../components/DriverArrivingComp';
 import RBSheet from '@lunalee/react-native-raw-bottom-sheet';
 import Rating from '../components/Rating';
-import PickDropComp from '../components/PickDropComp';
 import TextRender from '../components/TextRender';
 import {currencyFormat} from '../halpers/currencyFormat';
 import OtpShowComp from '../components/OtpShowComp';
@@ -33,35 +31,74 @@ import PickDropImageComp from '../components/PickDropImageComp';
 import DriverTrackingProfileComp from '../components/DriverTrackingProfileComp';
 import DriverTrackingComp from '../components/DriverTrackingComp';
 import MapRouteMarker from '../components/MapRouteMarker';
-import { rootStore } from '../stores/rootStore';
+import {rootStore} from '../stores/rootStore';
+import Modal from 'react-native-modal';
+import MapRoute from '../components/MapRoute';
+import BTN from '../components/cta/BTN';
+
+
 
 const SearchingRideForm = ({navigation, route}) => {
-  const {addParcelInfo}=rootStore.parcelStore;
+  const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
+    rootStore.parcelStore;
   const refRBSheet = useRef(null);
   const refRBSheetTrack = useRef(null);
-  const refRBSheetCancel = useRef(null);
-  const refRBSheetConfirmCancel = useRef(null);
-  const {pickDrop} = route.params;
+  const {paymentMethod} = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
   const [trackingDriver, setTrackingDriver] = useState('otp');
-  const [geoLocation ,setGeoLocation]=useState({})
+  const [geoLocation, setGeoLocation] = useState({});
+  const [destination, setDestination] = useState({});
+  const [parcelInfo, setParcelInfo] = useState({});
+  const [cancelReason, setCancelReason] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [riderLoading, setRiderLoading] = useState(false);
+  const [nearbyRider, setNearByRider] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [cancelVisible, setCancelVisible] = useState(false);
 
+  console.log('paymentMethod--', paymentMethod, addParcelInfo);
 
+  useEffect(() => {
+    if (Object?.keys(addParcelInfo)?.length > 0) {
+      setGeoLocation(addParcelInfo?.sender_address?.geo_location);
+      setDestination(addParcelInfo?.receiver_address?.geo_location)
+      setParcelInfo(addParcelInfo);
+      setTimeout(() => {
+        setSearching(false);
+        onGetNearByRider(addParcelInfo);
+      }, 1000);
+    }
+  }, [addParcelInfo]);
 
   useEffect(() => {
     setTimeout(() => {
-      setSearching(false);
-    }, 1000);
-      
-    if(addParcelInfo){
-      setGeoLocation(addParcelInfo?.sender_address?.geo_location)
-    }
+      setSearchArrive('arrive');
+      if (trackingDriver == 'confirm') {
+        refRBSheetTrack.current.open();
+      } else {
+        refRBSheet.current.open();
+      }
+    }, 5000);
+  }, []);
 
+  const onGetNearByRider = async info => {
+    console.log('info--', info);
 
-  }, [addParcelInfo]);
+    const value = {
+      parcel_id: info?.customer_id,
+      geo_location: info?.sender_address?.geo_location,
+      paymentMode: paymentMethod === 'Cash' ? 'cash' : 'online',
+    };
 
+    const res = await parcelsFindRider(value, handleLoadingRider);
+    console.log('res--', res);
+    setNearByRider(res);
+  };
 
+  const handleLoadingRider = v => {
+    setRiderLoading(v);
+  };
 
   const cancelRide = [
     {
@@ -143,13 +180,42 @@ const SearchingRideForm = ({navigation, route}) => {
     }
   };
 
+  const onCancelRequest = async () => {
+    const value = {
+      parcel_id: addParcelInfo?.customer_id,
+      reason: cancelReason,
+    };
+
+    await parcels_Cancel(value, onSuccess, handleLoading);
+  };
+
+  const handleLoading = v => {
+    setLoading(v);
+  };
+
+  const onSuccess = () => {
+    setCancelVisible(false);
+    setTimeout(() => {
+      navigation.navigate('parcel', {screen: 'home'});
+    },200);
+  };
+
   return (
     <View style={styles.main}>
       <View style={styles.mapView}>
-        <MapRouteMarker  geoLocation={geoLocation}
-          //  mapContainerView={{height: hp('65%')} }
-          mapContainerView={{height: hp('82%')}}
-        />
+        {searchArrive == 'search' ? (
+          <MapRouteMarker
+            origin={geoLocation}
+            markerArray={nearbyRider}
+            mapContainerView={{height: hp('82%')}}
+          />
+        ) : (
+          <MapRoute
+             origin={geoLocation}
+             destination={destination}
+            mapContainerView={{height: hp('82%')}}
+          />
+        )}
       </View>
       {searchArrive == 'search' ? (
         <View style={styles.containerSearchingView}>
@@ -292,7 +358,7 @@ const SearchingRideForm = ({navigation, route}) => {
         </RBSheet>
       ) : (
         <RBSheet
-          height={hp('76%')}
+          height={hp('78%')}
           ref={refRBSheet}
           closeOnDragDown={true}
           closeOnPressMask={true}
@@ -387,7 +453,7 @@ const SearchingRideForm = ({navigation, route}) => {
                 />
               );
             })}
-            <Spacer space={'8%'} />
+            <Spacer space={'9%'} />
             <CTA
               onPress={async () => {
                 if (trackingDriver == 'confirm') {
@@ -396,7 +462,7 @@ const SearchingRideForm = ({navigation, route}) => {
                   refRBSheet.current.close();
                 }
                 setTimeout(() => {
-                  refRBSheetCancel.current.open();
+                  setVisible(true);
                 }, 500);
               }}
               title={'Cancel Pickup'}
@@ -408,181 +474,192 @@ const SearchingRideForm = ({navigation, route}) => {
         </RBSheet>
       )}
 
-      <RBSheet
-        height={hp('70%')}
-        ref={refRBSheetCancel}
-        closeOnDragDown={true}
-        closeOnPressMask={true}
-        keyboardAvoidingViewEnabled={Platform.OS == 'ios' ? true : false}
-        customStyles={{
-          wrapper: {
-            backgroundColor: 'rgba(52, 52, 52, 0.8)',
-          },
-          container: {
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          },
-          draggableIcon: {
-            height: 0, // Hide draggable icon
-          },
-        }}>
-        <View style={{marginHorizontal: 24}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={{
-                flex: 1,
-                fontSize: RFValue(14),
-                fontFamily: fonts.medium,
-                color: colors.black,
-              }}>
-              Cancel Pickup
-            </Text>
-            <TouchableOpacity
+      <Modal
+        animationType="slide"
+        isVisible={visible}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <TouchableOpacity
+          onPress={() => {
+            setVisible(false);
+          }}
+          activeOpacity={0.8}
+          style={{alignSelf: 'center'}}>
+          <Image
+            resizeMode="contain"
+            style={{height: 45, width: 45}}
+            source={appImages.crossClose} // Your icon image
+          />
+        </TouchableOpacity>
+        <View
+          style={{
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginTop: '2%',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#FFFFFF',
+              width: '100%',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              paddingBottom: '12%',
+              // height: hp('80%'),
+            }}>
+            <Spacer space={'2%'} />
+
+            <View style={{marginHorizontal: 24}}>
+              <Text
+                style={{
+                  fontSize: RFValue(16),
+                  fontFamily: fonts.bold,
+                  color: colors.black,
+                  marginTop: '4%',
+                }}>
+                Why do you want to cancel ?
+              </Text>
+
+              {cancelRide?.map((item, index) => {
+                return (
+                  <View style={{justifyContent: 'center'}}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        setCancelReason(item?.title);
+                        setVisible(false);
+                        setTimeout(() => {
+                          setCancelVisible(true);
+                        }, 500);
+                      }}
+                      key={index}
+                      style={{
+                        flexDirection: 'row',
+                        marginTop: '2%',
+                        alignItems: 'center',
+                        height: hp('7%'),
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: RFValue(14),
+                          fontFamily: fonts.regular,
+                          marginLeft: '3%',
+                          color: '#242424',
+                        }}>
+                        {item?.title}
+                      </Text>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        height: 2,
+                        backgroundColor: '#D9D9D9',
+                        // marginTop: '1%',
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            </View>
+            <Spacer space={'8%'} />
+            <CTA
+              title={'Wait for driver'}
+              textTransform={'capitalize'}
               onPress={() => {
-                refRBSheetCancel.current.close();
+                setVisible(false);
               }}
-              activeOpacity={0.8}
-              style={{backgroundColor: 'white'}}>
-              <SvgXml xml={appImagesSvg.crossSvg} />
-            </TouchableOpacity>
+              bottomCheck={1}
+            />
           </View>
-          <Text
-            style={{
-              fontSize: RFValue(16),
-              fontFamily: fonts.bold,
-              color: colors.black,
-              marginTop: '4%',
-            }}>
-            Why do you want to cancel ?
-          </Text>
-
-          {cancelRide?.map((item, index) => {
-            return (
-              <View style={{justifyContent: 'center'}}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    refRBSheetCancel.current.close();
-                    setTimeout(() => {
-                      refRBSheetConfirmCancel.current.open();
-                    }, 500);
-                  }}
-                  key={index}
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: '2%',
-                    alignItems: 'center',
-                    height: hp('7%'),
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: RFValue(14),
-                      fontFamily: fonts.regular,
-                      marginLeft: '3%',
-                      color: '#242424',
-                    }}>
-                    {item?.title}
-                  </Text>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    height: 2,
-                    backgroundColor: '#D9D9D9',
-                    // marginTop: '1%',
-                  }}
-                />
-              </View>
-            );
-          })}
         </View>
-        <Spacer space={'9%'} />
-        <CTA
-          title={'Wait for driver'}
-          textTransform={'capitalize'}
-          onPress={() => {
-            refRBSheetCancel.current.close();
-          }}
-        />
-      </RBSheet>
+      </Modal>
 
-       <RBSheet
-        height={hp('40%')}
-        ref={refRBSheetConfirmCancel}
-        closeOnDragDown={true}
-        closeOnPressMask={true}
-        keyboardAvoidingViewEnabled={Platform.OS == 'ios' ? true : false}
-        customStyles={{
-          wrapper: {
-            backgroundColor: 'rgba(52, 52, 52, 0.8)',
-          },
-          container: {
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          },
-          draggableIcon: {
-            height: 0, // Hide draggable icon
-          },
-        }}>
-        <View style={{marginHorizontal: 24}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={{
-                flex: 1,
-                fontSize: RFValue(14),
-                fontFamily: fonts.medium,
-                color: colors.black,
-              }}>
-              Cancel Pickup
-            </Text>
-            <TouchableOpacity
+      <Modal
+        animationType="slide"
+        isVisible={cancelVisible}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        style={{justifyContent: 'flex-end', margin: 0}}>
+        <TouchableOpacity
+          onPress={() => {
+            setCancelVisible(false);
+          }}
+          activeOpacity={0.8}
+          style={{alignSelf: 'center'}}>
+          <Image
+            resizeMode="contain"
+            style={{height: 45, width: 45}}
+            source={appImages.crossClose} // Your icon image
+          />
+        </TouchableOpacity>
+        <View
+          style={{
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginTop: '2%',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#FFFFFF',
+              width: '100%',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              paddingBottom: '12%',
+              // height: hp('80%'),
+            }}>
+            <Spacer space={'2%'} />
+
+            <View style={{marginHorizontal: 24}}>
+              <Text
+                style={{
+                  fontSize: RFValue(16),
+                  fontFamily: fonts.bold,
+                  color: colors.black,
+                  marginTop: '4%',
+                }}>
+                Are you sure you want to cancel ?
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: RFValue(13),
+                  fontFamily: fonts.regular,
+                  color: colors.color24,
+                  marginTop: '6%',
+                }}>
+                This pickup has been offered to a driver right now, and should
+                be confirmed within seconds.
+              </Text>
+            </View>
+            <Spacer space={'9%'} />
+            <View style={{flexDirection:'row',
+            justifyContent:'space-evenly',
+            alignItems:'center',marginHorizontal:10}}>
+            <BTN
+              title={'Cancel Request'}
+              textTransform={'capitalize'}
               onPress={() => {
-                refRBSheetConfirmCancel.current.close();
+                onCancelRequest();
               }}
-              activeOpacity={0.8}
-              style={{backgroundColor: 'white'}}>
-              <SvgXml xml={appImagesSvg.crossSvg} />
-            </TouchableOpacity>
+              backgroundColor={colors.white}
+              labelColor={colors.main}
+              loading={loading}
+              width={wp('42%')}
+              bottomCheck={1}
+            />
+            {/* <Spacer space={'4%'} /> */}
+            <BTN
+              width={wp('42%')}
+              title={'Wait for driver'}
+              textTransform={'capitalize'}
+              onPress={() => {
+                setCancelVisible(false);
+              }}
+              bottomCheck={1}
+            />
+            </View>
           </View>
-          <Text
-            style={{
-              fontSize: RFValue(16),
-              fontFamily: fonts.bold,
-              color: colors.black,
-              marginTop: '4%',
-            }}>
-            Are you sure you want to cancel ?
-          </Text>
-
-          <Text
-            style={{
-              fontSize: RFValue(13),
-              fontFamily: fonts.regular,
-              color: colors.color24,
-              marginTop: '6%',
-            }}>
-            This pickup has been offered to a driver right now, and should be
-            confirmed within seconds.
-          </Text>
         </View>
-        <Spacer space={'14%'} />
-        <CTA
-          title={'Cancel Request'}
-          textTransform={'capitalize'}
-          onPress={() => {
-            refRBSheetConfirmCancel.current.close();
-          }}
-          backgroundColor={colors.white}
-          labelColor={colors.main}
-        />
-        <Spacer space={'4%'} />
-        <CTA
-          title={'Wait for driver'}
-          textTransform={'capitalize'}
-          onPress={() => {
-            refRBSheetConfirmCancel.current.close();
-          }}
-        />
-      </RBSheet>
+      </Modal>
     </View>
   );
 };
