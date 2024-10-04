@@ -10,7 +10,7 @@ import Carousel from 'react-native-new-snap-carousel';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
-const HomeSlider = ({data ,onSliderPress,imageWidth,imageHeight}) => {
+const HomeSlider = ({data ,onSliderPress,imageWidth,imageHeight,paginationList}) => {
     const carouselRef = useRef(null);
     const [stateIndex, setStateIndex] = useState(0);
 
@@ -21,6 +21,9 @@ const HomeSlider = ({data ,onSliderPress,imageWidth,imageHeight}) => {
           style={{
             alignSelf: 'center',
             right: '2.7%',
+            borderRadius:10,
+            borderColor:colors.main,
+            borderWidth:0.3
           }}>
           <Image
             resizeMode='stretch'
@@ -83,7 +86,7 @@ const HomeSlider = ({data ,onSliderPress,imageWidth,imageHeight}) => {
             autoplayInterval={2000} // Interval of autoplay in milliseconds
             onSnapToItem={index => setStateIndex(index)}
           />
-          {pagination()}
+          {paginationList && pagination()}
         </View>
    
   );

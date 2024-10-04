@@ -381,6 +381,8 @@ export const appImages = {
   routeRide: require('../assets/routeRide.png'),
   routeFood: require('../assets/routeFood.png'),
   routeParcel: require('../assets/routeParcel.png'),
+  rateIcon: require('../assets/rateIcon.png'),
+  detailsIcon: require('../assets/detailsIcon.png'),
 
 
 };

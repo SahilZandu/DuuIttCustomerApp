@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {Text, View, KeyboardAvoidingView, FlatList} from 'react-native';
+import {Text, View, KeyboardAvoidingView, FlatList, ActivityIndicator} from 'react-native';
 import {appImagesSvg, appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import MikePopUp from '../../../../components/MikePopUp';
@@ -10,12 +10,12 @@ import {
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import {ordersArray} from '../../../../stores/DummyData/orders';
-import Spacer from '../../../../halpers/Spacer';
 import CardOrder from '../../../../components/CardOrder';
-import Tabs from '../../../../components/Tabs';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
 import Tabs3 from '../../../../components/Tabs3';
+import { rootStore } from '../../../../stores/rootStore';
+import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 
 
 const tabs = [
@@ -26,20 +26,68 @@ const tabs = [
 ];
 
 let defaultType = 'All Orders';
+let perPage = 20;
 
 export default function Orders({navigation}) {
+  const {parcelsOfUser, getOrderHistorybyFilters, orderHistoryList} =
+  rootStore.orderStore;
+  const {appUser}=rootStore.commonStore;
   const [isKeyboard, setIskeyboard] = useState(false);
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
-  const [orderList ,setOrderList]=useState(ordersArray)
-  const [orderListP ,setOrderListp]=useState(ordersArray)
+  const [orderList ,setOrderList]=useState(orderHistoryList)
+  const [type ,setType]=useState('All Orders')
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [loading, setLoading] = useState(
+    orderHistoryList?.length > 0 ? false : true,
+  );
+  const [appUserInfo ,setAppUserInfo]=useState(appUser)
 
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
+      defaultType = 'All Orders';
+      setType('All Orders');
+      getOrderList();
+      setTimeout(() => {
+        setLoading(false);
+      }, 5000);
+      onUpdateUserInfo()
     }, []),
   );
+
+  const onUpdateUserInfo=()=>{
+    const {appUser}=rootStore.commonStore;
+    setAppUserInfo(appUser)
+  }
+
+  const getOrderList = async () => {
+    const res = await parcelsOfUser(defaultType, perPage, handleLoading);
+    setOrderList(res);
+    setLoadingMore(false);
+  };
+
+  const handleLoading = v => {
+    setLoading(v);
+  };
+
+  const loadMoredata = () => {
+    console.log('load more');
+    if (!loadingMore && orderList?.length >= perPage) {
+      perPage = perPage + 20;
+      setLoadingMore(true);
+      getOrderList();
+    }
+  };
+
+  const renderFooter = () => {
+    return loadingMore ? (
+      <View style={{paddingVertical: 20}}>
+        <ActivityIndicator size="large" color="#28B056" />
+      </View>
+    ) : null;
+  };
 
   const hanldeSearch = async s => {
     console.log('get res:--', s);
@@ -66,36 +114,11 @@ export default function Orders({navigation}) {
 
   const handleTabPress = async text => {
       defaultType = text;
-       type = text 
-    // const filter = await getOrderbyFilters(text);
-    // // console.log("filter--",filter,defaultType,text)
-    // setHis([...filter]);
-
-    if (type == 'All Orders') {
-      setOrderList(orderListP)
-      // return orderListP;
-    } else if (type == 'Food') {
-      const filterList = orderListP?.filter(element =>
-        element?.statusOrder?.includes('food'),
-      );
-      setOrderList(filterList)
-      // return filterList;
-    } 
-    else if (type == 'Ride') {
-      const filterList = orderListP?.filter(element =>
-        element?.statusOrder?.includes('ride'),
-      );
-      setOrderList(filterList)
-      // return filterList;
-    }
-     else if (type == 'Parcel') {
-      const filterList = orderListP?.filter(element =>
-        element?.statusOrder?.includes('parcel'));
-        setOrderList(filterList)
-      // return filterList;
-    }
-
-
+       setType(text);
+       const filter = await getOrderHistorybyFilters(text);
+      //  console.log('filter--', filter, defaultType, text);
+       setOrderList(filter);
+    
   };
 
 
@@ -110,25 +133,27 @@ export default function Orders({navigation}) {
           // alert('second');
         }}
         secondImage={appImagesSvg.cartIcon}
-        value={searchRes}
-        onChangeText={t => {
-          setSearchRes(t);
-          if (t) {
-            hanldeSearch(t);
-          }
-        }}
-        onMicroPhone={() => {
-          setVisible(true);
-        }}
-        onFocus={() => setIskeyboard(true)}
-        onBlur={() => setIskeyboard(false)}
-        onCancelPress={() => {
-          setSearchRes('');
-        }}
+        // value={searchRes}
+        // onChangeText={t => {
+        //   setSearchRes(t);
+        //   if (t) {
+        //     hanldeSearch(t);
+        //   }
+        // }}
+        // onMicroPhone={() => {
+        //   setVisible(true);
+        // }}
+        // onFocus={() => setIskeyboard(true)}
+        // onBlur={() => setIskeyboard(false)}
+        // onCancelPress={() => {
+        //   setSearchRes('');
+        // }}
+        appUserInfo={appUserInfo}
       />
       <View style={styles.mainView}>
       <Tabs3 isRating={true} tabs={tabs} 
             tabPress={handleTabPress}
+            type={type}
              />
         <KeyboardAvoidingView
           style={{flex: 1}}
@@ -138,7 +163,10 @@ export default function Orders({navigation}) {
             <View style={styles.offerTextView}>
               <Text style={styles.offerText}>Offers You Can’t Miss</Text>
             </View>
+            {loading == true  ?  <AnimatedLoader type={'orderHistoryLoader'}/>
+            :
             <View style={{flex: 1}}>
+            {orderList?.length > 0 ? 
               <FlatList
                 contentContainerStyle={{paddingBottom: '30%'}}
                 nestedScrollEnable={true}
@@ -147,8 +175,16 @@ export default function Orders({navigation}) {
                 data={orderList}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
+                onEndReached={loadMoredata}
+                onEndReachedThreshold={0.1} // Trigger when the user scrolls 10% from the bottom
+                ListFooterComponent={renderFooter}
               />
+              :
+              <View style={styles.NoDataView}>
+                    <Text style={styles.NoDataText}>No Record Found</Text>
+                  </View>}
             </View>
+             }
           </AppInputScroll>
         </KeyboardAvoidingView>
       </View>

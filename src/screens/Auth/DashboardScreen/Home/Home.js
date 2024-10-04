@@ -20,6 +20,7 @@ import AppInputScroll from '../../../../halpers/AppInputScroll';
 import RenderOffer from '../../../../components/RenderOffer';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
+import { rootStore } from '../../../../stores/rootStore';
 
 
 
@@ -34,19 +35,25 @@ let imageArray = [
 
 
 export default function Home({navigation}) {
-
-
+  const {appUser}=rootStore.commonStore;
   const [sliderItems, setSliderItems] = useState(imageArray);
   const [isKeyboard, setIskeyboard] = useState(false);
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
+  const [appUserInfo ,setAppUserInfo]=useState(appUser)
 
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
+      onUpdateUserInfo()
     }, []),
   );
+
+  const onUpdateUserInfo=()=>{
+    const {appUser}=rootStore.commonStore;
+    setAppUserInfo(appUser)
+  }
 
   const hanldeSearch = async s => {
     console.log('get res:--', s);
@@ -90,6 +97,7 @@ export default function Home({navigation}) {
           onCancelPress={() => {
             setSearchRes('');
           }}
+          appUserInfo={appUserInfo}
         />
       <View style={styles.mainView}>
        <KeyboardAvoidingView
@@ -102,7 +110,7 @@ export default function Home({navigation}) {
 
         <ChangeRoute data={homeCS} navigation={navigation} />
 
-        <HomeSlider data={sliderItems}/>
+         <HomeSlider data={sliderItems} paginationList={true}/>
 
           <RenderOffer data={mainArray}/>
 

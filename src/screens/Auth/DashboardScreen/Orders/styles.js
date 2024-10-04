@@ -26,6 +26,16 @@ export const styles = StyleSheet.create({
     fontSize:RFValue(13),
     fontFamily:fonts.semiBold,
     color:colors.black
+  },
+  NoDataView:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('25%'),
+  },
+  NoDataText:{
+    fontSize: RFValue(15),
+    fontFamily: fonts.medium,
+    color: colors.black,
   }
  
 });

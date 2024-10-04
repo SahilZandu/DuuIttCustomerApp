@@ -176,7 +176,7 @@ const MapRoute = ({ mapContainerView, origin, destination }) => {
         `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat},${origin?.lng}&destination=${destination?.lat},${destination?.lng}&key=${API_KEY}`
       );
       const json = await response.json();
-      console.log("json---",json)
+      // console.log("json---",json)
       if (json?.routes?.length) {
         const points = PolylineDecoder.decode(json.routes[0].overview_polyline.points);
         const routeCoords = points.map(point => ({
@@ -184,7 +184,7 @@ const MapRoute = ({ mapContainerView, origin, destination }) => {
           longitude: point[1],
         }));
         setCoords(routeCoords);
-        console.log("routeCoords---",routeCoords)
+        // console.log("routeCoords---",routeCoords)
       }
     } catch (error) {
       console.error("error --++-- ",error);

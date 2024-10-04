@@ -91,12 +91,13 @@ export default function VerifyOtp({navigation, route}) {
       //  if(loginType == 'forgot'){
       //   navigation.navigate("setPass",{value:mobileEmail})
       //  }else{
+          // await setToken("true")
+        // navigation.navigate('dashborad' , {screen:'home'})
+      //  }
 
          await verifyOtp(mobileEmail,loginType ,otpValue, navigation, handleLoading,onResendClear )
         
-        // await setToken("true")
-        // navigation.navigate('dashborad' , {screen:'home'})
-      //  }
+      
       
   };
 

@@ -12,7 +12,8 @@ export default class ParcelStore {
     let requestData = {
       weight: Number(value?.weight),
       quantity: value?.quantity,
-      type: value?.type?.name,
+      type: value?.type,
+      order_type:'parcel',
       sender_address: value?.sender_address,
       receiver_address: value?.receiver_address,
       billing_detail: value?.billing_detail,
@@ -54,7 +55,7 @@ export default class ParcelStore {
       parcel_id: value?.parcel_id,
       order_cancel_by: 'customer',
       reason_of_cancellation: value?.reason,
-      status: 'cancelled',
+      status: 'rejected',
     };
 
     console.log('requestData:-', requestData);
@@ -96,7 +97,8 @@ export default class ParcelStore {
       if (res?.statusCode == 200) {
         // useToast(res.message, 1);
         handleLoading(false);
-        return res?.data;
+        this.addParcelInfo = res?.data?.order;
+        return res?.data?.riders;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);

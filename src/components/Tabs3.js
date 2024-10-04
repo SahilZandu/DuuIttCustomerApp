@@ -1,4 +1,4 @@
-import react, {useState, useRef} from 'react';
+import react, {useState, useRef,useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -22,7 +22,7 @@ import { fonts } from '../theme/fonts/fonts';
 
 const size = Dimensions.get('window').height;
 
-export default function Tabs3({tabs, tabPress, isRating, isCount,showImage}) {
+export default function Tabs3({tabs, tabPress, isRating, isCount,showImage,type}) {
   const scrollViewRef = useRef();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -30,6 +30,13 @@ export default function Tabs3({tabs, tabPress, isRating, isCount,showImage}) {
     setSelectedIndex(index);
     if (tabPress) tabPress(text);
   };
+  useEffect(()=>{
+    if(type == 'All Orders'){
+      setSelectedIndex(0)
+    }
+
+  },[type])
+
 
   const onSetImage =(index)=>{
     switch (index) {

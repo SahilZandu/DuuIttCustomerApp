@@ -19,6 +19,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
+  console.log('markerArray--',markerArray);
   const mapRef = useRef(null);
   const [lat, setLat] = useState(origin?.lat);
   const [long, setLong] = useState(origin?.lng);

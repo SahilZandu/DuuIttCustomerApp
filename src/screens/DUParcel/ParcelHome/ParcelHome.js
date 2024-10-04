@@ -478,16 +478,25 @@ import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import MapRoute from '../../../components/MapRoute';
 import { setCurrentLocation } from '../../../components/GetAppLocation';
+import { rootStore } from '../../../stores/rootStore';
 
 
 export default function ParcelHome({navigation}) {
+  const {appUser}=rootStore.commonStore;
+  const [appUserInfo ,setAppUserInfo]=useState(appUser)
  
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
       setCurrentLocation();
+      onUpdateUserInfo()
     }, []),
   );
+
+  const onUpdateUserInfo=()=>{
+    const {appUser}=rootStore.commonStore;
+    setAppUserInfo(appUser)
+  }
 
 
   return (
@@ -497,6 +506,7 @@ export default function ParcelHome({navigation}) {
         onPress={() => {
           navigation.goBack();
         }}
+        appUserInfo={appUserInfo}
       />
 
         <MapRoute 

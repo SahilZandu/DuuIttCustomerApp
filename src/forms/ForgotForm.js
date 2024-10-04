@@ -15,9 +15,7 @@ import {fonts} from '../theme/fonts/fonts';
 import {forgotValidations} from './formsValidation/forgotValidations';
 import { rootStore } from '../stores/rootStore';
 
-const initialValues = {
-  email: '',
-};
+
 
 const FormButton = ({loading, onPress}) => {
   const {dirty, isValid, values} = useFormikContext();
@@ -36,6 +34,9 @@ const ForgotForm = ({navigation}) => {
   const {forgotPass}=rootStore.authStore;
    
   const [loading, setLoading] = useState(false);
+  const [initialValues ,setInitialValues] =useState({
+    email: '',
+  });
 
   const handleForgot = async(values) => {
       console.log('values', values);

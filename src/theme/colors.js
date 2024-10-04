@@ -36,7 +36,8 @@ export const colors = {
     color43:'#43BA6B',
     colorFA:'#FAA61A',
     color24:'#242424',
-    color64:'#646464'
+    color64:'#646464',
+    color53:'#535353'
     
    
    

@@ -13,7 +13,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
+import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import CTA from './cta/CTA';
@@ -21,8 +21,11 @@ import {currencyFormat} from '../halpers/currencyFormat';
 import {Surface} from 'react-native-paper';
 import BTN from './cta/BTN';
 import PickDropComp from './PickDropComp';
+import moment from 'moment';
+import Url from '../api/Url';
 
 const CardOrder = ({item, index}) => {
+  // console.log('item -- ', item);
   const setDetailsBtn = status => {
     switch (status) {
       case 'food':
@@ -45,26 +48,42 @@ const CardOrder = ({item, index}) => {
     }
   };
 
+  const dateTimeFormat = createdAt => {
+    const date = new Date(createdAt);
+    const formattedDate = moment(date).format('MMM DD, YYYY - hh:mm A');
+    // console.log('formattedDate--', formattedDate); // Output: Jul 25, 2024 - 10:30 AM
+    return formattedDate;
+  };
+
+  const setNoImage = status => {
+    switch (status) {
+      case 'food':
+        return appImages.order1;
+      case 'parcel':
+        return appImages.order2;
+      case 'ride':
+        return appImages.order3;
+    }
+  };
+
   return (
     <Surface
-    elevation={5}
-    style={{
-      shadowColor:  colors.black, // You can customize shadow color
-      backgroundColor: colors.white,
-      alignSelf: 'center',
-      borderRadius: 10,
-      width: wp('90%'),
-      marginTop: '5%',
-
-    }}>
-    <TouchableOpacity
-      key={index}
-      activeOpacity={0.8}
+      elevation={5}
       style={{
+        shadowColor: colors.black, // You can customize shadow color
+        backgroundColor: colors.white,
         alignSelf: 'center',
         borderRadius: 10,
+        width: wp('90%'),
+        marginTop: '5%',
       }}>
-     
+      <TouchableOpacity
+        key={index}
+        activeOpacity={0.8}
+        style={{
+          alignSelf: 'center',
+          borderRadius: 10,
+        }}>
         <View
           style={{
             paddingHorizontal: '3%',
@@ -73,7 +92,11 @@ const CardOrder = ({item, index}) => {
           }}>
           <Image
             style={{width: 75, height: 75, borderRadius: 10}}
-            source={item?.image}
+            source={
+              item?.rider?.profile_pic?.length > 0
+                ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                : setNoImage(item?.order_type)
+            }
           />
           <View style={{flex: 1, flexDirection: 'column', marginLeft: '2.5%'}}>
             <Text
@@ -83,7 +106,7 @@ const CardOrder = ({item, index}) => {
                 fontFamily: fonts.medium,
                 color: colors.black,
               }}>
-              {item?.name ? item?.name : `Tracking ID:${item?.tracking_id}`}
+              {item?.name ? item?.name : `Tracking ID:${item?.customer_id}`}
             </Text>
             <Text
               style={{
@@ -92,7 +115,7 @@ const CardOrder = ({item, index}) => {
                 color: '#838282',
                 marginTop: '3%',
               }}>
-              {item?.date}
+              {dateTimeFormat(item?.createdAt)}
             </Text>
             <View
               style={{
@@ -124,17 +147,27 @@ const CardOrder = ({item, index}) => {
                   fontFamily: fonts.medium,
                   color: colors.black,
                 }}>
-                {currencyFormat(item?.price)}
+                {currencyFormat(item?.total_amount)}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={{marginHorizontal: 10, marginTop: '3%'}}>
-          {item?.itemArray?.map((value, i) => {
-            return (
-              <>
-                {value?.type?.length > 0 ? (
+          {item?.order_type !== 'food' ? (
+            <PickDropComp
+              item={{
+                id: 1,
+                pickup_drop: 'Pickup point',
+                pickup: item?.sender_address?.address,
+                drop: item?.receiver_address?.address,
+              }}
+              lineHeight={48}
+            />
+          ) : (
+            <>
+              {/* {item?.sender_address?.map((value, i) => {
+                return (
                   <View key={i} style={{flexDirection: 'row', marginTop: '4%'}}>
                     <SvgXml
                       xml={
@@ -155,12 +188,10 @@ const CardOrder = ({item, index}) => {
                       <Text style={{color: '#646464'}}> x {value?.qty}</Text>
                     </Text>
                   </View>
-                ) : (
-                  <PickDropComp item={value} lineHeight={48}/>
-                )}
-              </>
-            );
-          })}
+                );
+              })} */}
+            </>
+          )}
 
           <View
             style={{
@@ -172,7 +203,7 @@ const CardOrder = ({item, index}) => {
               backgroundColor={colors.white}
               labelColor={colors.main}
               width={wp('38%')}
-              title={setDetailsBtn(item?.statusOrder)}
+              title={setDetailsBtn(item?.order_type)}
               onPress={() => {
                 // handleVerify(otp);
               }}
@@ -181,17 +212,17 @@ const CardOrder = ({item, index}) => {
             />
 
             <BTN
-            width={wp('38%')}
-            title={setProgressBtn(item?.statusOrder)}
-            onPress={() => {
-              // handleVerify(otp);
-            }}
-            bottomCheck={15}
-            textTransform={'capitalize'}
+              width={wp('38%')}
+              title={setProgressBtn(item?.order_type)}
+              onPress={() => {
+                // handleVerify(otp);
+              }}
+              bottomCheck={15}
+              textTransform={'capitalize'}
             />
           </View>
         </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
     </Surface>
   );
 };

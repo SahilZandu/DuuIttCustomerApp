@@ -35,9 +35,19 @@ import {rootStore} from '../stores/rootStore';
 import Modal from 'react-native-modal';
 import MapRoute from '../components/MapRoute';
 import BTN from '../components/cta/BTN';
+import DriverMeetPickup from '../components/DriverMeetPickup';
+import MeetingPickupComp from '../components/MeetPickupComp';
+import HomeSlider from '../components/slider/homeSlider';
+import PopUpRideDetails from '../components/PopUpRideDetails';
+import PopUpCancelInstruction from '../components/PopUpCancelInstruction';
+import PopUpRideCancel from '../components/PopUpRideCancel';
 
-
-
+let imageArray = [
+  {id: 1, image: appImages.sliderImage1},
+  {id: 2, image: appImages.sliderImage2},
+  {id: 3, image: appImages.sliderImage1},
+  {id: 4, image: appImages.sliderImage2},
+];
 const SearchingRideForm = ({navigation, route}) => {
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
@@ -49,50 +59,65 @@ const SearchingRideForm = ({navigation, route}) => {
   const [trackingDriver, setTrackingDriver] = useState('otp');
   const [geoLocation, setGeoLocation] = useState({});
   const [destination, setDestination] = useState({});
-  const [parcelInfo, setParcelInfo] = useState({});
+  const [parcelInfo, setParcelInfo] = useState(addParcelInfo);
   const [cancelReason, setCancelReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [riderLoading, setRiderLoading] = useState(false);
   const [nearbyRider, setNearByRider] = useState([]);
   const [visible, setVisible] = useState(false);
   const [cancelVisible, setCancelVisible] = useState(false);
+  const [rideDetailsVisible, setRideDetailsVisible] = useState(false);
+  const [sliderItems, setSliderItems] = useState(imageArray);
 
-  console.log('paymentMethod--', paymentMethod, addParcelInfo);
+  console.log(
+    'paymentMethod--',
+    paymentMethod,
+    addParcelInfo,
+    // parcelInfo?.parcel_otp?.sender_otp?.toString()?.split(''),
+    // addParcelInfo?.parcel_otp?.sender_otp?.toString()?.split(''),
+  );
 
   useEffect(() => {
     if (Object?.keys(addParcelInfo)?.length > 0) {
       setGeoLocation(addParcelInfo?.sender_address?.geo_location);
-      setDestination(addParcelInfo?.receiver_address?.geo_location)
+      setDestination(addParcelInfo?.receiver_address?.geo_location);
       setParcelInfo(addParcelInfo);
       setTimeout(() => {
         setSearching(false);
         onGetNearByRider(addParcelInfo);
       }, 1000);
     }
+  }, []);
+
+  useEffect(() => {
+    const {addParcelInfo} = rootStore.parcelStore;
+    setTimeout(() => {
+      setParcelInfo(addParcelInfo);
+    }, 500);
   }, [addParcelInfo]);
 
   useEffect(() => {
     setTimeout(() => {
       setSearchArrive('arrive');
-      if (trackingDriver == 'confirm') {
-        refRBSheetTrack.current.open();
-      } else {
-        refRBSheet.current.open();
-      }
+      // if (trackingDriver == 'confirm') {
+      //   refRBSheetTrack.current.open();
+      // } else {
+      refRBSheet.current.open();
+      ridePickupParcel();
+      // }
     }, 5000);
   }, []);
 
   const onGetNearByRider = async info => {
     console.log('info--', info);
-
     const value = {
-      parcel_id: info?.customer_id,
+      parcel_id: info?._id,
       geo_location: info?.sender_address?.geo_location,
       paymentMode: paymentMethod === 'Cash' ? 'cash' : 'online',
     };
 
     const res = await parcelsFindRider(value, handleLoadingRider);
-    console.log('res--', res);
+    console.log('res--', res, value);
     setNearByRider(res);
   };
 
@@ -138,11 +163,11 @@ const SearchingRideForm = ({navigation, route}) => {
       title: 'Bike Number',
       value: 'HR 26CN 5724',
     },
-    {
-      id: 3,
-      title: 'Cash',
-      value: 45.5,
-    },
+    // {
+    //   id: 3,
+    //   title: 'Cash',
+    //   value: 45.5,
+    // },
   ];
 
   const parcelOtp = [2, 4, 5, 6];
@@ -197,7 +222,38 @@ const SearchingRideForm = ({navigation, route}) => {
     setCancelVisible(false);
     setTimeout(() => {
       navigation.navigate('parcel', {screen: 'home'});
-    },200);
+    }, 200);
+  };
+
+  const ridePickupParcel = () => {
+    setTimeout(() => {
+      setVisible(false);
+      setCancelVisible(false);
+      setRideDetailsVisible(false);
+      // refRBSheet.current.close();
+    }, 30000);
+    setTimeout(() => {
+      navigation.navigate('parcel', {screen: 'home'});
+    }, 35000);
+  };
+
+  const onDotPress = () => {
+    // if (trackingDriver == 'confirm') {
+    //   refRBSheetTrack.current.close();
+    // } else {
+    refRBSheet.current.close();
+    // }
+    setTimeout(() => {
+      setRideDetailsVisible(true);
+      // setVisible(true);
+    }, 500);
+  };
+
+  const onPressCancelRide = () => {
+    setRideDetailsVisible(false);
+    setTimeout(() => {
+      setVisible(true);
+    }, 500);
   };
 
   return (
@@ -211,9 +267,9 @@ const SearchingRideForm = ({navigation, route}) => {
           />
         ) : (
           <MapRoute
-             origin={geoLocation}
-             destination={destination}
-            mapContainerView={{height: hp('82%')}}
+            origin={geoLocation}
+            destination={destination}
+            mapContainerView={{height: hp('58%')}}
           />
         )}
       </View>
@@ -265,16 +321,16 @@ const SearchingRideForm = ({navigation, route}) => {
       ) : (
         <TouchableOpacity
           onPress={async () => {
-            if (trackingDriver == 'confirm') {
-              refRBSheetTrack.current.open();
-            } else {
-              refRBSheet.current.open();
-            }
+            // if (trackingDriver == 'confirm') {
+            //   refRBSheetTrack.current.open();
+            // } else {
+            refRBSheet.current.open();
+            // }
           }}
           activeOpacity={0.9}
           style={styles.containerDriverTouch}>
           <View style={styles.innerDriverView}>
-            {trackingDriver == 'confirm' ? (
+            {/* {trackingDriver == 'confirm' ? (
               <DriverTrackingProfileComp
                 topLine={true}
                 item={{
@@ -289,23 +345,19 @@ const SearchingRideForm = ({navigation, route}) => {
                   hanldeLinking('call');
                 }}
               />
-            ) : (
-              <DriverArrivingComp
-                topLine={true}
-                title={'Pickup in 10 minutes'}
-                onMessage={() => {
-                  hanldeLinking('email');
-                }}
-                onCall={() => {
-                  hanldeLinking('call');
-                }}
-              />
-            )}
+            ) : ( */}
+            <DriverMeetPickup
+              topLine={true}
+              onPressDot={() => {
+                onDotPress();
+              }}
+            />
+            {/* )} */}
           </View>
         </TouchableOpacity>
       )}
 
-      {trackingDriver == 'confirm' ? (
+      {/* {trackingDriver == 'confirm' ? (
         <RBSheet
           height={hp('52%')}
           ref={refRBSheetTrack}
@@ -356,104 +408,113 @@ const SearchingRideForm = ({navigation, route}) => {
             />
           </View>
         </RBSheet>
-      ) : (
-        <RBSheet
-          height={hp('78%')}
-          ref={refRBSheet}
-          closeOnDragDown={true}
-          closeOnPressMask={true}
-          keyboardAvoidingViewEnabled={Platform.OS == 'ios' ? true : false}
-          customStyles={{
-            wrapper: {
-              backgroundColor: 'rgba(52, 52, 52, 0.8)',
-            },
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            },
-            // draggableIcon: {
-            //   height: 0, // Hide draggable icon
-            // },
-          }}>
-          <View style={{marginHorizontal: 20}}>
-            <DriverArrivingComp
-              topLine={false}
-              title={'Pickup in 10 minutes'}
-              onMessage={() => {
-                hanldeLinking('email');
-              }}
-              onCall={() => {
-                hanldeLinking('call');
-              }}
+      ) : ( */}
+      <RBSheet
+        height={hp('80%')}
+        ref={refRBSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        keyboardAvoidingViewEnabled={Platform.OS == 'ios' ? true : false}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(52, 52, 52, 0.8)',
+          },
+          container: {
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          },
+          // draggableIcon: {
+          //   height: 0, // Hide draggable icon
+          // },
+        }}>
+        <View style={{marginHorizontal: 20}}>
+          <MeetingPickupComp
+            firstText={'Meet at your pickup stop'}
+            secondText={'Ride Details'}
+            onPressDot={() => {
+              onDotPress();
+            }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: '5%',
+            }}>
+            <Image
+              resizeMode="contain"
+              style={{height: 55, width: 55}}
+              source={appImages.avtarImage}
             />
-            <View
+            <Text
+              numberOfLines={2}
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: '5%',
+                fontSize: RFValue(12),
+                fontFamily: fonts.semiBold,
+                color: colors.black,
+                marginLeft: '4%',
+                width: wp('56.2%'),
               }}>
-              <Image
-                resizeMode="contain"
-                style={{height: 55, width: 55}}
-                source={appImages.avtarImage}
-              />
-              <Text
-                numberOfLines={2}
-                style={{
-                  fontSize: RFValue(12),
-                  fontFamily: fonts.semiBold,
-                  color: colors.black,
-                  marginLeft: '4%',
-                  width: wp('56.2%'),
-                }}>
-                Felicia Cudmore
-              </Text>
-              <Rating rating={'4.5'} />
-            </View>
-            <View
-              style={{
-                height: 1,
-                backgroundColor: colors.colorD9,
-                marginTop: '4%',
-                marginHorizontal: -20,
-              }}
-            />
-            <PickDropImageComp
-              item={{pickup: 'TDI TAJ PLAZA Block-505', drop: 'TDI city'}}
-              image={appImages.packetImage}
-            />
-            <View
-              style={{
-                height: 1,
-                backgroundColor: colors.colorD9,
-                marginTop: '7%',
-                marginHorizontal: -20,
-              }}
-            />
-            <OtpShowComp title={'Parcel OTP'} data={parcelOtp} />
-            <View
-              style={{
-                height: 1,
-                backgroundColor: colors.colorD9,
-                marginTop: '4%',
-                marginHorizontal: -20,
-              }}
-            />
+              Felicia Cudmore
+            </Text>
+            <Rating rating={'4.5'} />
+          </View>
+          <View
+            style={{
+              height: 1,
+              backgroundColor: colors.colorD9,
+              marginTop: '4%',
+              marginHorizontal: -20,
+            }}
+          />
+          <DriverArrivingComp
+            topLine={false}
+            title={'Pickup in 10 minutes'}
+            onMessage={() => {
+              hanldeLinking('email');
+            }}
+            onCall={() => {
+              hanldeLinking('call');
+            }}
+          />
 
-            {driverArrive?.map((item, i) => {
-              return (
-                <TextRender
-                  title={item?.title}
-                  value={
-                    item?.title == 'Cash'
-                      ? currencyFormat(Number(item?.value))
-                      : item?.value
-                  }
-                  bottomLine={true}
-                />
-              );
-            })}
-            <Spacer space={'9%'} />
+          <View
+            style={{
+              height: 1,
+              backgroundColor: colors.colorD9,
+              marginTop: '4%',
+              marginHorizontal: -20,
+            }}
+          />
+
+          <OtpShowComp
+            title={'Parcel OTP'}
+            // data={parcelOtp}
+            data={parcelInfo?.parcel_otp?.sender_otp?.toString()?.split('')}
+          />
+          <View
+            style={{
+              height: 1,
+              backgroundColor: colors.colorD9,
+              marginTop: '4%',
+              marginHorizontal: -20,
+            }}
+          />
+
+          {driverArrive?.map((item, i) => {
+            return (
+              <TextRender
+                title={item?.title}
+                value={
+                  item?.title == 'Cash'
+                    ? currencyFormat(Number(item?.value))
+                    : item?.value
+                }
+                bottomLine={true}
+              />
+            );
+          })}
+          {/* <Spacer space={'9%'} />
             <CTA
               onPress={async () => {
                 if (trackingDriver == 'confirm') {
@@ -469,197 +530,57 @@ const SearchingRideForm = ({navigation, route}) => {
               textTransform={'capitalize'}
               backgroundColor={colors.white}
               labelColor={colors.main}
-            />
+            /> */}
+          <View style={{marginLeft: '6%', alignSelf: 'center'}}>
+            <HomeSlider data={sliderItems} />
           </View>
-        </RBSheet>
-      )}
+        </View>
+      </RBSheet>
+      {/* )} */}
 
-      <Modal
-        animationType="slide"
+      <PopUpRideDetails
+        isVisible={rideDetailsVisible}
+        onClose={() => {
+          setRideDetailsVisible(false);
+        }}
+        title={'Ride Details'}
+        info={parcelInfo}
+        onPressCancelRide={() => {
+          onPressCancelRide();
+        }}
+        loading={false}
+      />
+
+      <PopUpCancelInstruction
         isVisible={visible}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        style={{justifyContent: 'flex-end', margin: 0}}>
-        <TouchableOpacity
-          onPress={() => {
-            setVisible(false);
-          }}
-          activeOpacity={0.8}
-          style={{alignSelf: 'center'}}>
-          <Image
-            resizeMode="contain"
-            style={{height: 45, width: 45}}
-            source={appImages.crossClose} // Your icon image
-          />
-        </TouchableOpacity>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            marginTop: '2%',
-          }}>
-          <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              width: '100%',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              paddingBottom: '12%',
-              // height: hp('80%'),
-            }}>
-            <Spacer space={'2%'} />
+        onClose={() => {
+          setVisible(false);
+        }}
+        title={'Why do you want to cancel ?'}
+        cancelRideInst={cancelRide}
+        onCancelReason={item => {
+          setCancelReason(item?.title);
+          setVisible(false);
+          setTimeout(() => {
+            setCancelVisible(true);
+          }, 500);
+        }}
+      />
 
-            <View style={{marginHorizontal: 24}}>
-              <Text
-                style={{
-                  fontSize: RFValue(16),
-                  fontFamily: fonts.bold,
-                  color: colors.black,
-                  marginTop: '4%',
-                }}>
-                Why do you want to cancel ?
-              </Text>
-
-              {cancelRide?.map((item, index) => {
-                return (
-                  <View style={{justifyContent: 'center'}}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        setCancelReason(item?.title);
-                        setVisible(false);
-                        setTimeout(() => {
-                          setCancelVisible(true);
-                        }, 500);
-                      }}
-                      key={index}
-                      style={{
-                        flexDirection: 'row',
-                        marginTop: '2%',
-                        alignItems: 'center',
-                        height: hp('7%'),
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: RFValue(14),
-                          fontFamily: fonts.regular,
-                          marginLeft: '3%',
-                          color: '#242424',
-                        }}>
-                        {item?.title}
-                      </Text>
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        height: 2,
-                        backgroundColor: '#D9D9D9',
-                        // marginTop: '1%',
-                      }}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-            <Spacer space={'8%'} />
-            <CTA
-              title={'Wait for driver'}
-              textTransform={'capitalize'}
-              onPress={() => {
-                setVisible(false);
-              }}
-              bottomCheck={1}
-            />
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        animationType="slide"
+      <PopUpRideCancel
         isVisible={cancelVisible}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        style={{justifyContent: 'flex-end', margin: 0}}>
-        <TouchableOpacity
-          onPress={() => {
-            setCancelVisible(false);
-          }}
-          activeOpacity={0.8}
-          style={{alignSelf: 'center'}}>
-          <Image
-            resizeMode="contain"
-            style={{height: 45, width: 45}}
-            source={appImages.crossClose} // Your icon image
-          />
-        </TouchableOpacity>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            marginTop: '2%',
-          }}>
-          <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              width: '100%',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              paddingBottom: '12%',
-              // height: hp('80%'),
-            }}>
-            <Spacer space={'2%'} />
-
-            <View style={{marginHorizontal: 24}}>
-              <Text
-                style={{
-                  fontSize: RFValue(16),
-                  fontFamily: fonts.bold,
-                  color: colors.black,
-                  marginTop: '4%',
-                }}>
-                Are you sure you want to cancel ?
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: RFValue(13),
-                  fontFamily: fonts.regular,
-                  color: colors.color24,
-                  marginTop: '6%',
-                }}>
-                This pickup has been offered to a driver right now, and should
-                be confirmed within seconds.
-              </Text>
-            </View>
-            <Spacer space={'9%'} />
-            <View style={{flexDirection:'row',
-            justifyContent:'space-evenly',
-            alignItems:'center',marginHorizontal:10}}>
-            <BTN
-              title={'Cancel Request'}
-              textTransform={'capitalize'}
-              onPress={() => {
-                onCancelRequest();
-              }}
-              backgroundColor={colors.white}
-              labelColor={colors.main}
-              loading={loading}
-              width={wp('42%')}
-              bottomCheck={1}
-            />
-            {/* <Spacer space={'4%'} /> */}
-            <BTN
-              width={wp('42%')}
-              title={'Wait for driver'}
-              textTransform={'capitalize'}
-              onPress={() => {
-                setCancelVisible(false);
-              }}
-              bottomCheck={1}
-            />
-            </View>
-          </View>
-        </View>
-      </Modal>
+        onClose={() => {
+          setCancelVisible(false);
+        }}
+        title={'Are you sure you want to cancel ?'}
+        message={
+          'This pickup has been offered to a driver right now, and should be confirmed within seconds.'
+        }
+        onCancelRequest={() => {
+          onCancelRequest();
+        }}
+        loading={loading}
+      />
     </View>
   );
 };
@@ -714,8 +635,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     bottom: 0,
-    justifyContent: 'center',
-    height: '11%',
+    height: '38%',
     width: wp('100%'),
   },
   innerDriverView: {

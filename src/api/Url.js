@@ -1,5 +1,6 @@
 export default  {
     Base_Url :'https://duuitt.hashsoft.io/',
+    Image_Url :'https://duuitt.hashsoft.io/',
     login : 'customers',
     verifyOtp:'customers/verify-otp',
     forgetPass:'customers/forget-password',
@@ -7,9 +8,11 @@ export default  {
     updatePassword:'customers/update-password',
     myAddress:'customers/address',
     getMyAddress:'customers/detail',
-    parcels:'parcels',
-    parcels_Cancel:'parcels/cancel',
-    parcels_find_rider:'parcels/find-rider'
+    parcels:'orders',
+    parcels_Cancel:'orders/cancel',
+    parcels_find_rider:'orders/find-rider',
+    updateProfile:'customers/update-profile',
+    parcelsOfUser:'orders/ofuser'
    
    
 } 

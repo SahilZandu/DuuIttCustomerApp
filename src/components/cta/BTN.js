@@ -20,6 +20,7 @@ const BTN = ({
     loading,
     disable,
     backgroundColor,
+    borderColor,
     width,
     height,
     labelColor,
@@ -29,7 +30,7 @@ const BTN = ({
     padding
 }) => (
  <TouchableOpacity 
- style={{ backgroundColor: backgroundColor ? backgroundColor : '#28B056',
+ style={{ backgroundColor: backgroundColor ? backgroundColor :colors.main,
  width: width ? width : wp('85%'),
  height: height ? height : hp('5.5%'),
  borderRadius: 50,
@@ -38,7 +39,7 @@ const BTN = ({
  alignSelf: 'center',
  position: isBottom ? 'absolute' : 'relative',
  bottom:bottomCheck?bottomCheck:10,
- borderColor:'#28B056',
+ borderColor:borderColor?borderColor:colors.main,
  borderWidth:1
 }}
  activeOpacity={0.8}

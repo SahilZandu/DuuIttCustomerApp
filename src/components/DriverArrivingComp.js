@@ -22,21 +22,23 @@ const DriverArrivingComp = ({topLine, title, onMessage, onCall}) => {
       {topLine && <View style={styles.topLineView} />}
       <View style={styles.textImageView}>
         <Text style={styles.DriverArriveText}>Driver Arriving</Text>
-        <TouchableOpacity onPress={onMessage} activeOpacity={0.8}>
-          <Image
-            resizeMode="contain"
-            style={styles.image}
-            source={appImages.messageImage}
-          />
-        </TouchableOpacity>
-        <Text>{'    '}</Text>
-        <TouchableOpacity onPress={onCall} activeOpacity={0.8}>
-          <Image
-            resizeMode="contain"
-            style={styles.image}
-            source={appImages.callImage}
-          />
-        </TouchableOpacity>
+        <View style={{marginTop: '2%', flexDirection: 'row'}}>
+          <TouchableOpacity onPress={onMessage} activeOpacity={0.8}>
+            <Image
+              resizeMode="contain"
+              style={styles.image}
+              source={appImages.messageImage}
+            />
+          </TouchableOpacity>
+          <Text>{'    '}</Text>
+          <TouchableOpacity onPress={onCall} activeOpacity={0.8}>
+            <Image
+              resizeMode="contain"
+              style={styles.image}
+              source={appImages.callImage}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <Text style={styles.titleText}>{title}</Text>
     </View>
@@ -47,7 +49,7 @@ export default DriverArrivingComp;
 
 const styles = StyleSheet.create({
   topLineView: {
-    height: 4,
+    height: 4.5,
     backgroundColor: colors.colorD9,
     width: wp('12%'),
     borderRadius: 10,
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
   },
   DriverArriveText: {
     flex: 1,
-    fontSize: RFValue(18),
+    fontSize: RFValue(17),
     fontFamily: fonts.bold,
     color: colors.black,
   },
@@ -68,9 +70,9 @@ const styles = StyleSheet.create({
     width: 35,
   },
   titleText: {
-    fontSize: RFValue(12),
+    fontSize: RFValue(11.5),
     fontFamily: fonts.medium,
     color: colors.colorAA,
-    marginTop: '-2%',
+    marginTop: '-4%',
   },
 });

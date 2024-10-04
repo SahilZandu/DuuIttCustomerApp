@@ -45,9 +45,10 @@ const SetPassForm = ({navigation, route}) => {
   const handleSetPass = async(values) => {
     // console.log('values', values);
     // navigation.navigate('verifyOtp', {value: values, loginType: type});
-   await updatePassword(data ,values,navigation,handleLoading)
+   await updatePassword(data,values,navigation,handleLoading)
       // navigation.navigate('login');
   };
+
   const handleLoading = v => {
     setLoading(v);
   };

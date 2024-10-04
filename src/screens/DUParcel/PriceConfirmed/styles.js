@@ -14,12 +14,12 @@ export const styles = StyleSheet.create({
   },
   main: {
     justifyContent: 'center',
-    marginTop:'25%',
+    marginTop: '25%',
     marginHorizontal: 30,
   },
   image: {
-    height: 180,
-    width: 180,
+    height: 160,
+    width: 160,
     alignSelf: 'center',
   },
   totalAmount: {
@@ -27,14 +27,14 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black,
     marginTop: '2%',
-    textAlign:'center'
+    textAlign: 'center',
   },
   amount: {
     fontSize: RFValue(31),
     fontFamily: fonts.medium,
     color: colors.black,
     marginTop: '1%',
-    textAlign:'center'
+    textAlign: 'center',
   },
   changeLocationText: {
     fontSize: RFValue(12),
@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
   BTHView: {
-    alignSelf:'center',
+    alignSelf: 'center',
     marginTop: '5%',
   },
   BTHText: {
@@ -57,5 +57,28 @@ export const styles = StyleSheet.create({
     height: 1,
     width: wp('26%'),
     backgroundColor: colors.black75,
+  },
+  rateSurfaceView: {
+    shadowColor: colors.black50, // You can customize shadow color
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    height: hp('7%'),
+    marginTop: '6%',
+    justifyContent: 'center',
+  },
+  surfaceInnerView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,
+  },
+  rateImage: {
+    width: 30,
+    height: 30,
+  },
+  rateText: {
+    fontSize: RFValue(14),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
+    marginLeft: '4%',
   },
 });

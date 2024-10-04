@@ -28,19 +28,33 @@ import {Surface} from 'react-native-paper';
 import PickDropLocation from '../components/PickDropLocation';
 import {useFocusEffect} from '@react-navigation/native';
 import TabsTouch from '../components/TabsTouch';
-import { rootStore } from '../stores/rootStore';
+import {rootStore} from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
+import DotTextComp from '../components/DotTextComp';
 
+// let categories = [
+//   {id: 1, active: 0, name: 'Documents'},
+//   {id: 2, active: 0, name: 'Glass'},
+//   {id: 3, active: 0, name: 'Liquid'},
+//   {id: 4, active: 0, name: 'Food'},
+//   {id: 5, active: 0, name: 'Electronic'},
+//   {id: 6, active: 0, name: 'Others'},
+// ];
 
-let categories = [
-  {id: 1, active: 0, name: 'Documents'},
-  {id: 2, active: 0, name: 'Glass'},
-  {id: 3, active: 0, name: 'Liquid'},
-  {id: 4, active: 0, name: 'Food'},
-  {id: 5, active: 0, name: 'Electronic'},
-  {id: 6, active: 0, name: 'Others'},
-];
-
+const parcelInst=[
+  {
+    id: 1, 
+    title: 'Avoid illegal items in package'
+  },
+  {
+    id: 2, 
+    title: 'Don’t send glass products. It can cause damage issue'
+  },
+  {
+    id: 3, 
+    title: 'You can send liquid products upto (1kg-5kg)'
+  },
+]
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -49,92 +63,92 @@ let imageArray = [
   {id: 4, image: appImages.sliderImage2},
 ];
 
-
 const PriceDetailsForm = ({navigation}) => {
-  const {senderAddress , receiverAddress} = rootStore.myAddressStore;
+  const {senderAddress, receiverAddress} = rootStore.myAddressStore;
   const {addRequestParcel} = rootStore.parcelStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
   const [weight, setWeight] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [categoriesShow, setCategoriesShow] = useState(categories);
-  const [selectCate, setSelectCate] = useState([]);
+  // const [categoriesShow, setCategoriesShow] = useState(categories);
+  // const [selectCate, setSelectCate] = useState([]);
   const [sliderItems, setSliderItems] = useState(imageArray);
-
-
 
   useFocusEffect(
     useCallback(() => {
-      getCheckSenderReceiverData()
+      getCheckSenderReceiverData();
     }, []),
   );
 
-  useEffect(()=>{
-    InitailsCate();
-  },[])
+  // useEffect(()=>{
+  //   InitailsCate();
+  // },[])
 
-
-  const getCheckSenderReceiverData =()=>{
-    console.log("senderAddress,receiverAddress",senderAddress,receiverAddress)
-    setPickUpLocation(senderAddress?.address)
-    setDropLocation(receiverAddress?.address)
-  }
-
-  const InitailsCate = () => {
-    categoriesShow?.map((value, i) => {
-      value.active = 0;
-      return {...value};
-    });
-    setCategoriesShow([...categoriesShow]);
-    onSelectedCate(categoriesShow);
+  const getCheckSenderReceiverData = () => {
+    console.log(
+      'senderAddress,receiverAddress',
+      senderAddress,
+      receiverAddress,
+    );
+    setPickUpLocation(senderAddress?.address);
+    setDropLocation(receiverAddress?.address);
   };
 
-  const handlePrice = async() => {
-   const newdata ={
-    weight:weight,
-    quantity:quantity,
-    type:selectCate[0],
-    sender_address:senderAddress,
-    receiver_address:receiverAddress,
-    billing_detail:{delivery_fee:9,discount:0,platform_fee:10,gst:18}
-   }
-   console.log("newdata--",newdata)
+  // const InitailsCate = () => {
+  //   categoriesShow?.map((value, i) => {
+  //     value.active = 0;
+  //     return {...value};
+  //   });
+  //   setCategoriesShow([...categoriesShow]);
+  //   onSelectedCate(categoriesShow);
+  // };
 
-  await addRequestParcel(newdata ,navigation,handleLoading)
-  
+  const handlePrice = async () => {
+    const newdata = {
+      weight: weight,
+      quantity: quantity,
+      type:'Others',
+      sender_address: senderAddress,
+      receiver_address: receiverAddress,
+      billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
+    };
+    console.log('newdata--', newdata);
+
+    await addRequestParcel(newdata, navigation, handleLoading);
+
     // navigation.navigate('priceConfirmed',{item:newdata});
   };
 
-  const handleLoading =(v)=>{
-    setLoading(v)
-  }
-
-  const onPressCategories = item => {
-    categoriesShow?.map((value, i) => {
-      if (value?.id == item?.id) {
-        value.active = value?.active == 0 ? 1 : 0;
-      }
-      return {...value};
-    });
-    setCategoriesShow([...categoriesShow]);
-    onSelectedCate(categoriesShow);
+  const handleLoading = v => {
+    setLoading(v);
   };
 
-  const onSelectedCate = cateArray => {
-    const selectedArray = cateArray?.filter((item, i) => {
-      return item.active == 1;
-    });
+  // const onPressCategories = item => {
+  //   categoriesShow?.map((value, i) => {
+  //     if (value?.id == item?.id) {
+  //       value.active = value?.active == 0 ? 1 : 0;
+  //     }
+  //     return {...value};
+  //   });
+  //   setCategoriesShow([...categoriesShow]);
+  //   onSelectedCate(categoriesShow);
+  // };
 
-    console.log('selectedArray--', selectedArray);
+  // const onSelectedCate = cateArray => {
+  //   const selectedArray = cateArray?.filter((item, i) => {
+  //     return item.active == 1;
+  //   });
 
-    setSelectCate([...selectedArray]);
-  };
+  //   console.log('selectedArray--', selectedArray);
+
+  //   setSelectCate([...selectedArray]);
+  // };
 
   const FormButton = ({loading, onPress}) => {
     return (
       <CTA
-        disable={weight == '' || selectCate?.length == 0}
+        disable={weight == ''}
         title={'Proceed'}
         onPress={() => onPress()}
         loading={loading}
@@ -151,7 +165,7 @@ const PriceDetailsForm = ({navigation}) => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <AppInputScroll
-          Pb={'25%'}
+          // Pb={'25%'}
           padding={true}
           keyboardShouldPersistTaps={'handled'}>
           <View style={{flex: 1, marginHorizontal: 20}}>
@@ -180,8 +194,29 @@ const PriceDetailsForm = ({navigation}) => {
                   <Text style={styles.weightKGText}>Kg</Text>
                 </View>
               </Surface>
+              <Text
+                style={styles.parcelMaxWeight}>
+                Parcel items maximum weight up to 20kg
+              </Text>
             </View>
+
             <View style={{marginTop: '7%'}}>
+              <Text
+                style={styles.parcelInstView}>
+                Parcel Instructions
+               </Text>
+
+              <View
+                style={styles.parcelInstInnerView}>
+                  {parcelInst?.map((item ,i)=>{
+                    return(
+                      <DotTextComp title={item?.title} index={i} data={parcelInst}/>
+                    )
+                  })}
+              </View>
+            </View>
+
+            {/* <View style={{marginTop: '7%'}}>
               <Text style={styles.quantityText}>Package Quantity</Text>
               <Surface elevation={2} style={styles.quantitySurface}>
                 <View style={styles.quantitInnerView}>
@@ -219,9 +254,9 @@ const PriceDetailsForm = ({navigation}) => {
                   </View>
                 </View>
               </Surface>
-            </View>
+            </View> */}
 
-            <View style={{marginTop: '7%'}}>
+            {/* <View style={{marginTop: '7%'}}>
               <Text style={styles.categoriesText}>Categories</Text>
               <TabsTouch
                 data={categoriesShow}
@@ -229,14 +264,14 @@ const PriceDetailsForm = ({navigation}) => {
                   onPressCategories(item);
                 }}
               />
-            </View>
+            </View> */}
           </View>
-          <View style={{marginHorizontal:10}}>
-          <HomeSlider data={sliderItems}/>
+          <View style={{marginHorizontal: 10}}>
+            <HomeSlider data={sliderItems} />
           </View>
         </AppInputScroll>
       </KeyboardAvoidingView>
-     
+
       <View style={{backgroundColor: colors.white, height: hp('9%')}}>
         <FormButton loading={loading} onPress={handlePrice} />
       </View>
@@ -253,7 +288,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   weightTextSurface: {
-    shadowColor: colors.black50, 
+    shadowColor: colors.black50,
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('8%'),
@@ -289,7 +324,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   quantitySurface: {
-    shadowColor: colors.black50, 
+    shadowColor: colors.black50,
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('8%'),
@@ -337,4 +372,21 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     color: colors.black,
   },
+  parcelMaxWeight:{
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
+    marginTop: '3%',
+  },
+  parcelInstView:{
+    fontSize: RFValue(14),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
+    marginTop: '3%',
+  },
+  parcelInstInnerView:{
+    backgroundColor:colors.colorD6,
+    borderRadius: 10,
+    marginTop: '3%',
+  }
 });

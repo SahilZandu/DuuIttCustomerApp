@@ -452,9 +452,7 @@ import {Formik, useFormikContext} from 'formik';
 import PickDropLocation from '../../../components/PickDropLocation';
 import Spacer from '../../../halpers/Spacer';
 import HomeSlider from '../../../components/slider/homeSlider';
-import { rootStore } from '../../../stores/rootStore';
-
-
+import {rootStore} from '../../../stores/rootStore';
 
 const paymentMethod = ['Cash', 'QR Code'];
 let imageArray = [
@@ -464,21 +462,18 @@ let imageArray = [
   {id: 4, image: appImages.sliderImage2},
 ];
 
-export default function PriceConfirmed({navigation,route}) {
-  const {item}=route.params;
-  const {setAddParcelInfo}=rootStore.parcelStore;
+export default function PriceConfirmed({navigation, route}) {
+  const {item} = route.params;
+  const {setAddParcelInfo} = rootStore.parcelStore;
   const refRBSheet = useRef(null);
-  console.log("Price item---",item)
-  const [pickUpLocation, setPickUpLocation] = useState(
-    '',
-  );
+  console.log('Price item---', item);
+  const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
   const [initialValues, setInitialValues] = useState({
     paymentMethods: 'Cash',
   });
   const [sliderItems, setSliderItems] = useState(imageArray);
-  const [total ,setTotal]=useState(0);
-
+  const [total, setTotal] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -486,39 +481,39 @@ export default function PriceConfirmed({navigation,route}) {
     }, []),
   );
 
-  useEffect(()=>{
-    if(Object?.keys(item || {})?.length > 0){
-      setTotal(item?.total_amount)
-      setPickUpLocation(item?.sender_address?.address)
-      setDropLocation(item?.receiver_address?.address)
+  useEffect(() => {
+    if (Object?.keys(item || {})?.length > 0) {
+      setTotal(item?.total_amount);
+      setPickUpLocation(item?.sender_address?.address);
+      setDropLocation(item?.receiver_address?.address);
     }
+  }, [item]);
 
-  },[item])
-
-
-  const BtnForm =({onPress})=>{
+  const BtnForm = ({onPress}) => {
     const {dirty, isValid, values} = useFormikContext();
-    return(
+    return (
       <CTA
-      title={'Find a driver'}
-      textTransform={'capitalize'}
-      onPress={() => {
-        onPress(values)
-        // refRBSheet.current.close();
-        // setTimeout(() => {
-        //   navigation.navigate('searchingRide', {paymentMethod: {}});
-        // }, 300);
-      }}
-    />
-    )
-  }
+        title={'Find a driver'}
+        textTransform={'capitalize'}
+        onPress={() => {
+          onPress(values);
+          // refRBSheet.current.close();
+          // setTimeout(() => {
+          //   navigation.navigate('searchingRide', {paymentMethod: {}});
+          // }, 300);
+        }}
+      />
+    );
+  };
 
-  const handleFindRider =(value)=>{
- refRBSheet.current.close();
-        setTimeout(() => {
-          navigation.navigate('searchingRide', {paymentMethod:value?.paymentMethods});
-        }, 300);
-  }
+  const handleFindRider = value => {
+    refRBSheet.current.close();
+    setTimeout(() => {
+      navigation.navigate('searchingRide', {
+        paymentMethod: value?.paymentMethods,
+      });
+    }, 300);
+  };
 
   return (
     <View style={styles.container}>
@@ -550,22 +545,27 @@ export default function PriceConfirmed({navigation,route}) {
           />
         </View>
 
-        <TouchableOpacity onPress={()=>{
-           navigation.navigate('parcel',{screen:'home'})
-           setAddParcelInfo({})
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('parcel', {screen: 'home'});
+            setAddParcelInfo({});
           }}
-         activeOpacity={0.8} style={styles.BTHView}>
+          activeOpacity={0.8}
+          style={styles.BTHView}>
           <Text style={styles.BTHText}>Back To Home</Text>
           <View style={styles.BTHBottomLine} />
         </TouchableOpacity>
-        <View style={{marginHorizontal:-20,}}>
-      <HomeSlider data={sliderItems} imageWidth={wp('84%')} imageHeight={hp("16%")}/>
+        <View style={{marginHorizontal: -20}}>
+          <HomeSlider
+            data={sliderItems}
+            imageWidth={wp('84%')}
+            imageHeight={hp('16%')}
+          />
+        </View>
       </View>
-       
-      </View>
-     
+
       <RBSheet
-        height={hp('42%')}
+        height={hp('50%')}
         ref={refRBSheet}
         closeOnDragDown={true}
         closeOnPressMask={true}
@@ -589,6 +589,19 @@ export default function PriceConfirmed({navigation,route}) {
               dropLocation={dropLocation}
             />
 
+            <Surface elevation={2} style={styles.rateSurfaceView}>
+              <View style={styles.surfaceInnerView}>
+                <Image
+                  resizeMode="cover"
+                  style={styles.rateImage}
+                  source={appImages.rateIcon}
+                />
+                <Text style={styles.rateText}>
+                  {currencyFormat(Number(total))}
+                </Text>
+              </View>
+            </Surface>
+
             <CheckBoxText
               data={paymentMethod}
               title={'Payment Methods'}
@@ -596,8 +609,8 @@ export default function PriceConfirmed({navigation,route}) {
               value={initialValues.paymentMethods}
             />
 
-            <Spacer space={'12%'} />
-          <BtnForm onPress={handleFindRider}/>
+            <Spacer space={'10%'} />
+            <BtnForm onPress={handleFindRider} />
           </View>
         </Formik>
       </RBSheet>

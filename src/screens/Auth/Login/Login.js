@@ -48,23 +48,8 @@ export default function Login({navigation}) {
     console.log('userResponse', userResponse);
     return userResponse;
   };
-
-  const testBaseURL = async () => {
-    try {
-      const response = await fetch('http://duuitt.hashsoft.io:3001');
-      if (response.ok) {
-        Alert.alert('Success', 'The base URL is accessible.');
-      } else {
-        Alert.alert('Error', 'The base URL returned an error.');
-      }
-    } catch (error) {
-      Alert.alert('Error', `Failed to access the base URL: ${error.message}`);
-    }
-  };
   
   useEffect(() => {
-    // testBaseURL()
-
     if (Platform.OS === 'android') {
       setTimeout(() => {
         requestSMSpermission();

@@ -61,10 +61,9 @@ export const agent = {
   parcels: body => requests.post(Url.parcels, body),
   parcels_Cancel: body => requests.post(Url.parcels_Cancel, body),
   parcels_find_rider: body => requests.post(Url.parcels_find_rider, body),
+  updateProfile: body => requests.postForm(Url.updateProfile, body),
+  parcelsOfUser: body => requests.post(Url.parcelsOfUser, body),
   
-  
-
-
 
 };
 
