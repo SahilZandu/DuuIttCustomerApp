@@ -93,7 +93,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'Send feedback',
       onPress: () => {
-        console.log('Order Histroy');
+        navigation.navigate('feedback')
       },
       icon: appImagesSvg.sendFeedback,
       show: true,
@@ -102,7 +102,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'Help',
       onPress: () => {
-        console.log('Order Histroy');
+        navigation.navigate('help')
       },
       icon: appImagesSvg.helpSvg,
       show: true,
@@ -138,7 +138,8 @@ export default function SideMenu({navigation}) {
 
   return (
     <View style={styles.container}>
-      <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
+      <AppInputScroll padding={true}
+       keyboardShouldPersistTaps={'handled'}>
         <View>
           <LinearGradient
             colors={['#28B05610', '#28B05640', '#28B05650']}
@@ -158,7 +159,7 @@ export default function SideMenu({navigation}) {
                 height: hp('11%'),
                 borderRadius: 10,
                 borderWidth: 1,
-                borderColor: '#D9D9D9',
+                borderColor: colors.colorD9,
                 justifyContent: 'center',
                 marginTop: '-13%',
                 backgroundColor: colors.white,
@@ -267,7 +268,7 @@ export default function SideMenu({navigation}) {
                     <View
                       style={{
                         height: 2,
-                        backgroundColor: '#D9D9D9',
+                        backgroundColor: colors.colorD9,
                         marginTop: '5%',
                       }}
                     />

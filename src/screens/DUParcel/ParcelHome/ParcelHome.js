@@ -429,24 +429,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   Text,
@@ -477,27 +459,52 @@ import {homeCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import MapRoute from '../../../components/MapRoute';
-import { setCurrentLocation } from '../../../components/GetAppLocation';
-import { rootStore } from '../../../stores/rootStore';
-
+import {setCurrentLocation} from '../../../components/GetAppLocation';
+import {rootStore} from '../../../stores/rootStore';
+import moment from 'moment';
+import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 
 export default function ParcelHome({navigation}) {
-  const {appUser}=rootStore.commonStore;
-  const [appUserInfo ,setAppUserInfo]=useState(appUser)
- 
+  const {appUser} = rootStore.commonStore;
+  const {ordersRecentOrder} = rootStore.orderStore;
+  const [appUserInfo, setAppUserInfo] = useState(appUser);
+  const [recentOrder, setRecentOrder] = useState({});
+  const [loading, setLoading] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
       setCurrentLocation();
-      onUpdateUserInfo()
+      onUpdateUserInfo();
     }, []),
   );
 
-  const onUpdateUserInfo=()=>{
-    const {appUser}=rootStore.commonStore;
-    setAppUserInfo(appUser)
-  }
+  useEffect(() => {
+    getRecentOrder();
+  }, []);
 
+  const getRecentOrder = async () => {
+    const res = await ordersRecentOrder('parcel', handleLoading);
+    console.log('res--getRecentOrder', res);
+    setRecentOrder(res);
+  };
+
+  const handleLoading = v => {
+    setLoading(v);
+    console.log('yes it is being ...');
+  };
+
+  const onUpdateUserInfo = () => {
+    const {appUser} = rootStore.commonStore;
+    setAppUserInfo(appUser);
+  };
+
+  const dateFormat = createdAt => {
+    const date = new Date(createdAt);
+    const formattedDate = moment(date).format('DD MMM, YYYY');
+    // console.log('formattedDate--', formattedDate); // Output: Jul 25, 2024 - 10:30 AM
+    return formattedDate;
+  };
 
   return (
     <View style={styles.container}>
@@ -509,14 +516,17 @@ export default function ParcelHome({navigation}) {
         appUserInfo={appUserInfo}
       />
 
-        <MapRoute 
-        //  mapContainerView={{height:hp("50%")}} 
-         />
-            
-       <SearchTextIcon title={'Enter pick up or send location'} onPress={()=>{
-        // navigation.navigate('priceDetails')
-        navigation.navigate('setLocationHistory')
-        }}/>
+      <MapRoute
+      //  mapContainerView={{height:hp("50%")}}
+      />
+
+      <SearchTextIcon
+        title={'Enter pick up or send location'}
+        onPress={() => {
+          // navigation.navigate('priceDetails')
+          navigation.navigate('setLocationHistory');
+        }}
+      />
       <View style={{backgroundColor: colors.white, marginTop: '2%'}}>
         <AppInputScroll
           padding={true}
@@ -532,15 +542,19 @@ export default function ParcelHome({navigation}) {
               {'Your last Order'}
             </Text>
 
-            <TrackingOrderCard
-              value={{
-                trackingId: 'N8881765',
-                price: 450,
-                pickup: 'Phase 5, Sector 59, Sahibzada Ajit... ',
-                drop: 'TDI TAJ PLAZA Block-505',
-                date: '04 JUL, 2024',
-              }}
-            />
+            {loading == true ? (
+              <AnimatedLoader type={'recentOrderLoader'} />
+            ) : (
+              <TrackingOrderCard
+                value={{
+                  trackingId: recentOrder?._id,
+                  price: recentOrder?.total_amount,
+                  pickup: recentOrder?.sender_address?.address,
+                  drop: recentOrder?.receiver_address?.address,
+                  date: dateFormat(recentOrder?.createdAt),
+                }}
+              />
+            )}
 
             <View
               style={{

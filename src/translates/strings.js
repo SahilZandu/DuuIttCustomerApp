@@ -17,5 +17,7 @@ export const Strings = {
     send:'Send',
     setNewPassword:'Set New Password',
     yourNewPasswordDifferent:"Your New Password Must Be Different from Previously Used Password.",
-    save:'Save'
+    save:'Save',
+    continue:'Continue',
+    TellUsLoveAbout :'Tell us what you love about the app, or what we could be doing better.'
 }

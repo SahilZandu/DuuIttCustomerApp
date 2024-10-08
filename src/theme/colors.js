@@ -24,6 +24,7 @@ export const colors = {
     colorAF:"#AFAFAF",
     colorDo:'#D6FFE435',
     colorD6:'#D6FFE4',
+    colorD45:'#D6FFE445',
     color27:'#272525',
     colorD9:'#D9D9D9',
     colorA9:'#A9A9AA',
@@ -37,7 +38,8 @@ export const colors = {
     colorFA:'#FAA61A',
     color24:'#242424',
     color64:'#646464',
-    color53:'#535353'
+    color53:'#535353',
+   
     
    
    

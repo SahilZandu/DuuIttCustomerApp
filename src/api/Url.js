@@ -12,7 +12,8 @@ export default  {
     parcels_Cancel:'orders/cancel',
     parcels_find_rider:'orders/find-rider',
     updateProfile:'customers/update-profile',
-    parcelsOfUser:'orders/ofuser'
+    parcelsOfUser:'orders/ofuser',
+    ordersRecentOrder:'orders/recent-order',
    
    
 } 

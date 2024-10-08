@@ -148,7 +148,7 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const API_KEY = 'AIzaSyAd2Y8Aprbva2a9eGaJu_wpjekXQjmhtmU';  // Add your Google Maps API key here
+const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';  // Add your Google Maps API key here
 
 const MapRoute = ({ mapContainerView, origin, destination }) => {
   const mapRef = useRef(null);

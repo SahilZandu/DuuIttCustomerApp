@@ -22,7 +22,7 @@ import { fonts } from '../theme/fonts/fonts';
 
 const size = Dimensions.get('window').height;
 
-export default function Tabs3({tabs, tabPress, isRating, isCount,showImage,type}) {
+export default function Tabs3({tabs, tabPress, isRating, isCount,showImage,type,imageHide}) {
   const scrollViewRef = useRef();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -30,7 +30,7 @@ export default function Tabs3({tabs, tabPress, isRating, isCount,showImage,type}
     setSelectedIndex(index);
     if (tabPress) tabPress(text);
   };
-  useEffect(()=>{
+   useEffect(()=>{
     if(type == 'All Orders'){
       setSelectedIndex(0)
     }
@@ -70,12 +70,14 @@ export default function Tabs3({tabs, tabPress, isRating, isCount,showImage,type}
         onPress={() => {
           onPress(index, text);
         }}>
+         {imageHide !== false && <>
         {(index != 0 || showImage) && <Image 
          resizeMode='contain'
         style={{
             width:20,height:20 
             ,tintColor:isSelected ? colors.main :colors.black85}} 
             source ={onSetImage(index)}/>}
+            </>}
         <Text
           style={[
             styles.tabtext,

@@ -1,4 +1,4 @@
-const myApiKey = 'AIzaSyB8ndrqIS-d0t2Y3v_w6OqaOw1qmxC8aEw';
+const myApiKey = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'
 
 let dalta = {
   latitudeDelta: 0.0322,

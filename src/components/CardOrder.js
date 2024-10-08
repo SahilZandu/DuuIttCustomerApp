@@ -68,7 +68,7 @@ const CardOrder = ({item, index}) => {
 
   return (
     <Surface
-      elevation={5}
+      elevation={2}
       style={{
         shadowColor: colors.black, // You can customize shadow color
         backgroundColor: colors.white,

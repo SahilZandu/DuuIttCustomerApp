@@ -55,7 +55,7 @@ const AutoCompleteGooglePlaceHolder = ({onPressAddress}) => {
       fetchDetails={true}
       placeholder="Enter Location"
       query={{
-        key: 'AIzaSyC92XAW12myisIsSsvNTifKO1PnlY4Q5qo',
+        key: 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA',
         language: 'en',
         type: ['geocode', 'hotel'],
         components: 'country:ind',

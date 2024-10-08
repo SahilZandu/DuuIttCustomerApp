@@ -8,6 +8,7 @@ import AddMyAddressLoader from './AddMyAddressLoader';
 import LocationHistoryLoader from './LocationHistoryLoader';
 import MyAddressLoader from './MyAddressLoader';
 import OrderHistoryLoader from './OrderHistoryLoader';
+import RecentOrderLoader from './RecentOrderLoader';
 
 
 const AnimatedLoader = ({type,absolute}) => {
@@ -17,6 +18,8 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'addMyAddress' && <AddMyAddressLoader />}
       {type == 'locationHistory' && <LocationHistoryLoader />}
       {type == 'orderHistoryLoader' && <OrderHistoryLoader />}
+      {type == 'recentOrderLoader' && <RecentOrderLoader />}
+      
       
     
     </View>

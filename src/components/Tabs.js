@@ -22,7 +22,7 @@ import { fonts } from '../theme/fonts/fonts';
 
 const size = Dimensions.get('window').height;
 
-export default function Tabs({tabs, tabPress, isRating, isCount,showImage}) {
+export default function Tabs({tabs, tabPress, isRating, isCount,showImage,imageHide}) {
   const scrollViewRef = useRef();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -64,12 +64,14 @@ export default function Tabs({tabs, tabPress, isRating, isCount,showImage}) {
         onPress={() => {
           onPress(index, text);
         }}>
+                  {imageHide !== false && <>
         {(index != 0 || showImage) && <Image 
          resizeMode='contain'
         style={{
             width:20,height:20 
             ,tintColor:isSelected ?colors.main :colors.black85}} 
             source ={onSetImage(index)}/>}
+             </>}
         <Text
           style={[
             styles.tabtext,
