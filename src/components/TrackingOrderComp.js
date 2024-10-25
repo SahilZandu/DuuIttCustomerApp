@@ -1,0 +1,155 @@
+import React from 'react';
+import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import {Surface} from 'react-native-paper';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {appImages, appImagesSvg} from '../commons/AppImages';
+import {colors} from '../theme/colors';
+import {fonts} from '../theme/fonts/fonts';
+
+const TrackingOrderComp = ({navigation,trackedArray}) => {
+  const setOrderImage = status => {
+    switch (status) {
+      case 'food':
+        return appImages.order1;
+      case 'parcel':
+        return appImages.order2;
+      case 'ride':
+        return appImages.order3;
+    }
+  };
+
+  return (
+    <View style={styles.main}>
+      <Surface elevation={2} style={styles.upperSurfaceView}></Surface>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('trackingOrder');
+        }}
+        activeOpacity={0.9}>
+        <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
+          <View style={styles.innerView}>
+            <Image
+              resizeMode="contain"
+              style={styles.image}
+              source={setOrderImage(trackedArray[0]?.order_type)}
+            />
+            <View style={styles.riderIdView}>
+              <Text numberOfLines={1} style={styles.riderText}>
+                Rider is on the way
+              </Text>
+              <Text numberOfLines={1} style={styles.trackId}>
+                Tracking ID:{trackedArray[0]?.tracking_id}
+              </Text>
+            </View>
+            <View style={styles.tarckOrderView}>
+              <Text style={styles.trackOrderText}>Track Order</Text>
+            </View>
+          </View>
+        </Surface>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('trackingOrder');
+        }}
+        activeOpacity={0.9}
+        style={styles.moreView}>
+        <Surface elevation={2} style={styles.moreSurface}>
+          <Text style={styles.moreText}> +{trackedArray?.length} more</Text>
+        </Surface>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default TrackingOrderComp;
+
+const styles = StyleSheet.create({
+  main: {
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: '1%',
+  },
+  upperSurfaceView: {
+    width: wp('85%'),
+    height: hp('3%'),
+    shadowColor: colors.black50, // You can customize shadow color
+    backgroundColor: colors.white,
+    alignSelf: 'center',
+    borderRadius: 10,
+    top: '12%',
+  },
+  viewDetailsSurfaceView: {
+    shadowColor: colors.black50, // You can customize shadow color
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    height: hp('8%'),
+    width: wp('90%'),
+    // marginTop: '6%',
+    justifyContent: 'center',
+  },
+  innerView: {
+    marginHorizontal: 10,
+    flexDirection: 'row',
+  },
+  image: {
+    width: 47,
+    height: 47,
+    borderRadius: 100,
+  },
+  riderIdView: {
+    flex: 1,
+    marginLeft: '4%',
+    justifyContent: 'center',
+  },
+  riderText: {
+    fontSize: RFValue(11),
+    fontFamily: fonts.medium,
+    color: colors.black,
+    width: wp('45%'),
+  },
+  trackId: {
+    fontSize: RFValue(10),
+    fontFamily: fonts.semiBold,
+    color: colors.color5A,
+    width: wp('45%'),
+    marginTop: '4%',
+  },
+  tarckOrderView: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.main,
+    height: hp('4%'),
+    paddingHorizontal: '3%',
+    borderRadius: 50,
+  },
+  trackOrderText: {
+    fontSize: RFValue(11),
+    fontFamily: fonts.medium,
+    color: colors.white,
+    textAlign: 'center',
+  },
+  moreView: {
+    position: 'absolute',
+    top: '13%',
+    alignSelf: 'center',
+  },
+  moreSurface: {
+    shadowColor: colors.black50, // You can customize shadow color
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: hp('3.5%'),
+    padding: '3%',
+    borderRadius: 50,
+  },
+  moreText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    color: colors.main,
+  },
+});

@@ -5,6 +5,7 @@ import {useToast} from '../halpers/useToast';
 
 export default class OrderStore {
   orderHistoryList = [];
+  orderTrackingList=[]
 
   parcelsOfUser = async (order_type, limit, handleLoading) => {
     let requestData = {
@@ -26,7 +27,7 @@ export default class OrderStore {
         return res?.data;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        useToast(message, 0);
+        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
@@ -36,9 +37,10 @@ export default class OrderStore {
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
-      useToast(m, 0);
+      // useToast(m, 0);
+      return [];
     }
-    return [];
+  
   };
 
   getOrderHistorybyFilters = async type => {
@@ -74,6 +76,7 @@ export default class OrderStore {
     handleLoading(true);
     let requestData = {
       type:type,
+      sender:'customer'
     };
 
     console.log('orders Recent Order User', requestData,);
@@ -87,7 +90,7 @@ export default class OrderStore {
         return res?.data;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        useToast(message, 0);
+        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
@@ -97,10 +100,49 @@ export default class OrderStore {
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
-      useToast(m, 0);
+      // useToast(m, 0);
+      return [];
     }
-    return [];
+    
   };
+
+  
+  ordersTrackOrder = async (handleLoading) => {
+    try {
+      const res = await agent.ordersTrackOrder();
+      console.log('orders Track Order Res : ', res);
+      if (res?.statusCode == 200) {
+        res?.data?.length > 0 ? this.orderTrackingList = res?.data :this.orderTrackingList =[]
+        handleLoading(false);
+        return res?.data;
+      } else {
+        this.orderTrackingList =[]
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error orders Track Order:', error);
+      this.orderTrackingList =[]
+      return [];
+    }
+  };
+
+  getPendingForCustomer = async () => {
+    try {
+      const res = await agent.pendingForCustomer();
+      console.log('pending For Customer Res : ', res);
+      if (res?.statusCode == 200) {
+        return res?.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log('error orders Track Order:', error);
+      return [];
+    }
+  };
+
+
   
 
 }

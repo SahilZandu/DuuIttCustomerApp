@@ -1,6 +1,6 @@
 export const colors = {
     main: '#28B056',
-    screenBackground:'#F5F5F5',
+    screenBackground:'#F6F6F6',
     bottomBarColor:'#28B056',
     ripleColor : 'rgba(52, 52, 52, 0.1)',
     white: '#FFFFFF',
@@ -39,6 +39,10 @@ export const colors = {
     color24:'#242424',
     color64:'#646464',
     color53:'#535353',
+    color5A:'#5A5B5C',
+    colorFFA:'#FFAD80',
+    colorFF10:'#FF7A3110',
+    colorFF:'#FF7A31'
    
     
    

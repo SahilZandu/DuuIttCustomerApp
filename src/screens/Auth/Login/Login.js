@@ -1,4 +1,4 @@
-import React, {useState, useEffect,useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Text,
   View,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
-  Alert
+  Alert,
 } from 'react-native';
 import {colors} from '../../../theme/colors';
 import LoginForm from '../../../forms/LoginForm';
@@ -24,11 +24,10 @@ import {SvgXml} from 'react-native-svg';
 import {fonts} from '../../../theme/fonts/fonts';
 import {appImagesSvg} from '../../../commons/AppImages';
 import Spacer from '../../../halpers/Spacer';
-import { Strings } from '../../../translates/strings';
+import {Strings} from '../../../translates/strings';
 import {styles} from './styles';
 import AuthScreenContent from '../../../components/AuthScreenContent';
-
-
+import BTN from '../../../components/cta/BTN';
 
 export default function Login({navigation}) {
   const [type, setType] = useState('Mobile');
@@ -48,7 +47,7 @@ export default function Login({navigation}) {
     console.log('userResponse', userResponse);
     return userResponse;
   };
-  
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       setTimeout(() => {
@@ -77,57 +76,57 @@ export default function Login({navigation}) {
         keyboardShouldPersistTaps={'handled'}
         style={{flex: 1}}>
         <View style={styles.screen}>
-          <AuthScreenContent marginTop={'20%'} title={Strings?.sign_In}  subTitle={Strings?.accessYourAccount} />
+          <AuthScreenContent
+            marginTop={'25%'}
+            title={Strings?.sign_In}
+            subTitle={Strings?.accessYourAccount}
+          />
           <Spacer space={'6%'} />
           {update && <LoginForm navigation={navigation} type={type} />}
-          <Text
-            style={styles.orText}>
-            {Strings.Or}
-          </Text>
-          <Pressable
+          <Text style={styles.orText}>{Strings.Or}</Text>
+          <Spacer space={'5%'} />
+          <BTN
+          backgroundColor={colors.white}
+          labelColor={colors.main}
+            title={
+              type == 'Mobile'
+                ? `${Strings?.loginWithEmail}`
+                : `${Strings?.loginWithMobile}`
+            }
+            textTransform={'capitalize'}
+            onPress={handleType}
+          />
+          {/* <Pressable
             style={styles.touchView}
             onPress={handleType}>
             <Text style={styles.login}>
                {type == 'Mobile' ? `${Strings?.loginWithEmail}` :  `${Strings?.loginWithMobile}`}{' '}
             </Text>
-          </Pressable>
+          </Pressable> */}
 
-          <View
-            style={styles.termsPolicyMainView}>
-            <Text
-              style={styles.agreeText}>
+          <View style={styles.termsPolicyMainView}>
+            <Text style={styles.agreeText}>
               By proceeding, you agree with our
             </Text>
-            <View
-              style={styles.termsPolicyView}>
-              <TouchableOpacity 
-               onPress={()=>{
-                navigation.navigate('myWebComponent', {
-                  type: 'terms',
-                })
-              }}
-               activeOpacity={0.8} >
-                <Text
-                  style={styles.termsText}>
-                  Terms & Conditions
-                </Text>
+            <View style={styles.termsPolicyView}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('myWebComponent', {
+                    type: 'terms',
+                  });
+                }}
+                activeOpacity={0.8}>
+                <Text style={styles.termsText}>Terms & Conditions</Text>
               </TouchableOpacity>
-              <Text
-                style={styles.andText}>
-                {' '}
-                &{' '}
-              </Text>
-              <TouchableOpacity 
-               onPress={()=>{
-                navigation.navigate('myWebComponent', {
-                  type: 'policy',
-                })
-              }}
-              activeOpacity={0.8}>
-                <Text
-                  style={styles.privacyText}>
-                  Privacy Policy
-                </Text>
+              <Text style={styles.andText}> & </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('myWebComponent', {
+                    type: 'policy',
+                  });
+                }}
+                activeOpacity={0.8}>
+                <Text style={styles.privacyText}>Privacy Policy</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -136,4 +135,3 @@ export default function Login({navigation}) {
     </View>
   );
 }
-

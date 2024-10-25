@@ -150,7 +150,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';  // Add your Google Maps API key here
 
-const MapRoute = ({ mapContainerView, origin, destination }) => {
+const MapRoute = ({ mapContainerView, origin, destination ,isPendingReq}) => {
   const mapRef = useRef(null);
   const [lat, setLat] = useState(30.7076);
   const [long, setLong] = useState(76.715126);
@@ -192,7 +192,7 @@ const MapRoute = ({ mapContainerView, origin, destination }) => {
   };
 
   return (
-    <View style={styles.homeSubContainer}>
+    <View pointerEvents={ isPendingReq ? 'none' : 'auto'} style={styles.homeSubContainer}>
       <MapView
         provider={PROVIDER_GOOGLE}
         ref={mapRef}

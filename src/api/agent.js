@@ -64,6 +64,8 @@ export const agent = {
   updateProfile: body => requests.postForm(Url.updateProfile, body),
   parcelsOfUser: body => requests.post(Url.parcelsOfUser, body),
   ordersRecentOrder: body => requests.post(Url.ordersRecentOrder, body),
+  ordersTrackOrder: () => requests.get(Url.ordersTrackOrder),
+  pendingForCustomer: () => requests.get(Url.pendingForCustomer),
   
   
 

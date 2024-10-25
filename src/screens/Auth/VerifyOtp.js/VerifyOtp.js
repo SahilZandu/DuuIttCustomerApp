@@ -15,15 +15,12 @@ import SmsListener from 'react-native-android-sms-listener';
 import {SvgXml} from 'react-native-svg';
 import {appImagesSvg} from '../../../commons/AppImages';
 import Header from '../../../components/header/Header';
-import { rootStore } from '../../../stores/rootStore';
+import {rootStore} from '../../../stores/rootStore';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 
-
-
-
 export default function VerifyOtp({navigation, route}) {
-  const {setToken}=rootStore.commonStore;
-  const {verifyOtp}=rootStore.authStore;
+  const {setToken} = rootStore.commonStore;
+  const {verifyOtp} = rootStore.authStore;
   const {value, loginType} = route.params;
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState(null);
@@ -87,25 +84,29 @@ export default function VerifyOtp({navigation, route}) {
   };
 
   const handleVerify = async otpValue => {
-      Keyboard.dismiss();
-      //  if(loginType == 'forgot'){
-      //   navigation.navigate("setPass",{value:mobileEmail})
-      //  }else{
-          // await setToken("true")
-        // navigation.navigate('dashborad' , {screen:'home'})
-      //  }
+    Keyboard.dismiss();
+    //  if(loginType == 'forgot'){
+    //   navigation.navigate("setPass",{value:mobileEmail})
+    //  }else{
+    // await setToken("true")
+    // navigation.navigate('dashborad' , {screen:'home'})
+    //  }
 
-         await verifyOtp(mobileEmail,loginType ,otpValue, navigation, handleLoading,onResendClear )
-        
-      
-      
+    await verifyOtp(
+      mobileEmail,
+      loginType,
+      otpValue,
+      navigation,
+      handleLoading,
+      onResendClear,
+    );
   };
 
   const handleLoading = v => {
     setLoading(v);
   };
 
-  const onResendClear = async() => {
+  const onResendClear = async () => {
     console.log('resend');
     setOtp('');
     setClearData(!clearData);
@@ -144,16 +145,17 @@ export default function VerifyOtp({navigation, route}) {
                 }`}
               </Text>
             </View> */}
-              <AuthScreenContent title={Strings.verification} 
-              subTitle= {`${Strings.otpVerificationText} ${
-                  loginType == 'Mobile'
-                    ? Strings.phoneNumber
-                    : Strings.emailAddress
-                } ${
-                  loginType == 'Mobile'
-                    ? mobileEmail?.mobile
-                    : mobileEmail?.email
-                }`} />
+            <AuthScreenContent
+              marginTop={'25%'}
+              title={Strings.verification}
+              subTitle={`${Strings.otpVerificationText} ${
+                loginType == 'Mobile'
+                  ? Strings.phoneNumber
+                  : Strings.emailAddress
+              } ${
+                loginType == 'Mobile' ? mobileEmail?.mobile : mobileEmail?.email
+              }`}
+            />
 
             <Spacer space={'2%'} />
             <OtpInput

@@ -5,7 +5,7 @@ export const updateProfileValidations = () => {
     ['image']: Yup.string('Profile picture is required')
     .trim()
     .required('Profile picture is required'),
-    ['fullName']: Yup.string('Enter your name')
+    ['name']: Yup.string('Enter your name')
     .trim()
     .required('Name is required')
     .min(2,"Name should be 2 character")

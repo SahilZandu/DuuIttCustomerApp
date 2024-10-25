@@ -386,13 +386,13 @@ export function FoodBottomNavigator  () {
       />
       <Tab.Screen
         name="tab2"
-        component={Promo}
+        component={Orders}
         // options={{tabBarLabel: 'Promo'}}
         listeners={{tabPress: handleAnimation}}
       />
       <Tab.Screen
         name="tab3"
-        component={Orders}
+        component={Promo}
         // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
       />

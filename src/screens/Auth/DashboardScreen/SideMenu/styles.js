@@ -12,20 +12,8 @@ import { fonts } from '../../../../theme/fonts/fonts';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.screenBackground,
     
   },
-  mainView:{
-    flex:1,
-  },
-  offerTextView:{
-    marginTop:'3%',
-    marginHorizontal:20
-  },
-  offerText:{
-    fontSize:RFValue(13),
-    fontFamily:fonts.semiBold,
-    color:colors.black
-  }
- 
+
 });

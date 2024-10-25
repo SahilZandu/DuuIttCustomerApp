@@ -14,6 +14,8 @@ export default  {
     updateProfile:'customers/update-profile',
     parcelsOfUser:'orders/ofuser',
     ordersRecentOrder:'orders/recent-order',
+    ordersTrackOrder:'orders/track-order',
+    pendingForCustomer:'orders/pending-for-customer',
    
    
 } 

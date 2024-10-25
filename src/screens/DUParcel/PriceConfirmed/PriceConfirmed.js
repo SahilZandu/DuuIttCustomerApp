@@ -548,7 +548,7 @@ export default function PriceConfirmed({navigation, route}) {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('parcel', {screen: 'home'});
-            setAddParcelInfo({});
+            // setAddParcelInfo({});
           }}
           activeOpacity={0.8}
           style={styles.BTHView}>
@@ -608,7 +608,6 @@ export default function PriceConfirmed({navigation, route}) {
               name={'paymentMethods'}
               value={initialValues.paymentMethods}
             />
-
             <Spacer space={'10%'} />
             <BtnForm onPress={handleFindRider} />
           </View>

@@ -11,7 +11,7 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {fonts} from '../theme/fonts/fonts';
-import { LaunchGallary } from './LaunchGallery';
+
 
 function FieldInput({
   name,

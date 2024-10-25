@@ -65,19 +65,19 @@ export default function Tabs3({tabs, tabPress, isRating, isCount,showImage,type,
     return (
       <Pressable
         style={[
-          styles.button(isSelected)
+          styles.button(isSelected,index)
         ]}
         onPress={() => {
           onPress(index, text);
         }}>
-         {imageHide !== false && <>
+         {imageHide !== false && <View>
         {(index != 0 || showImage) && <Image 
          resizeMode='contain'
         style={{
             width:20,height:20 
             ,tintColor:isSelected ? colors.main :colors.black85}} 
             source ={onSetImage(index)}/>}
-            </>}
+            </View>}
         <Text
           style={[
             styles.tabtext,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(13),
     fontFamily: fonts.medium,
   },
-  button:(isSelected)=>({
+  button:(isSelected,index)=>({
     flexDirection: 'row',
     height: hp('5%'),
     alignItems: 'center',
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     borderColor:isSelected ? colors.main :colors.white,
     marginHorizontal: -3,
     borderBottomWidth: 2,
-    padding:wp("3%"),
+    marginLeft:index !== 0 ? wp("5%") : 0,
   }),
 
 

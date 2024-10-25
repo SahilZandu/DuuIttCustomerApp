@@ -21,13 +21,13 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 
 
-const AutoCompleteGooglePlaceHolder = ({onPressAddress}) => {
+const AutoCompleteGooglePlaceHolder = ({onPressAddress,address}) => {
     const GooglePlacesRef = useRef();
     const textInputRef = useRef();
 
     useEffect(() => {
-      GooglePlacesRef.current?.setAddressText('');
-    }, []);
+      GooglePlacesRef.current?.setAddressText(address);
+    }, [address]);
 
     const handleClosePress = () => {
         // bottomSheetRef.current?.collapse(snapPoints);

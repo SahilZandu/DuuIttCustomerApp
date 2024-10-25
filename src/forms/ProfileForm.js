@@ -15,23 +15,36 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import FieldInput from '../components/FieldInput';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import {SvgXml} from 'react-native-svg';
 import AppInputScroll from '../halpers/AppInputScroll';
-import GenderType from '../components/GenderType';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import RBSheet from '@lunalee/react-native-raw-bottom-sheet';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
 import PickUpdateActions from '../halpers/PickUpdateActions';
 import {updateProfileValidations} from './formsValidation/updateProfileValidations';
 import {colors} from '../theme/colors';
 import {rootStore} from '../stores/rootStore';
 import Url from '../api/Url';
+import InputFieldLabel from '../components/InputFieldLabel';
+import FieldInputText from '../components/FieldInputText';
+import DropDownLabelComp from '../components/DropDownLabelComp';
 
 let dateStart = new Date();
+let genderArray = [
+  {
+    id: 1,
+    name: 'male',
+  },
+  {
+    id: 2,
+    name: 'female',
+  },
+  {
+    id: 3,
+    name: 'others',
+  },
+];
 
 const FormButton = ({loading, onPress}) => {
   const {dirty, isValid, values} = useFormikContext();
@@ -73,7 +86,7 @@ const ProfileForm = ({navigation}) => {
       appUser?.profile_pic?.length > 0
         ? Url?.Image_Url + appUser?.profile_pic
         : '',
-    fullName: appUser?.name?.length > 0 ? appUser?.name : '',
+    name: appUser?.name?.length > 0 ? appUser?.name : '',
     email: appUser?.email?.length > 0 ? appUser?.email : '',
     mobile:
       appUser?.phone?.toString()?.length > 0 ? appUser?.phone?.toString() : '',
@@ -100,21 +113,20 @@ const ProfileForm = ({navigation}) => {
 
   const onSuccess = () => {
     const {appUser} = rootStore.commonStore;
-    setUpdate(false)
+    setUpdate(false);
     setInitialValues({
       image: Url?.Image_Url + appUser?.profile_pic,
-      fullName: appUser?.name,
+      name: appUser?.name,
       email: appUser?.email,
       mobile: appUser?.phone?.toString(),
       dob: dateFormat(appUser?.date_of_birth),
       date_of_birth: dateFormatApi(appUser?.date_of_birth),
-      gender:appUser?.gender,
+      gender: appUser?.gender,
     });
 
-    setTimeout(()=>{
-      setUpdate(true)
-    },50)
-
+    setTimeout(() => {
+      setUpdate(true);
+    }, 50);
   };
 
   const DatePickeButton = ({}) => {
@@ -175,9 +187,10 @@ const ProfileForm = ({navigation}) => {
             style={{flex: 1}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <AppInputScroll
+              Pb={'25%'}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{flex: 1}}>
+              <View style={{flex: 1, marginHorizontal: 20}}>
                 {/* {<ProfileCoverImage />} */}
                 <View style={styles.imageMainView}>
                   <Image
@@ -198,48 +211,54 @@ const ProfileForm = ({navigation}) => {
                   </View>
                 </View>
                 <Spacer space={'-7%'} />
-                <FieldInput
+
+                <InputFieldLabel
+                  borderWidth={1}
                   inputLabel={'Name'}
-                  name={'fullName'}
+                  name={'name'}
                   placeholder={'Enter full name'}
                 />
-                <FieldInput
+                <InputFieldLabel
+                  borderWidth={1}
                   inputLabel={'Email Address'}
                   keyboardType="email-address"
                   name={'email'}
                   placeholder={'example@gmail.com'}
-                  // rightIcon={true}
-                  // image={appImagesSvg.editProfile}
                 />
-                <FieldInput
+                <InputFieldLabel
+                  borderWidth={1}
                   inputLabel={'Phone Number'}
                   keyboardType="number-pad"
                   name={'mobile'}
                   placeholder={'Enter phone number'}
                   maxLength={10}
-                  // rightIcon={true}
-                  // image={appImagesSvg.editProfile}
                 />
-                <FieldInput
-                  inputLabel={'Date of Birth'}
+
+                <FieldInputText
+                  borderWidth={1.2}
                   name={'dob'}
-                  placeholder={'Enter date of birth'}
                   rightIcon={true}
+                  inputLabel={'Date of Birth'}
+                  placeholder={'Enter date of birth'}
                   image={appImagesSvg.datePickerSvg}
+                  onBlur={true}
                   onRightPress={() => {
                     setShowPicker(true);
                   }}
                 />
 
-                <GenderType
-                  title={'Gender'}
+                <DropDownLabelComp
+                  position={'relative'}
+                  marginTop={'-12%'}
                   name={'gender'}
+                  title={'Gender'}
                   value={initialValues.gender}
+                  list={genderArray}
                 />
               </View>
             </AppInputScroll>
           </KeyboardAvoidingView>
-          <View>
+          <View style={{backgroundColor: colors.white, height: hp('9%')}}>
             <FormButton loading={loading} onPress={handleLogin} />
           </View>
           <DatePickeButton />
@@ -264,7 +283,7 @@ const ProfileForm = ({navigation}) => {
       </Formik>
     );
   } else {
-    null
+    null;
   }
 };
 
@@ -274,11 +293,11 @@ const styles = StyleSheet.create({
   imageMainView: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '5%',
+    marginTop: '10%',
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     borderRadius: 100,
     borderWidth: 0.5,
     borderColor: colors.main,
@@ -290,8 +309,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    top: '-21%',
-    right: '-7%',
+    top: '-14%',
+    right: '-5%',
   },
   editImageTouch: {
     backgroundColor: '#AFAFAF',

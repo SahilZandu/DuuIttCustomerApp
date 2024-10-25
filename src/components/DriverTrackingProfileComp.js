@@ -16,16 +16,23 @@ import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import Rating from './Rating';
+import Url from '../api/Url';
 
 const DriverTrackingProfileComp = ({topLine, item, onMessage, onCall}) => {
+  // console.log('Driver--', item);
+ 
   return (
     <View>
       {topLine && <View style={styles.topLineView} />}
       <View style={styles.main}>
         <Image
-          resizeMode="contain"
+          resizeMode='cover'
           style={styles.userImage}
-          source={item.image}
+          source={
+              item?.image?.toString()?.includes('profile')
+              ? {uri: Url.Image_Url + item?.image}
+              : item.image
+          }
         />
         <View style={styles.textRatingView}>
           <Text numberOfLines={1} style={styles.title}>
@@ -67,12 +74,12 @@ const styles = StyleSheet.create({
   },
   main: {
     flexDirection: 'row',
-    alignItems:'center',
-    marginTop:'3%'
+    alignItems: 'center',
   },
   userImage: {
     height: 55,
     width: 55,
+    borderRadius: 100,
   },
   textRatingView: {
     flex: 1,
@@ -82,9 +89,9 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     fontFamily: fonts.semiBold,
     color: colors.black,
-    marginBottom: '3%',
+    marginBottom: '7%',
     marginLeft: '2%',
-    width: wp('48%'),
+    width: wp('40%'),
   },
   callMessageView: {
     flexDirection: 'row',

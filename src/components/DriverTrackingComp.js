@@ -45,7 +45,7 @@ export default DriverTrackingComp;
 
 const styles = StyleSheet.create({
   main: {
-    marginTop: '8%',
+    marginTop: '5%',
   },
   renderView: {
     justifyContent: 'center',
@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   cricleView: status => ({
-    height: 18,
-    width: 18,
+    height: 13,
+    width: 13,
     backgroundColor: status == 'completed' ? colors.main : colors.white,
     borderRadius: 100,
     borderColor: colors.main,
@@ -70,20 +70,20 @@ const styles = StyleSheet.create({
   },
   lineView: {
     height: hp('6%'),
-    width: wp('0.8%'),
+    width: wp('0.7%'),
     backgroundColor: colors.main,
     borderRadius: 100,
-    marginLeft: '2%',
-    marginVertical: '-1%',
+    marginLeft: '1.5%',
+    marginVertical: '-2%',
   },
   packetImageView: {
     position: 'absolute',
-    top: '40%',
+    top: '45%',
     right: '0.1%',
   },
   packetImage: {
-    height: 120,
-    width: 120,
+    height: 100,
+    width: 100,
   },
   bottomLine: {
     height: 1,

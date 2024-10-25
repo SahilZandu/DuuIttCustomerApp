@@ -12,6 +12,8 @@ import MyAddress from '../screens/DUParcel/MyAddress/MyAddress';
 import AddMyAddress from '../screens/DUParcel/AddMyAddress/AddMyAddress';
 import Feedback from '../screens/Auth/DashboardScreen/Feedback/Feedback';
 import Help from '../screens/Auth/DashboardScreen/Help/Help';
+import TrackingOrder from '../screens/DUParcel/TrackingOrder/TrackingOrder';
+import PickSuccessfully from '../screens/DUParcel/PickSuccessfully.js/PickSuccessfully';
 
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +40,10 @@ export default function ParcelRoutes(props) {
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
        <Stack.Screen name="feedback" component={Feedback} />
        <Stack.Screen name="help" component={Help} />
+       <Stack.Screen name="trackingOrder" component={TrackingOrder} />
+       <Stack.Screen name="pickSuccessfully" component={PickSuccessfully} />
+       
+       
 
 
 

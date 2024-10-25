@@ -65,7 +65,7 @@ const ChooseMapLocation = ({navigation, route}) => {
       />
       <View style={{flex: 1}}>
         <MapRoute mapContainerView={{height: hp('70%')}} origin={geoLocation} />
-        <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} />
+        <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />
       </View>
       <View style={styles.bottomPopUpContainer}>
         <View style={{paddingHorizontal: 30, marginTop: '3%'}}>

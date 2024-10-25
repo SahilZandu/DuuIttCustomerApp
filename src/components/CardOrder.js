@@ -55,7 +55,7 @@ const CardOrder = ({item, index}) => {
     return formattedDate;
   };
 
-  const setNoImage = status => {
+  const setImageIcon = status => {
     switch (status) {
       case 'food':
         return appImages.order1;
@@ -95,7 +95,7 @@ const CardOrder = ({item, index}) => {
             source={
               item?.rider?.profile_pic?.length > 0
                 ? {uri: Url.Image_Url + item?.rider?.profile_pic}
-                : setNoImage(item?.order_type)
+                : setImageIcon(item?.order_type)
             }
           />
           <View style={{flex: 1, flexDirection: 'column', marginLeft: '2.5%'}}>

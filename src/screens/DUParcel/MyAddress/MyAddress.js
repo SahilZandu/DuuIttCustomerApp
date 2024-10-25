@@ -87,13 +87,13 @@ export default function MyAddress({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Header
+      {/* <Header
         title={'My Address'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
+      /> */}
 
       {loading == true ? (
         <AnimatedLoader type={'myAddress'} />

@@ -6,7 +6,7 @@ const AppInputScroll = ({children,padding,Pb,nestedScrollEnabled,...otherProps})
   <InputScrollView
     horizontal={false}
     nestedScrollEnabled={nestedScrollEnabled}
-    bounces={false}
+    bounces={true}
     keyboardOffset={150}
     useAnimatedScrollView={true}
     style={{flex: 1}}

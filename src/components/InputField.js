@@ -70,7 +70,7 @@ function InputField({
             outlineColor={colors.colorB6}
             activeOutlineColor={colors.color95}
             style={{
-              paddingLeft: prefix ? '10%' : 0,
+              paddingLeft: prefix ? '10%' : '2%',
               marginTop: '-2%',
               backgroundColor:colors.white,
               paddingVertical: 0,
@@ -78,7 +78,7 @@ function InputField({
               height:hp('5.8%'),
               fontWeight:'500'
             }}
-            theme={{roundness: 10}}
+            theme={{roundness: 50}}
             left={
               (leftIconName && (
                 <TextInput.Icon
@@ -115,6 +115,7 @@ function InputField({
                     icon={rightIconName}
                     size={24}
                     iconColor={'#8F8F8F'}
+                    style={{marginLeft:'4%'}}
                   />
                 )
               ) : null

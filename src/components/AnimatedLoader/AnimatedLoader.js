@@ -9,6 +9,7 @@ import LocationHistoryLoader from './LocationHistoryLoader';
 import MyAddressLoader from './MyAddressLoader';
 import OrderHistoryLoader from './OrderHistoryLoader';
 import RecentOrderLoader from './RecentOrderLoader';
+import TrackingOrderLoader from './TrackingOderLoader';
 
 
 const AnimatedLoader = ({type,absolute}) => {
@@ -19,6 +20,8 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'locationHistory' && <LocationHistoryLoader />}
       {type == 'orderHistoryLoader' && <OrderHistoryLoader />}
       {type == 'recentOrderLoader' && <RecentOrderLoader />}
+      {type == 'trackingOrderLoader' && <TrackingOrderLoader/>}
+      
       
       
     

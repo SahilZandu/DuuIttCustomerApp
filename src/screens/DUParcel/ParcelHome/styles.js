@@ -12,22 +12,15 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  homeSubContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    shadowRadius: 1,
-    shadowOffset: {height: 2, width: 0},
+  outerScrollView: {
+    flex: 1,
+    backgroundColor: colors.white,
+    marginTop: '2%',
   },
-  mapContainer: {
-    alignSelf: 'center',
-    height: hp('35%'),
-    width: wp('100%'),
-    overflow: 'hidden',
+  bottomImageView:{
+    marginTop: '5%'
   },
-  markerImage: {
-    height: 35,
-    width: 35,
-    marginTop: Platform.OS == 'ios' ? '25%' : 0,
-  },
+  bottomImage:{
+    height: hp('30%'), width: wp('100%')
+  }
 });

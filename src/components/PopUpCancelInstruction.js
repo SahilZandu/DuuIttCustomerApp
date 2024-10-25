@@ -9,11 +9,7 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {appImages} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import Spacer from '../halpers/Spacer';
-import BTN from './cta/BTN';
 import {fonts} from '../theme/fonts/fonts';
-import PickDropImageComp from './PickDropImageComp';
-import TextRender from './TextRender';
-import {currencyFormat} from '../halpers/currencyFormat';
 import CTA from './cta/CTA';
 
 const PopUpCancelInstruction = ({

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     main:(marginTop)=>( {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:marginTop ? marginTop : '12%',
+        marginTop:marginTop ? marginTop : '20%',
         marginHorizontal:22
       }),
       titleText: {

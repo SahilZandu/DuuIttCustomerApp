@@ -9,14 +9,11 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import CTA from '../components/cta/CTA';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import Spacer from '../halpers/Spacer';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {SvgXml} from 'react-native-svg';
+import {appImages} from '../commons/AppImages';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import {colors} from '../theme/colors';
@@ -27,20 +24,20 @@ import Rating from '../components/Rating';
 import TextRender from '../components/TextRender';
 import {currencyFormat} from '../halpers/currencyFormat';
 import OtpShowComp from '../components/OtpShowComp';
-import PickDropImageComp from '../components/PickDropImageComp';
-import DriverTrackingProfileComp from '../components/DriverTrackingProfileComp';
-import DriverTrackingComp from '../components/DriverTrackingComp';
 import MapRouteMarker from '../components/MapRouteMarker';
 import {rootStore} from '../stores/rootStore';
-import Modal from 'react-native-modal';
 import MapRoute from '../components/MapRoute';
-import BTN from '../components/cta/BTN';
 import DriverMeetPickup from '../components/DriverMeetPickup';
 import MeetingPickupComp from '../components/MeetPickupComp';
 import HomeSlider from '../components/slider/homeSlider';
 import PopUpRideDetails from '../components/PopUpRideDetails';
 import PopUpCancelInstruction from '../components/PopUpCancelInstruction';
 import PopUpRideCancel from '../components/PopUpRideCancel';
+import socketServices from '../socketIo/SocketServices';
+import {
+  getCurrentLocation,
+  setCurrentLocation,
+} from '../components/GetAppLocation';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -48,15 +45,16 @@ let imageArray = [
   {id: 3, image: appImages.sliderImage1},
   {id: 4, image: appImages.sliderImage2},
 ];
+
 const SearchingRideForm = ({navigation, route}) => {
+  // const socket = io(Url.Base_Url); // Replace with your server URL
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
+  const {appUser} = rootStore.commonStore;
   const refRBSheet = useRef(null);
-  const refRBSheetTrack = useRef(null);
   const {paymentMethod} = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
-  const [trackingDriver, setTrackingDriver] = useState('otp');
   const [geoLocation, setGeoLocation] = useState({});
   const [destination, setDestination] = useState({});
   const [parcelInfo, setParcelInfo] = useState(addParcelInfo);
@@ -68,6 +66,15 @@ const SearchingRideForm = ({navigation, route}) => {
   const [cancelVisible, setCancelVisible] = useState(false);
   const [rideDetailsVisible, setRideDetailsVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(imageArray);
+
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
 
   console.log(
     'paymentMethod--',
@@ -92,21 +99,78 @@ const SearchingRideForm = ({navigation, route}) => {
   useEffect(() => {
     const {addParcelInfo} = rootStore.parcelStore;
     setTimeout(() => {
+      if(addParcelInfo?.status == 'accepted'){
+        setSearchArrive('arrive');
+        refRBSheet.current.open();
+      }
       setParcelInfo(addParcelInfo);
     }, 500);
   }, [addParcelInfo]);
 
   useEffect(() => {
     setTimeout(() => {
-      setSearchArrive('arrive');
-      // if (trackingDriver == 'confirm') {
-      //   refRBSheetTrack.current.open();
-      // } else {
-      refRBSheet.current.open();
-      ridePickupParcel();
+      // if(parcelInfo?.status == 'accepted'){
+      //   setSearchArrive('arrive');
+      //   refRBSheet.current.open();
+      // }else{
+        setSearchArrive('arrive');
+        refRBSheet.current.open();
       // }
     }, 5000);
+  }, [parcelInfo]);
+
+  useEffect(() => {
+    socketServices.initailizeSocket();
+    ridePickupParcel()
   }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      let query = {
+        lat: getLocation('lat')?.toString(),
+        lng: getLocation('lng')?.toString(),
+        user_id: appUser?._id,
+        user_type: 'customer',
+      };
+      socketServices.emit('update-location', query);
+
+      socketServices.on('getremainingdistance', data => {
+        console.log('Remaining distance data:', data);
+      });
+    }, 2000);
+
+    const intervalId = setInterval(() => {
+      setCurrentLocation();
+      setTimeout(() => {
+        getSocketLocation(socketServices);
+      }, 1000);
+    }, 10000);
+    return () => {
+      clearInterval(intervalId); clearTimeout(timeoutId);
+    };
+  },[]);
+
+  const getSocketLocation = async socketServices => {
+    const {appUser} = rootStore.commonStore;
+    let query = {
+      lat: getLocation('lat')?.toString(),
+      lng: getLocation('lng')?.toString(),
+      user_id: appUser?._id,
+      user_type: 'customer',
+    };
+    socketServices.emit('update-location', query);
+
+    let request = {
+      lat: getLocation('lat')?.toString(),
+      lng: getLocation('lng')?.toString(),
+      // rider_id: parcelInfo?.rider?._id,
+      rider_id: '66ec10d66a97b571cbce371c',
+      customer_id: appUser?._id,
+      user_type: 'customer',
+    };
+    console.log('Socket state:', socketServices?.socket?.connected, request);
+    socketServices.emit('remaining-distance', request);
+  };
 
   const onGetNearByRider = async info => {
     console.log('info--', info);
@@ -170,31 +234,6 @@ const SearchingRideForm = ({navigation, route}) => {
     // },
   ];
 
-  const parcelOtp = [2, 4, 5, 6];
-
-  const trackingArray = [
-    {
-      id: 0,
-      name: 'Arrived to pick up location',
-      status: 'completed',
-    },
-    {
-      id: 1,
-      name: 'Picked',
-      status: 'completed',
-    },
-    {
-      id: 2,
-      name: 'Arrived to destination',
-      status: 'inProgress',
-    },
-    {
-      id: 3,
-      name: 'Delivered',
-      status: 'not Arrive',
-    },
-  ];
-
   const hanldeLinking = type => {
     if (type) {
       if (type == 'email') {
@@ -207,7 +246,8 @@ const SearchingRideForm = ({navigation, route}) => {
 
   const onCancelRequest = async () => {
     const value = {
-      parcel_id: addParcelInfo?.customer_id,
+      orderId: addParcelInfo?._id,
+      customerId: addParcelInfo?.customer_id,
       reason: cancelReason,
     };
 
@@ -220,6 +260,9 @@ const SearchingRideForm = ({navigation, route}) => {
 
   const onSuccess = () => {
     setCancelVisible(false);
+    socketServices.removeListener('update-location');
+    socketServices.removeListener('remaining-distance');
+    socketServices.disconnectSocket();
     setTimeout(() => {
       navigation.navigate('parcel', {screen: 'home'});
     }, 200);
@@ -231,21 +274,19 @@ const SearchingRideForm = ({navigation, route}) => {
       setCancelVisible(false);
       setRideDetailsVisible(false);
       // refRBSheet.current.close();
-    }, 30000);
+    },30000);
     setTimeout(() => {
-      navigation.navigate('parcel', {screen: 'home'});
-    }, 35000);
+      socketServices.removeListener('update-location');
+      socketServices.removeListener('remaining-distance');
+      socketServices.disconnectSocket();
+      navigation.navigate('pickSuccessfully');
+    },32000);
   };
 
   const onDotPress = () => {
-    // if (trackingDriver == 'confirm') {
-    //   refRBSheetTrack.current.close();
-    // } else {
     refRBSheet.current.close();
-    // }
     setTimeout(() => {
       setRideDetailsVisible(true);
-      // setVisible(true);
     }, 500);
   };
 
@@ -299,116 +340,26 @@ const SearchingRideForm = ({navigation, route}) => {
                 unfilledColor={colors.color95}
               />
             </View>
-
-            {/* <Spacer space={'11%'} />
-            <CTA
-              onPress={async () => {
-                setSearchArrive('arrive');
-                if (trackingDriver == 'confirm') {
-                  refRBSheetTrack.current.open();
-                } else {
-                  refRBSheet.current.open();
-                }
-              }}
-              title={'Cancel Pickup'}
-              textTransform={'capitalize'}
-              bottomCheck={10}
-              backgroundColor={colors.white}
-              labelColor={colors.main}
-            /> */}
           </View>
         </View>
       ) : (
         <TouchableOpacity
           onPress={async () => {
-            // if (trackingDriver == 'confirm') {
-            //   refRBSheetTrack.current.open();
-            // } else {
             refRBSheet.current.open();
-            // }
           }}
           activeOpacity={0.9}
           style={styles.containerDriverTouch}>
           <View style={styles.innerDriverView}>
-            {/* {trackingDriver == 'confirm' ? (
-              <DriverTrackingProfileComp
-                topLine={true}
-                item={{
-                  image: appImages.avtarImage,
-                  name: 'Felicia Cudmore',
-                  rating: '4.5',
-                }}
-                onMessage={() => {
-                  hanldeLinking('email');
-                }}
-                onCall={() => {
-                  hanldeLinking('call');
-                }}
-              />
-            ) : ( */}
             <DriverMeetPickup
               topLine={true}
               onPressDot={() => {
                 onDotPress();
               }}
             />
-            {/* )} */}
           </View>
         </TouchableOpacity>
       )}
 
-      {/* {trackingDriver == 'confirm' ? (
-        <RBSheet
-          height={hp('52%')}
-          ref={refRBSheetTrack}
-          closeOnDragDown={true}
-          closeOnPressMask={true}
-          keyboardAvoidingViewEnabled={Platform.OS == 'ios' ? true : false}
-          customStyles={{
-            wrapper: {
-              backgroundColor: 'rgba(52, 52, 52, 0.8)',
-            },
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            },
-          }}>
-          <View style={{marginHorizontal: 20, marginTop: '-3%'}}>
-            <DriverTrackingProfileComp
-              item={{
-                image: appImages.avtarImage,
-                name: 'Felicia Cudmore',
-                rating: '4.5',
-              }}
-              onMessage={() => {
-                hanldeLinking('email');
-              }}
-              onCall={() => {
-                hanldeLinking('call');
-              }}
-            />
-            <View
-              style={{
-                height: 1,
-                backgroundColor: colors.colorD9,
-                marginTop: '4%',
-                marginHorizontal: -20,
-              }}
-            />
-
-            <DriverTrackingComp
-              data={trackingArray}
-              image={appImages.packetImage}
-              bottomLine={true}
-            />
-            <TextRender
-              title={'Tracking ID'}
-              value={'N8881765'}
-              bottomLine={false}
-            />
-          </View>
-        </RBSheet>
-      ) : ( */}
       <RBSheet
         height={hp('80%')}
         ref={refRBSheet}
@@ -514,29 +465,12 @@ const SearchingRideForm = ({navigation, route}) => {
               />
             );
           })}
-          {/* <Spacer space={'9%'} />
-            <CTA
-              onPress={async () => {
-                if (trackingDriver == 'confirm') {
-                  refRBSheetTrack.current.close();
-                } else {
-                  refRBSheet.current.close();
-                }
-                setTimeout(() => {
-                  setVisible(true);
-                }, 500);
-              }}
-              title={'Cancel Pickup'}
-              textTransform={'capitalize'}
-              backgroundColor={colors.white}
-              labelColor={colors.main}
-            /> */}
+
           <View style={{marginLeft: '6%', alignSelf: 'center'}}>
             <HomeSlider data={sliderItems} />
           </View>
         </View>
       </RBSheet>
-      {/* )} */}
 
       <PopUpRideDetails
         isVisible={rideDetailsVisible}

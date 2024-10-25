@@ -35,14 +35,14 @@ import {appImages} from '../../../commons/AppImages';
 import Modal from 'react-native-modal';
 import Tabs2 from '../../../components/Tabs2';
 import {Surface} from 'react-native-paper';
-import { rootStore } from '../../../stores/rootStore';
+import {rootStore} from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import InputFieldLabel from '../../../components/InputFieldLabel';
 
+export default function AddMyAddress({navigation, route}) {
+  const {type, data} = route.params;
 
-export default function AddMyAddress({navigation,route}) {
-  const{type,data}=route.params;
-
-  const {myAddress}=rootStore.myAddressStore;
+  const {myAddress} = rootStore.myAddressStore;
 
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
@@ -55,14 +55,14 @@ export default function AddMyAddress({navigation,route}) {
   };
   const [loading, setLoading] = useState(false);
   const [geoLocation, setGeoLocation] = useState({
-    lat:getLocation('lat'),
-    lng:getLocation('lng')
+    lat: getLocation('lat'),
+    lng: getLocation('lng'),
   });
   const [address, setAddress] = useState('');
-  const [loactionId ,setLocationId]=useState('')
+  const [loactionId, setLocationId] = useState('');
   const [name, setName] = useState('');
   const [visible, setVisible] = useState(false);
-  const [title ,setTitle]=useState('Home')
+  const [title, setTitle] = useState('Home');
 
   const [initialValues, setInitialValues] = useState({
     name: '',
@@ -78,36 +78,33 @@ export default function AddMyAddress({navigation,route}) {
     }, []),
   );
   const tabs = [
-    {id:0, text: 'Home', icon: appImages.homeLocation},
-    {id:1,text: 'Work', icon: appImages.workLocation},
-    {id:2,text: 'Hotel', icon: appImages.hotelLocation},
-    {id:3,text: 'Other', icon: appImages.addressLocation},
+    {id: 0, text: 'Home', icon: appImages.homeLocation},
+    {id: 1, text: 'Work', icon: appImages.workLocation},
+    {id: 2, text: 'Hotel', icon: appImages.hotelLocation},
+    {id: 3, text: 'Other', icon: appImages.addressLocation},
   ];
 
-  useEffect(()=>{
-    setGeoLocation(
-      {
-      lat:getLocation('lat'),
-      lng:getLocation('lng')
-      }
-    )
-if(data){
-  console.log("data---",data)
-  const nameData = data?.address?.split(',');
-  setGeoLocation(data?.geo_location);
-  setAddress(data?.address);
-  setLocationId(data?.location_id)
-  setName(nameData[0]);
- setTitle(data?.title)
-setInitialValues({
-    name: data?.name,
-    phone: data?.phone?.toString(),
-    house: data?.address_detail,
-    landmark: data?.landmark,
-  });
-
-}
-  },[data])
+  useEffect(() => {
+    setGeoLocation({
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    });
+    if (data) {
+      console.log('data---', data);
+      const nameData = data?.address?.split(',');
+      setGeoLocation(data?.geo_location);
+      setAddress(data?.address);
+      setLocationId(data?.location_id);
+      setName(nameData[0]);
+      setTitle(data?.title);
+      setInitialValues({
+        name: data?.name,
+        phone: data?.phone?.toString(),
+        house: data?.address_detail,
+        landmark: data?.landmark,
+      });
+    }
+  }, [data]);
 
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
@@ -116,7 +113,7 @@ setInitialValues({
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setAddress(addressData?.address);
-    setLocationId(addressData?.place_Id)
+    setLocationId(addressData?.place_Id);
   };
 
   const FormButton = ({loading, onPress}) => {
@@ -132,27 +129,36 @@ setInitialValues({
     );
   };
 
-  const handleSvae = async(values) => {
+  const handleSvae = async values => {
     // console.log('values--', values,address ,title,geoLocation);
-      await myAddress(type,values,title,address,geoLocation,loactionId,onSuccess,handleLoading)
+    await myAddress(
+      type,
+      values,
+      title,
+      address,
+      geoLocation,
+      loactionId,
+      onSuccess,
+      handleLoading,
+    );
   };
 
-  const handleLoading=(v)=>{
-    setLoading(v)
-  }
+  const handleLoading = v => {
+    setLoading(v);
+  };
 
-  const onSuccess=()=>{
-    setVisible(false)
+  const onSuccess = () => {
+    setVisible(false);
     setTimeout(() => {
-      navigation.navigate('parcel',{screen:'home'})
-    },300);
-  }
+      navigation.navigate('parcel', {screen: 'home'});
+    }, 300);
+  };
 
   const onPressAddress = (data, details) => {
     setName(details?.name);
     setAddress(details?.formatted_address);
     setGeoLocation(details?.geometry?.location);
-    setLocationId(details?.place_id)
+    setLocationId(details?.place_id);
   };
 
   const handleConfirm = () => {
@@ -162,7 +168,7 @@ setInitialValues({
 
   const handleTabPress = async text => {
     console.log('text--', text);
-      setTitle(text)
+    setTitle(text);
   };
 
   const OpenDetails = () => {
@@ -181,7 +187,7 @@ setInitialValues({
             Add New Address
           </Text>
           <Spacer space={'2%'} />
-          <Tabs2 tabs={tabs} tabPress={handleTabPress} title={title}/>
+          <Tabs2 tabs={tabs} tabPress={handleTabPress} title={title} />
           <Surface
             elevation={2}
             style={{
@@ -221,29 +227,35 @@ setInitialValues({
               </TouchableOpacity>
             </View>
           </Surface>
+          <View style={{marginHorizontal: 20}}>
+            <InputFieldLabel
+              borderWidth={1}
+              inputLabel={'Flat / House no / Floor / Building'}
+              name={'house'}
+              placeholder={'e.g. #109'}
+            />
+            <InputFieldLabel
+              borderWidth={1}
+              inputLabel={'Nearby landmark (Optional)'}
+              name={'landmark'}
+              placeholder={'e.g. Bidu biotique'}
+            />
+            <InputFieldLabel
+              borderWidth={1}
+              inputLabel={'User Name'}
+              name={'name'}
+              placeholder={'Enter your name'}
+            />
+            <InputFieldLabel
+              keyboardType={'phone-pad'}
+              borderWidth={1}
+              inputLabel={'User Phone Number'}
+              name={'phone'}
+              placeholder={'Enter your phone number'}
+              maxLength={10}
+            />
+          </View>
 
-          <FieldInput
-            inputLabel={'User Name'}
-            name={'name'}
-            placeholder={'Enter name'}
-          />
-          <FieldInput
-            keyboardType={'phone-pad'}
-            inputLabel={'User Phone Number'}
-            name={'phone'}
-            placeholder={'Enter your phone number'}
-            maxLength={10}
-          />
-          <FieldInput
-            inputLabel={'Flat / House no / Floor / Building '}
-            name={'house'}
-            placeholder={'e.g. #109'}
-          />
-          <FieldInput
-            inputLabel={'Nearby landmark (Optional)'}
-            name={'landmark'}
-            placeholder={'e.g. Bidu biotique'}
-          />
           <Spacer space={'10%'} />
           <FormButton loading={loading} onPress={handleSvae} />
         </View>
@@ -254,41 +266,45 @@ setInitialValues({
   return (
     <View style={styles.container}>
       <Header
-        title={type == 'add' ? 'Add My Address':'Upadate My Address'}
+        title={type == 'add' ? 'Add My Address' : 'Upadate My Address'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
       />
       <View style={styles.main}>
-        <MapRouteMarker mapContainerView={{height: hp('70%')}}  origin={geoLocation}/>
-        <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} />
+        <MapRouteMarker
+          mapContainerView={{height: hp('70%')}}
+          origin={geoLocation}
+        />
+        <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />
 
-        <View
-          style={styles.addressView}>
-            {!address?.length > 0  ? <AnimatedLoader type={'addMyAddress'}/>
-            :
-          <View style={{paddingHorizontal: 30, marginTop: '3%'}}>
-            <LocationHistoryCard
-              bottomLine={true}
-              item={{
-                name: name,
-                address: address,
-              }}
-              index={0}
-              onPress={() => {}}
-            />
-            <Spacer space={'12%'} />
-            <CTA
-              disable={!(address || name)}
-              onPress={() => {
-                handleConfirm();
-              }}
-              title={'Confirm'}
-              textTransform={'capitalize'}
-              bottomCheck={10}
-            />
-          </View>}
+        <View style={styles.addressView}>
+          {!address?.length > 0 ? (
+            <AnimatedLoader type={'addMyAddress'}  />
+          ) : (
+            <View style={{paddingHorizontal: 30, marginTop: '3%'}}>
+              <LocationHistoryCard
+                bottomLine={true}
+                item={{
+                  name: name,
+                  address: address,
+                }}
+                index={0}
+                onPress={() => {}}
+              />
+              <Spacer space={'12%'} />
+              <CTA
+                disable={!(address || name)}
+                onPress={() => {
+                  handleConfirm();
+                }}
+                title={'Confirm'}
+                textTransform={'capitalize'}
+                bottomCheck={10}
+              />
+            </View>
+          )}
         </View>
 
         <Modal
@@ -323,7 +339,7 @@ setInitialValues({
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10,
                 paddingBottom: '12%',
-                height: hp('80%'),
+                height: hp('82%'),
               }}>
               <Spacer space={'2%'} />
               <KeyboardAvoidingView
@@ -334,7 +350,7 @@ setInitialValues({
                   padding={true}
                   keyboardShouldPersistTaps={'handled'}
                   Pb={hp('15%')}>
-                 { OpenDetails()}
+                  {OpenDetails()}
                 </AppInputScroll>
               </KeyboardAvoidingView>
             </View>

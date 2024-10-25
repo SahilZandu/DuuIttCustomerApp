@@ -11,8 +11,6 @@ export default class ParcelStore {
     handleLoading(true);
     let requestData = {
       weight: Number(value?.weight),
-      quantity: value?.quantity,
-      type: value?.type,
       order_type:'parcel',
       sender_address: value?.sender_address,
       receiver_address: value?.receiver_address,
@@ -52,10 +50,11 @@ export default class ParcelStore {
     handleLoading(true);
 
     let requestData = {
-      parcel_id: value?.parcel_id,
-      order_cancel_by: 'customer',
+      order_id: value?.orderId,
+      user_type: 'customer',
+      order_type: 'parcel',
+      user_id:value?.customerId,
       reason_of_cancellation: value?.reason,
-      status: 'rejected',
     };
 
     console.log('requestData:-', requestData);

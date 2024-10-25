@@ -1,28 +1,23 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {Text, TouchableOpacity, View, Image, Dimensions,KeyboardAvoidingView,} from 'react-native';
-import {appImagesSvg, appImages} from '../../../../commons/AppImages';
+import {View, KeyboardAvoidingView, Image} from 'react-native';
+import {appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import MikePopUp from '../../../../components/MikePopUp';
 import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
 import {homeCS} from '../../../../stores/DummyData/Home';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../../theme/fonts/fonts';
-import {colors} from '../../../../theme/colors';
 import ChangeRoute from '../../../../components/ChangeRoute';
 import {mainArray} from '../../../../stores/DummyData/Home';
 import HomeSlider from '../../../../components/slider/homeSlider';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import RenderOffer from '../../../../components/RenderOffer';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import { useFocusEffect } from '@react-navigation/native';
-import { rootStore } from '../../../../stores/rootStore';
-
-
+import {useFocusEffect} from '@react-navigation/native';
+import {rootStore} from '../../../../stores/rootStore';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {hasProp} from 'mobx/dist/internal';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -31,29 +26,25 @@ let imageArray = [
   {id: 4, image: appImages.sliderImage2},
 ];
 
-
-
-
 export default function Home({navigation}) {
-  const {appUser}=rootStore.commonStore;
+  const {appUser} = rootStore.commonStore;
   const [sliderItems, setSliderItems] = useState(imageArray);
   const [isKeyboard, setIskeyboard] = useState(false);
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
-  const [appUserInfo ,setAppUserInfo]=useState(appUser)
-
+  const [appUserInfo, setAppUserInfo] = useState(appUser);
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
-      onUpdateUserInfo()
+      onUpdateUserInfo();
     }, []),
   );
 
-  const onUpdateUserInfo=()=>{
-    const {appUser}=rootStore.commonStore;
-    setAppUserInfo(appUser)
-  }
+  const onUpdateUserInfo = () => {
+    const {appUser} = rootStore.commonStore;
+    setAppUserInfo(appUser);
+  };
 
   const hanldeSearch = async s => {
     console.log('get res:--', s);
@@ -69,52 +60,53 @@ export default function Home({navigation}) {
     setVisible(false);
   };
 
- 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.text}> Under Processing .... </Text> */}
-    
-        <DashboardHeader
-           navigation={navigation}
-          // title={'Home'}
-          autoFocus={isKeyboard}
-          onPressSecond={() => {
-            // alert('second');
-          }}
-          secondImage={appImagesSvg.cartIcon}
-          value={searchRes}
-          onChangeText={t => {
-            setSearchRes(t);
-            if (t) {
-              hanldeSearch(t);
-            }
-          }}
-          onMicroPhone={() => {
-            setVisible(true);
-          }}
-          onFocus={() => setIskeyboard(true)}
-          onBlur={() => setIskeyboard(false)}
-          onCancelPress={() => {
-            setSearchRes('');
-          }}
-          appUserInfo={appUserInfo}
-        />
+      <DashboardHeader
+        navigation={navigation}
+        // title={'Home'}
+        // autoFocus={isKeyboard}
+        // onPressSecond={() => {
+        //   // alert('second');
+        // }}
+        // secondImage={appImagesSvg.cartIcon}
+        // value={searchRes}
+        // onChangeText={t => {
+        //   setSearchRes(t);
+        //   if (t) {
+        //     hanldeSearch(t);
+        //   }
+        // }}
+        // onMicroPhone={() => {
+        //   setVisible(true);
+        // }}
+        // onFocus={() => setIskeyboard(true)}
+        // onBlur={() => setIskeyboard(false)}
+        // onCancelPress={() => {
+        //   setSearchRes('');
+        // }}
+        appUserInfo={appUserInfo}
+      />
       <View style={styles.mainView}>
-       <KeyboardAvoidingView
-          style={{flex: 1,marginTop:'1.5%'}}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          >
-          <AppInputScroll
-            padding={true}
-            keyboardShouldPersistTaps={'handled'}>
+        <KeyboardAvoidingView
+          style={{flex: 1, marginTop: '1.5%'}}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
+            <View style={styles.innerView}>
+              <ChangeRoute data={homeCS} navigation={navigation} />
 
-        <ChangeRoute data={homeCS} navigation={navigation} />
+              <HomeSlider data={sliderItems} paginationList={true} />
 
-         <HomeSlider data={sliderItems} paginationList={true}/>
-
-          <RenderOffer data={mainArray}/>
-
-        </AppInputScroll>
+              <RenderOffer data={mainArray} />
+            </View>
+            <View style={styles.bottomImageView}>
+              <Image
+                resizeMode="cover"
+                style={styles.bottomImage}
+                source={appImages.mainHomeBootmImage}
+              />
+            </View>
+          </AppInputScroll>
         </KeyboardAvoidingView>
       </View>
       <MikePopUp

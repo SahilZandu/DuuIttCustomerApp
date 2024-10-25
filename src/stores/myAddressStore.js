@@ -63,19 +63,20 @@ export default class MyAddressStore {
       
     } catch (error) {
       console.log('error:', error);
-      const m = error?.data?.message
-      ? error?.data?.message
-      : 'Something went wrong';
-    useToast(m, 0);
-    }
+    //   const m = error?.data?.message
+    //   ? error?.data?.message
+    //   : 'Something went wrong';
+    // useToast(m, 0);
     return []
+    }
+   
   };
 
   deleteMyAddress = async (type,data,onSuccess,handleLoading) => {
     let requestData = {
         title:data?.title,
         name:data?.name ?data?.name :'test',
-        phone:data?.phone ? Number(data?.phone):9876543524 ,
+        phone:data?.phone ? Number(data?.phone):9876543210,
         address:data?.address,
         address_detail:data?.address_detail,
         geo_location:data?.geo_location,

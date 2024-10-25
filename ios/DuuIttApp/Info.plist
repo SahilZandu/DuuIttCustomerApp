@@ -9,7 +9,8 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<!-- <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string> -->
+    <string>org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -48,7 +49,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This is the plist item for NSLocationAlwaysUsageDescription</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs to get your location...</string>
+	<string>Your location is required for real time tracking...</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need access to your microphone to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

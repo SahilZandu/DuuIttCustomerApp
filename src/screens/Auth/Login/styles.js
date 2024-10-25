@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.color72,
     textAlign: 'center',
+    marginTop: '1%',
   },
   touchView: {
     marginTop: '3%',

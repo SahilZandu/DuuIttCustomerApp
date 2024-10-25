@@ -17,12 +17,18 @@ export const styles = StyleSheet.create({
   },
   mainView:{
     flex:1,
+    // marginHorizontal:10
+  },
+  innerView:{
+    justifyContent:'center',
     marginHorizontal:10
   },
-  text:{
-    fontSize:RFValue(14),
-    fontFamily:fonts.bold,
-    color:colors.black
+  bottomImageView:{
+    marginTop: '5%'
+  },
+  bottomImage:{
+    height: hp('30%'), width: wp('100%')
   }
+ 
  
 });
