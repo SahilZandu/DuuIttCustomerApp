@@ -6,6 +6,7 @@ import {
 } from 'react-native-responsive-screen';
 import AddMyAddressLoader from './AddMyAddressLoader';
 import LocationHistoryLoader from './LocationHistoryLoader';
+import MultipleRiderLoader from './MultipleRiderLoader';
 import MyAddressLoader from './MyAddressLoader';
 import OrderHistoryLoader from './OrderHistoryLoader';
 import RecentOrderLoader from './RecentOrderLoader';
@@ -21,6 +22,7 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'orderHistoryLoader' && <OrderHistoryLoader />}
       {type == 'recentOrderLoader' && <RecentOrderLoader />}
       {type == 'trackingOrderLoader' && <TrackingOrderLoader/>}
+      {type == 'multipleRiderLoader' &&  <MultipleRiderLoader/>}
       
       
       

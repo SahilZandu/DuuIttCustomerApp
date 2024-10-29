@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {View, KeyboardAvoidingView, Image} from 'react-native';
+import {View, KeyboardAvoidingView, Image, PermissionsAndroid, Platform} from 'react-native';
 import {appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import MikePopUp from '../../../../components/MikePopUp';
@@ -17,7 +17,9 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {hasProp} from 'mobx/dist/internal';
+import messaging from '@react-native-firebase/messaging';
+import { useNotifications } from '../../../../halpers/useNotifications';
+
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -28,18 +30,92 @@ let imageArray = [
 
 export default function Home({navigation}) {
   const {appUser} = rootStore.commonStore;
+  useNotifications(navigation);
+
   const [sliderItems, setSliderItems] = useState(imageArray);
   const [isKeyboard, setIskeyboard] = useState(false);
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
 
+
   useFocusEffect(
     useCallback(() => {
+      requestNotificationPermission()
       handleAndroidBackButton();
       onUpdateUserInfo();
     }, []),
   );
+
+
+  async function requestNotificationPermission() {
+    if (Platform.OS === 'android' && Platform.Version >= 33) {  // Android 13+
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+          {
+            title: "Notification Permission",
+            message:
+              "This app needs notification permissions to send you alerts.",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK"
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log("Notification permission granted");
+        } else {
+          console.log("Notification permission denied");
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  }
+
+  
+  useEffect(() => {
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+        await registerForRemoteMessages();
+      }
+    };
+
+    const registerForRemoteMessages = async () => {
+      try {
+        await messaging().registerDeviceForRemoteMessages();
+        console.log('Device registered for remote messages.');
+        await getToken();
+      } catch (error) {
+        console.log('Error registering device for remote messages:', error);
+      }
+    };
+
+    const getToken = async () => {
+      try {
+        const token = await messaging().getToken();
+        console.log('FCM Token:', token);
+      } catch (error) {
+        console.log('Error getting token:', error);
+      }
+    };
+
+    // Initialize FCM
+    const initFCM = async () => {
+      await requestUserPermission();
+    };
+
+    initFCM();
+  }, []);
+
+
+
 
   const onUpdateUserInfo = () => {
     const {appUser} = rootStore.commonStore;

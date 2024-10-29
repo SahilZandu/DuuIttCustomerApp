@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Alert,
   Linking,
+  Animated,
+  ScrollView,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -38,6 +40,12 @@ import {
   getCurrentLocation,
   setCurrentLocation,
 } from '../components/GetAppLocation';
+import {useFocusEffect} from '@react-navigation/native';
+import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -47,7 +55,6 @@ let imageArray = [
 ];
 
 const SearchingRideForm = ({navigation, route}) => {
-  // const socket = io(Url.Base_Url); // Replace with your server URL
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
   const {appUser} = rootStore.commonStore;
@@ -66,6 +73,8 @@ const SearchingRideForm = ({navigation, route}) => {
   const [cancelVisible, setCancelVisible] = useState(false);
   const [rideDetailsVisible, setRideDetailsVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(imageArray);
+  const [multipleRider, setMultipleRider] = useState(true);
+  const [minMaxHp, setMinMaxHp] = useState(hp('75%'));
 
   const getLocation = type => {
     let d =
@@ -94,14 +103,14 @@ const SearchingRideForm = ({navigation, route}) => {
         onGetNearByRider(addParcelInfo);
       }, 1000);
     }
-  }, []);
+  }, [addParcelInfo]);
 
   useEffect(() => {
     const {addParcelInfo} = rootStore.parcelStore;
     setTimeout(() => {
-      if(addParcelInfo?.status == 'accepted'){
+      if (addParcelInfo?.status == 'accepted') {
         setSearchArrive('arrive');
-        refRBSheet.current.open();
+        // refRBSheet.current.open();
       }
       setParcelInfo(addParcelInfo);
     }, 500);
@@ -113,15 +122,15 @@ const SearchingRideForm = ({navigation, route}) => {
       //   setSearchArrive('arrive');
       //   refRBSheet.current.open();
       // }else{
-        setSearchArrive('arrive');
-        refRBSheet.current.open();
+      setSearchArrive('arrive');
+      // refRBSheet.current.open();
       // }
-    }, 5000);
+    }, 10000);
   }, [parcelInfo]);
 
   useEffect(() => {
     socketServices.initailizeSocket();
-    ridePickupParcel()
+    // ridePickupParcel()
   }, []);
 
   useEffect(() => {
@@ -138,17 +147,25 @@ const SearchingRideForm = ({navigation, route}) => {
         console.log('Remaining distance data:', data);
       });
     }, 2000);
-
-    const intervalId = setInterval(() => {
-      setCurrentLocation();
-      setTimeout(() => {
-        getSocketLocation(socketServices);
-      }, 1000);
-    }, 10000);
     return () => {
-      clearInterval(intervalId); clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
     };
-  },[]);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const intervalId = setInterval(() => {
+        setCurrentLocation();
+        setTimeout(() => {
+          getSocketLocation(socketServices);
+        }, 1000);
+      }, 10000);
+      return () => {
+        // This will run when the screen is unfocused
+        clearInterval(intervalId);
+      };
+    }, [socketServices]),
+  );
 
   const getSocketLocation = async socketServices => {
     const {appUser} = rootStore.commonStore;
@@ -181,8 +198,11 @@ const SearchingRideForm = ({navigation, route}) => {
     };
 
     const res = await parcelsFindRider(value, handleLoadingRider);
-    console.log('res--', res, value);
+    console.log('res-- parcels Find Rider - ', res, value);
     setNearByRider(res);
+    setTimeout(() => {
+      setMultipleRider(false);
+    }, 1000);
   };
 
   const handleLoadingRider = v => {
@@ -273,18 +293,18 @@ const SearchingRideForm = ({navigation, route}) => {
       setVisible(false);
       setCancelVisible(false);
       setRideDetailsVisible(false);
-      // refRBSheet.current.close();
-    },30000);
-    setTimeout(() => {
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
       socketServices.disconnectSocket();
+      // refRBSheet.current.close();
+    }, 30000);
+    setTimeout(() => {
       navigation.navigate('pickSuccessfully');
-    },32000);
+    }, 32000);
   };
 
   const onDotPress = () => {
-    refRBSheet.current.close();
+    // refRBSheet.current.close();
     setTimeout(() => {
       setRideDetailsVisible(true);
     }, 500);
@@ -297,70 +317,200 @@ const SearchingRideForm = ({navigation, route}) => {
     }, 500);
   };
 
-  return (
-    <View style={styles.main}>
-      <View style={styles.mapView}>
-        {searchArrive == 'search' ? (
-          <MapRouteMarker
-            origin={geoLocation}
-            markerArray={nearbyRider}
-            mapContainerView={{height: hp('82%')}}
-          />
-        ) : (
-          <MapRoute
-            origin={geoLocation}
-            destination={destination}
-            mapContainerView={{height: hp('58%')}}
-          />
-        )}
-      </View>
-      {searchArrive == 'search' ? (
-        <View style={styles.containerSearchingView}>
-          <View style={styles.innerSearchingView}>
-            <View style={styles.textMainView}>
-              <Text style={styles.searchingPartnerText}>
-                Searching Delivery Partner
-              </Text>
-              <Text style={styles.findNearbyText}>Finding drivers nearby</Text>
-            </View>
-            <View style={{marginTop: '4%'}}>
-              <Image
-                resizeMode="contain"
-                style={styles.bikeImage}
-                source={appImages.searchingRide}
-              />
-              <Progress.Bar
-                indeterminate={searching}
-                indeterminateAnimationDuration={1000}
-                progress={0.2}
-                width={wp('84%')}
-                height={hp('0.5%')}
-                color={colors.color43}
-                borderColor={colors.color95}
-                unfilledColor={colors.color95}
-              />
-            </View>
-          </View>
-        </View>
-      ) : (
-        <TouchableOpacity
-          onPress={async () => {
-            refRBSheet.current.open();
-          }}
-          activeOpacity={0.9}
-          style={styles.containerDriverTouch}>
-          <View style={styles.innerDriverView}>
-            <DriverMeetPickup
-              topLine={true}
-              onPressDot={() => {
-                onDotPress();
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-      )}
+  const onGestureEvent = ({nativeEvent}) => {
+    console.log('nativeEvent----------', nativeEvent);
+    if (nativeEvent?.translationY >= 0) {
+      setMinMaxHp(hp('34%'));
+    } else {
+      setMinMaxHp(hp('75%'));
+    }
+    // if(nativeEvent?.absoluteY >= 451 && nativeEvent?.absoluteY <= 600){
+    //   setMinMaxHp(hp('60%'))
+    // }
+    // else if(nativeEvent?.absoluteY >= 250 && nativeEvent?.absoluteY <= 450){
+    //   setMinMaxHp(hp('30%'))
+    // }else{
+    //   setMinMaxHp(hp('30%'))
+    // }
+  };
 
-      <RBSheet
+  return (
+    <GestureHandlerRootView style={styles.main}>
+      <View style={styles.main}>
+        <View style={styles.mapView}>
+          {searchArrive == 'search' ? (
+            <>
+              {multipleRider == true ? (
+                <AnimatedLoader type="multipleRiderLoader" />
+              ) : (
+                <MapRouteMarker
+                  origin={geoLocation}
+                  markerArray={nearbyRider}
+                  mapContainerView={{height: hp('82%')}}
+                />
+              )}
+            </>
+          ) : (
+            <MapRoute
+              origin={geoLocation}
+              destination={destination}
+              mapContainerView={{height: hp('58%')}}
+            />
+          )}
+        </View>
+        {searchArrive == 'search' ? (
+          <View style={styles.containerSearchingView}>
+            <View style={styles.innerSearchingView}>
+              <View style={styles.textMainView}>
+                <Text style={styles.searchingPartnerText}>
+                  Searching Delivery Partner
+                </Text>
+                <Text style={styles.findNearbyText}>
+                  Finding drivers nearby
+                </Text>
+              </View>
+              <View style={{marginTop: '4%'}}>
+                <Image
+                  resizeMode="contain"
+                  style={styles.bikeImage}
+                  source={appImages.searchingRide}
+                />
+                <Progress.Bar
+                  indeterminate={searching}
+                  indeterminateAnimationDuration={1000}
+                  progress={0.2}
+                  width={wp('84%')}
+                  height={hp('0.5%')}
+                  color={colors.color43}
+                  borderColor={colors.color95}
+                  unfilledColor={colors.color95}
+                />
+              </View>
+            </View>
+          </View>
+        ) : (
+          <PanGestureHandler onGestureEvent={onGestureEvent}>
+            <Animated.View
+              style={[styles.containerDriverTouch, {height: minMaxHp}]}>
+              <View style={styles.topLineView} />
+              <View style={{marginHorizontal: 20}}>
+                <MeetingPickupComp
+                  firstText={'Meet at your pickup stop'}
+                  secondText={'Ride Details'}
+                  onPressDot={() => {
+                    onDotPress();
+                  }}
+                />
+                {minMaxHp == hp('75%') && (
+                  <>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: '5%',
+                      }}>
+                      <Image
+                        resizeMode="contain"
+                        style={{height: 55, width: 55}}
+                        source={appImages.avtarImage}
+                      />
+                      <Text
+                        numberOfLines={2}
+                        style={{
+                          fontSize: RFValue(12),
+                          fontFamily: fonts.semiBold,
+                          color: colors.black,
+                          marginLeft: '4%',
+                          width: wp('56.2%'),
+                        }}>
+                        Felicia Cudmore
+                      </Text>
+                      <Rating rating={'4.5'} />
+                    </View>
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: colors.colorD9,
+                        marginTop: '4%',
+                        marginHorizontal: -20,
+                      }}
+                    />
+                    <DriverArrivingComp
+                      topLine={false}
+                      title={'Pickup in 10 minutes'}
+                      onMessage={() => {
+                        hanldeLinking('email');
+                      }}
+                      onCall={() => {
+                        hanldeLinking('call');
+                      }}
+                    />
+
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: colors.colorD9,
+                        marginTop: '4%',
+                        marginHorizontal: -20,
+                      }}
+                    />
+
+                    <OtpShowComp
+                      title={'Parcel OTP'}
+                      // data={parcelOtp}
+                      data={parcelInfo?.parcel_otp?.sender_otp
+                        ?.toString()
+                        ?.split('')}
+                    />
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: colors.colorD9,
+                        marginTop: '4%',
+                        marginHorizontal: -20,
+                      }}
+                    />
+
+                    {driverArrive?.map((item, i) => {
+                      return (
+                        <TextRender
+                          title={item?.title}
+                          value={
+                            item?.title == 'Cash'
+                              ? currencyFormat(Number(item?.value))
+                              : item?.value
+                          }
+                          bottomLine={true}
+                        />
+                      );
+                    })}
+                  </>
+                )}
+                <View style={{marginLeft: '6%', alignSelf: 'center'}}>
+                  <HomeSlider data={sliderItems} />
+                </View>
+              </View>
+            </Animated.View>
+          </PanGestureHandler>
+
+          // <TouchableOpacity
+          //   onPress={async () => {
+          //     refRBSheet.current.open();
+          //   }}
+          //   activeOpacity={0.9}
+          //   style={styles.containerDriverTouch}>
+          //   <View style={styles.innerDriverView}>
+          //     <DriverMeetPickup
+          //       topLine={true}
+          //       onPressDot={() => {
+          //         onDotPress();
+          //       }}
+          //     />
+          //   </View>
+          // </TouchableOpacity>
+        )}
+
+        {/* <RBSheet
         height={hp('80%')}
         ref={refRBSheet}
         closeOnDragDown={true}
@@ -470,52 +620,53 @@ const SearchingRideForm = ({navigation, route}) => {
             <HomeSlider data={sliderItems} />
           </View>
         </View>
-      </RBSheet>
+      </RBSheet> */}
 
-      <PopUpRideDetails
-        isVisible={rideDetailsVisible}
-        onClose={() => {
-          setRideDetailsVisible(false);
-        }}
-        title={'Ride Details'}
-        info={parcelInfo}
-        onPressCancelRide={() => {
-          onPressCancelRide();
-        }}
-        loading={false}
-      />
+        <PopUpRideDetails
+          isVisible={rideDetailsVisible}
+          onClose={() => {
+            setRideDetailsVisible(false);
+          }}
+          title={'Ride Details'}
+          info={parcelInfo}
+          onPressCancelRide={() => {
+            onPressCancelRide();
+          }}
+          loading={false}
+        />
 
-      <PopUpCancelInstruction
-        isVisible={visible}
-        onClose={() => {
-          setVisible(false);
-        }}
-        title={'Why do you want to cancel ?'}
-        cancelRideInst={cancelRide}
-        onCancelReason={item => {
-          setCancelReason(item?.title);
-          setVisible(false);
-          setTimeout(() => {
-            setCancelVisible(true);
-          }, 500);
-        }}
-      />
+        <PopUpCancelInstruction
+          isVisible={visible}
+          onClose={() => {
+            setVisible(false);
+          }}
+          title={'Why do you want to cancel ?'}
+          cancelRideInst={cancelRide}
+          onCancelReason={item => {
+            setCancelReason(item?.title);
+            setVisible(false);
+            setTimeout(() => {
+              setCancelVisible(true);
+            }, 500);
+          }}
+        />
 
-      <PopUpRideCancel
-        isVisible={cancelVisible}
-        onClose={() => {
-          setCancelVisible(false);
-        }}
-        title={'Are you sure you want to cancel ?'}
-        message={
-          'This pickup has been offered to a driver right now, and should be confirmed within seconds.'
-        }
-        onCancelRequest={() => {
-          onCancelRequest();
-        }}
-        loading={loading}
-      />
-    </View>
+        <PopUpRideCancel
+          isVisible={cancelVisible}
+          onClose={() => {
+            setCancelVisible(false);
+          }}
+          title={'Are you sure you want to cancel ?'}
+          message={
+            'This pickup has been offered to a driver right now, and should be confirmed within seconds.'
+          }
+          onCancelRequest={() => {
+            onCancelRequest();
+          }}
+          loading={loading}
+        />
+      </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -569,11 +720,19 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     bottom: 0,
-    height: '38%',
+    height: hp('34%'),
     width: wp('100%'),
   },
   innerDriverView: {
     paddingHorizontal: 20,
     marginTop: '2%',
+  },
+  topLineView: {
+    height:hp("0.5%"),
+    backgroundColor: colors.colorD9,
+    width: wp('15%'),
+    borderRadius: 10,
+    alignSelf: 'center',
+    marginTop: '3%',
   },
 });

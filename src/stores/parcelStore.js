@@ -82,7 +82,6 @@ export default class ParcelStore {
 
   parcelsFindRider = async (value, handleLoading) => {
     handleLoading(true);
-
     let requestData = {
       parcel_id: value?.parcel_id,
       geo_location: value?.geo_location,
@@ -99,18 +98,18 @@ export default class ParcelStore {
         this.addParcelInfo = res?.data?.order;
         return res?.data?.riders;
       } else {
-        const message = res?.message ? res?.message : res?.data?.message;
-        useToast(message, 0);
+        // const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
     } catch (error) {
-      console.log('error:', error);
+      console.log('error parcels Find Rider -:', error);
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      useToast(m, 0);
+      // const m = error?.data?.message
+      //   ? error?.data?.message
+      //   : 'Something went wrong';
+      // useToast(m, 0);
       return [];
     }
   };

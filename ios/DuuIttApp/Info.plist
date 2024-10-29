@@ -78,10 +78,16 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+<false/>
 	<key>UIBackgroundModes</key>
 	<array>
+			<string>fetch</string>
 		<string>location</string>
+		<string>remote-notification</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+<string>We use your data to send you notifications about updates.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

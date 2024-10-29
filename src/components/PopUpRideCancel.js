@@ -46,7 +46,7 @@ const PopUpRideCancel = ({
         }}>
         <View
           style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor:colors.white,
             width: '100%',
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
@@ -88,8 +88,11 @@ const PopUpRideCancel = ({
               title={'Cancel Request'}
               textTransform={'capitalize'}
               onPress={onCancelRequest}
-              backgroundColor={colors.white}
-              labelColor={colors.main}
+              // backgroundColor={colors.white}
+              // labelColor={colors.main}
+              backgroundColor={colors.colorFFE}
+              labelColor={colors.colorFFB}
+              borderColor={colors.colorFFE}
               loading={loading}
               width={wp('42%')}
               bottomCheck={1}

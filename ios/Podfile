@@ -4,7 +4,7 @@
 #     "react-native/scripts/react_native_pods.rb",
 #     {paths: [process.argv[1]]},
 #   )', __dir__]).strip
-
+$FirebaseSDKVersion = '11.4.0'
 def node_require(script)
   # Resolve script with node to allow for hoisting
   require Pod::Executable.execute_command('node', ['-p',
@@ -56,6 +56,12 @@ end
 
 rn_maps_path = '../node_modules/react-native-maps'
 pod 'react-native-google-maps', :path => rn_maps_path
+
+pod 'Firebase', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+$RNFirebaseAsStaticFramework = true
 
 target 'DuuIttApp' do
   config = use_native_modules!

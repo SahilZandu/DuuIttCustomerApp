@@ -42,7 +42,9 @@ export const colors = {
     color5A:'#5A5B5C',
     colorFFA:'#FFAD80',
     colorFF10:'#FF7A3110',
-    colorFF:'#FF7A31'
+    colorFF:'#FF7A31',
+    colorFFE:'#FFEFF1',
+    colorFFB:'#FFBDC6'
    
     
    

@@ -91,13 +91,13 @@ const PopUpRideDetails = ({
                 marginTop: '10%',
               }}>
               <BTN
-                backgroundColor={'#CCFBDC'}
-                labelColor={colors.main}
+                backgroundColor={colors.colorFFE}
+                labelColor={colors.colorFFB}
                 width={wp('42%')}
                 bottomCheck={1}
                 title={'Cancel Ride'}
                 textTransform={'capitalize'}
-                borderColor={'#CCFBDC'}
+                borderColor={colors.colorFFE}
                 onPress={onPressCancelRide}
                 loading={loading}
               />
