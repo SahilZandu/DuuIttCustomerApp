@@ -1,5 +1,5 @@
-import React, {useState, useCallback} from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useCallback,useEffect} from 'react';
+import {View, Text, DeviceEventEmitter} from 'react-native';
 import {appImagesSvg} from '../../../../commons/AppImages';
 import {styles} from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
@@ -13,6 +13,10 @@ import TouchTextRightIconComp from '../../../../components/TouchTextRightIconCom
 import ProfileCompleteIconTextComp from '../../../../components/ProfileCompleteIconTextComp';
 import ProfileUpperShowComp from '../../../../components/ProfileUpperShowComp';
 import Spacer from '../../../../halpers/Spacer';
+import {fetch} from '@react-native-community/netinfo';
+import NoInternet from '../../../../components/NoInternet';
+
+
 
 export default function SideMenu({navigation}) {
   const {setToken, setAppUser, appUser} = rootStore.commonStore;
@@ -200,13 +204,30 @@ export default function SideMenu({navigation}) {
     email: '',
     phone: '',
   });
+  const [internet, setInternet] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
+      checkInternet();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();
     }, []),
   );
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('tab4', event => {
+      if (event != 'noInternet') {
+      }
+      setInternet(event == 'noInternet' ? false : true);
+      console.log('internet event');
+    });
+  }, []);
+  
+  const checkInternet = () => {
+    fetch().then(state => {
+      setInternet(state.isInternetReachable);
+    });
+  };
 
   const onUpdateUserInfo = () => {
     const {appUser} = rootStore.commonStore;
@@ -227,6 +248,8 @@ export default function SideMenu({navigation}) {
 
   return (
     <View style={styles.container}>
+      {internet == false ? <NoInternet/> 
+      :<> 
       <ProfileUpperShowComp
         navigation={navigation}
         item={initialValues}
@@ -264,6 +287,7 @@ export default function SideMenu({navigation}) {
           <TouchTextRightIconComp data={moreOptions} />
         </ReusableSurfaceComp>
       </AppInputScroll>
+      </>}
     </View>
   );
 }

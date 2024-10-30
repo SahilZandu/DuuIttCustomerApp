@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {Text, View, KeyboardAvoidingView} from 'react-native';
+import {Text, View, KeyboardAvoidingView, DeviceEventEmitter} from 'react-native';
 import {appImagesSvg, appImages} from '../../../../commons/AppImages';
 import {styles} from './styles';
 import {
@@ -19,6 +19,9 @@ import {Formik, useFormikContext} from 'formik';
 import {giftMessageValidations} from '../../../../forms/formsValidation/giftMessageValidations';
 import GiftCard from './GiftCard';
 import Rewards from './Rewards';
+import NoInternet from '../../../../components/NoInternet';
+import {fetch} from '@react-native-community/netinfo';
+
 
 const tabs = [{text: 'Gift cards'}, {text: 'Rewards'}];
 
@@ -39,9 +42,11 @@ export default function Promo({navigation}) {
     feedback: '',
   });
   const [giftReward, setGiftReward] = useState(defaultType);
+  const [internet, setInternet] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
+      checkInternet();
       handleAndroidBackButton(navigation);
     }, []),
   );
@@ -51,9 +56,25 @@ export default function Promo({navigation}) {
     console.log('text--', text);
     setGiftReward(text);
   };
+  useEffect(() => {
+    DeviceEventEmitter.addListener('tab2', event => {
+      if (event != 'noInternet') {
+      }
+      setInternet(event == 'noInternet' ? false : true);
+      console.log('internet event');
+    });
+  }, []);
+
+  const checkInternet = () => {
+    fetch().then(state => {
+      setInternet(state.isInternetReachable);
+    });
+  };
 
   return (
     <View style={styles.container}>
+      {internet == false ? <NoInternet/> 
+      :<> 
       <Formik
         initialValues={initialValues}
         validationSchema={giftMessageValidations()}>
@@ -100,6 +121,7 @@ export default function Promo({navigation}) {
           </AppInputScroll>
         </KeyboardAvoidingView>
       </Formik>
+      </>}
     </View>
   );
 }

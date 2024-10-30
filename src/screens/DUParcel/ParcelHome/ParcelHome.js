@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {Text, TouchableOpacity, View, Image} from 'react-native';
+import {Text, TouchableOpacity, View, Image, DeviceEventEmitter} from 'react-native';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {styles} from './styles';
 import {SvgXml} from 'react-native-svg';
@@ -27,6 +27,10 @@ import TrackingOrderComp from '../../../components/TrackingOrderComp';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
 import {getTabBarHeight} from '@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar';
 import socketServices from '../../../socketIo/SocketServices';
+import {fetch} from '@react-native-community/netinfo';
+import NoInternet from '../../../components/NoInternet';
+
+
 
 export default function ParcelHome({navigation}) {
   const {appUser} = rootStore.commonStore;
@@ -42,9 +46,11 @@ export default function ParcelHome({navigation}) {
   const [loading, setLoading] = useState(false);
   const [trackedArray, setTrackedArray] = useState(orderTrackingList);
   const [incompletedArray, setIncompletedArray] = useState([]);
+  const [internet, setInternet] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
+      checkInternet();
       handleAndroidBackButton();
       setCurrentLocation();
       onUpdateUserInfo();
@@ -126,8 +132,27 @@ export default function ParcelHome({navigation}) {
     }
   };
 
+  useEffect(() => {
+    DeviceEventEmitter.addListener('tab3', event => {
+      if (event != 'noInternet') {
+      }
+      setInternet(event == 'noInternet' ? false : true);
+      console.log('internet event');
+    });
+  }, []);
+
+  const checkInternet = () => {
+    fetch().then(state => {
+      setInternet(state.isInternetReachable);
+    });
+  };
+
   return (
     <View style={styles.container}>
+ {internet == false ? (
+        <NoInternet />
+      ) : (
+        <>
       <DashboardHeader2
         navigation={navigation}
         onPress={() => {
@@ -243,6 +268,7 @@ export default function ParcelHome({navigation}) {
           trackedArray={trackedArray}
         />
       )}
+      </>)}
     </View>
   );
 }

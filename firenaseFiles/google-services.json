@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "243274294480",
+    "project_id": "duuittcustomerapp",
+    "storage_bucket": "duuittcustomerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243274294480:android:1f1a3c0c37b3e78fe7ead5",
+        "android_client_info": {
+          "package_name": "com.duuittapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD935bhttwNpJccczQMIJNYin3fayySowo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

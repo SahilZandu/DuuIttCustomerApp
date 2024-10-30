@@ -35,14 +35,28 @@ function App() {
 
     setAppStoarge()
 
-  //   NetInfo.addEventListener(state => {
-  //     console.log('Connection type', state);
-  //     console.log('Is connected?', state?.isConnected);
-  //     if (state?.isInternetReachable != null) {
-  //       setIsInternet(state?.isInternetReachable);
-  //     }
-    // });
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log("Connection type", state);
+      console.log("Is connected?", state.isConnected);
+  
+      if (state.isInternetReachable != null) {
+        setIsInternet(state.isInternetReachable);
+        let action = state.isInternetReachable ? 'internet' : 'noInternet';
+        DeviceEventEmitter.emit(focusRoute, action);
+      }
+      
+    });
+  
+    return () => unsubscribe(); // Cleanup listener on unmount
   },[])
+
+  const getonTab = (screen) => {
+    if(screen == "tab1" || screen == "tab2" ||screen == "tab3"||screen == "tab4"){
+      return false
+    }else{
+      return true
+    }
+  }
 
 
   return (
@@ -59,7 +73,6 @@ function App() {
             focusRoute = navigationRef.current.getCurrentRoute().name;
             setcurrentScreen(navigationRef.current.getCurrentRoute().name);
           }}>
-             {!isInternet && <NoInternet />}
           <SafeAreaView
             style={{
               flex: 0,
@@ -82,6 +95,7 @@ function App() {
                 setStatusBar(currentScreen)
               }
             />
+               {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
             <Root />
           </SafeAreaView>
         </NavigationContainer>

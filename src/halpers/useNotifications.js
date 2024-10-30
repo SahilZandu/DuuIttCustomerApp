@@ -94,102 +94,102 @@ export function useNotifications(navigation) {
   //   return unsubscribe;
   // }, []);
 
-//   useEffect(() => {
-//     //   body: 'Custom sound',
-//     //   ios: {
-//     //     // iOS resource (.wav, aiff, .caf)
-//     //     sound: 'countdown.mp3',
-//     //     critical: true,
-//     //     interruptionLevel: 'timeSensitive',
-//     //     criticalVolume: 0.9,
-//     //   },
-//     // });
+  useEffect(() => {
+    //   body: 'Custom sound',
+    //   ios: {
+    //     // iOS resource (.wav, aiff, .caf)
+    //     sound: 'countdown.mp3',
+    //     critical: true,
+    //     interruptionLevel: 'timeSensitive',
+    //     criticalVolume: 0.9,
+    //   },
+    // });
 
-//     const unsubscribe = notifee.onBackgroundEvent(async ({type, detail}) => { 
-//       console.log('User pressed notification', detail.notification);
-//       // console.log('User pressed notification', detail.notification,type,EventType.PRESS);
-//       if (type === EventType.PRESS) {
-//         console.log('User pressed notification', detail.notification);
-//         // detail.notification.data = data;
-//         // if (detail?.notification?.data?.route) {
-//         //   console.log(JSON.parse(detail?.notification?.data?.data));
-//         //   let org =
-//         //     detail?.notification?.data?.data &&
-//         //     detail?.notification?.data?.data != 'null'
-//         //       ? JSON.parse(detail?.notification?.data?.data)
-//         //       : null;
+    const unsubscribe = notifee.onBackgroundEvent(async ({type, detail}) => { 
+      console.log('User pressed notification', detail.notification);
+      // console.log('User pressed notification', detail.notification,type,EventType.PRESS);
+      if (type === EventType.PRESS) {
+        console.log('User pressed notification', detail.notification);
+        // detail.notification.data = data;
+        // if (detail?.notification?.data?.route) {
+        //   console.log(JSON.parse(detail?.notification?.data?.data));
+        //   let org =
+        //     detail?.notification?.data?.data &&
+        //     detail?.notification?.data?.data != 'null'
+        //       ? JSON.parse(detail?.notification?.data?.data)
+        //       : null;
 
-//         //   if (org) {
-//         //     setOrg(
-//         //       detail?.notification?.data?.route == 'addoffer' ? appOrg : org,
-//         //     );
-//         //   }
+        //   if (org) {
+        //     setOrg(
+        //       detail?.notification?.data?.route == 'addoffer' ? appOrg : org,
+        //     );
+        //   }
 
          
-//         //   if (detail?.notification?.data?.route == 'timeManagement') {
-//         //     navigation.navigate('restaurant');
-//         //   } else if (
-//         //     detail?.notification?.data?.route == 'offers' ||
-//         //     detail?.notification?.data?.route == 'addoffer'
-//         //   ) {
-//         //     navigation.navigate('tab4');
-//         //   } else if (detail?.notification?.data?.route == 'product') {
-//         //     navigation.navigate('tab1');
-//         //   } else if (detail?.notification?.data?.route == 'profile') {
-//         //     navigation.navigate('profile');
-//         //   } else if (detail?.notification?.data?.route == 'newOrder') {
-//         //     navigation.navigate('tab3');
-//         //   } else if (detail?.notification?.data?.route == 'orderhistory') {
-//         //     navigation.navigate('orderHis');
-//         //   }
-//         // }
-//       }
-//     });
-//     return unsubscribe;
-//   }, []);
+        //   if (detail?.notification?.data?.route == 'timeManagement') {
+        //     navigation.navigate('restaurant');
+        //   } else if (
+        //     detail?.notification?.data?.route == 'offers' ||
+        //     detail?.notification?.data?.route == 'addoffer'
+        //   ) {
+        //     navigation.navigate('tab4');
+        //   } else if (detail?.notification?.data?.route == 'product') {
+        //     navigation.navigate('tab1');
+        //   } else if (detail?.notification?.data?.route == 'profile') {
+        //     navigation.navigate('profile');
+        //   } else if (detail?.notification?.data?.route == 'newOrder') {
+        //     navigation.navigate('tab3');
+        //   } else if (detail?.notification?.data?.route == 'orderhistory') {
+        //     navigation.navigate('orderHis');
+        //   }
+        // }
+      }
+    });
+    return unsubscribe;
+  }, []);
 
  
 
-//   useEffect(() => {
-//     const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
-//       if (type === EventType.PRESS) {
-//         console.log('User pressed notification', detail.notification);
-//         // detail.notification.data = data;
-//         // if (detail?.notification?.data?.route) {
-//         //   console.log(JSON.parse(detail?.notification?.data?.data));
-//         //   let org =
-//         //     detail?.notification?.data?.data &&
-//         //     detail?.notification?.data?.data != 'null'
-//         //       ? JSON.parse(detail?.notification?.data?.data)
-//         //       : null;
-//         //   if (org) {
-//         //     setOrg(
-//         //       detail?.notification?.data?.route == 'addoffer' ? appOrg : org,
-//         //     );
-//         //   }
+  useEffect(() => {
+    const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+      if (type === EventType.PRESS) {
+        console.log('User pressed notification', detail.notification);
+        // detail.notification.data = data;
+        // if (detail?.notification?.data?.route) {
+        //   console.log(JSON.parse(detail?.notification?.data?.data));
+        //   let org =
+        //     detail?.notification?.data?.data &&
+        //     detail?.notification?.data?.data != 'null'
+        //       ? JSON.parse(detail?.notification?.data?.data)
+        //       : null;
+        //   if (org) {
+        //     setOrg(
+        //       detail?.notification?.data?.route == 'addoffer' ? appOrg : org,
+        //     );
+        //   }
 
         
-//         //  if (detail?.notification?.data?.route == 'timeManagement') {
-//         //     navigation.navigate('restaurant');
-//         //   } else if (
-//         //     detail?.notification?.data?.route == 'offers' ||
-//         //     detail?.notification?.data?.route == 'addoffer'
-//         //   ) {
-//         //     navigation.navigate('tab4');
-//         //   } else if (detail?.notification?.data?.route == 'product') {
-//         //     navigation.navigate('tab1');
-//         //   } else if (detail?.notification?.data?.route == 'profile') {
-//         //     navigation.navigate('profile');
-//         //   } else if (detail?.notification?.data?.route == 'newOrder') {
-//         //     navigation.navigate('tab3');
-//         //   } else if (detail?.notification?.data?.route == 'orderhistory') {
-//         //     navigation.navigate('orderHis');
-//         //   }
-//         // }
-//       }
-//     });
-//     return unsubscribe;
-//   }, []);
+        //  if (detail?.notification?.data?.route == 'timeManagement') {
+        //     navigation.navigate('restaurant');
+        //   } else if (
+        //     detail?.notification?.data?.route == 'offers' ||
+        //     detail?.notification?.data?.route == 'addoffer'
+        //   ) {
+        //     navigation.navigate('tab4');
+        //   } else if (detail?.notification?.data?.route == 'product') {
+        //     navigation.navigate('tab1');
+        //   } else if (detail?.notification?.data?.route == 'profile') {
+        //     navigation.navigate('profile');
+        //   } else if (detail?.notification?.data?.route == 'newOrder') {
+        //     navigation.navigate('tab3');
+        //   } else if (detail?.notification?.data?.route == 'orderhistory') {
+        //     navigation.navigate('orderHis');
+        //   }
+        // }
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   return 'register Notification';
 }

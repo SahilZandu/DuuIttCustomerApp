@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {Text, View, KeyboardAvoidingView, FlatList, ActivityIndicator} from 'react-native';
+import {Text, View, KeyboardAvoidingView, FlatList, ActivityIndicator, DeviceEventEmitter} from 'react-native';
 import {appImagesSvg, appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import MikePopUp from '../../../../components/MikePopUp';
@@ -16,6 +16,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import Tabs3 from '../../../../components/Tabs3';
 import { rootStore } from '../../../../stores/rootStore';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
+import {fetch} from '@react-native-community/netinfo';
+import NoInternet from '../../../../components/NoInternet';
+
 
 
 const tabs = [
@@ -42,10 +45,12 @@ export default function Orders({navigation}) {
     orderHistoryList?.length > 0 ? false : true,
   );
   const [appUserInfo ,setAppUserInfo]=useState(appUser)
+  const [internet, setInternet] = useState(true);
 
 
   useFocusEffect(
     useCallback(() => {
+      checkInternet()
       handleAndroidBackButton(navigation);
       defaultType = 'All Orders';
       setType('All Orders');
@@ -56,6 +61,21 @@ export default function Orders({navigation}) {
       onUpdateUserInfo()
     }, []),
   );
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('tab3', event => {
+      if (event != 'noInternet') {
+      }
+      setInternet(event == 'noInternet' ? false : true);
+      console.log('internet event');
+    });
+  }, []);
+
+  const checkInternet = () => {
+    fetch().then(state => {
+      setInternet(state.isInternetReachable);
+    });
+  };
 
   const onUpdateUserInfo=()=>{
     const {appUser}=rootStore.commonStore;
@@ -124,7 +144,8 @@ export default function Orders({navigation}) {
 
   return (
     <View style={styles.container}>
-       
+        {internet == false ? <NoInternet/> 
+      :<>    
       <DashboardHeader
          navigation={navigation}
         title={'Home'}
@@ -195,6 +216,7 @@ export default function Orders({navigation}) {
         onCancelBtn={onCancel}
         onSuccessResult={onSuccessResult}
       />
+      </>}
     </View>
   );
 }

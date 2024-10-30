@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   FlatList,
+  DeviceEventEmitter,
 } from 'react-native';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {styles} from './styles';
@@ -30,6 +31,9 @@ import {rootStore} from '../../../stores/rootStore';
 import MyAddressLoader from '../../../components/AnimatedLoader/MyAddressLoader';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import PopUp from '../../../components/appPopUp/PopUp';
+import {fetch} from '@react-native-community/netinfo';
+import NoInternet from '../../../components/NoInternet';
+
 
 export default function MyAddress({navigation}) {
   const {getMyAddress, getAddress, deleteMyAddress} = rootStore.myAddressStore;
@@ -39,13 +43,30 @@ export default function MyAddress({navigation}) {
   const [isDelete, setIsDelete] = useState(false);
   const [isDeleteIndex, setIsDeleteIndex] = useState('');
   const [isDeleteItem, setIsDeleteItem] = useState('');
+  const [internet, setInternet] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
+      checkInternet();
       handleAndroidBackButton();
       getAddressDetails();
     }, []),
   );
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('tab3', event => {
+      if (event != 'noInternet') {
+      }
+      setInternet(event == 'noInternet' ? false : true);
+      console.log('internet event');
+    });
+  }, []);
+
+  const checkInternet = () => {
+    fetch().then(state => {
+      setInternet(state.isInternetReachable);
+    });
+  };
 
   const getAddressDetails = async () => {
     const res = await getMyAddress();
@@ -94,6 +115,10 @@ export default function MyAddress({navigation}) {
           navigation.goBack();
         }}
       /> */}
+       {internet == false ? (
+        <NoInternet />
+      ) : (
+        <>
 
       {loading == true ? (
         <AnimatedLoader type={'myAddress'} />
@@ -150,6 +175,7 @@ export default function MyAddress({navigation}) {
         text={'This will delete your item from the address are your sure?'}
         onDelete={handleDelete}
       />
+      </>)}
     </View>
   );
 }

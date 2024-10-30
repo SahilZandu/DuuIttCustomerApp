@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {View, KeyboardAvoidingView, Image, PermissionsAndroid, Platform} from 'react-native';
+import {View, KeyboardAvoidingView, Image, PermissionsAndroid, Platform, DeviceEventEmitter} from 'react-native';
 import {appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import MikePopUp from '../../../../components/MikePopUp';
@@ -19,6 +19,8 @@ import {
 } from 'react-native-responsive-screen';
 import messaging from '@react-native-firebase/messaging';
 import { useNotifications } from '../../../../halpers/useNotifications';
+import {fetch} from '@react-native-community/netinfo';
+import NoInternet from '../../../../components/NoInternet';
 
 
 let imageArray = [
@@ -37,6 +39,8 @@ export default function Home({navigation}) {
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
+  const [internet, setInternet] = useState(true);
+
 
 
   useFocusEffect(
@@ -44,9 +48,26 @@ export default function Home({navigation}) {
       requestNotificationPermission()
       handleAndroidBackButton();
       onUpdateUserInfo();
+      checkInternet()
     }, []),
   );
 
+
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('tab1', event => {
+      console.log('event----tab1', event);
+      if (event != 'noInternet') {
+      }
+      setInternet(event == 'noInternet' ? false : true);
+      console.log('internet event');
+    });
+  }, []);
+  const checkInternet = () => {
+    fetch().then(state => {
+      setInternet(state.isInternetReachable);
+    });
+  };
 
   async function requestNotificationPermission() {
     if (Platform.OS === 'android' && Platform.Version >= 33) {  // Android 13+
@@ -138,6 +159,8 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
+    {internet == false ? <NoInternet/> 
+      :<>       
       <DashboardHeader
         navigation={navigation}
         // title={'Home'}
@@ -192,6 +215,7 @@ export default function Home({navigation}) {
         onCancelBtn={onCancel}
         onSuccessResult={onSuccessResult}
       />
+            </>}
     </View>
   );
 }
