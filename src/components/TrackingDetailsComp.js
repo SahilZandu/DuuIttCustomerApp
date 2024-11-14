@@ -33,7 +33,7 @@ const TrackingDetailsComp = ({onViewDetails, item, xml, index}) => {
       onPress={() => {
         onViewDetail(item?.status, index);
       }}>
-      <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
+      <Surface elevation={3} style={styles.viewDetailsSurfaceView}>
         <View style={styles.innerView}>
           <View style={styles.imageTrackView}>
             <Image

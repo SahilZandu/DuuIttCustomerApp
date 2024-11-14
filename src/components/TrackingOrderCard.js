@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Text, Image, Platform} from 'react-native';
 import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
@@ -9,6 +9,7 @@ import {
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import {currencyFormat} from '../halpers/currencyFormat';
+import { screenHeight } from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import PickDropComp from './PickDropComp';
@@ -16,7 +17,7 @@ import PickDropComp from './PickDropComp';
 const TrackingOrderCard = ({value}) => {
   return (
     <>
-      <Surface elevation={2} style={styles.container}>
+      <Surface elevation={3} style={styles.container}>
         <View style={styles.imageTextView}>
           <Image
             resizeMode="contain"
@@ -52,18 +53,19 @@ export default TrackingOrderCard;
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor:Platform.OS =='ios'? colors.black50 :colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     alignSelf: 'center',
     borderRadius: 10,
-    height: hp('23%'),
+    // height: hp('24.5%'),
+     width:wp('90%'),
     marginTop: '5%',
+    paddingVertical:'5%'
   },
   imageTextView: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 20,
-    marginTop: '4%',
   },
   trackingIdView: {
     flex: 1,
@@ -98,6 +100,7 @@ const styles = StyleSheet.create({
   },
   dateView: {
     flexDirection: 'row',
+    alignItems:'center',
     marginTop: '4%',
   },
   dateText: {

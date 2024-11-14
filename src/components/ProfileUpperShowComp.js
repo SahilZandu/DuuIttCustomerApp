@@ -1,10 +1,6 @@
 import React from 'react';
 import {Surface} from 'react-native-paper';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -12,6 +8,7 @@ import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import LinearGradient from 'react-native-linear-gradient';
 import Url from '../api/Url';
+import { screenHeight, screenWidth } from '../halpers/matrics';
 
 const ProfileUpperShowComp = ({navigation, appUser, item}) => {
   return (
@@ -67,8 +64,8 @@ const styles = StyleSheet.create({
     marginTop: '6%',
   },
   innerView: {
-    width: wp('90%'),
-    height: hp('11%'),
+    width:screenWidth(90),
+    height:screenHeight(11),
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.colorD9,

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,6 +12,7 @@ import Spacer from '../../../halpers/Spacer';
 import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGooglePlaceHolder';
 import Header from '../../../components/header/Header';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import { screenHeight } from '../../../halpers/matrics';
 
 const ChooseMapLocation = ({navigation, route}) => {
   const {pickDrop, item} = route.params;
@@ -37,7 +38,7 @@ const ChooseMapLocation = ({navigation, route}) => {
       setAddress(item?.address);
       setName(item?.name);
     }
-  },10)
+  },1000)
   }, [item]);
 
   const onHandleConfirm = () => {
@@ -64,7 +65,7 @@ const ChooseMapLocation = ({navigation, route}) => {
         }}
       />
       <View style={{flex: 1}}>
-        <MapRoute mapContainerView={{height: hp('70%')}} origin={geoLocation} />
+        <MapRoute mapContainerView={Platform.OS == 'ios' ?{height:screenHeight(70)} :{height: screenHeight(74)}} origin={geoLocation} />
         <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />
       </View>
       <View style={styles.bottomPopUpContainer}>

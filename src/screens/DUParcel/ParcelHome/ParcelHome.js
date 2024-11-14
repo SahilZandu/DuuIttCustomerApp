@@ -29,6 +29,7 @@ import {getTabBarHeight} from '@react-navigation/bottom-tabs/lib/typescript/src/
 import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
+import PopUp from '../../../components/appPopUp/PopUp';
 
 
 
@@ -39,14 +40,18 @@ export default function ParcelHome({navigation}) {
     ordersTrackOrder,
     orderTrackingList,
     getPendingForCustomer,
+    updateOrderStatus
   } = rootStore.orderStore;
   const {setAddParcelInfo} = rootStore.parcelStore;
+  const {testMessage}=rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [recentOrder, setRecentOrder] = useState({});
   const [loading, setLoading] = useState(false);
   const [trackedArray, setTrackedArray] = useState(orderTrackingList);
   const [incompletedArray, setIncompletedArray] = useState([]);
   const [internet, setInternet] = useState(true);
+  const [isDelete ,setIsDelete]=useState(false)
+
 
   useFocusEffect(
     useCallback(() => {
@@ -62,6 +67,60 @@ export default function ParcelHome({navigation}) {
     }, []),
   );
 
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      'newOrder',
+      data => {
+      console.log('new order data -- ',data)
+      getIncompleteOrder();
+      },
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      'cancelOrder',
+      data => {
+      console.log('cancel Order data -- ',data)
+       getIncompleteOrder();
+      },
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      'picked',
+      data => {
+      console.log('picked data -- ',data)
+      // navigation.navigate('parcel', {screen: 'home'});
+      getTrackingOrder()
+      },
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      'dropped',
+      data => {
+      console.log('dropped data -- ',data)
+       getTrackingOrder();
+      },
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   const getTrackingOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
     setTrackedArray(resTrack);
@@ -73,8 +132,24 @@ export default function ParcelHome({navigation}) {
     setIncompletedArray(resIncompleteOrder);
   };
 
-  const handleLoadingTrack = v => {
-    console.log('Track...');
+  const deleteIncompleteOrder =async()=>{
+    const parcelId= incompletedArray[0]?._id;
+    console.log('Item parcelId--',parcelId);
+      await updateOrderStatus(parcelId,"deleted",handleDeleteLoading ,onDeleteSuccess,true)
+  }
+
+  const handleDeleteLoading = (v) => {
+    console.log('delete...',v);
+      setIsDelete(false)
+  };
+
+  const onDeleteSuccess = () => {
+    console.log('onDeleteSuccess...');
+     getIncompleteOrder();
+  };
+
+  const handleLoadingTrack = (v) => {
+    console.log('Track...',v);
   };
 
   useEffect(() => {
@@ -82,6 +157,7 @@ export default function ParcelHome({navigation}) {
   }, []);
 
   const getRecentOrder = async () => {
+          //  await testMessage();
     const res = await ordersRecentOrder('parcel', handleLoading);
     console.log('res--getRecentOrder', res);
     setRecentOrder(res);
@@ -167,6 +243,7 @@ export default function ParcelHome({navigation}) {
         onPress={() => {
           if (incompletedArray?.length > 0) {
             onPressInCompleteOrder();
+            // navigation.navigate('setLocationHistory');
           } else {
             navigation.navigate('setLocationHistory');
             // navigation.navigate('pickSuccessfully');
@@ -213,7 +290,7 @@ export default function ParcelHome({navigation}) {
                       <Image
                         resizeMode="cover"
                         style={{
-                          height: hp('22%'),
+                          height: hp('25%'),
                           width: wp('90%'),
                           borderRadius: 20,
                         }}
@@ -256,12 +333,21 @@ export default function ParcelHome({navigation}) {
         <IncompleteCartComp
           navigation={navigation}
           trackedArray={trackedArray}
+          incompletedArray={incompletedArray}
           onPressComplete={() => {
             onPressInCompleteOrder();
           }}
+          onDeleteRequest={()=>{setIsDelete(true)}}
         />
       )}
-
+       <PopUp
+        visible={isDelete}
+        type={'delete'}
+        onClose={() => setIsDelete(false)}
+        title={'You are about to delete an request'}
+        text={'This will delete your order request from the pending order.Are your sure?'}
+        onDelete={deleteIncompleteOrder}
+      />
       {trackedArray?.length > 0 && (
         <TrackingOrderComp
           navigation={navigation}

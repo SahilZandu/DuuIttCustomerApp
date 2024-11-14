@@ -16,6 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import { appImages, appImagesSvg } from '../commons/AppImages';
+import { screenHeight, screenWidth } from '../halpers/matrics';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/fonts/fonts';
 
@@ -109,9 +110,9 @@ export default function Tabs2({tabs, tabPress, isRating, isCount,title}) {
       <ScrollView
         bounces={false}
         ref={scrollViewRef}
-        style={{alignSelf: 'center',height:hp("6%")}}
+        style={{alignSelf: 'center',height:screenHeight(6)}}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{minWidth:wp("90")}}
+        contentContainerStyle={{minWidth:screenWidth(90)}}
         horizontal >
         {tabs?.map((tab, idx) => (
           <TabButton
@@ -138,14 +139,14 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
-    height: hp('5%'),
+    height:screenHeight(5),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 50,
     marginHorizontal: 3,
     borderWidth: 1,
     borderColor:colors.colorD9,
-    padding:wp("2.5%"),
+    paddingHorizontal:'2.5%',
   },
 
   selectedButton: {

@@ -21,14 +21,14 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
   console.log('markerArray--',markerArray);
   const mapRef = useRef(null);
-  const [lat, setLat] = useState(origin?.lat);
-  const [long, setLong] = useState(origin?.lng);
+  const [lat, setLat] = useState(Number(origin?.lat));
+  const [long, setLong] = useState(Number(origin?.lng));
   const [coords, setcoords] = useState([]);
 
   useEffect(() => {
     if(Object?.keys(origin || {})?.length > 0){
-    setLat(markerArray?.length > 0 ? markerArray[0]?.geo_location?.lat : origin?.lat);
-    setLong(markerArray?.length > 0 ? markerArray[0]?.geo_location?.lng :origin?.lng);
+    setLat(markerArray?.length > 0 ? Number(markerArray[0]?.geo_location?.lat) : Number(origin?.lat));
+    setLong(markerArray?.length > 0 ? Number(markerArray[0]?.geo_location?.lng) :Number(origin?.lng));
     }
   }, [origin,markerArray]);
 
@@ -57,15 +57,16 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
         //   onRegionChangeComplete={() =>
         //   CoordinatesValue(originLoactaion, destinationLocation)
         // }
-        zoomTapEnabled={true}
-        rotateEnabled={true}
-        loadingEnabled={true}
-        showsCompass={true}>
+        zoomTapEnabled
+        rotateEnabled
+        loadingEnabled
+        showsCompass
+        >
         {markerArray && markerArray?.length > 0 ? (
           markerArray?.map((marker, index) => (
             <Marker
               key={index}
-              coordinate={{latitude:marker?.geo_location?.lat, longitude:marker?.geo_location?.lng}}>
+              coordinate={{latitude:Number(marker?.geo_location?.lat), longitude:Number(marker?.geo_location?.lng)}}>
               <Image
                 resizeMode="contain"
                 source={appImages.markerImage}

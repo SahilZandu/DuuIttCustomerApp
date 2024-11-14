@@ -3993,6 +3993,7 @@ __metadata:
     react-native: 0.74.3
     react-native-android-sms-listener: ^0.8.0
     react-native-date-picker: ^5.0.4
+    react-native-device-info: ^14.0.0
     react-native-geolocation-service: ^5.3.1
     react-native-gesture-handler: ^2.17.1
     react-native-google-places-autocomplete: ^2.5.6
@@ -9860,6 +9861,15 @@ __metadata:
     react: ">= 17.0.1"
     react-native: ">= 0.64.3"
   checksum: 67db7fba5de613c61a70b5b9274daef8c7d3b6f6cdc5a6063eb61126d4df43252c501c2cb78ebda37fb0997ccb0994e949976d0fb395453580019923100e03ad
+  languageName: node
+  linkType: hard
+
+"react-native-device-info@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "react-native-device-info@npm:14.0.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: d9990fce678c6c179f498866d5042f08dc9c3fec1a139fc12a83341b3289f4ee954e86613b1794047d7646d25f04a902d96927b0a52db9d324e194ffb99e8946
   languageName: node
   linkType: hard
 

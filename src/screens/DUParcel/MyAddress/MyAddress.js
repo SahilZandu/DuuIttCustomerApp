@@ -48,7 +48,7 @@ export default function MyAddress({navigation}) {
   useFocusEffect(
     useCallback(() => {
       checkInternet();
-      handleAndroidBackButton();
+      handleAndroidBackButton(navigation);
       getAddressDetails();
     }, []),
   );

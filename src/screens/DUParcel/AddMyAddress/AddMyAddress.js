@@ -189,7 +189,7 @@ export default function AddMyAddress({navigation, route}) {
           <Spacer space={'2%'} />
           <Tabs2 tabs={tabs} tabPress={handleTabPress} title={title} />
           <Surface
-            elevation={2}
+            elevation={3}
             style={{
               shadowColor: colors.black50,
               backgroundColor: colors.white,
@@ -274,7 +274,7 @@ export default function AddMyAddress({navigation, route}) {
       />
       <View style={styles.main}>
         <MapRouteMarker
-          mapContainerView={{height: hp('70%')}}
+          mapContainerView={{height: hp('74%')}}
           origin={geoLocation}
         />
         <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />
@@ -338,14 +338,15 @@ export default function AddMyAddress({navigation, route}) {
                 width: '100%',
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10,
-                paddingBottom: '12%',
+                // paddingBottom: '12%',
                 height: hp('82%'),
               }}>
               <Spacer space={'2%'} />
               <KeyboardAvoidingView
                 style={{flex: 1}}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust if needed
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                behavior={Platform.OS === 'ios' ? 'padding' :null}
+                >
                 <AppInputScroll
                   padding={true}
                   keyboardShouldPersistTaps={'handled'}

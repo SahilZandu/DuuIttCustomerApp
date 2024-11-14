@@ -34,6 +34,7 @@
     "react-native": "0.74.3",
     "react-native-android-sms-listener": "^0.8.0",
     "react-native-date-picker": "^5.0.4",
+    "react-native-device-info": "^14.0.0",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.17.1",
     "react-native-google-places-autocomplete": "^2.5.6",

@@ -23,7 +23,7 @@ import {fonts} from '../../../../theme/fonts/fonts';
 
 const Rewards = ({navigation}) => {
   const renderItem = ({item}) => (
-    <Surface elevation={2} style={styles.surfaceView}>
+    <Surface elevation={3} style={styles.surfaceView}>
       <View style={styles.surfaceMainView}>
         <View style={styles.voucherPriceView}>
           <Text style={styles.voucherPrice}>{currencyFormat(item?.price)}</Text>

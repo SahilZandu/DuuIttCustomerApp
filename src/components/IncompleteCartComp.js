@@ -1,17 +1,27 @@
-import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
+import {screenHeight, screenWidth} from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const IncompleteCartComp = ({navigation, trackedArray,onPressComplete}) => {
+const IncompleteCartComp = ({
+  navigation,
+  trackedArray,
+  incompletedArray,
+  onPressComplete,
+  onDeleteRequest,
+}) => {
   const setOrderImage = status => {
     switch (status) {
       case 'food':
@@ -22,9 +32,10 @@ const IncompleteCartComp = ({navigation, trackedArray,onPressComplete}) => {
         return appImages.order3;
     }
   };
+
   return (
     <View style={styles.main(trackedArray)}>
-      <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
+      <Surface elevation={3} style={styles.viewDetailsSurfaceView}>
         <View style={styles.innerView}>
           {/* <Image
               resizeMode="contain"
@@ -41,15 +52,24 @@ const IncompleteCartComp = ({navigation, trackedArray,onPressComplete}) => {
           </View>
           <View style={styles.completeDeleteView}>
             <TouchableOpacity
-             onPress={onPressComplete}
+              onPress={onPressComplete}
               activeOpacity={0.8}
               style={styles.completeBtnView}>
               <Text style={styles.completeBtnText}>Complete your order</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={
+                incompletedArray[0]?.status == 'accepted' ? true : false
+              }
+              onPress={onDeleteRequest}
               activeOpacity={0.8}
               style={styles.deleteImageView}>
-              <SvgXml width={35} height={35} xml={appImagesSvg.deleteIconSvg} />
+              <SvgXml
+                opacity={incompletedArray[0]?.status == 'accepted' ? 0.5 : 1}
+                width={35}
+                height={35}
+                xml={appImagesSvg.deleteIconSvg}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -64,14 +84,14 @@ const styles = StyleSheet.create({
   main: trackedArray => ({
     position: 'absolute',
     alignSelf: 'center',
-    bottom: trackedArray?.length > 0 ? '14%' : '1%',
+    bottom: trackedArray?.length > 0 ? screenHeight(12) : screenHeight(1),
   }),
   viewDetailsSurfaceView: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('8%'),
-    width: wp('90%'),
+    height: screenHeight(8),
+    width: screenWidth(90),
     justifyContent: 'center',
   },
   innerView: {
@@ -92,13 +112,13 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
-    width: wp('41%'),
+    width: screenWidth(41),
   },
   proceedText: {
     fontSize: RFValue(10),
     fontFamily: fonts.medium,
     color: colors.black65,
-    width: wp('41%'),
+    width: screenWidth(41),
     marginTop: '2%',
   },
   completeDeleteView: {
@@ -111,11 +131,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     backgroundColor: colors.colorD45,
-    height: hp('5.8%'),
-    width: wp('24%'),
+    height: screenHeight(5.8),
+    width: screenWidth(24),
     borderRadius: 10,
     borderColor: colors.main,
     borderWidth: 0.5,
+    paddingHorizontal: '2%',
   },
   completeBtnText: {
     fontSize: RFValue(12),

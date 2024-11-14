@@ -122,6 +122,7 @@ export default class OrderStore {
       }
     } catch (error) {
       console.log('error orders Track Order:', error);
+      handleLoading(false);
       this.orderTrackingList =[]
       return [];
     }
@@ -142,7 +143,32 @@ export default class OrderStore {
     }
   };
 
-
-  
+  updateOrderStatus = async (parcelId,status,handleDeleteLoading ,onDeleteSuccess,isPopUp) => {
+    let requestData = {
+      parcel_id:parcelId,
+      status:status,
+    };
+    console.log('update Order Status request ', requestData,);
+    try {
+      const res = await agent.updateOrderStatus(requestData);
+      console.log('update Order Status Res : ', res);
+      if (res?.statusCode == 200) {
+       if(isPopUp){useToast(res?.message, 1)}
+        onDeleteSuccess()
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        if(isPopUp){ useToast(message, 0)};
+      }
+      handleDeleteLoading(false);
+    } catch (error) {
+      console.log('error update Order Status:', error);
+      handleDeleteLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      if(isPopUp){ useToast(m, 0)};
+    }
+    
+  };
 
 }

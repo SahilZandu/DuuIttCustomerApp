@@ -10,7 +10,7 @@ import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const TrackingOrderComp = ({navigation,trackedArray}) => {
+const TrackingOrderComp = ({navigation, trackedArray}) => {
   const setOrderImage = status => {
     switch (status) {
       case 'food':
@@ -24,14 +24,14 @@ const TrackingOrderComp = ({navigation,trackedArray}) => {
 
   return (
     <View style={styles.main}>
-      <Surface elevation={2} style={styles.upperSurfaceView}></Surface>
+      <Surface elevation={3} style={styles.upperSurfaceView}></Surface>
 
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('trackingOrder');
         }}
         activeOpacity={0.9}>
-        <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
+        <Surface elevation={3} style={styles.viewDetailsSurfaceView}>
           <View style={styles.innerView}>
             <Image
               resizeMode="contain"
@@ -77,19 +77,18 @@ const styles = StyleSheet.create({
   upperSurfaceView: {
     width: wp('85%'),
     height: hp('3%'),
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
     backgroundColor: colors.white,
     alignSelf: 'center',
     borderRadius: 10,
     top: '12%',
   },
   viewDetailsSurfaceView: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('8%'),
     width: wp('90%'),
-    // marginTop: '6%',
     justifyContent: 'center',
   },
   innerView: {
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   moreSurface: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black85,
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',

@@ -480,8 +480,8 @@ import PriceDetailsForm from '../../../forms/PriceDetailsForm';
 export default function PriceDetails({navigation}) {
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
-    }, []),
+      handleAndroidBackButton(navigation);
+    },[]),
   );
 
 

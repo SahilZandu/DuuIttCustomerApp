@@ -1,5 +1,12 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {View, KeyboardAvoidingView, Image, PermissionsAndroid, Platform, DeviceEventEmitter} from 'react-native';
+import {
+  View,
+  KeyboardAvoidingView,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  DeviceEventEmitter,
+} from 'react-native';
 import {appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import MikePopUp from '../../../../components/MikePopUp';
@@ -18,10 +25,10 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import messaging from '@react-native-firebase/messaging';
-import { useNotifications } from '../../../../halpers/useNotifications';
+import {useNotifications} from '../../../../halpers/useNotifications';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
-
+import socketServices from '../../../../socketIo/SocketServices';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -32,6 +39,7 @@ let imageArray = [
 
 export default function Home({navigation}) {
   const {appUser} = rootStore.commonStore;
+  const {saveFcmToken} = rootStore.dashboardStore;
   useNotifications(navigation);
 
   const [sliderItems, setSliderItems] = useState(imageArray);
@@ -41,18 +49,14 @@ export default function Home({navigation}) {
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [internet, setInternet] = useState(true);
 
-
-
   useFocusEffect(
     useCallback(() => {
-      requestNotificationPermission()
+      requestNotificationPermission();
       handleAndroidBackButton();
       onUpdateUserInfo();
-      checkInternet()
+      checkInternet();
     }, []),
   );
-
-
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab1', event => {
@@ -70,23 +74,24 @@ export default function Home({navigation}) {
   };
 
   async function requestNotificationPermission() {
-    if (Platform.OS === 'android' && Platform.Version >= 33) {  // Android 13+
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      // Android 13+
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
           {
-            title: "Notification Permission",
+            title: 'Notification Permission',
             message:
-              "This app needs notification permissions to send you alerts.",
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
-            buttonPositive: "OK"
-          }
+              'This app needs notification permissions to send you alerts.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log("Notification permission granted");
+          console.log('Notification permission granted');
         } else {
-          console.log("Notification permission denied");
+          console.log('Notification permission denied');
         }
       } catch (err) {
         console.warn(err);
@@ -94,8 +99,8 @@ export default function Home({navigation}) {
     }
   }
 
-  
   useEffect(() => {
+    socketServices.initailizeSocket();
     const requestUserPermission = async () => {
       const authStatus = await messaging().requestPermission();
       const enabled =
@@ -122,6 +127,21 @@ export default function Home({navigation}) {
       try {
         const token = await messaging().getToken();
         console.log('FCM Token:', token);
+        if (token) {
+          setTimeout(() => {
+            let request = {
+              user_id: appUser?._id,
+              fcm_token: token,
+              user_type:'customer'
+            };
+            saveFcmToken(token);
+            socketServices.emit('update-fcm-token', request);
+            setTimeout(() => {
+              socketServices.disconnectSocket();
+            }, 500);
+          },1500);
+        }
+        //  await saveFcmToken(token)
       } catch (error) {
         console.log('Error getting token:', error);
       }
@@ -134,9 +154,6 @@ export default function Home({navigation}) {
 
     initFCM();
   }, []);
-
-
-
 
   const onUpdateUserInfo = () => {
     const {appUser} = rootStore.commonStore;
@@ -159,63 +176,68 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
-    {internet == false ? <NoInternet/> 
-      :<>       
-      <DashboardHeader
-        navigation={navigation}
-        // title={'Home'}
-        // autoFocus={isKeyboard}
-        // onPressSecond={() => {
-        //   // alert('second');
-        // }}
-        // secondImage={appImagesSvg.cartIcon}
-        // value={searchRes}
-        // onChangeText={t => {
-        //   setSearchRes(t);
-        //   if (t) {
-        //     hanldeSearch(t);
-        //   }
-        // }}
-        // onMicroPhone={() => {
-        //   setVisible(true);
-        // }}
-        // onFocus={() => setIskeyboard(true)}
-        // onBlur={() => setIskeyboard(false)}
-        // onCancelPress={() => {
-        //   setSearchRes('');
-        // }}
-        appUserInfo={appUserInfo}
-      />
-      <View style={styles.mainView}>
-        <KeyboardAvoidingView
-          style={{flex: 1, marginTop: '1.5%'}}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
-            <View style={styles.innerView}>
-              <ChangeRoute data={homeCS} navigation={navigation} />
+      {internet == false ? (
+        <NoInternet />
+      ) : (
+        <>
+          <DashboardHeader
+            navigation={navigation}
+            // title={'Home'}
+            // autoFocus={isKeyboard}
+            // onPressSecond={() => {
+            //   // alert('second');
+            // }}
+            // secondImage={appImagesSvg.cartIcon}
+            // value={searchRes}
+            // onChangeText={t => {
+            //   setSearchRes(t);
+            //   if (t) {
+            //     hanldeSearch(t);
+            //   }
+            // }}
+            // onMicroPhone={() => {
+            //   setVisible(true);
+            // }}
+            // onFocus={() => setIskeyboard(true)}
+            // onBlur={() => setIskeyboard(false)}
+            // onCancelPress={() => {
+            //   setSearchRes('');
+            // }}
+            appUserInfo={appUserInfo}
+          />
+          <View style={styles.mainView}>
+            <KeyboardAvoidingView
+              style={{flex: 1, marginTop: '1.5%'}}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+              <AppInputScroll
+                padding={true}
+                keyboardShouldPersistTaps={'handled'}>
+                <View style={styles.innerView}>
+                  <ChangeRoute data={homeCS} navigation={navigation} />
 
-              <HomeSlider data={sliderItems} paginationList={true} />
+                  <HomeSlider data={sliderItems} paginationList={true} />
 
-              <RenderOffer data={mainArray} />
-            </View>
-            <View style={styles.bottomImageView}>
-              <Image
-                resizeMode="cover"
-                style={styles.bottomImage}
-                source={appImages.mainHomeBootmImage}
-              />
-            </View>
-          </AppInputScroll>
-        </KeyboardAvoidingView>
-      </View>
-      <MikePopUp
-        visible={visible}
-        title={'Sorry! Didn’t hear that'}
-        text={'Try saying restaurant name or a dish.'}
-        onCancelBtn={onCancel}
-        onSuccessResult={onSuccessResult}
-      />
-            </>}
+                  <RenderOffer data={mainArray} />
+                </View>
+                <View style={styles.bottomImageView}>
+                  <Image
+                    resizeMode="cover"
+                    style={styles.bottomImage}
+                    source={appImages.mainHomeBootmImage}
+                  />
+                </View>
+              </AppInputScroll>
+            </KeyboardAvoidingView>
+          </View>
+          <MikePopUp
+            visible={visible}
+            title={'Sorry! Didn’t hear that'}
+            text={'Try saying restaurant name or a dish.'}
+            onCancelBtn={onCancel}
+            onSuccessResult={onSuccessResult}
+          />
+        </>
+      )}
     </View>
   );
 }

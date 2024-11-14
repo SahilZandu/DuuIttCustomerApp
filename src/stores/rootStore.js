@@ -14,7 +14,5 @@ export const rootStore = {
   parcelStore :new ParcelStore(),
   dashboardStore :new DashboardStore(),
   orderStore : new OrderStore(),
-
-  
 };
 export const RootStoreContext = createContext(rootStore);

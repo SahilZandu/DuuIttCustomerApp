@@ -10,6 +10,7 @@ import {
   Dimensions,
   StyleSheet,
   TextInput,
+  Platform,
 } from 'react-native';
 import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -25,6 +26,7 @@ import GiftSliderFlatList from '../../../../components/slider/giftSlider';
 import Tabs from '../../../../components/Tabs';
 import TabTextIcon from '../../../../components/TabTextIcon';
 import {currencyFormat} from '../../../../halpers/currencyFormat';
+import { screenHeight, screenWidth } from '../../../../halpers/matrics';
 import Spacer from '../../../../halpers/Spacer';
 import {promoRewards, promoVouchers} from '../../../../stores/DummyData/Promo';
 import {colors} from '../../../../theme/colors';
@@ -116,7 +118,7 @@ const GiftCard = ({navigation}) => {
           <Text style={styles.giftCardAmount}>Gift Card Amount</Text>
           <Text style={styles.giftAmount}>{currencyFormat(value)}</Text>
         </View>
-        <Surface elevation={2} style={styles.addMoneyShadow}>
+        <Surface elevation={3} style={styles.addMoneyShadow}>
           <View style={styles.addMoneyInnerView}>
             <View style={styles.inputTextView}>
               <Text
@@ -172,12 +174,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   addMoneyShadow: {
-    shadowColor: colors.black,
+    shadowColor:Platform.OS == 'ios'?colors.black50:colors.black,
     backgroundColor: colors.white,
     alignSelf: 'center',
     borderRadius: 10,
-    width: wp('90%'),
-    height: hp('17%'),
+    width: screenWidth(90),
+    height: screenHeight(17),
     marginTop: '5%',
     borderWidth: 1,
     borderColor: colors.colorD9,
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   inputTextView: {
-    height: hp('5.6%'),
+    height:screenHeight(5.6),
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.colorB6,
@@ -208,9 +210,9 @@ const styles = StyleSheet.create({
   inputText: {
     padding: 5,
     borderRadius: 10,
-    height: hp('5.6%'),
-    width: wp('74%'),
-    ontSize: RFValue(13),
+    height:screenHeight(5.6),
+    width:screenWidth(74),
+    fontSize: RFValue(13),
     fontFamily: fonts.medium,
   },
   innerView: {

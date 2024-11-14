@@ -1,13 +1,11 @@
 
 import React from 'react';
-import {Pressable, View} from 'react-native';
-import {Text, TextInput} from 'react-native-paper';
+import {Pressable, View,Text} from 'react-native';
+import {TextInput} from 'react-native-paper';
 import {useFormikContext} from 'formik';
 import {colors} from '../theme/colors';
 import {RFValue} from 'react-native-responsive-fontsize';
 import FieldErrorMessage from './FieldErrorMessage';
-import { SvgXml } from 'react-native-svg';
-import { appImagesSvg } from '../commons/AppImages';
 import { heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
 import { fonts } from '../theme/fonts/fonts';
 
@@ -73,10 +71,12 @@ function InputField({
               paddingLeft: prefix ? '10%' : '2%',
               marginTop: '-2%',
               backgroundColor:colors.white,
-              paddingVertical: 0,
+              paddingVertical:0,
               fontSize: RFValue(13),
               height:hp('5.8%'),
-              fontWeight:'500'
+              fontWeight:'500',
+              textAlign: 'left', 
+              textAlignVertical:'center',
             }}
             theme={{roundness: 50}}
             left={
@@ -140,7 +140,7 @@ function InputField({
               position: 'absolute',
               left: 10,
               fontSize: RFValue(13),
-              color: '#000000',
+              color:colors.black,
               textAlign: 'center',
               top:'27%'
             }}>

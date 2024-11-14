@@ -81,7 +81,7 @@ export default function Promo({navigation}) {
         <KeyboardAvoidingView
           style={{flex: 1, marginTop: '1.5%'}}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <Surface elevation={2} style={styles.surfaceView}>
+          <Surface elevation={3} style={styles.surfaceView}>
             <View style={styles.walletRateView}>
               <View style={styles.walletView}>
                 <SvgXml

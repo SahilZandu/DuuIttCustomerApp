@@ -49,7 +49,7 @@ const SetLocationHistory = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      handleAndroidBackButton(navigation);
       getAddressDetails();
       getCheckSenderReciever();
     }, []),
@@ -61,12 +61,10 @@ const SetLocationHistory = ({navigation}) => {
       lng: getLocation('lng'),
     });
 
-    setTimeout(()=>{
+    setTimeout(() => {
       getCurrentAddress();
-    },500)
-
+    }, 500);
   }, []);
-
 
   const getCheckSenderReciever = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
@@ -104,6 +102,12 @@ const SetLocationHistory = ({navigation}) => {
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setCurrentAddress(addressData?.address);
+    // if (pickDrop == 'pick') {
+    //   setPickUpLocation(addressData?.address);
+    //   // setPickDrop('drop');
+    // } else {
+    //   setDropLocation(addressData?.address);
+    // }
   };
 
   const renderItem = ({item, index}) => {
@@ -119,10 +123,14 @@ const SetLocationHistory = ({navigation}) => {
             } else {
               setDropLocation(item?.address);
             }
-            navigation.navigate('chooseMapLocation', {
+            navigation.navigate('senderReceiverDetails', {
               pickDrop: pickDrop,
               item: item,
             });
+            // navigation.navigate('chooseMapLocation', {
+            //   pickDrop: pickDrop,
+            //   item: item,
+            // });
           }}
         />
       </>
@@ -130,12 +138,33 @@ const SetLocationHistory = ({navigation}) => {
   };
 
   const onPressPickLocation = () => {
-    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item:{name: name, address: pickUpLocation, geo_location: geoLocation}});
+    const newItem = {
+      name: name,
+      address: pickUpLocation ? pickUpLocation : currentAddress,
+      geo_location: geoLocation,
+    };
+    // console.log("newItem---",newItem)
+
+    navigation.navigate('senderReceiverDetails', {
+      pickDrop: 'pick',
+      item: newItem,
+    });
+
+    // navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item:{name: name, address: pickUpLocation ? pickUpLocation :currentAddress, geo_location: geoLocation}});
     // alert('pick')
   };
 
   const onPressDropLocation = () => {
-    navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {name: name, address: dropLocation, geo_location: geoLocation}});
+    const newItem = {
+      name: name,
+      address: dropLocation ? dropLocation : currentAddress,
+      geo_location: geoLocation,
+    };
+    navigation.navigate('senderReceiverDetails', {
+      pickDrop: 'drop',
+      item: newItem,
+    });
+    // navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {name: name, address: dropLocation ? dropLocation :currentAddress, geo_location: geoLocation}});
     // alert('drop')
   };
 
@@ -146,10 +175,14 @@ const SetLocationHistory = ({navigation}) => {
     } else {
       setDropLocation(currentAddress);
     }
-    navigation.navigate('chooseMapLocation', {
+    navigation.navigate('senderReceiverDetails', {
       pickDrop: pickDrop,
       item: {name: name, address: currentAddress, geo_location: geoLocation},
     });
+    // navigation.navigate('chooseMapLocation', {
+    //   pickDrop: pickDrop,
+    //   item: {name: name, address: currentAddress, geo_location: geoLocation},
+    // });
   };
 
   return (

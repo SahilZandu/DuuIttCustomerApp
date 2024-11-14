@@ -9,14 +9,10 @@ import {
   Image,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import {currencyFormat} from '../halpers/currencyFormat';
+import { screenHeight, screenWidth } from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
@@ -60,9 +56,9 @@ export default function TabTextIcon({tabs, tabPress, isRating}) {
       <ScrollView
         bounces={false}
         ref={scrollViewRef}
-        style={{alignSelf: 'center', height: hp('6%')}}
+        style={{alignSelf: 'center', height:screenHeight(6)}}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{minWidth: wp('90')}}
+        contentContainerStyle={{minWidth:screenWidth(90)}}
         horizontal>
         {tabs?.map((tab, idx) => (
           <TabButton
@@ -86,14 +82,14 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
-    height: hp('4.5%'),
+    height: screenHeight(4.5),
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
     marginHorizontal: 3,
     borderWidth: 1,
     borderColor: colors.colorD9,
-    padding: wp('2.5%'),
+    paddingHorizontal: '3%',
   },
 
   selectedButton: {

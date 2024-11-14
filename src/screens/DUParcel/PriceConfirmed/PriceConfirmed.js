@@ -589,7 +589,7 @@ export default function PriceConfirmed({navigation, route}) {
               dropLocation={dropLocation}
             />
 
-            <Surface elevation={2} style={styles.rateSurfaceView}>
+            <Surface elevation={3} style={styles.rateSurfaceView}>
               <View style={styles.surfaceInnerView}>
                 <Image
                   resizeMode="cover"

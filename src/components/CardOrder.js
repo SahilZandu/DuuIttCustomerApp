@@ -6,12 +6,9 @@ import {
   Image,
   View,
   Text,
+  Platform,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
@@ -23,6 +20,7 @@ import BTN from './cta/BTN';
 import PickDropComp from './PickDropComp';
 import moment from 'moment';
 import Url from '../api/Url';
+import { screenWidth } from '../halpers/matrics';
 
 const CardOrder = ({item, index}) => {
   // console.log('item -- ', item);
@@ -68,13 +66,13 @@ const CardOrder = ({item, index}) => {
 
   return (
     <Surface
-      elevation={2}
+      elevation={3}
       style={{
         shadowColor: colors.black, // You can customize shadow color
         backgroundColor: colors.white,
         alignSelf: 'center',
         borderRadius: 10,
-        width: wp('90%'),
+        width: screenWidth(90),
         marginTop: '5%',
       }}>
       <TouchableOpacity
@@ -202,7 +200,7 @@ const CardOrder = ({item, index}) => {
             <BTN
               backgroundColor={colors.white}
               labelColor={colors.main}
-              width={wp('38%')}
+              width={screenWidth(38)}
               title={setDetailsBtn(item?.order_type)}
               onPress={() => {
                 // handleVerify(otp);
@@ -212,7 +210,7 @@ const CardOrder = ({item, index}) => {
             />
 
             <BTN
-              width={wp('38%')}
+              width={screenWidth(38)}
               title={setProgressBtn(item?.order_type)}
               onPress={() => {
                 // handleVerify(otp);

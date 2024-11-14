@@ -49,7 +49,8 @@ export default PickDropComp;
 
 const styles = StyleSheet.create({
   container:{
-    flexDirection: 'row', marginTop: '4%'
+    flexDirection: 'row',
+     marginTop: '4%'
   },
   circleViewMain:{
     flexDirection: 'column',

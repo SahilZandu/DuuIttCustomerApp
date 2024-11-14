@@ -78,13 +78,16 @@ function InputFieldMultiLine({
               setFieldValue(name, t);
             }}
             style={{
-              flex: 1,
+              // flex: 1,
               height: height ? height : hp('18%'),
               marginRight: '2%',
               color: colors.black,
               fontSize: RFValue(13),
               marginLeft: '4%',
               paddingVertical: '2%',
+              textAlignVertical: 'top', // Aligns text to the top
+              textAlign: 'left',        // Aligns text to the left
+              paddingHorizontal: 0,     // Removes extra horizontal padding
             }}
             maxLength={maxLength}
             {...otherProps}

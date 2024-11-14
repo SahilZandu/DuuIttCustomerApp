@@ -43,6 +43,10 @@ import DotTextComp from '../components/DotTextComp';
 
 const parcelInst=[
   {
+    id: 0, 
+    title: 'Parcel items maximum weight up to 20kg'
+  },
+  {
     id: 1, 
     title: 'Avoid illegal items in package'
   },
@@ -69,7 +73,7 @@ const PriceDetailsForm = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
-  const [weight, setWeight] = useState('');
+  const [weight, setWeight] = useState(20);
   const [quantity, setQuantity] = useState(1);
   // const [categoriesShow, setCategoriesShow] = useState(categories);
   // const [selectCate, setSelectCate] = useState([]);
@@ -148,7 +152,7 @@ const PriceDetailsForm = ({navigation}) => {
   const FormButton = ({loading, onPress}) => {
     return (
       <CTA
-        disable={weight == ''}
+        disable={weight == '' || weight > 20}
         title={'Proceed'}
         onPress={() => onPress()}
         loading={loading}
@@ -174,9 +178,9 @@ const PriceDetailsForm = ({navigation}) => {
               dropLocation={dropLocation}
             />
 
-            <View style={{marginTop: '7%'}}>
+            {/* <View style={{marginTop: '7%'}}>
               <Text style={styles.weightText}>Weight</Text>
-              <Surface elevation={2} style={styles.weightTextSurface}>
+              <Surface elevation={3} style={styles.weightTextSurface}>
                 <View style={styles.weightInnerView}>
                   <Image
                     resizeMode="contain"
@@ -198,7 +202,7 @@ const PriceDetailsForm = ({navigation}) => {
                 style={styles.parcelMaxWeight}>
                 Parcel items maximum weight up to 20kg
               </Text>
-            </View>
+            </View> */}
 
             <View style={{marginTop: '7%'}}>
               <Text
@@ -288,7 +292,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   weightTextSurface: {
-    shadowColor: colors.black50,
+    shadowColor:Platform.OS == 'ios'? colors.black50 :colors.black,
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('8%'),

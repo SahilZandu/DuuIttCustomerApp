@@ -1,5 +1,13 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image, Pressable} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Pressable,
+  Platform,
+} from 'react-native';
 import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
@@ -8,6 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
+import { screenHeight } from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
@@ -22,11 +31,12 @@ const PickDropLocation = ({
   onPressDropLocation,
 }) => {
   return (
-    <Surface elevation={2} style={styles.container}>
+    <Surface elevation={3} style={styles.container}>
       <View>
-        <TouchableOpacity 
-        onPress={onPressPickLocation}
-        activeOpacity={0.8} style={styles.mainTouch}>
+        <TouchableOpacity
+          onPress={onPressPickLocation}
+          activeOpacity={0.8}
+          style={styles.mainTouch}>
           <Image
             style={{width: 25, height: 25}}
             source={appImages.pickIconSet}
@@ -34,13 +44,15 @@ const PickDropLocation = ({
           <Text numberOfLines={1} style={styles.text}>
             {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
           </Text>
-          {cancelPickUp && <>
-          {pickUpLocation != '' && (
-              <Pressable onPress={cancelPickUp}>
-            <SvgXml  xml={appImagesSvg.crossBlackIcon} />
-            </Pressable>
+          {cancelPickUp && (
+            <>
+              {pickUpLocation != '' && (
+                <Pressable onPress={cancelPickUp}>
+                  <SvgXml xml={appImagesSvg.crossBlackIcon} />
+                </Pressable>
+              )}
+            </>
           )}
-          </>}
         </TouchableOpacity>
 
         <View style={{marginHorizontal: '7%'}}>
@@ -55,7 +67,7 @@ const PickDropLocation = ({
         </View>
 
         <TouchableOpacity
-            onPress={onPressDropLocation}
+          onPress={onPressDropLocation}
           activeOpacity={0.8}
           disabled={pickUpLocation == '' ? true : false}
           style={styles.dropTouch(pickUpLocation)}>
@@ -66,13 +78,15 @@ const PickDropLocation = ({
           <Text numberOfLines={1} style={styles.dropText(pickUpLocation)}>
             {dropLocation == '' ? 'Set drop location' : dropLocation}
           </Text>
-          {cancelDrop && <>
-          {dropLocation != '' && (
-            <Pressable onPress={cancelDrop}>
-            <SvgXml xml={appImagesSvg.crossBlackIcon} />
-            </Pressable>
+          {cancelDrop && (
+            <>
+              {dropLocation != '' && (
+                <Pressable onPress={cancelDrop}>
+                  <SvgXml xml={appImagesSvg.crossBlackIcon} />
+                </Pressable>
+              )}
+            </>
           )}
-            </>}
         </TouchableOpacity>
       </View>
     </Surface>
@@ -83,18 +97,18 @@ export default PickDropLocation;
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('13.5%'),
+    height: hp('14%'),
     marginTop: '5%',
   },
   mainTouch: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '4%',
-    marginTop: '4.5%',
-    height: '18%',
+    marginTop:hp('1.8%'),
+    height:hp('2.5%') ,
   },
   text: {
     marginLeft: '3%',
@@ -104,24 +118,24 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   dottedView: {
-    height: 6,
+    height: 5,
     width: 3,
     backgroundColor: colors.color95,
     marginTop: '2%',
   },
   dottedWithLine: {
     height: 2,
-    width: wp('70%'),
+    width: wp('72%'),
     backgroundColor: colors.colorD1,
     alignSelf: 'center',
-    marginLeft: '6%',
-    top: '-17%',
+    marginLeft:wp('8%') ,
+    // top:hp('-0.4%') ,
   },
   dropTouch: pickUpLocation => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '4%',
-    height: '30%',
+    height:hp('4.7%'),
     opacity: pickUpLocation == '' ? 0.5 : 1,
   }),
   dropText: pickUpLocation => ({

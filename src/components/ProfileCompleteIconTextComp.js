@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {Surface} from 'react-native-paper';
-import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import {TouchableOpacity, View, Text, StyleSheet, Platform} from 'react-native';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {SvgXml} from 'react-native-svg';
 import {appImagesSvg} from '../commons/AppImages';
+import { screenHeight } from '../halpers/matrics';
 
 const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
     const [completedProfile ,setCompletedProfile]=useState('30%')
@@ -25,7 +22,7 @@ const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
   },[appUser])
 
   return (
-    <Surface elevation={2} style={styles.container}>
+    <Surface elevation={3} style={styles.container}>
       <View key={0} style={styles.innerView}>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -55,10 +52,10 @@ export default ProfileCompleteIconTextComp;
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor:Platform.OS == 'ios'? colors.black50:colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('7%'),
+    height:screenHeight(7),
     marginTop: '4%',
     justifyContent: 'center',
     marginHorizontal: 20,

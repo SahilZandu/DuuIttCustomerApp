@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     height: hp('5.8%'),
     backgroundColor: colors.white,
     borderRadius: 10,
-    // borderWidth: 1,
+    borderWidth: 0.5,
+    borderColor:colors.black25,
     alignItems: 'center',
   },
   viewCricle: {

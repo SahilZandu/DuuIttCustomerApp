@@ -15,7 +15,7 @@ const RenderOffer = ({data}) => {
       {data?.map((item, i) => {
         return (
           <View style={styles.renderView}>
-            <Surface elevation={2} style={styles.surfaceView}>
+            <Surface elevation={3} style={styles.surfaceView}>
               <TouchableOpacity
                 style={styles.touchView}
                 key={i}

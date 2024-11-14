@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.black75,
   },
   rateSurfaceView: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor:Platform.OS == 'ios'? colors.black50:colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('7%'),

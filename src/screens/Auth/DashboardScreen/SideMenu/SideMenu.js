@@ -15,6 +15,7 @@ import ProfileUpperShowComp from '../../../../components/ProfileUpperShowComp';
 import Spacer from '../../../../halpers/Spacer';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
+import socketServices from '../../../../socketIo/SocketServices';
 
 
 
@@ -185,6 +186,7 @@ export default function SideMenu({navigation}) {
       onPress: async () => {
         await setToken(null);
         await setAppUser(null);
+        socketServices.disconnectSocket();
         navigation.dispatch(
           CommonActions.reset({
             index: 0,

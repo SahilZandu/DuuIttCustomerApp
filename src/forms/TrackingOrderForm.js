@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   Linking,
+  DeviceEventEmitter,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -30,6 +31,7 @@ import TrackingDetailsComp from '../components/TrackingDetailsComp';
 import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
+import OtpShowComp from '../components/OtpShowComp';
 
 
 
@@ -42,7 +44,7 @@ const trackArray = [
   {
     id: 1,
     name: 'Picked',
-    status: 'pending',
+    status: 'completed',
   },
   {
     id: 2,
@@ -71,10 +73,23 @@ const TrackingOrderForm = ({navigation}) => {
   
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      handleAndroidBackButton(navigation);
       getTrackingOrder();
     }, []),
   );
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      'dropped',
+      data => {
+      console.log('dropped data -- ',data)
+       getTrackingOrder();
+      },
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const getTrackingOrder = async () => {
     const res = await ordersTrackOrder(handleLoading);
@@ -156,7 +171,7 @@ const TrackingOrderForm = ({navigation}) => {
           index={index}
         />
         {isSelected === index && (
-          <Surface elevation={2} style={styles.trackingSurfaceView}>
+          <Surface elevation={3} style={styles.trackingSurfaceView}>
             <View style={styles.innerTrackingView}>
               <DriverTrackingProfileComp
                 item={{
@@ -183,11 +198,20 @@ const TrackingOrderForm = ({navigation}) => {
                 image={appImages.packetImage}
                 //   bottomLine={true}
               />
+             
               <TextRender
                 title={'Cash'}
                 value={currencyFormat(item?.total_amount)}
                 bottomLine={false}
               />
+               <OtpShowComp
+                      title={'Parcel OTP'}
+                      data={
+                        item?.parcel_otp?.receiver_otp
+                        ?.toString()
+                        ?.split('')
+                      }
+                    />
             </View>
           </Surface>
         )}
@@ -232,7 +256,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black50,
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('41%'),
+    height: hp('45%'),
     marginTop: '3%',
     justifyContent: 'center',
   },

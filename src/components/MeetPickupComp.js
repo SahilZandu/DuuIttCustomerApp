@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
@@ -7,12 +7,13 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {appImages} from '../commons/AppImages';
+import { screenHeight } from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
 const MeetingPickupComp = ({firstText, secondText, onPressDot}) => {
   return (
-    <Surface elevation={2} style={styles.rateSurfaceView}>
+    <Surface elevation={3} style={styles.rateSurfaceView}>
       <View style={styles.innerSurfaceView}>
         <View style={styles.textView}>
           <Text numberOfLines={1} style={styles.meetText}>
@@ -38,10 +39,10 @@ export default MeetingPickupComp;
 
 const styles = StyleSheet.create({
   rateSurfaceView: {
-    shadowColor: colors.black50, // You can customize shadow color
+    shadowColor:Platform.OS == 'ios'? colors.black50:colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('8%'),
+    height: screenHeight(8),
     marginTop: '5%',
     justifyContent: 'center',
   },

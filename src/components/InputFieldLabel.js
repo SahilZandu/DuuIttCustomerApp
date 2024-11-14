@@ -25,6 +25,7 @@ function InputFieldLabel({
   maxLength,
   borderWidth,
   marginBottom,
+  marginTop,
   marginLeft,
   ...otherProps
 }) {
@@ -41,7 +42,7 @@ function InputFieldLabel({
 
   return (
     <>
-      <View style={{marginTop: '10%', justifyContent: 'center'}}>
+      <View style={{marginTop:marginTop? marginTop : '10%', justifyContent: 'center'}}>
         <View style={{position:'relative'}}>
           {/* Label with "cut through border" effect */}
           {inputLabel && (

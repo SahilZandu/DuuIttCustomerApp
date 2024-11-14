@@ -1,28 +1,17 @@
 import React from 'react';
 import {Surface} from 'react-native-paper';
-import {View,Text,StyleSheet} from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import {View, Text, StyleSheet, Platform} from 'react-native';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
-import { RFValue } from 'react-native-responsive-fontsize';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {screenHeight, screenWidth} from '../halpers/matrics';
 
-const ReusableSurfaceComp = ({title,children}) => {
+const ReusableSurfaceComp = ({title, children}) => {
   return (
-    <Surface
-      elevation={2}
-      style={styles.container}>
-      <View
-        style={styles.innerView}>
-        <View
-          style={styles.titleView}
-        />
-        <Text
-          style={styles.title}>
-         {title}
-        </Text>
+    <Surface elevation={3} style={styles.container}>
+      <View style={styles.innerView}>
+        <View style={styles.titleView} />
+        <Text style={styles.title}>{title}</Text>
       </View>
       {/* Render the content passed as children */}
       {children}
@@ -33,30 +22,29 @@ const ReusableSurfaceComp = ({title,children}) => {
 export default ReusableSurfaceComp;
 
 const styles = StyleSheet.create({
-  container:{
-    shadowColor: colors.black50,
+  container: {
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
     backgroundColor: colors.white,
     borderRadius: 10,
-    minHeight: hp('13%'),
+    minHeight: screenHeight(13),
     marginTop: '6%',
     justifyContent: 'center',
     marginHorizontal: 20,
   },
-  innerView:{
+  innerView: {
     marginTop: '5%',
     flexDirection: 'row',
   },
-  titleView:{
-    height: hp('4%'),
-    width: wp('0.8%'),
+  titleView: {
+    height: screenHeight(4),
+    width: screenWidth(0.8),
     backgroundColor: colors.main,
   },
-  title:{
+  title: {
     fontSize: RFValue(14),
-            fontFamily: fonts.semiBold,
-            color: colors.main,
-            marginLeft: '4%',
-            marginTop: '2%',
-  }
-
-})
+    fontFamily: fonts.semiBold,
+    color: colors.main,
+    marginLeft: '4%',
+    marginTop: '2%',
+  },
+});

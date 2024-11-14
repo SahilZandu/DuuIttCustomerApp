@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  Platform,
 } from 'react-native';
 import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -15,12 +16,13 @@ import {
 } from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
+import {screenHeight} from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const PickDropAddressEdit = ({item,onPressEdit}) => {
+const PickDropAddressEdit = ({item, onPressEdit}) => {
   return (
-    <Surface elevation={2} style={styles.shadowView}>
+    <Surface elevation={3} style={styles.shadowView}>
       <View style={styles.innerShadowView}>
         <Image
           resizeMode="contain"
@@ -37,7 +39,7 @@ const PickDropAddressEdit = ({item,onPressEdit}) => {
           <Text style={styles.editText}>Edit</Text>
         </TouchableOpacity>
       </View>
-      <Text numberOfLines={1} style={styles.addressText}>
+      <Text numberOfLines={2} style={styles.addressText}>
         {item?.address}
       </Text>
     </Surface>
@@ -48,10 +50,11 @@ export default PickDropAddressEdit;
 
 const styles = StyleSheet.create({
   shadowView: {
-    shadowColor: colors.black50,
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('8%'),
+    // height: hp('8%'),
+    height: screenHeight(10.5),
   },
   innerShadowView: {
     flexDirection: 'row',
@@ -80,6 +83,6 @@ const styles = StyleSheet.create({
     marginLeft: '10%',
     fontSize: RFValue(12),
     fontFamily: fonts.regular,
-    color:colors.color95,
+    color: colors.color95,
   },
 });

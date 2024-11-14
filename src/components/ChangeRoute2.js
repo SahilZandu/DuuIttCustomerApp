@@ -17,104 +17,105 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {screenHeight, screenWidth} from '../halpers/matrics';
 
-const ChangeRoute2 = ({data, navigation,route}) => {
-
-  const onRoutePress =(item)=>{
-    if(item?.name == 'FOOD'){
-      navigation.navigate('food',{screen:'home'})
-    }else if(item?.name == 'RIDE'){
-      navigation.navigate('ride',{screen:'home'})
-    }else if(item?.name == 'PARCEL'){
-      navigation.navigate('parcel',{screen:'home'})
+const ChangeRoute2 = ({data, navigation, route}) => {
+  const onRoutePress = item => {
+    if (item?.name == 'FOOD') {
+      navigation.navigate('food', {screen: 'home'});
+    } else if (item?.name == 'RIDE') {
+      navigation.navigate('ride', {screen: 'home'});
+    } else if (item?.name == 'PARCEL') {
+      navigation.navigate('parcel', {screen: 'home'});
+    } else {
+      navigation.navigate('dashborad', {screen: 'home'});
     }
-    else{
-      navigation.navigate('dashborad',{screen:'home'})
-    }
-    
-
-  }
+  };
 
   const renderItem = ({item, index}) => {
     return (
-        <>
-        {route !== item?.name ?  
-        <TouchableOpacity
-        onPress={()=>{onRoutePress(item)}}
-        activeOpacity={0.8}
-        key={index}
-        style={styles.mainTouch(index)}>
-        <SvgXml
-          style={{marginLeft: '8%', marginTop: '8%'}}
-          xml={item?.duIcon}
-        />
-        <Text
-          style={styles.nameText}>
-          {item?.name}
-        </Text>
-        <Image
-          resizeMode="contain"
-          style={styles.image}
-          source={item?.image}
-        />
-        </TouchableOpacity>
-        :null}
-      </>
+      <View style={{flex: 1}}>
+        {route !== item?.name ? (
+          <TouchableOpacity
+            onPress={() => {
+              onRoutePress(item);
+            }}
+            activeOpacity={0.8}
+            key={index}
+            style={styles.mainTouch(index)}>
+            <View>
+              <SvgXml
+                style={{marginLeft:wp('4%') , marginTop:hp('2%') }}
+                xml={item?.duIcon}
+              />
+              <Text style={styles.nameText}>{item?.name}</Text>
+            </View>
+            <View style={{position: 'absolute', bottom:hp('-3%') }}>
+              <Image
+                resizeMode="contain"
+                style={styles.image}
+                source={item?.image}
+              />
+            </View>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     );
   };
 
   return (
-      <View style={styles.container}>
-        <FlatList
-          nestedScrollEnabled={true}
-          scrollEnabled={false}
-          bounces={false}
-          style={{
-            marginTop: '1%',
-            alignSelf: 'center',
-          }}
-          contentContainerStyle={{paddingBottom: '1%',width:wp('90%'),}}
-          showsVerticalScrollIndicator={false}
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          numColumns={2} // Set number of columns
-        />
-      </View>
+    <View style={styles.container}>
+      <FlatList
+        nestedScrollEnabled={true}
+        scrollEnabled={false}
+        bounces={false}
+        style={{
+          marginTop: '1%',
+        }}
+        contentContainerStyle={{paddingBottom: '1%', width: screenWidth(90)}}
+        showsVerticalScrollIndicator={false}
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        numColumns={2} // Set number of columns
+      />
+    </View>
   );
 };
 
 export default ChangeRoute2;
 
 const styles = StyleSheet.create({
-  container:{
-    flex: 1, 
+  container: {
+    flex: 1,
     flexWrap: 'wrap',
-    marginTop:'6%'
-    },
-    mainTouch:(index)=>({
-      marginLeft:(index)%2 == 0 ? 0:'auto',
-      width: wp('43%'),
-      height: hp('15%'),
-      backgroundColor: colors.colorDo,
-      borderRadius: 10,
-      borderColor:colors.colorD6,
-      borderWidth:1.5,
-      // marginTop: '5%',
-    }),
-    nameText:{
-      marginLeft: '8%',
-      marginTop: '7%',
-      fontSize: RFValue(15),
-      fontFamily: fonts.bold,
-      color: colors.color27,
-    },
-    image:{
-      alignSelf: 'center',
-      marginTop: '-15%',
-      marginLeft: '40%',
-      width: 90,
-      height: 90,
-    }
+    marginTop: '6%',
+  },
+  mainTouch: index => ({
+    marginLeft: index % 2 == 0 ? 0 : 'auto',
+    // width: wp('43%'),
+    // height: hp('15%'),
+    width: screenWidth(43),
+    height: screenHeight(15),
 
-})
+    backgroundColor: colors.colorDo,
+    borderRadius: 10,
+    borderColor: colors.colorD6,
+    borderWidth: 1.5,
+    // marginTop: '5%',
+  }),
+  nameText: {
+    marginLeft:wp('4%') ,
+    marginTop:hp('1%') ,
+    fontSize: RFValue(15),
+    fontFamily: fonts.bold,
+    color: colors.color27,
+  },
+  image: {
+    alignSelf: 'center',
+    marginTop: screenHeight(-6.7),
+    marginLeft: screenWidth(12),
+    width:wp('32%'),
+    height: 120,
+  },
+});

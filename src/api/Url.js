@@ -16,6 +16,10 @@ export default  {
     ordersRecentOrder:'orders/recent-order',
     ordersTrackOrder:'orders/track-order',
     pendingForCustomer:'orders/pending-for-customer',
+    customersFcmToken:'customers/update',
+    testMessage:'test/message',
+    updateOrderStatus:'orders/update-order-status'
+
    
    
 } 

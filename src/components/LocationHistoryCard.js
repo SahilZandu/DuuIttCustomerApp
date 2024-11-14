@@ -44,7 +44,7 @@ const LocationHistoryCard = ({item, index,onPress,bottomLine}) => {
         </Text>
       </View>
       <Text 
-      numberOfLines={1}
+      numberOfLines={2}
       style={styles.textAddress}
        >
         {item.address}

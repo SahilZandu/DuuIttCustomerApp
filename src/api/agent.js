@@ -66,6 +66,9 @@ export const agent = {
   ordersRecentOrder: body => requests.post(Url.ordersRecentOrder, body),
   ordersTrackOrder: () => requests.get(Url.ordersTrackOrder),
   pendingForCustomer: () => requests.get(Url.pendingForCustomer),
+  customersFcmToken: body => requests.post(Url.customersFcmToken, body),
+  testMessage: body => requests.post(Url.testMessage, body),
+  updateOrderStatus: body => requests.post(Url.updateOrderStatus, body),
   
   
 

@@ -38,13 +38,11 @@ function App() {
     const unsubscribe = NetInfo.addEventListener(state => {
       console.log("Connection type", state);
       console.log("Is connected?", state.isConnected);
-  
       if (state.isInternetReachable != null) {
         setIsInternet(state.isInternetReachable);
         let action = state.isInternetReachable ? 'internet' : 'noInternet';
         DeviceEventEmitter.emit(focusRoute, action);
       }
-      
     });
   
     return () => unsubscribe(); // Cleanup listener on unmount
