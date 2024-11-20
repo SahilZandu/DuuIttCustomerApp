@@ -488,7 +488,7 @@ export default function PriceDetails({navigation}) {
   return (
     <View style={styles.container}>
       <Header 
-      title={'Price Details'}
+      title={'Parcel Details'}
       backArrow={true}
       onPress={() => {
         navigation.goBack();

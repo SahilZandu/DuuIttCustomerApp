@@ -9,12 +9,14 @@ import {
 } from 'react-native-responsive-screen';
 import {appImages} from '../../../commons/AppImages';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import CTA from '../../../components/cta/CTA';
 import {getGeoCodes} from '../../../components/GeoCodeAddress';
 import {getCurrentLocation} from '../../../components/GetAppLocation';
 import Header from '../../../components/header/Header';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import Spacer from '../../../halpers/Spacer';
 import {pickUpHistory} from '../../../stores/DummyData/Home';
 import {rootStore} from '../../../stores/rootStore';
 import {colors} from '../../../theme/colors';
@@ -22,8 +24,14 @@ import {fonts} from '../../../theme/fonts/fonts';
 import {styles} from './styles';
 
 const SetLocationHistory = ({navigation}) => {
-  const {getMyAddress, getAddress, setSenderAddress, setReceiverAddress} =
-    rootStore.myAddressStore;
+  const {
+    getMyAddress,
+    getAddress,
+    setSenderAddress,
+    setReceiverAddress,
+    senderAddress,
+    receiverAddress,
+  } = rootStore.myAddressStore;
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
     let d =
@@ -51,9 +59,13 @@ const SetLocationHistory = ({navigation}) => {
     useCallback(() => {
       handleAndroidBackButton(navigation);
       getAddressDetails();
-      getCheckSenderReciever();
+      // getCheckSenderReciever();
     }, []),
   );
+
+  useEffect(()=>{
+    getCheckSenderReciever();
+  },[senderAddress ,receiverAddress])
 
   useEffect(() => {
     setGeoLocation({
@@ -72,6 +84,7 @@ const SetLocationHistory = ({navigation}) => {
       'senderAddress,receiverAddress--',
       senderAddress,
       receiverAddress,
+      getAddress
     );
     if (Object?.keys(senderAddress || {})?.length == 0) {
       setPickUpLocation('');
@@ -102,12 +115,26 @@ const SetLocationHistory = ({navigation}) => {
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setCurrentAddress(addressData?.address);
-    // if (pickDrop == 'pick') {
-    //   setPickUpLocation(addressData?.address);
-    //   // setPickDrop('drop');
-    // } else {
-    //   setDropLocation(addressData?.address);
-    // }
+    setGeoLocation(addressData?.geo_location)
+    if (pickDrop == 'pick') {
+      const newData = {
+        address: addressData?.address,
+        geo_location: geoLocation,
+      };
+      console.log('newData--', newData);
+      setSenderAddress(newData);
+      setPickUpLocation(addressData?.address);
+      setPickDrop('drop');
+    } else {
+      const newData = {
+        address: addressData?.address,
+        geo_location: geoLocation,
+      };
+      console.log('newData--', newData);
+      setReceiverAddress(newData);
+      setDropLocation(addressData?.address);
+      setPickDrop('pick');
+    }
   };
 
   const renderItem = ({item, index}) => {
@@ -119,18 +146,18 @@ const SetLocationHistory = ({navigation}) => {
           onPress={() => {
             if (pickDrop == 'pick') {
               setPickUpLocation(item?.address);
+              setSenderAddress(item);
               setPickDrop('drop');
+              if (receiverAddress?.address?.length > 0) {
+                navigation.navigate('priceDetails');
+              }
             } else {
               setDropLocation(item?.address);
+              setReceiverAddress(item);
+              if (senderAddress?.address?.length > 0) {
+                navigation.navigate('priceDetails');
+              }
             }
-            navigation.navigate('senderReceiverDetails', {
-              pickDrop: pickDrop,
-              item: item,
-            });
-            // navigation.navigate('chooseMapLocation', {
-            //   pickDrop: pickDrop,
-            //   item: item,
-            // });
           }}
         />
       </>
@@ -138,33 +165,47 @@ const SetLocationHistory = ({navigation}) => {
   };
 
   const onPressPickLocation = () => {
-    const newItem = {
-      name: name,
-      address: pickUpLocation ? pickUpLocation : currentAddress,
-      geo_location: geoLocation,
-    };
-    // console.log("newItem---",newItem)
+    // const newItem = {
+    //   name: name,
+    //   address: pickUpLocation ? pickUpLocation : currentAddress,
+    //   geo_location: geoLocation,
+    // };
+    // // console.log("newItem---",newItem)
 
-    navigation.navigate('senderReceiverDetails', {
+    // navigation.navigate('senderReceiverDetails', {
+    //   pickDrop: 'pick',
+    //   item: newItem,
+    // });
+
+    navigation.navigate('chooseMapLocation', {
       pickDrop: 'pick',
-      item: newItem,
+      item: {
+        name: name,
+        address: pickUpLocation ? pickUpLocation : currentAddress,
+        geo_location: geoLocation,
+      },
     });
-
-    // navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item:{name: name, address: pickUpLocation ? pickUpLocation :currentAddress, geo_location: geoLocation}});
     // alert('pick')
   };
 
   const onPressDropLocation = () => {
-    const newItem = {
-      name: name,
-      address: dropLocation ? dropLocation : currentAddress,
-      geo_location: geoLocation,
-    };
-    navigation.navigate('senderReceiverDetails', {
+    // const newItem = {
+    //   name: name,
+    //   address: dropLocation ? dropLocation : currentAddress,
+    //   geo_location: geoLocation,
+    // };
+    // navigation.navigate('senderReceiverDetails', {
+    //   pickDrop: 'drop',
+    //   item: newItem,
+    // });
+    navigation.navigate('chooseMapLocation', {
       pickDrop: 'drop',
-      item: newItem,
+      item: {
+        name: name,
+        address: dropLocation ? dropLocation : currentAddress,
+        geo_location: geoLocation,
+      },
     });
-    // navigation.navigate('chooseMapLocation', {pickDrop: pickDrop, item: {name: name, address: dropLocation ? dropLocation :currentAddress, geo_location: geoLocation}});
     // alert('drop')
   };
 
@@ -175,15 +216,36 @@ const SetLocationHistory = ({navigation}) => {
     } else {
       setDropLocation(currentAddress);
     }
-    navigation.navigate('senderReceiverDetails', {
-      pickDrop: pickDrop,
-      item: {name: name, address: currentAddress, geo_location: geoLocation},
-    });
-    // navigation.navigate('chooseMapLocation', {
+    // navigation.navigate('senderReceiverDetails', {
     //   pickDrop: pickDrop,
     //   item: {name: name, address: currentAddress, geo_location: geoLocation},
     // });
+    navigation.navigate('chooseMapLocation', {
+      pickDrop: pickDrop,
+      item: {name: name, address: currentAddress, geo_location: geoLocation},
+    });
   };
+
+  const onChangePress=()=>{
+    if(senderAddress?.address?.length > 0 && receiverAddress?.address?.length> 0){
+      setPickDrop('drop');
+      setSenderAddress(receiverAddress);
+      setPickUpLocation(receiverAddress?.address);
+      setReceiverAddress(senderAddress);
+      setDropLocation(senderAddress?.address);
+      setPickDrop('pick');
+    } else if(senderAddress?.address?.length > 0 ){
+      setReceiverAddress(senderAddress);
+      setDropLocation(senderAddress?.address);
+      setPickDrop('pick');
+      setSenderAddress({})
+    } else if(receiverAddress?.address?.length> 0){
+      setSenderAddress(receiverAddress);
+      setPickUpLocation(receiverAddress?.address);
+      setPickDrop('drop');
+      setReceiverAddress({});
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -206,8 +268,10 @@ const SetLocationHistory = ({navigation}) => {
           }}
           onPressPickLocation={onPressPickLocation}
           onPressDropLocation={onPressDropLocation}
+          onChangePress={()=>{onChangePress()}}
         />
-        <View style={styles.currentLocView}>
+
+        {/* <View style={styles.currentLocView}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
@@ -221,7 +285,7 @@ const SetLocationHistory = ({navigation}) => {
             />
             <Text style={styles.currentLocText}>Choose current location</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={styles.middleLineView} />
         {loading == true ? (
@@ -255,8 +319,17 @@ const SetLocationHistory = ({navigation}) => {
               </View>
             )}
           </View>
+         
         )}
       </View>
+      {(senderAddress?.address?.length > 0 &&
+       receiverAddress?.address?.length > 0) &&
+       <View style={{backgroundColor:colors.white,height:hp("8%")}}>
+        <Spacer space={'5%'}/>
+       <CTA title={'continue'}
+       onPress={()=>{ navigation.navigate('priceDetails')}}
+       />
+      </View>}
     </View>
   );
 };

@@ -45,12 +45,12 @@ const ChangeRoute2 = ({data, navigation, route}) => {
             style={styles.mainTouch(index)}>
             <View>
               <SvgXml
-                style={{marginLeft:wp('4%') , marginTop:hp('2%') }}
+                style={{marginLeft: wp('4%'), marginTop: hp('2%')}}
                 xml={item?.duIcon}
               />
               <Text style={styles.nameText}>{item?.name}</Text>
             </View>
-            <View style={{position: 'absolute', bottom:hp('-3%') }}>
+            <View style={styles.imageView}>
               <Image
                 resizeMode="contain"
                 style={styles.image}
@@ -105,17 +105,20 @@ const styles = StyleSheet.create({
     // marginTop: '5%',
   }),
   nameText: {
-    marginLeft:wp('4%') ,
-    marginTop:hp('1%') ,
+    marginLeft: wp('4%'),
+    marginTop: hp('1%'),
     fontSize: RFValue(15),
     fontFamily: fonts.bold,
     color: colors.color27,
   },
+  imageView: {
+    position: 'absolute',
+    bottom: hp('-4%'),
+  },
   image: {
     alignSelf: 'center',
-    marginTop: screenHeight(-6.7),
-    marginLeft: screenWidth(12),
-    width:wp('32%'),
+    marginLeft: screenWidth(13),
+    width: wp('29%'),
     height: 120,
   },
 });

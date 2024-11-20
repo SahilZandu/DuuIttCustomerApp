@@ -74,8 +74,10 @@ export default function AddMyAddress({navigation, route}) {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
+      if(type == 'add'){
       getCurrentAddress();
-    }, []),
+      }
+    }, [type]),
   );
   const tabs = [
     {id: 0, text: 'Home', icon: appImages.homeLocation},
@@ -114,6 +116,7 @@ export default function AddMyAddress({navigation, route}) {
     setName(nameData[0]);
     setAddress(addressData?.address);
     setLocationId(addressData?.place_Id);
+    setGeoLocation(addressData?.geo_location)
   };
 
   const FormButton = ({loading, onPress}) => {

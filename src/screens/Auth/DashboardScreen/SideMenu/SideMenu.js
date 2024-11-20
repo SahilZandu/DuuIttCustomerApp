@@ -21,7 +21,6 @@ import socketServices from '../../../../socketIo/SocketServices';
 
 export default function SideMenu({navigation}) {
   const {setToken, setAppUser, appUser} = rootStore.commonStore;
-
   const foodOptions = [
     {
       title: 'Your Order',
@@ -184,9 +183,13 @@ export default function SideMenu({navigation}) {
     {
       title: 'Logout',
       onPress: async () => {
+        let query ={
+          user_id:appUser?._id
+          }
+        socketServices.emit('remove-user',query)
+        socketServices.disconnectSocket();
         await setToken(null);
         await setAppUser(null);
-        socketServices.disconnectSocket();
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -210,6 +213,7 @@ export default function SideMenu({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
+      socketServices.initailizeSocket();
       checkInternet();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();

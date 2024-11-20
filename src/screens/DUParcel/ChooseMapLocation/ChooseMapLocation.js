@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Platform, View} from 'react-native';
+import {Alert, Platform, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -13,8 +13,11 @@ import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGoogl
 import Header from '../../../components/header/Header';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import { screenHeight } from '../../../halpers/matrics';
+import { rootStore } from '../../../stores/rootStore';
 
 const ChooseMapLocation = ({navigation, route}) => {
+  const {setSenderAddress, setReceiverAddress, senderAddress,
+    receiverAddress} = rootStore.myAddressStore;
   const {pickDrop, item} = route.params;
   console.log('pickDrop--', pickDrop, item);
   const [geoLocation, setGeoLocation] = useState({
@@ -47,12 +50,34 @@ const ChooseMapLocation = ({navigation, route}) => {
       address: address,
       geo_location: geoLocation,
     };
-    // console.log("newItem---",newItem)
+    console.log("newItem---",newItem,pickDrop)
 
-    navigation.navigate('senderReceiverDetails', {
-      pickDrop: pickDrop,
-      item: newItem,
-    });
+    // navigation.navigate('senderReceiverDetails', {
+    //   pickDrop: pickDrop,
+    //   item: newItem,
+    // });
+    if (pickDrop == 'pick') {
+      setSenderAddress(newItem);
+    setTimeout(()=>{
+      if(receiverAddress?.address?.length > 0){
+        navigation.navigate('priceDetails');
+      }else{
+        navigation.navigate('setLocationHistory');
+      }
+    },200)
+     
+    } else {
+      setReceiverAddress(newItem);
+     setTimeout(()=>{
+      if(senderAddress?.address?.length > 0){
+        navigation.navigate('priceDetails');
+      }else{
+        navigation.navigate('setLocationHistory');
+      }
+    },200)
+    }
+
+
   };
 
   return (

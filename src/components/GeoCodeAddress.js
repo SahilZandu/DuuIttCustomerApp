@@ -23,6 +23,7 @@ export const getGeoCodes = (latitude, longitude) => {
           const data ={
             address:responseJson?.results?.[0]?.formatted_address,
             place_Id:responseJson?.results?.[0]?.place_id,
+            geo_location:responseJson?.results?.[0]?.geometry?.location
           }
           resolve(data);
           // resolve(responseJson?.results?.[0]?.formatted_address);

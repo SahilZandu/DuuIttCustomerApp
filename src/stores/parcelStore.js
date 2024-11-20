@@ -15,6 +15,7 @@ export default class ParcelStore {
       sender_address: value?.sender_address,
       receiver_address: value?.receiver_address,
       billing_detail: value?.billing_detail,
+      secure:value?.isSecure
     };
 
     console.log('requestData:-', requestData);

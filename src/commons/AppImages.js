@@ -159,7 +159,7 @@ export const appImagesSvg = {
   searchIconGreen: `<svg xmlns="http://www.w3.org/2000/svg" width="23" height="24" viewBox="0 0 23 24" fill="none">
     <path d="M20.125 20.625L14.3751 14.875M16.2917 10.0833C16.2917 13.7882 13.2882 16.7917 9.58333 16.7917C5.87842 16.7917 2.875 13.7882 2.875 10.0833C2.875 6.37842 5.87842 3.375 9.58333 3.375C13.2882 3.375 16.2917 6.37842 16.2917 10.0833Z" stroke="#28B056" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`,
-  crossBlackIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10" fill="none">
+  crossBlackIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 10 10" fill="none">
     <path d="M9.16665 0.833496L0.833313 9.16683M0.833313 0.833496L9.16665 9.16683" stroke="#838282" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`,
   callIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
@@ -268,6 +268,24 @@ export const appImagesSvg = {
 </defs>
 </svg>`,
   refershIcon: `<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M480-160q-133.33 0-226.67-93.33Q160-346.67 160-480q0-133.33 93.33-226.67Q346.67-800 480-800q79.67 0 143.33 32.5 63.67 32.5 110 90.17V-800H800v262.67H537.33V-604h168q-36-58.67-93.83-94T480-733.33q-106 0-179.67 73.66Q226.67-586 226.67-480q0 106 73.66 179.67Q374-226.67 480-226.67q81 0 147.67-46.33 66.66-46.33 93-122.33H790Q761.33-290 675.33-225q-86 65-195.33 65Z"/></svg>`,
+  changeLocationAddress: `<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 33 33" fill="none">
+  <g clip-path="url(#clip0_4171_1928)">
+  <path d="M32.5 16.5C32.5 25.3366 25.3366 32.5 16.5 32.5C7.66344 32.5 0.5 25.3366 0.5 16.5C0.5 7.66344 7.66344 0.5 16.5 0.5C25.3366 0.5 32.5 7.66344 32.5 16.5Z" fill="white" stroke="#D9D9D9"/>
+  <path d="M20.3333 11.667V22.3337M20.3333 22.3337L17.6667 19.667M20.3333 22.3337L23 19.667M13.6667 22.3337V11.667M13.6667 11.667L11 14.3337M13.6667 11.667L16.3333 14.3337" stroke="black" stroke-opacity="0.67" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_4171_1928">
+  <rect width="33" height="33" fill="white"/>
+  </clipPath>
+  </defs>
+  </svg>`,
+  unCheckBox:`<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 19 19" fill="none">
+  <rect x="0.5" y="0.225098" width="18" height="18" rx="5" fill="#D9D9D9"/>
+  </svg>`,
+  checkBox:`<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 19 19" fill="none">
+  <rect x="0.5" y="0.225098" width="18" height="18" rx="5" fill="#1D721E"/>
+  <path d="M8.07061 12.725L4.74561 9.40003L5.57686 8.56878L8.07061 11.0625L13.4227 5.71045L14.2539 6.5417L8.07061 12.725Z" fill="white"/>
+  </svg>`
 };
 
 export const bottomTabIcons = {
@@ -446,4 +464,5 @@ export const appImages = {
   rideHomeBootmImage: require('../assets/rideHomeBottomImage.png'),
   parcelHomeBootmImage: require('../assets/parcelHomeBottomImage.png'),
   pickedGreenImage: require('../assets/pickedGreenImage.png'),
+  mapTrackImage: require('../assets/mapTrackImage.png'),
 };

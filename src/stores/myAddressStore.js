@@ -52,7 +52,7 @@ export default class MyAddressStore {
       const res = await agent.getMyAddress();
       console.log('getMyAddressd Res : ', res);
       if(res?.statusCode==200){
-         res?.data?.addresses  ? this.getAddress == res?.data?.addresses : this.getAddress=[]
+         res?.data?.addresses  ? this.getAddress = res?.data?.addresses : this.getAddress=[]
          return res?.data?.addresses 
       }else{
         this.getAddress=[]

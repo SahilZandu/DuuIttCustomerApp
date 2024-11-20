@@ -81,4 +81,30 @@ export const styles = StyleSheet.create({
     color: colors.black,
     marginLeft: '4%',
   },
+  containerDriverTouch: {
+    position: 'absolute',
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    bottom: 0,
+    height:hp('35%'),
+    width: wp('100%'),
+  },
+  innerDriverView: {
+    paddingHorizontal: 20,
+    marginTop: '2%',
+  },
+  topLineView: {
+    height: hp('0.5%'),
+    backgroundColor: colors.colorD9,
+    width:wp('15%'),
+    borderRadius: 10,
+    alignSelf: 'center',
+    marginTop: '3%',
+  },
+  homeSliderView:{
+    marginHorizontal: -7,
+    alignContent: 'center',
+    justifyContent: 'center',
+  }
 });

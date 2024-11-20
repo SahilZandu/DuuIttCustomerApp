@@ -1,3 +1,153 @@
+// import React from 'react';
+// import {
+//   StyleSheet,
+//   View,
+//   Text,
+//   TouchableOpacity,
+//   Image,
+//   Pressable,
+//   Platform,
+// } from 'react-native';
+// import {Surface} from 'react-native-paper';
+// import {RFValue} from 'react-native-responsive-fontsize';
+// import {
+//   heightPercentageToDP as hp,
+//   widthPercentageToDP as wp,
+// } from 'react-native-responsive-screen';
+// import {SvgXml} from 'react-native-svg';
+// import {appImages, appImagesSvg} from '../commons/AppImages';
+// import { screenHeight } from '../halpers/matrics';
+// import {colors} from '../theme/colors';
+// import {fonts} from '../theme/fonts/fonts';
+
+// const dotLineArray = [1, 2, 3];
+
+// const PickDropLocation = ({
+//   pickUpLocation,
+//   cancelPickUp,
+//   onPressPickLocation,
+//   dropLocation,
+//   cancelDrop,
+//   onPressDropLocation,
+// }) => {
+//   return (
+//     <Surface elevation={3} style={styles.container}>
+//       <View>
+//         <TouchableOpacity
+//           onPress={onPressPickLocation}
+//           activeOpacity={0.8}
+//           style={styles.mainTouch}>
+//           <Image
+//             style={{width: 25, height: 25}}
+//             source={appImages.pickIconSet}
+//           />
+//           <Text numberOfLines={1} style={styles.text}>
+//             {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
+//           </Text>
+//           {cancelPickUp && (
+//             <>
+//               {pickUpLocation != '' && (
+//                 <Pressable onPress={cancelPickUp}>
+//                   <SvgXml xml={appImagesSvg.crossBlackIcon} />
+//                 </Pressable>
+//               )}
+//             </>
+//           )}
+//         </TouchableOpacity>
+
+//         <View style={{marginHorizontal: '7%'}}>
+//           {dotLineArray?.map((item, i) => {
+//             return (
+//               <View style={{justifyContent: 'center'}}>
+//                 <View style={styles.dottedView} />
+//                 {item == 2 && <View style={styles.dottedWithLine} />}
+//               </View>
+//             );
+//           })}
+//         </View>
+
+//         <TouchableOpacity
+//           onPress={onPressDropLocation}
+//           activeOpacity={0.8}
+//           // disabled={pickUpLocation == '' ? true : false}
+//           style={styles.dropTouch(pickUpLocation)}>
+//           <Image
+//             style={{width: 25, height: 25}}
+//             source={appImages.dropIconSet}
+//           />
+//           <Text numberOfLines={1} style={styles.dropText(pickUpLocation)}>
+//             {dropLocation == '' ? 'Set drop location' : dropLocation}
+//           </Text>
+//           {cancelDrop && (
+//             <>
+//               {dropLocation != '' && (
+//                 <Pressable onPress={cancelDrop}>
+//                   <SvgXml xml={appImagesSvg.crossBlackIcon} />
+//                 </Pressable>
+//               )}
+//             </>
+//           )}
+//         </TouchableOpacity>
+//       </View>
+//     </Surface>
+//   );
+// };
+
+// export default PickDropLocation;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
+//     backgroundColor: colors.white,
+//     borderRadius: 10,
+//     height: hp('14%'),
+//     marginTop: '5%',
+//   },
+//   mainTouch: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginHorizontal: '4%',
+//     marginTop:hp('1.8%'),
+//     height:hp('2.5%') ,
+//   },
+//   text: {
+//     marginLeft: '3%',
+//     width: wp('70%'),
+//     fontSize: RFValue(12),
+//     fontFamily: fonts.medium,
+//     color: colors.black,
+//   },
+//   dottedView: {
+//     height: 5,
+//     width: 3,
+//     backgroundColor: colors.color95,
+//     marginTop: '2%',
+//   },
+//   dottedWithLine: {
+//     height: 2,
+//     width: wp('72%'),
+//     backgroundColor: colors.colorD1,
+//     alignSelf: 'center',
+//     marginLeft:wp('8%') ,
+//     // top:hp('-0.4%') ,
+//   },
+//   dropTouch: pickUpLocation => ({
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginHorizontal: '4%',
+//     height:hp('4.7%'),
+//     // opacity: pickUpLocation == '' ? 0.5 : 1,
+//   }),
+//   dropText: pickUpLocation => ({
+//     marginLeft: '3%',
+//     width: wp('70%'),
+//     fontSize: RFValue(12),
+//     fontFamily: fonts.medium,
+//     color: colors.black,
+//     // color: pickUpLocation == '' ? colors.black50 : colors.black,
+//   }),
+// });
+
 import React from 'react';
 import {
   StyleSheet,
@@ -16,11 +166,11 @@ import {
 } from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
 import {appImages, appImagesSvg} from '../commons/AppImages';
-import { screenHeight } from '../halpers/matrics';
+import {screenHeight} from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const dotLineArray = [1, 2, 3];
+const dotLineArray = [1, 2, 3, 4];
 
 const PickDropLocation = ({
   pickUpLocation,
@@ -29,6 +179,10 @@ const PickDropLocation = ({
   dropLocation,
   cancelDrop,
   onPressDropLocation,
+  onChangePress,
+  addOnPick,
+  addOnDrop,
+  
 }) => {
   return (
     <Surface elevation={3} style={styles.container}>
@@ -38,16 +192,28 @@ const PickDropLocation = ({
           activeOpacity={0.8}
           style={styles.mainTouch}>
           <Image
-            style={{width: 25, height: 25}}
+            style={{width: 25, height: 25, marginTop: '2%'}}
             source={appImages.pickIconSet}
           />
-          <Text numberOfLines={1} style={styles.text}>
-            {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
-          </Text>
+          <View style={{flexDirection: 'column', marginTop: '3%'}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[styles.senderText, {flex: 1, marginTop: '2%'}]}>
+                Sender
+              </Text>
+              {addOnPick && (
+                <TouchableOpacity onPress={addOnPick} style={styles.addOnTouch}>
+                  <Text style={styles.addOnText}>Add</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            <Text numberOfLines={1} style={styles.text}>
+              {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
+            </Text>
+          </View>
           {cancelPickUp && (
             <>
               {pickUpLocation != '' && (
-                <Pressable onPress={cancelPickUp}>
+                <Pressable style={{padding: 5}} onPress={cancelPickUp}>
                   <SvgXml xml={appImagesSvg.crossBlackIcon} />
                 </Pressable>
               )}
@@ -61,6 +227,18 @@ const PickDropLocation = ({
               <View style={{justifyContent: 'center'}}>
                 <View style={styles.dottedView} />
                 {item == 2 && <View style={styles.dottedWithLine} />}
+                {item == 2 && onChangePress && (
+                  <TouchableOpacity
+                    onPress={onChangePress}
+                    activeOpacity={0.8}
+                    style={{
+                      position: 'absolute',
+                      right: wp('14%'),
+                      top: hp('-0.4%'),
+                    }}>
+                    <SvgXml xml={appImagesSvg.changeLocationAddress} />
+                  </TouchableOpacity>
+                )}
               </View>
             );
           })}
@@ -69,15 +247,25 @@ const PickDropLocation = ({
         <TouchableOpacity
           onPress={onPressDropLocation}
           activeOpacity={0.8}
-          disabled={pickUpLocation == '' ? true : false}
+          // disabled={pickUpLocation == '' ? true : false}
           style={styles.dropTouch(pickUpLocation)}>
           <Image
             style={{width: 25, height: 25}}
             source={appImages.dropIconSet}
           />
-          <Text numberOfLines={1} style={styles.dropText(pickUpLocation)}>
-            {dropLocation == '' ? 'Set drop location' : dropLocation}
-          </Text>
+          <View style={{flexDirection: 'column'}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[styles.reciverText, {flex: 1}]}>Receiver</Text>
+              {addOnDrop && (
+                <TouchableOpacity onPress={addOnDrop} style={styles.addOnTouch}>
+                  <Text style={styles.addOnText}>Add</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            <Text numberOfLines={1} style={styles.dropText(pickUpLocation)}>
+              {dropLocation == '' ? 'Set drop location' : dropLocation}
+            </Text>
+          </View>
           {cancelDrop && (
             <>
               {dropLocation != '' && (
@@ -99,16 +287,24 @@ const styles = StyleSheet.create({
   container: {
     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
     backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 10,
-    height: hp('14%'),
+    height: hp('20%'),
     marginTop: '5%',
   },
   mainTouch: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '4%',
-    marginTop:hp('1.8%'),
-    height:hp('2.5%') ,
+    height: hp('4%'),
+  },
+  senderText: {
+    marginLeft: '3%',
+    // width: wp('70%'),
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black85,
   },
   text: {
     marginLeft: '3%',
@@ -116,33 +312,60 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
+    marginTop: '1%',
   },
   dottedView: {
-    height: 5,
+    height: 9,
     width: 3,
     backgroundColor: colors.color95,
     marginTop: '2%',
+    marginLeft: '0.2%',
   },
   dottedWithLine: {
     height: 2,
     width: wp('72%'),
     backgroundColor: colors.colorD1,
     alignSelf: 'center',
-    marginLeft:wp('8%') ,
-    // top:hp('-0.4%') ,
+    marginLeft: wp('8%'),
+    top: hp('0.4%'),
   },
   dropTouch: pickUpLocation => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '4%',
-    height:hp('4.7%'),
-    opacity: pickUpLocation == '' ? 0.5 : 1,
+    height: hp('4.7%'),
+    // opacity: pickUpLocation == '' ? 0.5 : 1,
   }),
+  reciverText: {
+    marginLeft: '3%',
+    // width: wp('70%'),
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black85,
+  },
   dropText: pickUpLocation => ({
     marginLeft: '3%',
     width: wp('70%'),
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
-    color: pickUpLocation == '' ? colors.black50 : colors.black,
+    color: colors.black,
+    marginBottom: '4%',
+    marginTop: '0.5%',
+    // color: pickUpLocation == '' ? colors.black50 : colors.black,
   }),
+  addOnTouch: {
+    backgroundColor: '#D9D9D9',
+    height: hp('3.5%'),
+    width: wp('15%'),
+    borderRadius: 10,
+    marginRight: '-8%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '-2%',
+  },
+  addOnText: {
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
+  },
 });

@@ -43,6 +43,10 @@ export default function ParcelHome({navigation}) {
     updateOrderStatus
   } = rootStore.orderStore;
   const {setAddParcelInfo} = rootStore.parcelStore;
+  const {
+    setSenderAddress,
+    setReceiverAddress,
+  } = rootStore.myAddressStore;
   const {testMessage}=rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [recentOrder, setRecentOrder] = useState({});
@@ -56,7 +60,7 @@ export default function ParcelHome({navigation}) {
   useFocusEffect(
     useCallback(() => {
       checkInternet();
-      handleAndroidBackButton();
+      handleAndroidBackButton(navigation);
       setCurrentLocation();
       onUpdateUserInfo();
       getTrackingOrder();
@@ -64,6 +68,9 @@ export default function ParcelHome({navigation}) {
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
       socketServices.disconnectSocket();
+      setSenderAddress({})
+      setReceiverAddress({})
+    
     }, []),
   );
 

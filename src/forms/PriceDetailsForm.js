@@ -31,6 +31,10 @@ import TabsTouch from '../components/TabsTouch';
 import {rootStore} from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
 import DotTextComp from '../components/DotTextComp';
+import ModalPopUp from '../components/ModalPopUp';
+import SenderReceiverForm from './SenderReceiverForm';
+import InputFieldLabel from '../components/InputFieldLabel';
+import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
 
 // let categories = [
 //   {id: 1, active: 0, name: 'Documents'},
@@ -41,24 +45,24 @@ import DotTextComp from '../components/DotTextComp';
 //   {id: 6, active: 0, name: 'Others'},
 // ];
 
-const parcelInst=[
+const parcelInst = [
   {
-    id: 0, 
-    title: 'Parcel items maximum weight up to 20kg'
+    id: 0,
+    title: 'Parcel items maximum weight up to 20kg',
   },
   {
-    id: 1, 
-    title: 'Avoid illegal items in package'
+    id: 1,
+    title: 'Avoid illegal items in package',
   },
   {
-    id: 2, 
-    title: 'Don’t send glass products. It can cause damage issue'
+    id: 2,
+    title: 'Don’t send glass products. It can cause damage issue',
   },
   {
-    id: 3, 
-    title: 'You can send liquid products upto (1kg-5kg)'
+    id: 3,
+    title: 'You can send liquid products upto (1kg-5kg)',
   },
-]
+];
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -68,7 +72,8 @@ let imageArray = [
 ];
 
 const PriceDetailsForm = ({navigation}) => {
-  const {senderAddress, receiverAddress} = rootStore.myAddressStore;
+  const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
+    rootStore.myAddressStore;
   const {addRequestParcel} = rootStore.parcelStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
@@ -78,6 +83,12 @@ const PriceDetailsForm = ({navigation}) => {
   // const [categoriesShow, setCategoriesShow] = useState(categories);
   // const [selectCate, setSelectCate] = useState([]);
   const [sliderItems, setSliderItems] = useState(imageArray);
+  const [isAddressModal, setIsAddressModal] = useState(false);
+  const [isStatus, setIsStatus] = useState('');
+  const [isSecure, setIsSecure] = useState(false);
+  const [initialValues, setInitialValues] = useState({
+    phone: receiverAddress?.phone?.toString(),
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -90,6 +101,7 @@ const PriceDetailsForm = ({navigation}) => {
   // },[])
 
   const getCheckSenderReceiverData = () => {
+    const {senderAddress, receiverAddress} = rootStore.myAddressStore;
     console.log(
       'senderAddress,receiverAddress',
       senderAddress,
@@ -108,14 +120,24 @@ const PriceDetailsForm = ({navigation}) => {
   //   onSelectedCate(categoriesShow);
   // };
 
-  const handlePrice = async () => {
+  const handlePrice = async values => {
+    let newReceiverAddress = {...receiverAddress};
+    if (isSecure == true && values?.phone) {
+      newReceiverAddress = {
+        ...receiverAddress,
+        phone: Number(values?.phone),
+      };
+    }
+    // console.log('newReceiverAddress---',newReceiverAddress);
+
     const newdata = {
       weight: weight,
       quantity: quantity,
-      type:'Others',
+      type: 'Others',
       sender_address: senderAddress,
-      receiver_address: receiverAddress,
+      receiver_address: newReceiverAddress,
       billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
+      isSecure: isSecure,
     };
     console.log('newdata--', newdata);
 
@@ -150,11 +172,17 @@ const PriceDetailsForm = ({navigation}) => {
   // };
 
   const FormButton = ({loading, onPress}) => {
+    const {dirty, isValid, values} = useFormikContext();
     return (
       <CTA
-        disable={weight == '' || weight > 20}
+        // disable={weight == '' || weight > 20}
+        disable={
+          isSecure == true && values?.phone?.toString().length >= 10
+            ? false
+            : !(isValid && dirty) && isSecure == true
+        }
         title={'Proceed'}
-        onPress={() => onPress()}
+        onPress={() => onPress(values)}
         loading={loading}
         isBottom={true}
         width={'90%'}
@@ -163,22 +191,127 @@ const PriceDetailsForm = ({navigation}) => {
     );
   };
 
+  const onPressPickLocation = () => {
+    navigation.navigate('chooseMapLocation', {
+      pickDrop: 'pick',
+      item: senderAddress,
+    });
+  };
+
+  const onPressDropLocation = () => {
+    navigation.navigate('chooseMapLocation', {
+      pickDrop: 'drop',
+      item: receiverAddress,
+    });
+  };
+
+  const onChangePress = () => {
+    if (
+      senderAddress?.address?.length > 0 &&
+      receiverAddress?.address?.length > 0
+    ) {
+      setSenderAddress(receiverAddress);
+      setPickUpLocation(receiverAddress?.address);
+      setReceiverAddress(senderAddress);
+      setDropLocation(senderAddress?.address);
+    } else if (senderAddress?.address?.length > 0) {
+      setReceiverAddress(senderAddress);
+      setDropLocation(senderAddress?.address);
+      setSenderAddress({});
+    } else if (receiverAddress?.address?.length > 0) {
+      setSenderAddress(receiverAddress);
+      setPickUpLocation(receiverAddress?.address);
+      setReceiverAddress({});
+    }
+  };
+
+  const SecureTextData = () => {
+    const {values, setFieldValue} = useFormikContext();
+    const {receiverAddress} = rootStore.myAddressStore;
+    useEffect(()=>{
+      if (isSecure) {
+        setFieldValue('phone', receiverAddress?.phone?.toString());
+      }
+    },[receiverAddress])
+    return (
+      <View style={{marginTop: '6%', marginHorizontal: 20}}>
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            height: hp('5%'),
+            width: wp('52%'),
+          }}
+          onPress={() => {
+            setIsSecure(!isSecure);
+            if (isSecure) {
+              setFieldValue('phone', receiverAddress?.phone?.toString());
+            }
+          }}
+          activeOpacity={0.9}>
+          {isSecure == true ? (
+            <SvgXml xml={appImagesSvg.checkBox} />
+          ) : (
+            <SvgXml xml={appImagesSvg.unCheckBox} />
+          )}
+          <Text
+            style={{
+              marginLeft: '2%',
+              fontSize: RFValue(12),
+              fontFamily: fonts.medium,
+              color: colors.black85,
+            }}>
+            Secure parcel devivery
+          </Text>
+        </TouchableOpacity>
+        <Spacer space={'-5%'} />
+        {isSecure && (
+          <InputFieldLabel
+            borderWidth={1}
+            inputLabel={"Receiver's mobile number"}
+            keyboardType="number-pad"
+            name={'phone'}
+            placeholder={'Enter mobile number'}
+            maxLength={10}
+          />
+        )}
+      </View>
+    );
+  };
+
   return (
     <View style={{flex: 1}}>
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <AppInputScroll
-          // Pb={'25%'}
-          padding={true}
-          keyboardShouldPersistTaps={'handled'}>
-          <View style={{flex: 1, marginHorizontal: 20}}>
-            <PickDropLocation
-              pickUpLocation={pickUpLocation}
-              dropLocation={dropLocation}
-            />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={senderReceiverValidations()}>
+        <>
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <AppInputScroll
+              Pb={'22%'}
+              padding={true}
+              keyboardShouldPersistTaps={'handled'}>
+              <View style={{flex: 1, marginHorizontal: 20}}>
+                <PickDropLocation
+                  pickUpLocation={pickUpLocation}
+                  dropLocation={dropLocation}
+                  onChangePress={() => {
+                    onChangePress();
+                  }}
+                  onPressPickLocation={onPressPickLocation}
+                  onPressDropLocation={onPressDropLocation}
+                  addOnPick={() => {
+                    setIsStatus('pick');
+                    setIsAddressModal(true);
+                  }}
+                  addOnDrop={() => {
+                    setIsStatus('drop');
+                    setIsAddressModal(true);
+                  }}
+                />
 
-            {/* <View style={{marginTop: '7%'}}>
+                {/* <View style={{marginTop: '7%'}}>
               <Text style={styles.weightText}>Weight</Text>
               <Surface elevation={3} style={styles.weightTextSurface}>
                 <View style={styles.weightInnerView}>
@@ -204,23 +337,23 @@ const PriceDetailsForm = ({navigation}) => {
               </Text>
             </View> */}
 
-            <View style={{marginTop: '7%'}}>
-              <Text
-                style={styles.parcelInstView}>
-                Parcel Instructions
-               </Text>
+                <View style={{marginTop: '7%'}}>
+                  <Text style={styles.parcelInstView}>Parcel Instructions</Text>
 
-              <View
-                style={styles.parcelInstInnerView}>
-                  {parcelInst?.map((item ,i)=>{
-                    return(
-                      <DotTextComp title={item?.title} index={i} data={parcelInst}/>
-                    )
-                  })}
-              </View>
-            </View>
+                  <View style={styles.parcelInstInnerView}>
+                    {parcelInst?.map((item, i) => {
+                      return (
+                        <DotTextComp
+                          title={item?.title}
+                          index={i}
+                          data={parcelInst}
+                        />
+                      );
+                    })}
+                  </View>
+                </View>
 
-            {/* <View style={{marginTop: '7%'}}>
+                {/* <View style={{marginTop: '7%'}}>
               <Text style={styles.quantityText}>Package Quantity</Text>
               <Surface elevation={2} style={styles.quantitySurface}>
                 <View style={styles.quantitInnerView}>
@@ -260,7 +393,7 @@ const PriceDetailsForm = ({navigation}) => {
               </Surface>
             </View> */}
 
-            {/* <View style={{marginTop: '7%'}}>
+                {/* <View style={{marginTop: '7%'}}>
               <Text style={styles.categoriesText}>Categories</Text>
               <TabsTouch
                 data={categoriesShow}
@@ -269,16 +402,72 @@ const PriceDetailsForm = ({navigation}) => {
                 }}
               />
             </View> */}
-          </View>
-          <View style={{marginHorizontal: 10}}>
-            <HomeSlider data={sliderItems} />
-          </View>
-        </AppInputScroll>
-      </KeyboardAvoidingView>
+              </View>
+              <View style={{marginHorizontal: 10}}>
+                <HomeSlider data={sliderItems} />
+              </View>
+              {/* <View style={{marginTop: '6%', marginHorizontal: 20}}>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: hp('5%'),
+                width: wp('52%'),
+              }}
+              onPress={() => {
+                setIsSecure(!isSecure);
+              }}
+              activeOpacity={0.9}>
+              {isSecure == true ? (
+                <SvgXml xml={appImagesSvg.checkBox} />
+              ) : (
+                <SvgXml xml={appImagesSvg.unCheckBox} />
+              )}
+              <Text
+                style={{
+                  marginLeft: '2%',
+                  fontSize: RFValue(12),
+                  fontFamily: fonts.medium,
+                  color: colors.black85,
+                }}>
+                Secure parcel devivery
+              </Text>
+            </TouchableOpacity>
+            <Spacer space={'-5%'}/>
+            {isSecure && <InputFieldLabel
+                  borderWidth={1}
+                  inputLabel={"Receiver's mobile number"}
+                  keyboardType="number-pad"
+                  name={'phone'}
+                  placeholder={'Enter mobile number'}
+                  maxLength={10}
+                />}
+          </View> */}
+              <SecureTextData />
+            </AppInputScroll>
+          </KeyboardAvoidingView>
 
-      <View style={{backgroundColor: colors.white, height: hp('9%')}}>
-        <FormButton loading={loading} onPress={handlePrice} />
-      </View>
+          <View style={{backgroundColor: colors.white, height: hp('9%')}}>
+            <FormButton loading={loading} onPress={handlePrice} />
+          </View>
+        </>
+      </Formik>
+      <ModalPopUp
+        isVisible={isAddressModal}
+        onClose={() => {
+          setIsAddressModal(false);
+        }}>
+        <View style={{height: hp('58%'), backgroundColor: colors.white}}>
+          <SenderReceiverForm
+            navigation={navigation}
+            pickDrop={isStatus}
+            item={isStatus == 'pick' ? senderAddress : receiverAddress}
+            onClose={() => {
+              setIsAddressModal(false);
+            }}
+          />
+        </View>
+      </ModalPopUp>
     </View>
   );
 };
@@ -292,7 +481,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   weightTextSurface: {
-    shadowColor:Platform.OS == 'ios'? colors.black50 :colors.black,
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('8%'),
@@ -376,21 +565,21 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     color: colors.black,
   },
-  parcelMaxWeight:{
+  parcelMaxWeight: {
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
     marginTop: '3%',
   },
-  parcelInstView:{
+  parcelInstView: {
     fontSize: RFValue(14),
     fontFamily: fonts.semiBold,
     color: colors.black,
     marginTop: '3%',
   },
-  parcelInstInnerView:{
-    backgroundColor:colors.colorD6,
+  parcelInstInnerView: {
+    backgroundColor: colors.colorD6,
     borderRadius: 10,
     marginTop: '3%',
-  }
+  },
 });

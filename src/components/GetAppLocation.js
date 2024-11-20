@@ -1,10 +1,11 @@
-
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
-let loc ={
-  latitude: 30.7307,
-  longitude: 76.6815,
+let loc = {
+  // latitude: 30.7307,
+  // longitude: 76.6815,
+   latitude: null,
+   longitude: null,
 };
 
 export const setCurrentLocation = async () => {
@@ -23,39 +24,35 @@ export const setCurrentLocation = async () => {
 };
 
 const postionerror = error => {
-    if (error.code == 1) {
-      console.log('postionerror', error);
-    }
-    // loc = null;
-      loc = loc;
-  };
- 
-
-const  setPostion = () => {
-    Geolocation.getCurrentPosition(
-        coords => {
-         console.log("coords---",coords)
-          const originLocataion = {
-            latitude: coords?.coords?.latitude,
-            longitude: coords?.coords?.longitude,
-          };
-          loc = originLocataion
-        },
-        error => {
-          postionerror(error);
-        },
-        {
-          timeout: 20000,
-          showLocationDialog: true,
-          forceRequestLocation: true,
-          enableHighAccuracy: true,
-        },
-      );
+  if (error.code == 1) {
+    console.log('postionerror', error);
+  }
+  // loc = null;
+  loc = loc;
 };
 
-
-
-
+const setPostion = () => {
+  Geolocation.getCurrentPosition(
+    coords => {
+      console.log('coords---', coords);
+      const originLocataion = {
+        latitude: coords?.coords?.latitude,
+        longitude: coords?.coords?.longitude,
+      };
+      loc = originLocataion;
+    },
+    error => {
+      postionerror(error);
+    },
+    {
+      timeout: 20000,
+      showLocationDialog: true,
+      forceRequestLocation: true,
+      enableHighAccuracy: true,
+      maximumAge:0
+    },
+  );
+};
 
 export const getCurrentLocation = () => {
   return loc;

@@ -29,6 +29,7 @@ import {useNotifications} from '../../../../halpers/useNotifications';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
+import { setCurrentLocation } from '../../../../components/GetAppLocation';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -55,6 +56,7 @@ export default function Home({navigation}) {
       handleAndroidBackButton();
       onUpdateUserInfo();
       checkInternet();
+      setCurrentLocation();
     }, []),
   );
 

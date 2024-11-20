@@ -168,9 +168,9 @@ const ChangeRoute = ({data, navigation}) => {
               borderRadius: 10,
               borderWidth: 1,
               borderColor: colors.black30,
-              marginTop:'5%',
+              marginTop: '5%',
             }}>
-            <View style={{flex: 1, marginLeft:wp('5%') , marginTop:hp('2%') }}>
+            <View style={{flex: 1, marginLeft: wp('5%'), marginTop: hp('2%')}}>
               <SvgXml xml={item?.duIcon} />
               <Text
                 style={{
@@ -198,15 +198,15 @@ const ChangeRoute = ({data, navigation}) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginRight:wp('3%') ,
+                marginRight: wp('3%'),
               }}>
               <Image
                 resizeMode="contain"
                 style={{
                   alignSelf: 'center',
-                  width:wp('35%'),
-                  height:130,
-                  bottom:hp('1%')
+                  width: wp('32%'),
+                  height: 130,
+                  bottom: hp('-1%'),
                 }}
                 source={item?.image}
               />
@@ -233,28 +233,28 @@ const ChangeRoute = ({data, navigation}) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginLeft:wp('5%') ,
+                marginLeft: wp('5%'),
               }}>
               <Image
                 resizeMode="contain"
                 style={{
                   alignSelf: 'center',
-                  width:wp('35%'),
-                  height:130,
-                  bottom:hp('0.5%'),
-                  left:wp('-2%') ,
+                  width: wp('32%'),
+                  height: 130,
+                  bottom: hp('-1%'),
+                  left: wp('-2%'),
                 }}
                 source={item?.image}
               />
             </View>
-            <View style={{marginLeft:wp('8%'), marginTop:hp('2%') }}>
+            <View style={{marginLeft: wp('8%'), marginTop: hp('2%')}}>
               <SvgXml xml={item?.duIcon} />
               <Text
                 style={{
                   fontSize: RFValue(15),
                   fontFamily: fonts.bold,
                   color: colors.color27,
-                  marginTop:'2%',
+                  marginTop: '2%',
                 }}>
                 {item?.name}
               </Text>
