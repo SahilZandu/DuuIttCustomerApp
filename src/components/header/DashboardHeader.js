@@ -19,7 +19,7 @@ import {
 } from 'react-native-responsive-screen';
 import Url from '../../api/Url';
 import {rootStore} from '../../stores/rootStore';
-import {getCurrentLocation} from '../GetAppLocation';
+import {getCurrentLocation, setCurrentLocation} from '../GetAppLocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGeoCodes} from '../GeoCodeAddress';
 
@@ -40,15 +40,6 @@ const DashboardHeader = ({
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (getLocation) {
-        onUpdateLatLng();
-        getCurrentAddress();
-      }
-    }, []),
-  );
-
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -63,6 +54,18 @@ const DashboardHeader = ({
     lng: getLocation('lng'),
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentLocation();
+      setTimeout(()=>{
+        if (getLocation) {
+          onUpdateLatLng();
+          getCurrentAddress();
+        }
+      },1000)
+    }, []),
+  );
+
   const onUpdateLatLng = () => {
     setGeoLocation({
       lat: getLocation('lat'),
@@ -72,9 +75,11 @@ const DashboardHeader = ({
 
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
-    // console.log('addressData', addressData);
+    console.log('addressData', addressData);
     setAddress(addressData?.address);
   };
+
+  
 
   return (
     <View>

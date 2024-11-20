@@ -18,7 +18,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Url from '../../api/Url';
-import {getCurrentLocation} from '../GetAppLocation';
+import {getCurrentLocation, setCurrentLocation} from '../GetAppLocation';
 import {getGeoCodes} from '../GeoCodeAddress';
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -39,11 +39,14 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (getLocation) {
-        onUpdateLatLng();
-        getCurrentAddress();
-      }
-    }, []),
+      setCurrentLocation();
+      setTimeout(()=>{
+        if (getLocation) {
+          onUpdateLatLng();
+          getCurrentAddress();
+        }
+      },1000)
+    },[]),
   );
 
   const onUpdateLatLng = () => {
