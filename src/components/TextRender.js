@@ -1,25 +1,17 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
-import {Surface} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {currencyFormat} from '../halpers/currencyFormat';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const TextRender = ({title, value, bottomLine}) => {
+const TextRender = ({title, value, bottomLine,titleStyle,valueStyle,lineStyle}) => {
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.value}>{value}</Text>
+        <Text style={[styles.title,titleStyle]}>{title}</Text>
+        <Text style={[styles.value,valueStyle]}>{value}</Text>
       </View>
-      {bottomLine && <View style={styles.bottomLine} />}
+      {bottomLine && <View style={[styles.bottomLine,lineStyle]} />}
     </>
   );
 };

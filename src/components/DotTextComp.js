@@ -6,12 +6,25 @@ import {fonts} from '../theme/fonts/fonts';
 import {appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import TrackingOrderCard from './TrackingOrderCard';
+import {currencyFormat} from '../halpers/currencyFormat';
 
-const DotTextComp = ({title, index,data}) => {
+const DotTextComp = ({title, index, data, amount}) => {
   return (
-    <View key={index} style={[styles.main(index,data)]}>
+    <View key={index} style={[styles.main(index, data)]}>
       <View style={styles.dotView} />
-      <Text style={styles.text}>{title}</Text>
+      {Number(amount) > 0 ? (
+        <Text style={styles.text}>
+          {title}{' '}
+          <Text
+            style={{
+              color: colors.black,
+            }}>
+            {currencyFormat(Number(amount))}
+          </Text>
+        </Text>
+      ) : (
+        <Text style={styles.text}>{title}</Text>
+      )}
     </View>
   );
 };
@@ -19,16 +32,16 @@ const DotTextComp = ({title, index,data}) => {
 export default DotTextComp;
 
 const styles = StyleSheet.create({
-  main: (index,data) => ({
+  main: (index, data) => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: index == 0 ? '4%' : '2%',
     marginHorizontal: '3%',
-    marginBottom:(index == data?.length - 1) ? '4%' : '2%',
+    marginBottom: index == data?.length - 1 ? '4%' : '2%',
   }),
   dotView: {
-    height: 8,
-    width: 8,
+    height: 7,
+    width: 7,
     borderRadius: 10,
     backgroundColor: colors.color53,
   },

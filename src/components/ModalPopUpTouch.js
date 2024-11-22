@@ -3,15 +3,17 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Modal from 'react-native-modal';
 import {appImages} from '../commons/AppImages';
 
-const ModalPopUp = ({isVisible, onClose, children}) => {
+const ModalPopUpTouch = ({isVisible, onClose, children,crossImage,onOuterClose}) => {
   return (
     <Modal
       animationType="slide"
       isVisible={isVisible}
       animationIn="fadeIn"
       animationOut="fadeOut"
+      onBackdropPress={onOuterClose}
+      onRequestClose={onClose}
       style={{justifyContent: 'flex-end', margin: 0}}>
-      <TouchableOpacity
+       {crossImage &&<TouchableOpacity
         onPress={onClose}
         activeOpacity={0.8}
         style={{alignSelf: 'center'}}>
@@ -20,7 +22,7 @@ const ModalPopUp = ({isVisible, onClose, children}) => {
           style={{height: 45, width: 45}}
           source={appImages.crossClose} // Your icon image
         />
-      </TouchableOpacity>
+         </TouchableOpacity>}
       <View
         style={{
           justifyContent: 'center',
@@ -28,8 +30,9 @@ const ModalPopUp = ({isVisible, onClose, children}) => {
         }}>
         {children}
       </View>
+     
     </Modal>
   );
 };
 
-export default ModalPopUp;
+export default ModalPopUpTouch;

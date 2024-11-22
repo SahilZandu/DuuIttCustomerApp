@@ -228,20 +228,15 @@ const PriceDetailsForm = ({navigation}) => {
   const SecureTextData = () => {
     const {values, setFieldValue} = useFormikContext();
     const {receiverAddress} = rootStore.myAddressStore;
-    useEffect(()=>{
+    useEffect(() => {
       if (isSecure) {
         setFieldValue('phone', receiverAddress?.phone?.toString());
       }
-    },[receiverAddress])
+    }, [receiverAddress]);
     return (
-      <View style={{marginTop: '6%', marginHorizontal: 20}}>
+      <View style={styles.secureMainView}>
         <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: hp('5%'),
-            width: wp('52%'),
-          }}
+          style={styles.secureTouch}
           onPress={() => {
             setIsSecure(!isSecure);
             if (isSecure) {
@@ -254,15 +249,7 @@ const PriceDetailsForm = ({navigation}) => {
           ) : (
             <SvgXml xml={appImagesSvg.unCheckBox} />
           )}
-          <Text
-            style={{
-              marginLeft: '2%',
-              fontSize: RFValue(12),
-              fontFamily: fonts.medium,
-              color: colors.black85,
-            }}>
-            Secure parcel devivery
-          </Text>
+          <Text style={styles.secureText}>Secure parcel delivery</Text>
         </TouchableOpacity>
         <Spacer space={'-5%'} />
         {isSecure && (
@@ -337,7 +324,7 @@ const PriceDetailsForm = ({navigation}) => {
               </Text>
             </View> */}
 
-                <View style={{marginTop: '7%'}}>
+                <View style={{marginTop: '4%'}}>
                   <Text style={styles.parcelInstView}>Parcel Instructions</Text>
 
                   <View style={styles.parcelInstInnerView}>
@@ -581,5 +568,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.colorD6,
     borderRadius: 10,
     marginTop: '3%',
+  },
+  secureMainView: {
+    marginTop: '4%',
+    marginHorizontal: 20,
+  },
+  secureTouch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: hp('5%'),
+    width: wp('52%'),
+  },
+  secureText: {
+    marginLeft: '2%',
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black85,
   },
 });

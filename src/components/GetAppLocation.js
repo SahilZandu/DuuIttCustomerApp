@@ -27,8 +27,8 @@ const postionerror = error => {
   if (error.code == 1) {
     console.log('postionerror', error);
   }
-  // loc = null;
-  loc = loc;
+  loc = null;
+  // loc = loc;
 };
 
 const setPostion = () => {

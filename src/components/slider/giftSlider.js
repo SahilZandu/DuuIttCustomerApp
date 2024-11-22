@@ -105,34 +105,40 @@ const GiftSliderFlatList = ({data, onSliderPress, onHandleImage}) => {
 
   // Render each item in the FlatList
   const renderItem = ({item, index}) => (
-    <View style={{flexDirection:'column'}}>
-    <TouchableOpacity
-      onPress={onSliderPress}
-      activeOpacity={0.8}
-      style={{
-        alignSelf: 'center',
-        borderRadius: 10,
-        borderColor: '#F99E1C',
-        borderWidth: 0.3,
-        marginRight: wp('5%'), // Space between items
-      }}>
-      <Image
-        resizeMode="stretch"
+    <View style={{flexDirection: 'column'}}>
+      <TouchableOpacity
+        onPress={onSliderPress}
+        activeOpacity={0.8}
         style={{
-          width: wp('55%'), // Image width
-          height: hp('18%'), // Image height
+          alignSelf: 'center',
           borderRadius: 10,
-        }}
-        source={item.image} // Source of the image
-      />
-    </TouchableOpacity>
-     {stateIndex === index ? (
-              <Image
-                resizeMode="contain"
-                style={{width: 40, height: 40,top:'-7%',alignSelf:'center'}}
-                source={appImages.mikeTick}
-              />
-            ) : null}
+          borderColor: '#F99E1C',
+          borderWidth: 0.3,
+          marginRight: wp('5%'), // Space between items
+        }}>
+        <Image
+          resizeMode="stretch"
+          style={{
+            width: wp('55%'), // Image width
+            height: hp('18%'), // Image height
+            borderRadius: 10,
+          }}
+          source={item.image} // Source of the image
+        />
+      </TouchableOpacity>
+      {stateIndex === index ? (
+        <Image
+          resizeMode="contain"
+          style={{
+            width: 40,
+            height: 40,
+            top: hp('-1.8%'),
+            alignSelf: 'center',
+            right: wp('3%'),
+          }}
+          source={appImages.mikeTick}
+        />
+      ) : null}
     </View>
   );
 

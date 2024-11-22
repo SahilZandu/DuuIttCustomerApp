@@ -23,6 +23,11 @@ import {getCurrentLocation, setCurrentLocation} from '../GetAppLocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGeoCodes} from '../GeoCodeAddress';
 
+let geoLocation ={
+  lat: null,
+  lng: null,
+}
+
 const DashboardHeader = ({
   navigation,
   value,
@@ -49,10 +54,11 @@ const DashboardHeader = ({
     return d ? d : '';
   };
   const [address, setAddress] = useState('');
-  const [geoLocation, setGeoLocation] = useState({
-    lat: getLocation('lat'),
-    lng: getLocation('lng'),
-  });
+  const [isRefersh, setIsRefersh] = useState(false);
+  // const [geoLocation, setGeoLocation] = useState({
+  //   lat: getLocation('lat'),
+  //   lng: getLocation('lng'),
+  // });
 
   useFocusEffect(
     useCallback(() => {
@@ -60,17 +66,28 @@ const DashboardHeader = ({
       setTimeout(()=>{
         if (getLocation) {
           onUpdateLatLng();
-          getCurrentAddress();
+          setIsRefersh(true)
+          // getCurrentAddress();
         }
       },1000)
-    }, []),
+    }, [appUserInfo]),
   );
 
+  useEffect(()=>{
+    setTimeout(() => {
+      getCurrentAddress();
+    }, 1500);
+  },[isRefersh])
+
   const onUpdateLatLng = () => {
-    setGeoLocation({
+    geoLocation ={
       lat: getLocation('lat'),
       lng: getLocation('lng'),
-    });
+    };
+    setIsRefersh(true);
+    setTimeout(() => {
+      setIsRefersh(false);
+    }, 1000);
   };
 
   const getCurrentAddress = async () => {
@@ -82,7 +99,7 @@ const DashboardHeader = ({
   
 
   return (
-    <View>
+    <View style={{backgroundColor:colors.white}}>
       <View
         style={{
           flexDirection: 'row',

@@ -23,7 +23,11 @@ const DashbordScreens = [
   'myAddres',
   'addMyAddress',
   'trackingOrder',
-  'pickSuccessfully'
+  'pickSuccessfully',
+  'giftCard',
+  'giftCardPurchase',
+  'claimGiftCard',
+  
 ];
 
 export function setBarColor(screen) {

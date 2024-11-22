@@ -23,6 +23,11 @@ import {colors} from '../../../theme/colors';
 import {fonts} from '../../../theme/fonts/fonts';
 import {styles} from './styles';
 
+let geoLocation ={
+      lat:null,
+    lng:null,
+}
+
 const SetLocationHistory = ({navigation}) => {
   const {
     getMyAddress,
@@ -48,10 +53,10 @@ const SetLocationHistory = ({navigation}) => {
   // const [lat, setlat] = useState(30.7076);
   // const [long, setlong] = useState(76.715126);
   const [myAddress, setMyAddress] = useState(getAddress);
-  const [geoLocation, setGeoLocation] = useState({
-    lat: getLocation('lat'),
-    lng: getLocation('lng'),
-  });
+  // const [geoLocation, setGeoLocation] = useState({
+  //   lat: getLocation('lat'),
+  //   lng: getLocation('lng'),
+  // });
   const [currentAddress, setCurrentAddress] = useState('');
   const [name, setName] = useState('');
 
@@ -68,10 +73,10 @@ const SetLocationHistory = ({navigation}) => {
   },[senderAddress ,receiverAddress])
 
   useEffect(() => {
-    setGeoLocation({
+    geoLocation ={
       lat: getLocation('lat'),
       lng: getLocation('lng'),
-    });
+    };
 
     setTimeout(() => {
       getCurrentAddress();
@@ -115,7 +120,7 @@ const SetLocationHistory = ({navigation}) => {
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setCurrentAddress(addressData?.address);
-    setGeoLocation(addressData?.geo_location)
+    geoLocation =(addressData?.geo_location)
     if (pickDrop == 'pick') {
       const newData = {
         address: addressData?.address,

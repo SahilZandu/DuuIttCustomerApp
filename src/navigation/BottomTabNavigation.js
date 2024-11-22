@@ -15,6 +15,7 @@ import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
 import SideMenu from '../screens/Auth/DashboardScreen/SideMenu/SideMenu';
 import ParcelHome from '../screens/DUParcel/ParcelHome/ParcelHome';
 import MyAddress from '../screens/DUParcel/MyAddress/MyAddress';
+import Offers from '../screens/Auth/DashboardScreen/Offers/Offers';
 
 
 const Tab = createBottomTabNavigator();
@@ -78,7 +79,7 @@ export function DashboardBottomNavigator  () {
               label = 'Home';
               break;
             case 'tab2':
-              label = 'Promo';
+              label = 'Offers';
               break;
             case 'tab3':
               label = 'Orders';
@@ -127,7 +128,7 @@ export function DashboardBottomNavigator  () {
       />
       <Tab.Screen
         name="tab2"
-        component={Promo}
+        component={Offers}
         // options={{tabBarLabel: 'Promo'}}
         listeners={{tabPress: handleAnimation}}
       />

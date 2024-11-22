@@ -32,6 +32,7 @@ export function useNotifications(navigation) {
       data = remoteMessage?.data;
      
       // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
+      notifee.displayNotification(newa);
 
       if (remoteMessage?.data?.route == "searchingRide") {
         let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data)
@@ -64,8 +65,6 @@ export function useNotifications(navigation) {
          DeviceEventEmitter.emit('dropped', droppedDetails)
        } 
       
-       notifee.displayNotification(newa);
-
     });
 
     return unsubscribe;

@@ -1,13 +1,17 @@
 import {io} from 'socket.io-client';
+import {rootStore} from '../stores/rootStore';
 
 let Source_Url = 'https://duuitt.hashsoft.io/'; // Replace with your server URL
 
 class WSServices {
-
   // Initialize the WebSocket connection
   initailizeSocket = async () => {
+    const {token} = rootStore.commonStore;
     try {
-      this.socket = io(Source_Url,{
+      this.socket = io(Source_Url, {
+        auth: {
+          token: token,
+        },
         // transports: ['websocket'],
         reconnection: true, // Enable reconnection
         reconnectionAttempts: Infinity, // Unlimited reconnection attempts
@@ -29,16 +33,14 @@ class WSServices {
       });
 
       // Handle connection errors
-      this.socket.on('connect_error', (error) => {
+      this.socket.on('connect_error', error => {
         console.log('=== Socket connection error ===', error);
       });
 
       // Other error handling
-      this.socket.on('error', (error) => {
+      this.socket.on('error', error => {
         console.log('=== Socket error ===', error);
       });
-    
-
     } catch (error) {
       console.log('=== Socket initialization failed ===', error);
     }
@@ -57,7 +59,7 @@ class WSServices {
   // Listen for events from the server
   on(event, cb) {
     if (this.socket) {
-      this.socket.on(event, cb);  // Correcting to use 'on' for listening
+      this.socket.on(event, cb); // Correcting to use 'on' for listening
       console.log(`Listening for event: ${event}`);
     } else {
       console.log(`Socket is not connected, cannot listen to event: ${event}`);
@@ -70,7 +72,9 @@ class WSServices {
       this.socket.removeListener(listenerName);
       console.log(`Removed listener: ${listenerName}`);
     } else {
-      console.log(`Socket is not connected, cannot remove listener: ${listenerName}`);
+      console.log(
+        `Socket is not connected, cannot remove listener: ${listenerName}`,
+      );
     }
   }
   disconnectSocket() {
@@ -81,7 +85,6 @@ class WSServices {
       console.log('=== No socket connection to disconnect ===');
     }
   }
-
 }
 
 // Exporting an instance of the socket service

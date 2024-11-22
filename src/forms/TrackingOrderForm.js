@@ -130,6 +130,7 @@ const TrackingOrderForm = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
+      if(trackedArray?.length > 0){
       const intervalId = setInterval(() => {
         setCurrentLocation();
         setTimeout(() => {
@@ -140,7 +141,8 @@ const TrackingOrderForm = ({navigation}) => {
         // This will run when the screen is unfocused
         clearInterval(intervalId);
       };
-    }, [trackItem]),
+    }
+    }, [trackItem,trackedArray]),
   );
 
   const getSocketLocation = async (socketServices, trackItem) => {

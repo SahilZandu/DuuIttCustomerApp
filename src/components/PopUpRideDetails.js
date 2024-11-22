@@ -49,7 +49,7 @@ const PopUpRideDetails = ({
         <View
           style={{
             backgroundColor: '#FFFFFF',
-            width: '100%',
+            width:wp('100%') ,
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
             paddingBottom: '12%',
