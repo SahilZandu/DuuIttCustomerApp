@@ -4,8 +4,9 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../../../theme/colors';
-import {fonts} from '../../../../theme/fonts/fonts';
+import { colors } from '../../../../../theme/colors';
+import { fonts } from '../../../../../theme/fonts/fonts';
+
 
 export const styles = StyleSheet.create({
   container: {
@@ -55,7 +56,8 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.medium,
   },
   innerView: {
-    marginTop: '3%',
+    // marginTop: '1%',
+    justifyContent:'center'
   },
   giftAmountView: {
     flexDirection: 'row',

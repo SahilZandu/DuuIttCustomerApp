@@ -1,24 +1,20 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, Platform, Image, TouchableOpacity} from 'react-native';
-import {Surface} from 'react-native-paper';
-import {appImages, appImagesSvg} from '../../../../commons/AppImages';
-import Header from '../../../../components/header/Header';
-import {colors} from '../../../../theme/colors';
 import {styles} from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../../theme/fonts/fonts';
-import TextRender from '../../../../components/TextRender';
-import {currencyFormat} from '../../../../halpers/currencyFormat';
-import AppInputScroll from '../../../../halpers/AppInputScroll';
-import {SvgXml} from 'react-native-svg';
-import BTN from '../../../../components/cta/BTN';
-import GiftCardHappiness from '../../../../components/GiftCardHappiness';
-import DotTextComp from '../../../../components/DotTextComp';
-import Spacer from '../../../../halpers/Spacer';
+import Header from '../../../../../components/header/Header';
+import AppInputScroll from '../../../../../halpers/AppInputScroll';
+import GiftCardHappiness from '../../../../../components/GiftCardHappiness';
+import DotTextComp from '../../../../../components/DotTextComp';
+import Spacer from '../../../../../halpers/Spacer';
+import BTN from '../../../../../components/cta/BTN';
+import { colors } from '../../../../../theme/colors';
+import { fonts } from '../../../../../theme/fonts/fonts';
+
 
 const ClaimGiftCard = ({navigation, route}) => {
   const {item} = route.params;
@@ -54,13 +50,9 @@ const ClaimGiftCard = ({navigation, route}) => {
         <View style={styles.upperMainView}>
           <GiftCardHappiness item={clainGift} />
         </View>
-        <View style={{marginTop: hp('4%'), marginHorizontal: 20}}>
+        <View style={styles.detailsView}>
           <Text
-            style={{
-              fontSize: RFValue(14),
-              fontFamily: fonts.medium,
-              color: colors.black,
-            }}>
+            style={styles.detailsText}>
             Details
           </Text>
           {claimDetails?.map((item, i) => {

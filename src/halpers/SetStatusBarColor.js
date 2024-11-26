@@ -27,6 +27,10 @@ const DashbordScreens = [
   'giftCard',
   'giftCardPurchase',
   'claimGiftCard',
+  'claimGiftQRCode',
+  'paymentMethod',
+  'vouchers',
+  'vouchersDetails'
   
 ];
 

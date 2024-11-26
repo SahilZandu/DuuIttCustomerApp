@@ -114,13 +114,13 @@ const GiftSliderFlatList = ({data, onSliderPress, onHandleImage}) => {
           borderRadius: 10,
           borderColor: '#F99E1C',
           borderWidth: 0.3,
-          marginRight: wp('5%'), // Space between items
+          marginRight: wp('3%'), // Space between items
         }}>
         <Image
           resizeMode="stretch"
           style={{
-            width: wp('55%'), // Image width
-            height: hp('18%'), // Image height
+            width: wp('34%'), // Image width
+            height: hp('12%'), // Image height
             borderRadius: 10,
           }}
           source={item.image} // Source of the image
@@ -130,11 +130,11 @@ const GiftSliderFlatList = ({data, onSliderPress, onHandleImage}) => {
         <Image
           resizeMode="contain"
           style={{
-            width: 40,
-            height: 40,
+            width: 35,
+            height: 35,
             top: hp('-1.8%'),
             alignSelf: 'center',
-            right: wp('3%'),
+            right: wp('1%'),
           }}
           source={appImages.mikeTick}
         />
@@ -163,12 +163,12 @@ const GiftSliderFlatList = ({data, onSliderPress, onHandleImage}) => {
         showsHorizontalScrollIndicator={false}
         snapToAlignment={'center'}
         decelerationRate="fast"
-        snapToInterval={wp('55%')} // Ensures only two items are fully visible
+        snapToInterval={wp('10%')} // Ensures only two items are fully visible
         onViewableItemsChanged={onViewRef.current} // Updates pagination based on the visible item
         viewabilityConfig={viewConfigRef.current}
         keyExtractor={(item, index) => index?.toString()}
         contentContainerStyle={{
-          paddingRight: wp('3%'),
+          paddingRight: wp('25%'),
         }} // Left padding to hide the left image
       />
     </View>

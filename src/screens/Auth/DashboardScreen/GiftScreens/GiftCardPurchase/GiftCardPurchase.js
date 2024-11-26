@@ -1,22 +1,22 @@
 import React, {useCallback, useState} from 'react';
 import {View, Text, Platform, Image, TouchableOpacity} from 'react-native';
 import {Surface} from 'react-native-paper';
-import {appImages, appImagesSvg} from '../../../../commons/AppImages';
-import Header from '../../../../components/header/Header';
-import {colors} from '../../../../theme/colors';
+import {appImages, appImagesSvg} from '../../../../../commons/AppImages';
+import Header from '../../../../../components/header/Header';
+import {colors} from '../../../../../theme/colors';
 import {styles} from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../../theme/fonts/fonts';
-import TextRender from '../../../../components/TextRender';
-import {currencyFormat} from '../../../../halpers/currencyFormat';
-import AppInputScroll from '../../../../halpers/AppInputScroll';
+import {fonts} from '../../../../../theme/fonts/fonts';
+import TextRender from '../../../../../components/TextRender';
+import {currencyFormat} from '../../../../../halpers/currencyFormat';
+import AppInputScroll from '../../../../../halpers/AppInputScroll';
 import {SvgXml} from 'react-native-svg';
-import BTN from '../../../../components/cta/BTN';
-import GiftCardHappiness from '../../../../components/GiftCardHappiness';
+import BTN from '../../../../../components/cta/BTN';
+import GiftCardHappiness from '../../../../../components/GiftCardHappiness';
 
 const GiftCardPurchase = ({navigation}) => {
   return (
@@ -60,6 +60,9 @@ const GiftCardPurchase = ({navigation}) => {
         <Surface elevation={3} style={styles.bottomBtnSurface}>
           <View style={styles.bottomInnerView}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('paymentMethod');
+              }}
               activeOpacity={0.8}
               style={styles.paymentModeTouch}>
               <SvgXml xml={appImagesSvg.googlePay} />
@@ -73,7 +76,13 @@ const GiftCardPurchase = ({navigation}) => {
             </TouchableOpacity>
 
             <View style={styles.buyBtnView}>
-              <BTN width={wp('45%')} title={'Buy Now'} />
+              <BTN
+                width={wp('45%')}
+                title={'Buy Now'}
+                onPress={() => {
+                  navigation.navigate('paymentMethod');
+                }}
+              />
             </View>
           </View>
         </Surface>

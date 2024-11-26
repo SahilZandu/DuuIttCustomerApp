@@ -21,6 +21,7 @@ import NoInternet from './src/components/NoInternet';
 import { rootStore } from './src/stores/rootStore';
 
 
+let focusRoute = '';
 
 function App() {
   const [currentScreen, setcurrentScreen] = useState('splash');

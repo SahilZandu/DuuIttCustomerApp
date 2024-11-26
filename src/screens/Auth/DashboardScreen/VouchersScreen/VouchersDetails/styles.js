@@ -1,11 +1,12 @@
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../../../theme/colors';
-import {fonts} from '../../../../theme/fonts/fonts';
+import { colors } from '../../../../../theme/colors';
+import { fonts } from '../../../../../theme/fonts/fonts';
+
 
 export const styles = StyleSheet.create({
   main: {
@@ -16,32 +17,38 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: 'center',
   },
-  summaryView: {
-    marginHorizontal: 20,
-    marginTop: hp('3%'),
+  surfaceView: {
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
+    backgroundColor: colors.bottomBarColor,
+    alignSelf: 'center',
+    borderRadius: 10,
+    width: wp('90%'),
+    height: hp('15%'),
+    borderWidth: 0.5,
+    borderColor: colors.colorD9,
+    marginTop:'5%'
   },
-  summaryText: {
+  innerView:{
+    flex: 1, justifyContent: 'center', alignItems: 'center'
+  },
+  discountText:{
+    fontSize: RFValue(33),
+    fontFamily: fonts.semiBold,
+    color: colors.white,
+  },
+  offText:{
+    fontSize: RFValue(18),
+    fontFamily: fonts.regular,
+    color: colors.white,
+  },
+  detailsView: {
+    marginTop: hp('4%'),
+    marginHorizontal: 10,
+  },
+  detailsText: {
     fontSize: RFValue(14),
-    color: colors.black,
     fontFamily: fonts.medium,
-  },
-  subTotalText: {
-    fontSize: RFValue(12),
-    color: colors.black85,
-    fontFamily: fonts.medium,
-  },
-  subTotalValue: {
-    color: colors.black85,
-    fontSize: RFValue(12),
-  },
-  totalText: {
-    fontSize: RFValue(12),
     color: colors.black,
-    fontFamily: fonts.medium,
-  },
-  totalValue: {
-    color: colors.black,
-    fontSize: RFValue(12),
   },
   bottomButtonView: {
     position: 'absolute',
@@ -81,4 +88,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: hp('4%'),
   },
+ 
+ 
 });

@@ -15,6 +15,7 @@ export const colors = {
     black75:"#00000075",
     black85:"#00000085",
     black50:"#00000050",
+    black40:"#00000040",
     black30:"#00000030",
     black20:"#00000020",
     black25:"#00000025",
@@ -47,7 +48,11 @@ export const colors = {
     colorFFB:'#FFBDC6',
     lightGreen:'#CCFBDC',
     lightGreen1:"#17AB4C",
-    lightRed:'#FF6A7E'
+    lightRed:'#FF6A7E',
+    color8F:'#8F8F8F',
+    colorC1:'#C1C1C1',
+    colorFB:'#FB8C00',
+    colorFF:'#FFA726'
    
     
    

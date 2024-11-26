@@ -27,7 +27,8 @@ const BTN = ({
     isBottom,
     bottomCheck,
     textTransform,
-    padding
+    padding,
+    fontSize,
 }) => (
  <TouchableOpacity 
  style={{ backgroundColor: backgroundColor ? backgroundColor :colors.main,
@@ -61,7 +62,7 @@ const BTN = ({
      <Text style={{
         color: labelColor ? labelColor : colors.white,
       textTransform: textTransform ? textTransform: 'uppercase',
-      fontSize:RFValue(12),
+      fontSize:fontSize ? fontSize :RFValue(12),
       fontFamily:fonts.bold,
       textAlign:'center'}}>
         {title}

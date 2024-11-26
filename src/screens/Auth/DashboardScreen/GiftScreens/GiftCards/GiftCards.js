@@ -10,33 +10,32 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import CTA from '../../../../components/cta/CTA';
-import Header from '../../../../components/header/Header';
-import InputFieldMultiLine from '../../../../components/InputFieldMultiLine';
-import GiftSliderFlatList from '../../../../components/slider/giftSlider';
-import Tabs from '../../../../components/Tabs';
-import TabTextIcon from '../../../../components/TabTextIcon';
-import {giftMessageValidations} from '../../../../forms/formsValidation/giftMessageValidations';
-import AppInputScroll from '../../../../halpers/AppInputScroll';
-import {currencyFormat} from '../../../../halpers/currencyFormat';
-import Spacer from '../../../../halpers/Spacer';
-import {colors} from '../../../../theme/colors';
-import {Strings} from '../../../../translates/strings';
+import CTA from '../../../../../components/cta/CTA';
+import Header from '../../../../../components/header/Header';
+import InputFieldMultiLine from '../../../../../components/InputFieldMultiLine';
+import GiftSliderFlatList from '../../../../../components/slider/giftSlider';
+import Tabs from '../../../../../components/Tabs';
+import TabTextIcon from '../../../../../components/TabTextIcon';
+import AppInputScroll from '../../../../../halpers/AppInputScroll';
+import Spacer from '../../../../../halpers/Spacer';
 import {styles} from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import ClaimGiftCards from '../../../../../components/ClaimGiftCards';
+import ModalPopUpTouch from '../../../../../components/ModalPopUpTouch';
+import BTN from '../../../../../components/cta/BTN';
+import DotTextComp from '../../../../../components/DotTextComp';
+import {giftMessageValidations} from '../../../../../forms/formsValidation/giftMessageValidations';
+import {currencyFormat} from '../../../../../halpers/currencyFormat';
+import {colors} from '../../../../../theme/colors';
+import {Strings} from '../../../../../translates/strings';
 import {
   giftCardsArray,
   giftImageArray,
-} from '../../../../stores/DummyData/Offers';
-import ClaimGiftCards from '../../../../components/ClaimGiftCards';
-import ModalPopUpTouch from '../../../../components/ModalPopUpTouch';
-import BTN from '../../../../components/cta/BTN';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../../theme/fonts/fonts';
-import DotTextComp from '../../../../components/DotTextComp';
+} from '../../../../../stores/DummyData/Offers';
+import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
 
 const tabsGift = [
   {text: 'Birthday'},
@@ -68,6 +67,7 @@ const GiftCard = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       onHandleGiftImage(0);
+      handleAndroidBackButton(navigation);
     }, []),
   );
 
@@ -190,7 +190,7 @@ const GiftCard = ({navigation}) => {
                       style={styles.inputText}
                     />
                   </View>
-                  <Spacer space={'2%'} />
+                  <Spacer space={'1%'} />
                   <TabTextIcon
                     isRating={true}
                     tabs={tabsRate}
@@ -199,13 +199,13 @@ const GiftCard = ({navigation}) => {
                 </View>
               </View>
               <InputFieldMultiLine
-                height={hp('15%')}
+                height={hp('14%')}
                 inputLabel={'Add Message'}
                 maxLength={100}
                 name={'feedback'}
                 placeholder={'Happy birthday dear ...'}
               />
-              <Spacer space={'13%'} />
+              <Spacer space={'12%'} />
 
               <FormButton loading={loading} onPress={handleContinue} />
               <View style={styles.claimContainerView}>
@@ -264,6 +264,12 @@ const GiftCard = ({navigation}) => {
                     width={wp('42')}
                     title={'QR code'}
                     textTransform={'capitalize'}
+                    onPress={() => {
+                      setIsViewDetails(false);
+                      navigation.navigate('claimGiftQRCode', {
+                        item: claimGiftItem,
+                      });
+                    }}
                   />
                   <BTN
                     width={wp('42')}

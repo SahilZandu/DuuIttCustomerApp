@@ -39,35 +39,35 @@ export const offerExplore = [
     image: appImages.rewards,
     title: 'Rewards',
     discount: 'Up to 60% OFF',
-    route:''
+    route: '',
   },
   {
     id: 2,
     image: appImages.giftCards,
     title: 'Gift Cards',
     discount: 'Starting at ₹250',
-    route:'giftCard'
+    route: 'giftCard',
   },
   {
     id: 3,
     image: appImages.vouchers,
     title: 'Vouchers',
     discount: 'Up to 60% OFF',
-    route:''
+    route: '',
   },
   {
     id: 4,
     image: appImages.rewardStars,
     title: 'Reward Stars',
     discount: 'Collect coins to level up',
-    route:''
+    route: '',
   },
   {
     id: 5,
     image: appImages.wallet,
     title: 'Wallet',
     discount: 'Add cash to your wallet',
-    route:''
+    route: '',
   },
 ];
 
@@ -87,25 +87,130 @@ export const offerPromotion = [
 ];
 
 export const offerTopDeals = [
-{id: 1, image: appImages.sliderImage1},
-{id: 2, image: appImages.sliderImage2},
-{id: 3, image: appImages.sliderImage1},
-{id: 4, image: appImages.sliderImage2},
+  {id: 1, image: appImages.sliderImage1},
+  {id: 2, image: appImages.sliderImage2},
+  {id: 3, image: appImages.sliderImage1},
+  {id: 4, image: appImages.sliderImage2},
 ];
 
 export const giftImageArray = [
-    {id: 1, image: appImages.birthdayImage2},
-    {id: 2, image: appImages.birthdayImage1},
-    {id: 3, image: appImages.birthdayImage2},
-    {id: 4, image: appImages.birthdayImage1},
-]
+  {id: 1, image: appImages.birthdayImage2},
+  {id: 2, image: appImages.birthdayImage1},
+  {id: 3, image: appImages.birthdayImage2},
+  {id: 4, image: appImages.birthdayImage1},
+];
 
 export const giftCardsArray = [
-  {id: 1, image: appImages.birthdayImage2,title:'Birthday Card',message:'Have a great day full....',msgDay:'Have a great day full of happiness!'},
-  {id: 2, image: appImages.anniversaryImage,title:'Anniversary Card',message:'Have a great day full....',msgDay:'Have a great day full of happiness!'},
-  {id: 3, image: appImages.birthdayImage1,title:'Birthday Card',message:'Have a great day full....',msgDay:'Have a great day full of happiness!'},
-  {id: 4, image: appImages.anniversaryImage,title:'Anniversary Card',message:'Have a great day full....',msgDay:'Have a great day full of happiness!'},
-  {id: 5, image: appImages.birthdayImage2,title:'Birthday Card',message:'Have a great day full....',msgDay:'Have a great day full of happiness!'},
-  {id: 6, image: appImages.anniversaryImage,title:'Anniversary Card',message:'Have a great day full....',msgDay:'Have a great day full of happiness!'},
-  
-]
+  {
+    id: 1,
+    image: appImages.birthdayImage2,
+    title: 'Birthday Card',
+    message: 'Have a great day full....',
+    msgDay: 'Have a great day full of happiness!',
+  },
+  {
+    id: 2,
+    image: appImages.anniversaryImage,
+    title: 'Anniversary Card',
+    message: 'Have a great day full....',
+    msgDay: 'Have a great day full of happiness!',
+  },
+  {
+    id: 3,
+    image: appImages.birthdayImage1,
+    title: 'Birthday Card',
+    message: 'Have a great day full....',
+    msgDay: 'Have a great day full of happiness!',
+  },
+  {
+    id: 4,
+    image: appImages.anniversaryImage,
+    title: 'Anniversary Card',
+    message: 'Have a great day full....',
+    msgDay: 'Have a great day full of happiness!',
+  },
+  {
+    id: 5,
+    image: appImages.birthdayImage2,
+    title: 'Birthday Card',
+    message: 'Have a great day full....',
+    msgDay: 'Have a great day full of happiness!',
+  },
+  {
+    id: 6,
+    image: appImages.anniversaryImage,
+    title: 'Anniversary Card',
+    message: 'Have a great day full....',
+    msgDay: 'Have a great day full of happiness!',
+  },
+];
+
+export const vouchersCardsArray = [
+  {
+    id: 1,
+    discount: 50,
+    coupons: 5,
+    title: 'in your wallet',
+    message: 'Food Coupons',
+    validdate: 'valid till',
+    restaurantName:"Katani's silver package",
+    walletPrice:50,
+    expiryDate:'2024-12-02'
+  },
+  {
+    id: 2,
+    discount: 20,
+    coupons: 5,
+    title: 'in your wallet',
+    message: 'Food Coupons',
+    validdate: 'valid till',
+    restaurantName:"Dana Pani silver package",
+    walletPrice:50,
+    expiryDate:'2024-11-30'
+    
+  },
+  {
+    id: 3,
+    discount: 10,
+    coupons: 5,
+    title: 'in your wallet',
+    message: 'Food Coupons',
+    validdate: 'valid till',
+    restaurantName:"Sama biryani silver package",
+    walletPrice:50,
+    expiryDate:'2024-12-03'
+  },
+  {
+    id: 4,
+    discount: 20,
+    coupons: 5,
+    title: 'in your wallet',
+    message: 'Food Coupons',
+    validdate: 'valid till',
+    restaurantName:"Dana Pani silver package",
+    walletPrice:50,
+    expiryDate:'2024-12-05'
+  },
+  {
+    id: 5,
+    discount: 10,
+    coupons: 5,
+    title: 'in your wallet',
+    message: 'Food Coupons',
+    validdate: 'valid till',
+    restaurantName:"Katani's silver package",
+    walletPrice:50,
+    expiryDate:'2024-12-01'
+  },
+  {
+    id: 6,
+    discount: 50,
+    coupons: 5,
+    title: 'in your wallet',
+    message: 'Food Coupons',
+    validdate: 'valid till',
+    restaurantName:"Sama biryani silver package",
+    walletPrice:50,
+    expiryDate:'2024-12-10'
+  },
+];
