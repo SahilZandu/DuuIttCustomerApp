@@ -6,7 +6,7 @@ import {appImagesSvg} from '../../commons/AppImages';
 import {colors} from '../../theme/colors';
 import {fonts} from '../../theme/fonts/fonts';
 
-const Header = ({onPress, title, backArrow, shareIcon, onPressShare}) => {
+const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone}) => {
   return (
     <View
       style={{
@@ -14,11 +14,12 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare}) => {
         backgroundColor: colors.white,
         alignItems: 'center',
         paddingBottom: '2%',
-        marginTop: '3.5%',
+        marginTop: '4%',
       }}>
       {backArrow && (
         <TouchableOpacity
           activeOpacity={0.9}
+          hitSlop={{top:10,bottom:10,left:20,right:20}}
           onPress={onPress}
           style={{marginLeft: '4%'}}>
           <SvgXml xml={appImagesSvg.backArrow} />
@@ -36,12 +37,24 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare}) => {
       </Text>
       {shareIcon && (
         <TouchableOpacity
+        hitSlop={{top:10,bottom:10,left:20,right:20}}
           activeOpacity={0.9}
           onPress={onPressShare}
           style={{marginRight: '5%'}}>
           <SvgXml xml={appImagesSvg.shareIcon} />
         </TouchableOpacity>
       )}
+       {onPressPhone && (
+        <TouchableOpacity
+        hitSlop={{top:10,bottom:10,left:20,right:20}}
+          activeOpacity={0.9}
+          onPress={onPressPhone}
+          style={{marginRight: '5%'}}>
+          <SvgXml xml={appImagesSvg.phoneChatIcon} />
+        </TouchableOpacity>
+      )}
+
+
     </View>
   );
 };

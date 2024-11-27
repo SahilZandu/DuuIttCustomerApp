@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
     width: wp('90%'),
-    height: hp('14%'),
+    height: hp('16%'),
     borderWidth: 0.1,
     borderColor: colors.black50,
   },
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageView: {
-    height: hp('14%'),
+    height: hp('16%'),
     width: wp('30%'),
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
@@ -113,8 +113,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   outerViewCircel: {
-    height: hp('10.5%'),
-    width: wp('23%'),
+    // height: hp('11%'),
+    // width: wp('23%'),
+    height:90,
+    width:90,
     backgroundColor: colors.colorFB,
     justifyContent: 'center',
     alignItems: 'center',
@@ -187,6 +189,6 @@ const styles = StyleSheet.create({
   buyBtnView: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: hp('2%'),
+    marginTop: hp('2.5%'),
   },
 });

@@ -85,10 +85,11 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
         backgroundColor: colors.backColorMain,
         alignItems: 'center',
         paddingBottom: '2%',
-        marginTop: '2%',
+        marginTop: '4%',
         paddingHorizontal: 20,
       }}>
       <TouchableOpacity
+       hitSlop={{top:10,bottom:10,left:20,right:20}}
         activeOpacity={0.9}
         onPress={onPress}
         style={{marginRight: '4%', marginLeft: '-2%'}}>
@@ -119,6 +120,7 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
       </View>
 
       <TouchableOpacity
+       hitSlop={{top:10,bottom:10,left:20,right:20}}
         onPress={() => {
           navigation.navigate('profile');
         }}

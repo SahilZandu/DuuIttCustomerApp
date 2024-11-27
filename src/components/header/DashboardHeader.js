@@ -23,10 +23,10 @@ import {getCurrentLocation, setCurrentLocation} from '../GetAppLocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGeoCodes} from '../GeoCodeAddress';
 
-let geoLocation ={
+let geoLocation = {
   lat: null,
   lng: null,
-}
+};
 
 const DashboardHeader = ({
   navigation,
@@ -63,24 +63,24 @@ const DashboardHeader = ({
   useFocusEffect(
     useCallback(() => {
       setCurrentLocation();
-      setTimeout(()=>{
+      setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
-          setIsRefersh(true)
+          setIsRefersh(true);
           // getCurrentAddress();
         }
-      },1000)
+      }, 1000);
     }, [appUserInfo]),
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     setTimeout(() => {
       getCurrentAddress();
     }, 1500);
-  },[isRefersh])
+  }, [isRefersh]);
 
   const onUpdateLatLng = () => {
-    geoLocation ={
+    geoLocation = {
       lat: getLocation('lat'),
       lng: getLocation('lng'),
     };
@@ -96,17 +96,15 @@ const DashboardHeader = ({
     setAddress(addressData?.address);
   };
 
-  
-
   return (
-    <View style={{backgroundColor:colors.white}}>
+    <View style={{backgroundColor: colors.white}}>
       <View
         style={{
           flexDirection: 'row',
           backgroundColor: colors.backColorMain,
           alignItems: 'center',
           paddingBottom: '2%',
-          marginTop: '2%',
+          marginTop: '4%',
           paddingHorizontal: 20,
         }}>
         <View
@@ -134,6 +132,7 @@ const DashboardHeader = ({
         </View>
 
         <TouchableOpacity
+          hitSlop={{top: 10, bottom: 10, left: 20, right: 20}}
           onPress={() => {
             navigation.navigate('profile');
           }}
