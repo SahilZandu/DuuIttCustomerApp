@@ -6,12 +6,12 @@ import {useToast} from '../halpers/useToast';
 export default class ParcelStore {
   addParcelInfo = {};
 
-  addRequestParcel = async (value, navigation, handleLoading) => {
+  addRequestParcelRide = async (value, navigation, handleLoading) => {
     const {setSenderAddress, setReceiverAddress} = rootStore.myAddressStore;
     handleLoading(true);
     let requestData = {
       weight: Number(value?.weight),
-      order_type:'parcel',
+      order_type:value?.order_type,
       sender_address: value?.sender_address,
       receiver_address: value?.receiver_address,
       billing_detail: value?.billing_detail,
@@ -20,8 +20,8 @@ export default class ParcelStore {
 
     console.log('requestData:-', requestData);
     try {
-      const res = await agent.parcels(requestData);
-      console.log('addRequestParcel API Res:', res);
+      const res = await agent.parcelsRides(requestData);
+      console.log('addRequestParcelRide API Res:', res);
       if (res?.statusCode == 200) {
         setSenderAddress({});
         setReceiverAddress({});

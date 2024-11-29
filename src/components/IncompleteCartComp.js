@@ -21,6 +21,7 @@ const IncompleteCartComp = ({
   incompletedArray,
   onPressComplete,
   onDeleteRequest,
+  title,
 }) => {
   const setOrderImage = status => {
     switch (status) {
@@ -44,7 +45,7 @@ const IncompleteCartComp = ({
             /> */}
           <View style={styles.IncompleteView}>
             <Text numberOfLines={1} style={styles.incompleteText}>
-              Complete your order....
+              {title}....
             </Text>
             <Text numberOfLines={2} style={styles.proceedText}>
               Proceed the process and find your driver
@@ -55,7 +56,7 @@ const IncompleteCartComp = ({
               onPress={onPressComplete}
               activeOpacity={0.8}
               style={styles.completeBtnView}>
-              <Text style={styles.completeBtnText}>Complete your order</Text>
+              <Text style={styles.completeBtnText}>{title}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               disabled={

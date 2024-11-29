@@ -15,7 +15,7 @@ const SearchingRide = ({navigation, route}) => {
           navigation.goBack();
         }}
       /> */}
-      <SearchingRideForm navigation={navigation} route={route} />
+      <SearchingRideForm navigation={navigation} route={route} screenName={'parcel'}/>
 
     </View>
   );

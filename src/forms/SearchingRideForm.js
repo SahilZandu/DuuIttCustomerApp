@@ -50,6 +50,15 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {screenHeight, screenWidth} from '../halpers/matrics';
 import Svg, {SvgXml} from 'react-native-svg';
+import {
+  cancelParcel,
+  cancelParcelRide,
+  cancelRide,
+} from '../stores/DummyData/CancelData';
+import Url from '../api/Url';
+import FastImage from 'react-native-fast-image';
+import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
+import ImageNameRatingComp from '../components/ImageNameRatingComp';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -58,7 +67,7 @@ let imageArray = [
   {id: 4, image: appImages.sliderImage2},
 ];
 
-const SearchingRideForm = ({navigation, route}) => {
+const SearchingRideForm = ({navigation, route, screenName}) => {
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
   const {appUser} = rootStore.commonStore;
@@ -92,13 +101,7 @@ const SearchingRideForm = ({navigation, route}) => {
     return d ? d : '';
   };
 
-  console.log(
-    'paymentMethod--',
-    paymentMethod,
-    addParcelInfo,
-    // parcelInfo?.parcel_otp?.sender_otp?.toString()?.split(''),
-    // addParcelInfo?.parcel_otp?.sender_otp?.toString()?.split(''),
-  );
+  console.log('paymentMethod--', paymentMethod, addParcelInfo);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -115,7 +118,7 @@ const SearchingRideForm = ({navigation, route}) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
       console.log('cancel Order data -- ', data);
-      navigation.navigate('parcel', {screen: 'home'});
+      navigation.navigate(screenName, {screen: 'home'});
       setSearchArrive('search');
     });
     return () => {
@@ -127,8 +130,26 @@ const SearchingRideForm = ({navigation, route}) => {
     const subscription = DeviceEventEmitter.addListener('picked', data => {
       console.log('picked data -- ', data);
       // navigation.navigate('parcel', {screen: 'home'});
-      navigation.navigate('pickSuccessfully');
-      setSearchArrive('search');
+      setParcelInfo(data);
+      if (screenName == 'parcel') {
+        navigation.navigate('pickSuccessfully');
+        setSearchArrive('search');
+      } else {
+        setMinMaxHp(screenHeight(35));
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data -- ', data);
+      if (screenName == 'ride') {
+        navigation.navigate(screenName, {screen: 'home'});
+        setSearchArrive('search');
+      }
     });
     return () => {
       subscription.remove();
@@ -149,8 +170,14 @@ const SearchingRideForm = ({navigation, route}) => {
       setParcelInfo(addParcelInfo);
       setTimeout(() => {
         setSearching(false);
-        if (addParcelInfo?.status == 'accepted') {
+        if (
+          addParcelInfo?.status == 'accepted' ||
+          addParcelInfo?.status == 'picked'
+        ) {
           setSearchArrive('arrive');
+          if (addParcelInfo?.status == 'picked') {
+            setMinMaxHp(screenHeight(35));
+          }
           // refRBSheet.current.open();
         } else {
           onGetNearByRider(addParcelInfo);
@@ -196,7 +223,7 @@ const SearchingRideForm = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (parcelInfo?.status == 'accepted') {
+      if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
         const intervalId = setInterval(() => {
           setCurrentLocation();
           setTimeout(() => {
@@ -231,7 +258,7 @@ const SearchingRideForm = ({navigation, route}) => {
   }, [parcelInfo, nearbyRider, searchingFind]);
 
   useEffect(() => {
-    if ((parcelInfo?.status !== 'accepted' && searchingFind == 'searching')) {
+    if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
       const refershFindRiders = setTimeout(async () => {
         setSearchingFind('refresh');
         await updateOrderStatus(
@@ -241,13 +268,13 @@ const SearchingRideForm = ({navigation, route}) => {
           onDeleteSuccess,
           false,
         );
-      },60000);
+      }, 60000);
       return () => {
         // This will run when the screen is unfocused
         clearTimeout(refershFindRiders);
       };
     }
-  }, [parcelInfo,searchingFind]);
+  }, [parcelInfo, searchingFind]);
 
   const handleDeleteLoading = v => {
     console.log('vvvv--', v);
@@ -258,7 +285,10 @@ const SearchingRideForm = ({navigation, route}) => {
 
   const refershFindRidersData = () => {
     setSearching(false);
-    if (addParcelInfo?.status == 'accepted') {
+    if (
+      addParcelInfo?.status == 'accepted' ||
+      addParcelInfo?.status == 'picked'
+    ) {
       setSearchArrive('arrive');
     } else {
       setSearchingFind('searching');
@@ -267,7 +297,7 @@ const SearchingRideForm = ({navigation, route}) => {
   };
 
   const backToHome = () => {
-    navigation.navigate('parcel', {screen: 'home'});
+    navigation.navigate(screenName, {screen: 'home'});
     setSearchArrive('search');
   };
 
@@ -300,7 +330,7 @@ const SearchingRideForm = ({navigation, route}) => {
       lng: getLocation('lng')?.toString(),
       user_id: appUser?._id,
       order_id: info?._id,
-      refresh:'refresh',
+      refresh: 'refresh',
     };
     socketServices.emit('find-nearby-riders', query);
 
@@ -319,56 +349,24 @@ const SearchingRideForm = ({navigation, route}) => {
     }
     setTimeout(() => {
       setMultipleRider(false);
-    },3000);
+    }, 3000);
   };
 
   const handleLoadingRider = v => {
     setRiderLoading(v);
   };
 
-  const cancelRide = [
-    {
-      id: 0,
-      title: 'Where is my order',
-    },
-    {
-      id: 1,
-      title: 'I want to cancel my order',
-    },
-    {
-      id: 2,
-      title: 'I have coupon related queries',
-    },
-    {
-      id: 3,
-      title: 'I want to give instructions for my order',
-    },
-    {
-      id: 4,
-      title: 'Requested accidently',
-    },
-    {
-      id: 5,
-      title: 'Other',
-    },
-  ];
-
   const driverArrive = [
     {
       id: 0,
-      title: 'Tracking ID',
-      value: 'N8881765',
+      title: 'Order ID',
+      value:  `${parcelInfo?._id}`,
     },
     {
       id: 2,
       title: 'Bike Number',
-      value: 'HR 26CN 5724',
+      value: `${parcelInfo?.rider?.vehicle_info?.vehicle_number}`,
     },
-    // {
-    //   id: 3,
-    //   title: 'Cash',
-    //   value: 45.5,
-    // },
   ];
 
   const hanldeLinking = type => {
@@ -376,7 +374,7 @@ const SearchingRideForm = ({navigation, route}) => {
       if (type == 'email') {
         Linking.openURL(`mailto:${'DuuItt@gmail.com'}`);
       } else {
-        Linking.openURL(`tel:${'1234567890'}`);
+        Linking.openURL(`tel:${parcelInfo?.rider?.phone?.toString()}`);
       }
     }
   };
@@ -401,7 +399,7 @@ const SearchingRideForm = ({navigation, route}) => {
     socketServices.removeListener('remaining-distance');
     socketServices.disconnectSocket();
     setTimeout(() => {
-      navigation.navigate('parcel', {screen: 'home'});
+      navigation.navigate(screenName, {screen: 'home'});
     }, 200);
   };
 
@@ -420,11 +418,17 @@ const SearchingRideForm = ({navigation, route}) => {
   };
 
   const onGestureEvent = ({nativeEvent}) => {
-    console.log('nativeEvent----------', nativeEvent);
-    if (nativeEvent?.translationY >= 0) {
-      setMinMaxHp(screenHeight(35));
+    console.log('nativeEvent----------', nativeEvent, parcelInfo);
+    if (parcelInfo?.status == 'picked') {
+      if (nativeEvent?.translationY >= 0) {
+        setMinMaxHp(screenHeight(35));
+      }
     } else {
-      setMinMaxHp(screenHeight(79));
+      if (nativeEvent?.translationY >= 0) {
+        setMinMaxHp(screenHeight(35));
+      } else {
+        setMinMaxHp(screenHeight(79));
+      }
     }
     // if(nativeEvent?.absoluteY >= 451 && nativeEvent?.absoluteY <= 600){
     //   setMinMaxHp(hp('60%'))
@@ -476,7 +480,9 @@ const SearchingRideForm = ({navigation, route}) => {
               <View style={styles.innerSearchingView}>
                 <View style={styles.textMainView}>
                   <Text style={styles.searchingPartnerText}>
-                    Searching Delivery Partner
+                    {screenName == 'parcel'
+                      ? 'Searching Delivery Partner'
+                      : 'Searching Ride'}
                   </Text>
                   <Text style={styles.findNearbyText}>
                     Finding drivers nearby
@@ -501,58 +507,12 @@ const SearchingRideForm = ({navigation, route}) => {
                 </View>
               </View>
             ) : (
-              <View style={{width: wp('100%'), justifyContent: 'center'}}>
-                <Text
-                  style={{
-                    fontSize: RFValue(18),
-                    fontFamily: fonts.medium,
-                    color: colors.black,
-                    textAlign: 'center',
-                    marginTop: '5%',
-                  }}>
-                  No riders available, Try again...{' '}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    refershFindRidersData();
-                  }}
-                  activeOpacity={0.8}
-                  style={{
-                    backgroundColor: '#F2F2F2',
-                    marginTop: hp('2.5%'),
-                    alignSelf: 'center',
-                    borderRadius: 100,
-                  }}>
-                  <SvgXml
-                    height={50}
-                    width={50}
-                    xml={appImagesSvg.refershIcon}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    backToHome();
-                  }}
-                  activeOpacity={0.8}
-                  style={{
-                    marginTop: hp('2%'),
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                    borderRadius: 100,
-                  }}>
-                  <Text
-                    style={{fontSize: RFValue(14), fontFamily: fonts.medium}}>
-                    Back to home
-                  </Text>
-                  <View
-                    style={{
-                      height: 1,
-                      width: wp('28%'),
-                      backgroundColor: colors.black50,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
+              <RiderNotAvailableComp
+              onRefershFindRiders={()=>{refershFindRidersData()}}
+              onBackToHome={()=>{
+                backToHome();
+                }}
+               />
             )}
           </View>
         ) : (
@@ -570,38 +530,10 @@ const SearchingRideForm = ({navigation, route}) => {
                 />
                 {minMaxHp == screenHeight(79) && (
                   <>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: '5%',
-                      }}>
-                      <Image
-                        resizeMode="contain"
-                        style={{height: 55, width: 55}}
-                        source={appImages.avtarImage}
-                      />
-                      <Text
-                        numberOfLines={2}
-                        style={{
-                          fontSize: RFValue(12),
-                          fontFamily: fonts.semiBold,
-                          color: colors.black,
-                          marginLeft: '4%',
-                          width: wp('56.2%'),
-                        }}>
-                        Felicia Cudmore
-                      </Text>
-                      <Rating rating={'4.5'} />
-                    </View>
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: colors.colorD9,
-                        marginTop: '4%',
-                        marginHorizontal: -20,
-                      }}
-                    />
+                    <ImageNameRatingComp
+                    parcelInfo={parcelInfo}
+                     />
+                     
                     <DriverArrivingComp
                       topLine={false}
                       title={'Pickup in 10 minutes'}
@@ -672,6 +604,11 @@ const SearchingRideForm = ({navigation, route}) => {
             onPressCancelRide();
           }}
           loading={false}
+          packetImage={
+            screenName == 'parcel'
+              ? appImages.packetImage
+              : appImages.packetRideImage
+          }
         />
 
         <PopUpCancelInstruction
@@ -680,7 +617,7 @@ const SearchingRideForm = ({navigation, route}) => {
             setVisible(false);
           }}
           title={'Why do you want to cancel ?'}
-          cancelRideInst={cancelRide}
+          cancelRideInst={screenName == 'parcel' ? cancelParcel : cancelRide}
           onCancelReason={item => {
             setCancelReason(item?.title);
             setVisible(false);
@@ -697,7 +634,9 @@ const SearchingRideForm = ({navigation, route}) => {
           }}
           title={'Are you sure you want to cancel ?'}
           message={
-            'This pickup has been offered to a driver right now, and should be confirmed within seconds.'
+            screenName == 'parcel'
+              ? cancelParcelRide?.parcel
+              : cancelParcelRide?.ride
           }
           onCancelRequest={() => {
             onCancelRequest();

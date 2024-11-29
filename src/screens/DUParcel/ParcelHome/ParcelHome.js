@@ -15,7 +15,7 @@ import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import TrackingOrderCard from '../../../components/TrackingOrderCard';
-import {homeCS} from '../../../stores/DummyData/Home';
+import {homeParcelCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import MapRoute from '../../../components/MapRoute';
@@ -36,7 +36,7 @@ import PopUp from '../../../components/appPopUp/PopUp';
 export default function ParcelHome({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {
-    ordersRecentOrder,
+    // ordersRecentOrder,
     ordersTrackOrder,
     orderTrackingList,
     getPendingForCustomer,
@@ -134,8 +134,8 @@ export default function ParcelHome({navigation}) {
   };
 
   const getIncompleteOrder = async () => {
-    const resIncompleteOrder = await getPendingForCustomer();
-    console.log('resIncompleteOrder--', resIncompleteOrder);
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
     setIncompletedArray(resIncompleteOrder);
   };
 
@@ -159,16 +159,16 @@ export default function ParcelHome({navigation}) {
     console.log('Track...',v);
   };
 
-  useEffect(() => {
-    getRecentOrder();
-  }, []);
+  // useEffect(() => {
+  //   getRecentOrder();
+  // }, []);
 
-  const getRecentOrder = async () => {
-          //  await testMessage();
-    const res = await ordersRecentOrder('parcel', handleLoading);
-    console.log('res--getRecentOrder', res);
-    setRecentOrder(res);
-  };
+  // const getRecentOrder = async () => {
+  //         //  await testMessage();
+  //   const res = await ordersRecentOrder('parcel', handleLoading);
+  //   console.log('res--getRecentOrder', res);
+  //   setRecentOrder(res);
+  // };
 
   const handleLoading = v => {
     setLoading(v);
@@ -216,7 +216,7 @@ export default function ParcelHome({navigation}) {
   };
 
   useEffect(() => {
-    DeviceEventEmitter.addListener('tab3', event => {
+    DeviceEventEmitter.addListener('tab1', event => {
       if (event != 'noInternet') {
       }
       setInternet(event == 'noInternet' ? false : true);
@@ -262,8 +262,8 @@ export default function ParcelHome({navigation}) {
           padding={true}
           Pb={getHeight(trackedArray, incompletedArray)}
           keyboardShouldPersistTaps={'handled'}>
-          <View style={{marginTop: '4%', marginHorizontal: 20}}>
-            <View>
+          <View style={{marginTop: '2%', marginHorizontal: 20}}>
+            {/* <View>
               <Text
                 style={{
                   fontSize: RFValue(13),
@@ -307,28 +307,27 @@ export default function ParcelHome({navigation}) {
                   )}
                 </>
               )}
-            </View>
+            </View> */}
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: '6%',
               }}>
               <Image
-                resizeMode="stretch"
+                resizeMode='contain'
                 style={{width: wp('90%'), height: hp('18%')}}
                 source={appImages.parcelHomeImage}
               />
             </View>
             <ChangeRoute2
-              data={homeCS}
+              data={homeParcelCS}
               navigation={navigation}
               route={'PARCEL'}
             />
           </View>
           <View style={styles.bottomImageView}>
             <Image
-              resizeMode="cover"
+              resizeMode='contain'
               style={styles.bottomImage}
               source={appImages.parcelHomeBootmImage}
             />
@@ -345,6 +344,7 @@ export default function ParcelHome({navigation}) {
             onPressInCompleteOrder();
           }}
           onDeleteRequest={()=>{setIsDelete(true)}}
+          title={'Complete your order'}
         />
       )}
        <PopUp

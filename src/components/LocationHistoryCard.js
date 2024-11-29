@@ -1,7 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   Image,
   View,
@@ -12,8 +11,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
+import {appImages} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Surface} from 'react-native-paper';
-import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, View, Text, Image, StyleSheet, Platform} from 'react-native';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -12,14 +12,7 @@ import { screenHeight, screenWidth } from '../halpers/matrics';
 
 const ProfileUpperShowComp = ({navigation, appUser, item}) => {
   return (
-    <View>
-      {/* <LinearGradient
-        colors={['#28B05610', '#28B05640', '#28B05650']}
-        style={{
-          height: hp('10%'),
-          borderBottomLeftRadius: 20,
-          borderBottomRightRadius: 20,
-        }}></LinearGradient> */}
+    <Surface elevation={3} style={styles.surfaceView}>
       <View style={styles.container}>
         <View style={styles.innerView}>
           <View style={styles.imageTextMainView}>
@@ -50,35 +43,44 @@ const ProfileUpperShowComp = ({navigation, appUser, item}) => {
             </View>
           </View>
         </View>
+      
       </View>
-    </View>
+      </Surface>
   );
 };
 
 export default ProfileUpperShowComp;
 
 const styles = StyleSheet.create({
+  surfaceView:{
+    shadowColor:Platform.OS == 'ios'? colors.black50:colors.black, // You can customize shadow color
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    height:screenHeight(13),
+    marginTop: '6%',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+  },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6%',
+    // marginTop: '6%',
   },
   innerView: {
     width:screenWidth(90),
-    height:screenHeight(11),
+    height:screenHeight(13),
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.colorD9,
+    // borderWidth: 1,
+    // borderColor: colors.colorD9,
     justifyContent: 'center',
-    // marginTop: '-13%',
     backgroundColor: colors.white,
   },
   imageTextMainView: {
     flexDirection: 'row',
   },
   image: {
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     borderRadius: 100,
     marginLeft: '5%',
     borderColor: colors.main,

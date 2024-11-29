@@ -34,8 +34,9 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 
-
-export default function MyAddress({navigation}) {
+export default function MyAddress({navigation, route}) {
+  const {screenName} = route.params || {};
+  console.log('screenName---', screenName);
   const {getMyAddress, getAddress, deleteMyAddress} = rootStore.myAddressStore;
 
   const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
@@ -54,7 +55,7 @@ export default function MyAddress({navigation}) {
   );
 
   useEffect(() => {
-    DeviceEventEmitter.addListener('tab3', event => {
+    DeviceEventEmitter.addListener('tab2', event => {
       if (event != 'noInternet') {
       }
       setInternet(event == 'noInternet' ? false : true);
@@ -96,7 +97,11 @@ export default function MyAddress({navigation}) {
         item={item}
         index={index}
         onPress={() => {
-          navigation.navigate('addMyAddress', {type: 'update', data: item});
+          navigation.navigate('addMyAddress', {
+            type: 'update',
+            data: item,
+            screenName: screenName,
+          });
         }}
         onPressDot={() => {
           setIsDelete(true), setIsDeleteIndex(index);
@@ -108,74 +113,67 @@ export default function MyAddress({navigation}) {
 
   return (
     <View style={styles.container}>
-      {/* <Header
+      <Header
         title={'My Address'}
-        backArrow={true}
+        // backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      /> */}
-       {internet == false ? (
+      />
+      {internet == false ? (
         <NoInternet />
       ) : (
         <>
-
-      {loading == true ? (
-        <AnimatedLoader type={'myAddress'} />
-      ) : (
-        <>
-          <View style={styles.main}>
-            {myAddress?.length > 0 ? (
-              <FlatList
-                contentContainerStyle={{paddingBottom: '10%'}}
-                showsVerticalScrollIndicator={false}
-                data={myAddress}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-              />
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: RFValue(14),
-                    fontFamily: fonts.medium,
-                    color: colors.black,
-                  }}>
-                  No Data Found
-                </Text>
+          {loading == true ? (
+            <AnimatedLoader type={'myAddress'} />
+          ) : (
+            <>
+              <View style={styles.main}>
+                {myAddress?.length > 0 ? (
+                  <FlatList
+                    contentContainerStyle={{paddingBottom: '20%'}}
+                    showsVerticalScrollIndicator={false}
+                    data={myAddress}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                  />
+                ) : (
+                  <View style={styles.noDataView}>
+                    <Text style={styles.noDataText}>No Data Found</Text>
+                  </View>
+                )}
               </View>
-            )}
-          </View>
-          <View style={{backgroundColor: colors.white, height: hp('9%')}}>
-            <CTA
-              width={wp('90%')}
-              isBottom={true}
-              title={'ADD NEW ADDRESS'}
-              onPress={() => {
-                navigation.navigate('addMyAddress', {
-                  type: 'add',
-                  data: undefined,
-                });
-              }}
-            />
-          </View>
+              <View style={styles.btnView}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('addMyAddress', {
+                      type: 'add',
+                      data: undefined,
+                      screenName: screenName,
+                    });
+                  }}
+                  activeOpacity={0.8}
+                  style={styles.btnTouch}>
+                  <SvgXml
+                    width={50}
+                    height={50}
+                    xml={appImagesSvg.addAddresBtn}
+                  />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+
+          <PopUp
+            visible={isDelete}
+            type={'delete'}
+            onClose={() => setIsDelete(false)}
+            title={'You are about to delete an item'}
+            text={'This will delete your item from the address are your sure?'}
+            onDelete={handleDelete}
+          />
         </>
       )}
-
-      <PopUp
-        visible={isDelete}
-        type={'delete'}
-        onClose={() => setIsDelete(false)}
-        title={'You are about to delete an item'}
-        text={'This will delete your item from the address are your sure?'}
-        onDelete={handleDelete}
-      />
-      </>)}
     </View>
   );
 }

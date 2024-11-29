@@ -1,10 +1,8 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Text,
   View,
-  KeyboardAvoidingView,
   DeviceEventEmitter,
-  Alert,
 } from 'react-native';
 import {styles} from './styles';
 import {
@@ -19,23 +17,18 @@ import {fetch} from '@react-native-community/netinfo';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import {rootStore} from '../../../../stores/rootStore';
 import OffersExploreFlatList from '../../../../components/slider/offersExplore';
-import {appImages} from '../../../../commons/AppImages';
 import {
   offerExplore,
   offerPromotion,
   offerTopDeals,
 } from '../../../../stores/DummyData/Offers';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../../theme/fonts/fonts';
-import {colors} from '../../../../theme/colors';
 import PromotionsFlatList from '../../../../components/slider/promotionsSlider';
-import HomeSlider from '../../../../components/slider/homeSlider';
 import TwoTextSlider from '../../../../components/slider/twoTextSlider';
+
 
 export default function Offers({navigation}) {
   const {appUser} = rootStore.commonStore;
   const [internet, setInternet] = useState(true);
-  const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [exploreArray, setExploreArray] = useState(offerExplore);
   const [promotionArray, setPromotionArray] = useState(offerPromotion);
   const [sliderItems, setSliderItems] = useState(offerTopDeals);
@@ -44,7 +37,6 @@ export default function Offers({navigation}) {
     useCallback(() => {
       checkInternet();
       handleAndroidBackButton(navigation);
-      setAppUserInfo(appUser);
     }, []),
   );
 
@@ -80,7 +72,7 @@ export default function Offers({navigation}) {
         <NoInternet />
       ) : (
         <>
-          <DashboardHeader navigation={navigation} appUserInfo={appUserInfo} />
+          <DashboardHeader title={'Explore'} />
             <AppInputScroll
             Pb={'20%'}
               padding={true}
@@ -93,7 +85,7 @@ export default function Offers({navigation}) {
                 <PromotionsFlatList
                   data={promotionArray}
                   onPress={() => {
-                    alert('yes');
+                    // alert('yes');
                   }}
                 />
                 <TwoTextSlider

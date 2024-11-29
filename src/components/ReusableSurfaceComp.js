@@ -34,17 +34,28 @@ const styles = StyleSheet.create({
   innerView: {
     marginTop: '5%',
     flexDirection: 'row',
+    //  justifyContent:'center',
+    alignItems:'center'
   },
   titleView: {
-    height: screenHeight(4),
-    width: screenWidth(0.8),
-    backgroundColor: colors.main,
+    // height: screenHeight(4),
+    // width: screenWidth(0.8),
+    // backgroundColor: colors.main,
+     height: screenHeight(2.5),
+    width: screenWidth(3),
+    borderLeftWidth: 10, // Half of the triangle's base
+    borderRightWidth: 10, // Half of the triangle's base
+    borderBottomWidth: 10, // Height of the triangle
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: colors.main, // Triangle's color,
+    transform: [{ rotate: '90deg' }], // Rotates the triangle 90 degrees,
   },
   title: {
     fontSize: RFValue(14),
     fontFamily: fonts.semiBold,
     color: colors.main,
-    marginLeft: '4%',
-    marginTop: '2%',
+    right: screenWidth(0.5),
+    // marginTop: '2%',
   },
 });

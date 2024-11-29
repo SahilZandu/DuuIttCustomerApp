@@ -105,7 +105,6 @@ export default class OrderStore {
     }
     
   };
-
   
   ordersTrackOrder = async (handleLoading) => {
     try {
@@ -128,9 +127,14 @@ export default class OrderStore {
     }
   };
 
-  getPendingForCustomer = async () => {
+  getPendingForCustomer = async (type) => {
+    let requestData = {
+      type:type,
+      sender:'customer'
+    };
+    
     try {
-      const res = await agent.pendingForCustomer();
+      const res = await agent.pendingForCustomer(requestData);
       console.log('pending For Customer Res : ', res);
       if (res?.statusCode == 200) {
         return res?.data;

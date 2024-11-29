@@ -44,11 +44,11 @@ const OffersExploreFlatList = ({data, onPress}) => {
     </View>
   );
 
-//   const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
+  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
 
   return (
     <View style={styles.main}>
-      <Text style={styles.exploreText}>Explore</Text>
+      <Text style={styles.exploreText}>Explore Cards</Text>
       <View style={{marginTop: '5%'}}>
         <FlatList
           ref={flatListRef}
@@ -59,7 +59,7 @@ const OffersExploreFlatList = ({data, onPress}) => {
           snapToAlignment={'center'}
           decelerationRate="fast"
           snapToInterval={wp('55%')} // Ensures only two items are fully visible
-        //   viewabilityConfig={viewConfigRef.current}
+          viewabilityConfig={viewConfigRef.current}
           keyExtractor={(item, index) => index?.toString()}
           contentContainerStyle={{
             paddingRight: wp('3%'),

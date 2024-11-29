@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {appImages} from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
-import MikePopUp from '../../../../components/MikePopUp';
 import {styles} from './styles';
 import {homeCS} from '../../../../stores/DummyData/Home';
 import ChangeRoute from '../../../../components/ChangeRoute';
@@ -29,7 +28,7 @@ import {useNotifications} from '../../../../halpers/useNotifications';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
-import { setCurrentLocation } from '../../../../components/GetAppLocation';
+import {setCurrentLocation} from '../../../../components/GetAppLocation';
 
 let imageArray = [
   {id: 1, image: appImages.sliderImage1},
@@ -44,17 +43,12 @@ export default function Home({navigation}) {
   useNotifications(navigation);
 
   const [sliderItems, setSliderItems] = useState(imageArray);
-  const [isKeyboard, setIskeyboard] = useState(false);
-  const [searchRes, setSearchRes] = useState('');
-  const [visible, setVisible] = useState(false);
-  const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [internet, setInternet] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       requestNotificationPermission();
       handleAndroidBackButton();
-      onUpdateUserInfo();
       checkInternet();
       setCurrentLocation();
     }, []),
@@ -134,14 +128,14 @@ export default function Home({navigation}) {
             let request = {
               user_id: appUser?._id,
               fcm_token: token,
-              user_type:'customer'
+              user_type: 'customer',
             };
             saveFcmToken(token);
             socketServices.emit('update-fcm-token', request);
             setTimeout(() => {
               socketServices.disconnectSocket();
             }, 500);
-          },1500);
+          }, 1500);
         }
         //  await saveFcmToken(token)
       } catch (error) {
@@ -157,87 +151,33 @@ export default function Home({navigation}) {
     initFCM();
   }, []);
 
-  const onUpdateUserInfo = () => {
-    const {appUser} = rootStore.commonStore;
-    setAppUserInfo(appUser);
-  };
-
-  const hanldeSearch = async s => {
-    console.log('get res:--', s);
-  };
-
-  const onSuccessResult = item => {
-    console.log('item=== onSuccessResult', item);
-    setSearchRes(item);
-    setVisible(false);
-  };
-
-  const onCancel = () => {
-    setVisible(false);
-  };
-
   return (
     <View style={styles.container}>
       {internet == false ? (
         <NoInternet />
       ) : (
         <>
-          <DashboardHeader
-            navigation={navigation}
-            // title={'Home'}
-            // autoFocus={isKeyboard}
-            // onPressSecond={() => {
-            //   // alert('second');
-            // }}
-            // secondImage={appImagesSvg.cartIcon}
-            // value={searchRes}
-            // onChangeText={t => {
-            //   setSearchRes(t);
-            //   if (t) {
-            //     hanldeSearch(t);
-            //   }
-            // }}
-            // onMicroPhone={() => {
-            //   setVisible(true);
-            // }}
-            // onFocus={() => setIskeyboard(true)}
-            // onBlur={() => setIskeyboard(false)}
-            // onCancelPress={() => {
-            //   setSearchRes('');
-            // }}
-            appUserInfo={appUserInfo}
-          />
+          <DashboardHeader title={'Home'} />
           <View style={styles.mainView}>
-            <KeyboardAvoidingView
-              style={{flex: 1, marginTop: '1.5%'}}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <AppInputScroll
-                padding={true}
-                keyboardShouldPersistTaps={'handled'}>
-                <View style={styles.innerView}>
-                  <ChangeRoute data={homeCS} navigation={navigation} />
+            <AppInputScroll
+              padding={true}
+              keyboardShouldPersistTaps={'handled'}>
+              <View style={styles.innerView}>
+                <ChangeRoute data={homeCS} navigation={navigation} />
 
-                  <HomeSlider data={sliderItems} paginationList={true} />
+                <HomeSlider data={sliderItems} paginationList={true} />
 
-                  <RenderOffer data={mainArray} />
-                </View>
-                <View style={styles.bottomImageView}>
-                  <Image
-                    resizeMode="cover"
-                    style={styles.bottomImage}
-                    source={appImages.mainHomeBootmImage}
-                  />
-                </View>
-              </AppInputScroll>
-            </KeyboardAvoidingView>
+                <RenderOffer data={mainArray} />
+              </View>
+              <View style={styles.bottomImageView}>
+                <Image
+                  resizeMode="cover"
+                  style={styles.bottomImage}
+                  source={appImages.mainHomeBootmImage}
+                />
+              </View>
+            </AppInputScroll>
           </View>
-          <MikePopUp
-            visible={visible}
-            title={'Sorry! Didn’t hear that'}
-            text={'Try saying restaurant name or a dish.'}
-            onCancelBtn={onCancel}
-            onSuccessResult={onSuccessResult}
-          />
         </>
       )}
     </View>

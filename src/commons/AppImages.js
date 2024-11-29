@@ -267,17 +267,9 @@ export const appImagesSvg = {
 </clipPath>
 </defs>
 </svg>`,
-  refershIcon: `<svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M480-160q-133.33 0-226.67-93.33Q160-346.67 160-480q0-133.33 93.33-226.67Q346.67-800 480-800q79.67 0 143.33 32.5 63.67 32.5 110 90.17V-800H800v262.67H537.33V-604h168q-36-58.67-93.83-94T480-733.33q-106 0-179.67 73.66Q226.67-586 226.67-480q0 106 73.66 179.67Q374-226.67 480-226.67q81 0 147.67-46.33 66.66-46.33 93-122.33H790Q761.33-290 675.33-225q-86 65-195.33 65Z"/></svg>`,
-  changeLocationAddress: `<svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 33 33" fill="none">
-  <g clip-path="url(#clip0_4171_1928)">
-  <path d="M32.5 16.5C32.5 25.3366 25.3366 32.5 16.5 32.5C7.66344 32.5 0.5 25.3366 0.5 16.5C0.5 7.66344 7.66344 0.5 16.5 0.5C25.3366 0.5 32.5 7.66344 32.5 16.5Z" fill="white" stroke="#D9D9D9"/>
-  <path d="M20.3333 11.667V22.3337M20.3333 22.3337L17.6667 19.667M20.3333 22.3337L23 19.667M13.6667 22.3337V11.667M13.6667 11.667L11 14.3337M13.6667 11.667L16.3333 14.3337" stroke="black" stroke-opacity="0.67" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-  <defs>
-  <clipPath id="clip0_4171_1928">
-  <rect width="33" height="33" fill="white"/>
-  </clipPath>
-  </defs>
+  refershIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33" fill="none">
+  <circle cx="16.5" cy="16.5" r="16.5" fill="#28B056"/>
+  <path d="M25.3333 15.3333C25.3333 15.3333 23.6625 13.0568 22.3051 11.6985C20.9478 10.3402 19.072 9.5 17 9.5C12.8579 9.5 9.5 12.8579 9.5 17C9.5 21.1421 12.8579 24.5 17 24.5C20.4192 24.5 23.3041 22.2119 24.2069 19.0833M25.3333 15.3333V10.3333M25.3333 15.3333H20.3333" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`,
   unCheckBox: `<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 19 19" fill="none">
   <rect x="0.5" y="0.225098" width="18" height="18" rx="5" fill="#D9D9D9"/>
@@ -320,6 +312,28 @@ export const appImagesSvg = {
   </svg>`,
   phoneChatIcon:`<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 16 16" fill="none">
   <path d="M4.54216 5.49693C5.12216 6.70495 5.91281 7.83715 6.91413 8.83847C7.91544 9.83978 9.04764 10.6304 10.2557 11.2104C10.3596 11.2603 10.4115 11.2853 10.4773 11.3044C10.7109 11.3725 10.9978 11.3236 11.1956 11.1819C11.2513 11.1421 11.2989 11.0944 11.3942 10.9992C11.6855 10.7078 11.8312 10.5622 11.9777 10.4669C12.5301 10.1078 13.2422 10.1078 13.7947 10.4669C13.9411 10.5622 14.0868 10.7078 14.3781 10.9992L14.5405 11.1616C14.9834 11.6044 15.2048 11.8259 15.3251 12.0637C15.5644 12.5367 15.5644 13.0952 15.3251 13.5682C15.2048 13.806 14.9834 14.0274 14.5405 14.4703L14.4092 14.6017C13.9678 15.043 13.7471 15.2637 13.4471 15.4322C13.1142 15.6193 12.5971 15.7537 12.2153 15.7526C11.8711 15.7516 11.636 15.6848 11.1656 15.5513C8.63776 14.8338 6.25246 13.4801 4.26248 11.4901C2.27249 9.50013 0.918765 7.11483 0.20129 4.587C0.0677842 4.11663 0.00103061 3.88144 7.14884e-06 3.53732C-0.00112927 3.15547 0.133339 2.6384 0.320356 2.30547C0.488896 2.00545 0.709572 1.78477 1.15092 1.34342L1.28229 1.21206C1.72516 0.769187 1.94659 0.547753 2.18441 0.427466C2.65738 0.188241 3.21593 0.188241 3.6889 0.427466C3.92671 0.547753 4.14815 0.769187 4.59102 1.21206L4.75341 1.37445C5.04475 1.66579 5.19042 1.81145 5.28565 1.95794C5.64482 2.51034 5.64482 3.2225 5.28565 3.7749C5.19042 3.92139 5.04475 4.06706 4.75341 4.35839C4.65815 4.45365 4.61052 4.50128 4.57065 4.55696C4.42897 4.75482 4.38006 5.0417 4.44816 5.27533C4.46732 5.34107 4.49227 5.39303 4.54216 5.49693Z" fill="#28B056"/>
+  </svg>`,
+  changeLocationAddress:`<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 33 33" fill="none">
+  <g clip-path="url(#clip0_4186_1983)">
+  <path d="M32.5 16.5C32.5 25.3366 25.3366 32.5 16.5 32.5C7.66344 32.5 0.5 25.3366 0.5 16.5C0.5 7.66344 7.66344 0.5 16.5 0.5C25.3366 0.5 32.5 7.66344 32.5 16.5Z" fill="white" stroke="#D9D9D9"/>
+  <path d="M20.3333 11.667V22.3337M20.3333 22.3337L17.6667 19.667M20.3333 22.3337L23 19.667M13.6667 22.3337V11.667M13.6667 11.667L11 14.3337M13.6667 11.667L16.3333 14.3337" stroke="black" stroke-opacity="0.67" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_4186_1983">
+  <rect width="33" height="33" fill="white"/>
+  </clipPath>
+  </defs>
+  </svg>`,
+  addAddresBtn:`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 33 33" fill="none">
+  <g clip-path="url(#clip0_4560_2563)">
+  <path d="M16.5 33C25.6127 33 33 25.6127 33 16.5C33 7.3873 25.6127 0 16.5 0C7.3873 0 0 7.3873 0 16.5C0 25.6127 7.3873 33 16.5 33Z" fill="#28B056"/>
+  <path d="M16.4999 10.958V22.0413M10.9583 16.4997H22.0416" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_4560_2563">
+  <rect width="33" height="33" fill="white"/>
+  </clipPath>
+  </defs>
   </svg>`,
 };
 
@@ -466,6 +480,7 @@ export const appImages = {
 
   markerImage: require('../assets/markerImage.png'),
   parcelHomeImage: require('../assets/parcelHomeImage.png'),
+  rideHomeImage: require('../assets/rideHomeImage.png'),
   parcelImageWhite: require('../assets/parcelImageWhite.png'),
   pickIconSet: require('../assets/setPickIcon.png'),
   dropIconSet: require('../assets/setDropIcon.png'),
@@ -482,6 +497,7 @@ export const appImages = {
   callImage: require('../assets/callImage.png'),
   messageImage: require('../assets/messageImage.png'),
   packetImage: require('../assets/packetImage.png'),
+  packetRideImage: require('../assets/packetRideImage.png'),
   crossClose: require('../assets/crossClose.png'),
 
   homeLocation: require('../assets/homeLocation.png'),

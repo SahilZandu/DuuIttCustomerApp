@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 20,
     height: hp('12%'),
-    marginTop: '-3%',
+    marginTop:hp('-1.6%'),
   }
   
 });

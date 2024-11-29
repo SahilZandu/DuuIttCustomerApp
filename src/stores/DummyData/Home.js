@@ -3,7 +3,6 @@ import {appImagesSvg, appImages} from '../../commons/AppImages';
 export const homeCS = [
   {
     id: 1,
-    // image:appImages.rideImage,
     image: appImages.routeRide,
     name: 'RIDE',
     duIcon: appImagesSvg.duSvg,
@@ -11,7 +10,6 @@ export const homeCS = [
   },
   {
     id: 2,
-    // image:appImages.foodImage,
     image: appImages.routeFood,
     name: 'FOOD',
     duIcon: appImagesSvg.duSvg,
@@ -19,12 +17,64 @@ export const homeCS = [
   },
   {
     id: 3,
-    // image:appImages.parcelImage,
     image: appImages.routeParcel,
     name: 'PARCEL',
     duIcon: appImagesSvg.duSvg,
     title: 'Daily Needs & Essentials',
   },
+];
+
+export const homeParcelCS = [
+  {
+    id: 1,
+    image: appImages.routeRide,
+    name: 'RIDE',
+    duIcon: appImagesSvg.duSvg,
+    title: 'Schedule a Ride',
+  },
+  {
+    id: 2,
+    image: appImages.routeFood,
+    name: 'FOOD',
+    duIcon: appImagesSvg.duSvg,
+    title: 'Fresh & Full of Flavors',
+  },
+];
+
+export const homeRideCS = [
+  {
+    id: 1,
+    image: appImages.routeParcel,
+    name: 'PARCEL',
+    duIcon: appImagesSvg.duSvg,
+    title: 'Daily Needs & Essentials',
+  },
+  {
+    id: 2,
+    image: appImages.routeFood,
+    name: 'FOOD',
+    duIcon: appImagesSvg.duSvg,
+    title: 'Fresh & Full of Flavors',
+  },
+ 
+];
+
+export const homeFoodCS = [
+  {
+    id: 1,
+    image: appImages.routeParcel,
+    name: 'PARCEL',
+    duIcon: appImagesSvg.duSvg,
+    title: 'Daily Needs & Essentials',
+  }, 
+   {  
+    id: 2,
+    image: appImages.routeRide,
+    name: 'RIDE',
+    duIcon: appImagesSvg.duSvg,
+    title: 'Schedule a Ride',
+  },
+ 
 ];
 
 export const mainArray = [

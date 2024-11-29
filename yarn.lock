@@ -4400,6 +4400,7 @@ __metadata:
     react-native-android-sms-listener: ^0.8.0
     react-native-date-picker: ^5.0.4
     react-native-device-info: ^14.0.0
+    react-native-fast-image: ^8.6.3
     react-native-geolocation-service: ^5.3.1
     react-native-gesture-handler: ^2.17.1
     react-native-get-random-values: ^1.11.0
@@ -10391,6 +10392,16 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: d9990fce678c6c179f498866d5042f08dc9c3fec1a139fc12a83341b3289f4ee954e86613b1794047d7646d25f04a902d96927b0a52db9d324e194ffb99e8946
+  languageName: node
+  linkType: hard
+
+"react-native-fast-image@npm:^8.6.3":
+  version: 8.6.3
+  resolution: "react-native-fast-image@npm:8.6.3"
+  peerDependencies:
+    react: ^17 || ^18
+    react-native: ">=0.60.0"
+  checksum: 29289cb6b2eae0983c8922b22e2d9de3be07322bb7991c5def19f95eadefaedb0e308ff0b38cc1d0444e8bd4fe94a7621a99a2d3d9298100bcb60b3144677234
   languageName: node
   linkType: hard
 

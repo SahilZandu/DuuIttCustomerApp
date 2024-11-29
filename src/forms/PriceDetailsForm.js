@@ -74,7 +74,7 @@ let imageArray = [
 const PriceDetailsForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
     rootStore.myAddressStore;
-  const {addRequestParcel} = rootStore.parcelStore;
+  const {addRequestParcelRide} = rootStore.parcelStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -138,10 +138,11 @@ const PriceDetailsForm = ({navigation}) => {
       receiver_address: newReceiverAddress,
       billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
       isSecure: isSecure,
+      order_type:'parcel',
     };
     console.log('newdata--', newdata);
 
-    await addRequestParcel(newdata, navigation, handleLoading);
+    await addRequestParcelRide(newdata, navigation, handleLoading);
 
     // navigation.navigate('priceConfirmed',{item:newdata});
   };

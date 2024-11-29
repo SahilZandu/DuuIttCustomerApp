@@ -20,6 +20,7 @@ export const colors = {
     black20:"#00000020",
     black25:"#00000025",
     red:"#E95D5D",
+    redBold :'#ED0826',
     color80:'#808080',
     color72:'#727272',
     colorAF:"#AFAFAF",

@@ -13,7 +13,7 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone
         flexDirection: 'row',
         backgroundColor: colors.white,
         alignItems: 'center',
-        paddingBottom: '2%',
+        paddingBottom: '3%',
         marginTop: '4%',
       }}>
       {backArrow && (
@@ -31,7 +31,8 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone
           fontSize: RFValue(12),
           fontFamily: fonts.semiBold,
           color: colors.black,
-          marginLeft: '3%',
+          marginLeft: backArrow ? '3%' :'6%',
+          // textAlign: backArrow ?'left': 'center'
         }}>
         {title}
       </Text>

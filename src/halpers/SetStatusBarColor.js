@@ -13,7 +13,7 @@ const DashbordScreens = [
   'tab5',
   'profile',
   'chooseMapLocation',
-  'ParcelHome',
+  'parcelHome',
   'setLocationHistory',
   'senderReceiverDetails',
   'priceDetails',
@@ -30,7 +30,9 @@ const DashbordScreens = [
   'claimGiftQRCode',
   'paymentMethod',
   'vouchers',
-  'vouchersDetails'
+  'vouchersDetails',
+  'foodHome',
+  'rideHome'
   
 ];
 

@@ -14,8 +14,12 @@ import Promo from '../screens/Auth/DashboardScreen/Promo/Promo';
 import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
 import SideMenu from '../screens/Auth/DashboardScreen/SideMenu/SideMenu';
 import ParcelHome from '../screens/DUParcel/ParcelHome/ParcelHome';
-import MyAddress from '../screens/DUParcel/MyAddress/MyAddress';
 import Offers from '../screens/Auth/DashboardScreen/Offers/Offers';
+import RideHome from '../screens/DURide/RideHome/RideHome';
+import FoodHome from '../screens/DUFood/FoodHome/FoodHome';
+import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
+
+
 
 
 const Tab = createBottomTabNavigator();
@@ -174,21 +178,21 @@ export function RideBottomNavigator  () {
                 ? bottomTabIcons.focusRideIcon
                 : bottomTabIcons.rideIcon;
               break;
+            // case 'tab2':
+            //   iconName = focused
+            //     ? bottomTabIcons.focusActivityIcon
+            //     : bottomTabIcons.activityIcon;
+            //   break;
             case 'tab2':
-              iconName = focused
-                ? bottomTabIcons.focusActivityIcon
-                : bottomTabIcons.activityIcon;
-              break;
-            case 'tab3':
                 iconName = focused
                 ? bottomTabIcons.focusAddresIcon
                 : bottomTabIcons.addressIcon;
               break;
-            case 'tab4':
-                iconName = focused
-                ? bottomTabIcons.focusProfileIcon
-                : bottomTabIcons.profileIcon;
-              break;
+            // case 'tab4':
+            //     iconName = focused
+            //     ? bottomTabIcons.focusProfileIcon
+            //     : bottomTabIcons.profileIcon;
+            //   break;
             default:
               iconName = focused
                 ? bottomTabIcons.focusHomeIcon
@@ -208,15 +212,15 @@ export function RideBottomNavigator  () {
             case 'tab1':
               label = 'Ride';
               break;
+            // case 'tab2':
+            //   label = 'Activity';
+            //   break;
             case 'tab2':
-              label = 'Activity';
-              break;
-            case 'tab3':
               label = 'Address';
               break;
-            case 'tab4':
-              label = 'Profile';
-              break;
+            // case 'tab4':
+            //   label = 'Profile';
+            //   break;
             default:
               label = 'Home';
           }
@@ -252,28 +256,29 @@ export function RideBottomNavigator  () {
       })}>
       <Tab.Screen
         name="tab1"
-        component={Home}
+        component={RideHome}
         // options={{tabBarLabel: 'Home'}}
         listeners={{tabPress: handleAnimation}}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab2"
         component={Promo}
         // options={{tabBarLabel: 'Promo'}}
         listeners={{tabPress: handleAnimation}}
-      />
+      /> */}
       <Tab.Screen
-        name="tab3"
-        component={Orders}
+        name="tab2"
+        component={MyAddress}
         // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
+        initialParams={{screenName: 'ride' }} // Pass initial params
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab4"
         component={SideMenu}
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
-      />
+      /> */}
 
     </Tab.Navigator>
   );
@@ -303,21 +308,21 @@ export function FoodBottomNavigator  () {
                 ? bottomTabIcons.focusFoodIcon
                 : bottomTabIcons.foodIcon;
               break;
-            case 'tab2':
-                iconName = focused
-                ? bottomTabIcons.focusOrderIcon
-                : bottomTabIcons.orderIcon;
-              break;
-              case 'tab3':
+            // case 'tab2':
+            //     iconName = focused
+            //     ? bottomTabIcons.focusOrderIcon
+            //     : bottomTabIcons.orderIcon;
+            //   break;
+              case 'tab2':
                 iconName = focused
                   ? bottomTabIcons.focusAddresIcon
                   : bottomTabIcons.addressIcon;
                 break;
-            case 'tab4':
-                iconName = focused
-                ? bottomTabIcons.focusProfileIcon
-                : bottomTabIcons.profileIcon;
-              break;
+            // case 'tab4':
+            //     iconName = focused
+            //     ? bottomTabIcons.focusProfileIcon
+            //     : bottomTabIcons.profileIcon;
+            //   break;
             default:
               iconName = focused
                 ? bottomTabIcons.focusHomeIcon
@@ -337,15 +342,15 @@ export function FoodBottomNavigator  () {
             case 'tab1':
               label = 'Food';
               break;
+            // case 'tab2':
+            //   label = 'Orders';
+            //   break;
             case 'tab2':
-              label = 'Orders';
-              break;
-            case 'tab3':
               label = 'Address';
               break;
-            case 'tab4':
-              label = 'Profile';
-              break;
+            // case 'tab4':
+            //   label = 'Profile';
+            //   break;
             default:
               label = 'Home';
           }
@@ -381,28 +386,29 @@ export function FoodBottomNavigator  () {
       })}>
       <Tab.Screen
         name="tab1"
-        component={Home}
+        component={FoodHome}
         // options={{tabBarLabel: 'Home'}}
         listeners={{tabPress: handleAnimation}}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab2"
         component={Orders}
         // options={{tabBarLabel: 'Promo'}}
         listeners={{tabPress: handleAnimation}}
-      />
+      /> */}
       <Tab.Screen
-        name="tab3"
-        component={Promo}
+        name="tab2"
+        component={MyAddress}
         // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
+        initialParams={{screenName: 'food' }} // Pass initial params
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab4"
         component={SideMenu}
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
-      />
+      /> */}
 
     </Tab.Navigator>
   );
@@ -432,21 +438,21 @@ export function ParcelBottomNavigator  () {
                 ? bottomTabIcons.focusParcelIcon
                 : bottomTabIcons.parcelIcon;
               break;
+            // case 'tab2':
+            //   iconName = focused
+            //   ? bottomTabIcons.focusOrderIcon
+            //   : bottomTabIcons.orderIcon;
+            //   break;
             case 'tab2':
-              iconName = focused
-              ? bottomTabIcons.focusOrderIcon
-              : bottomTabIcons.orderIcon;
-              break;
-            case 'tab3':
                 iconName = focused
                 ? bottomTabIcons.focusAddresIcon
                 : bottomTabIcons.addressIcon;
               break;
-            case 'tab4':
-                iconName = focused
-                ? bottomTabIcons.focusProfileIcon
-                : bottomTabIcons.profileIcon;
-              break;
+            // case 'tab4':
+            //     iconName = focused
+            //     ? bottomTabIcons.focusProfileIcon
+            //     : bottomTabIcons.profileIcon;
+            //   break;
             default:
               iconName = focused
                 ? bottomTabIcons.focusHomeIcon
@@ -466,15 +472,15 @@ export function ParcelBottomNavigator  () {
             case 'tab1':
               label = 'Parcel';
               break;
+            // case 'tab2':
+            //   label = 'Orders';
+            //   break;
             case 'tab2':
-              label = 'Orders';
-              break;
-            case 'tab3':
               label = 'Address';
               break;
-            case 'tab4':
-              label = 'Profile';
-              break;
+            // case 'tab4':
+            //   label = 'Profile';
+            //   break;
             default:
               label = 'Home';
           }
@@ -514,24 +520,25 @@ export function ParcelBottomNavigator  () {
         // options={{tabBarLabel: 'Home'}}
         listeners={{tabPress: handleAnimation}}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab2"
         component={Orders}
         // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
-      />
+      /> */}
       <Tab.Screen
-        name="tab3"
+        name="tab2"
         component={MyAddress}
         // options={{tabBarLabel: 'MyAddress'}}
         listeners={{tabPress: handleAnimation}}
+        initialParams={{screenName: 'parcel' }} // Pass initial params
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab4"
         component={SideMenu}
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
-      />
+      /> */}
 
     </Tab.Navigator>
   );
@@ -569,7 +576,7 @@ const styles = {
     backgroundColor:colors.white, // Make the background transparent
     borderTopWidth:0,
     paddingBottom: 0,
-    shadowColor: Platform.OS === 'android' ? 'black' : 'rgba(0, 0, 0, 0.2)',
+    shadowColor: Platform.OS === 'android' ? colors.black : 'rgba(0, 0, 0, 0.2)',
     shadowOffset: {
       width: 0,
       height: 0,

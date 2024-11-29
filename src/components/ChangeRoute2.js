@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexWrap: 'wrap',
-    marginTop: '6%',
+    marginTop: '4%',
   },
   mainTouch: index => ({
     marginLeft: index % 2 == 0 ? 0 : 'auto',

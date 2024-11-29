@@ -21,6 +21,7 @@ const PopUpRideDetails = ({
   title,
   info,
   onPressCancelRide,
+  packetImage,
   loading,
 }) => {
   return (
@@ -69,7 +70,9 @@ const PopUpRideDetails = ({
                 pickup: info?.sender_address?.address,
                 drop: info?.receiver_address?.address,
               }}
-              image={appImages.packetImage}
+              image={packetImage}
+              // image={appImages.packetImage}
+              // image={appImages.packetRideImage}
             />
             <View
               style={{

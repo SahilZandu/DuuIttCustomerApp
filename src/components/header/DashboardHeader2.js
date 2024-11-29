@@ -84,7 +84,7 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
         flexDirection: 'row',
         backgroundColor: colors.backColorMain,
         alignItems: 'center',
-        paddingBottom: '2%',
+        paddingBottom: '3%',
         marginTop: '4%',
         paddingHorizontal: 20,
       }}>

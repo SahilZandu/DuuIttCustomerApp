@@ -8,7 +8,7 @@ export default  {
     updatePassword:'customers/update-password',
     myAddress:'customers/address',
     getMyAddress:'customers/detail',
-    parcels:'orders',
+    parcelsRides:'orders',
     parcels_Cancel:'orders/cancel',
     parcels_find_rider:'orders/find-rider',
     updateProfile:'customers/update-profile',
@@ -18,7 +18,8 @@ export default  {
     pendingForCustomer:'orders/pending-for-customer',
     customersFcmToken:'customers/update',
     testMessage:'test/message',
-    updateOrderStatus:'orders/update-order-status'
+    updateOrderStatus:'orders/update-order-status',
+
 
    
    

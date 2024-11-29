@@ -40,7 +40,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 
 export default function AddMyAddress({navigation, route}) {
-  const {type, data} = route.params;
+  const {type, data,screenName} = route.params;
 
   const {myAddress} = rootStore.myAddressStore;
 
@@ -153,7 +153,7 @@ export default function AddMyAddress({navigation, route}) {
   const onSuccess = () => {
     setVisible(false);
     setTimeout(() => {
-      navigation.navigate('parcel', {screen: 'home'});
+      navigation.navigate(screenName,{screen: 'home'});
     }, 300);
   };
 
@@ -269,7 +269,7 @@ export default function AddMyAddress({navigation, route}) {
   return (
     <View style={styles.container}>
       <Header
-        title={type == 'add' ? 'Add My Address' : 'Upadate My Address'}
+        title={type == 'add' ? 'Add My Address' : 'Update My Address'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
@@ -277,7 +277,7 @@ export default function AddMyAddress({navigation, route}) {
       />
       <View style={styles.main}>
         <MapRouteMarker
-          mapContainerView={{height: hp('74%')}}
+          mapContainerView={{height: Platform.OS == 'ios'?  hp('66%'): hp('74%')}}
           origin={geoLocation}
         />
         <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />

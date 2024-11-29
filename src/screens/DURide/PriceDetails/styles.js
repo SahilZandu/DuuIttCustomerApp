@@ -12,8 +12,5 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  main:{
-    flex:1
-  }
   
 });

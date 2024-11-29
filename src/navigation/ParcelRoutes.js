@@ -8,12 +8,12 @@ import SenderReceiverDetails from '../screens/DUParcel/SenderReceiverDetails.js/
 import PriceDetails from '../screens/DUParcel/PriceDetails/PriceDetails';
 import PriceConfirmed from '../screens/DUParcel/PriceConfirmed/PriceConfirmed';
 import SearchingRide from '../screens/DUParcel/SearchingRide/SearchingRide';
-import MyAddress from '../screens/DUParcel/MyAddress/MyAddress';
-import AddMyAddress from '../screens/DUParcel/AddMyAddress/AddMyAddress';
 import Feedback from '../screens/Auth/DashboardScreen/Feedback/Feedback';
 import Help from '../screens/Auth/DashboardScreen/Help/Help';
 import TrackingOrder from '../screens/DUParcel/TrackingOrder/TrackingOrder';
 import PickSuccessfully from '../screens/DUParcel/PickSuccessfully.js/PickSuccessfully';
+import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
+import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
 
 
 const Stack = createNativeStackNavigator();
@@ -29,7 +29,7 @@ export default function ParcelRoutes(props) {
       initialRouteName="home"> 
        <Stack.Screen name="home" component={ParcelBottomNavigator} />
        <Stack.Screen name="profile" component={Profile} />
-       <Stack.Screen name="ParcelHome" component={ParcelHome} />
+       <Stack.Screen name="parcelHome" component={ParcelHome} />
        <Stack.Screen name="setLocationHistory" component={SetLocationHistory} />
        <Stack.Screen name="chooseMapLocation" component={ChooseMapLocation} />
        <Stack.Screen name="senderReceiverDetails" component={SenderReceiverDetails} />
@@ -42,13 +42,6 @@ export default function ParcelRoutes(props) {
        <Stack.Screen name="help" component={Help} />
        <Stack.Screen name="trackingOrder" component={TrackingOrder} />
        <Stack.Screen name="pickSuccessfully" component={PickSuccessfully} />
-       
-       
-
-
-
-       
-       
        
   
     </Stack.Navigator>

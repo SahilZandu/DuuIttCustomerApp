@@ -17,7 +17,11 @@ const PickDropImageComp = ({item, image}) => {
         lineHeight={48}
       />
       <View style={{left: '2%', top: '3%'}}>
-        <Image style={{height: 70, width: 70}} source={image} />
+        <Image
+          resizeMode="contain"
+          style={{height: 70, width: 70}}
+          source={image}
+        />
       </View>
     </View>
   );
