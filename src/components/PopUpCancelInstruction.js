@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -19,98 +19,95 @@ const PopUpCancelInstruction = ({
   cancelRideInst,
   onCancelReason,
 }) => {
-
-
-
   return (
     <Modal
-        animationType="slide"
-        isVisible={isVisible}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        style={{justifyContent: 'flex-end', margin: 0}}>
-        <TouchableOpacity
-          onPress={ onClose}
-          activeOpacity={0.8}
-          style={{alignSelf: 'center'}}>
-          <Image
-            resizeMode="contain"
-            style={{height: 45, width: 45}}
-            source={appImages.crossClose} // Your icon image
-          />
-        </TouchableOpacity>
+      animationType="slide"
+      isVisible={isVisible}
+      animationIn="fadeIn"
+      animationOut="fadeOut"
+      style={{justifyContent: 'flex-end', margin: 0}}>
+      <TouchableOpacity
+        onPress={onClose}
+        activeOpacity={0.8}
+        style={{alignSelf: 'center'}}>
+        <Image
+          resizeMode="contain"
+          style={{height: 45, width: 45}}
+          source={appImages.crossClose} // Your icon image
+        />
+      </TouchableOpacity>
+      <View
+        style={{
+          justifyContent: 'flex-end',
+          alignItems: 'flex-end',
+          marginTop: '2%',
+        }}>
         <View
           style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            marginTop: '2%',
+            backgroundColor: '#FFFFFF',
+            width: '100%',
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+            paddingBottom:Platform.OS == 'ios'?hp('5%') : hp('3%'),
+            // height: hp('80%'),
           }}>
-          <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              width: '100%',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              paddingBottom: '12%',
-              // height: hp('80%'),
-            }}>
-            <Spacer space={'2%'} />
+          <Spacer space={'1%'} />
+          <View style={{marginHorizontal: 24}}>
+            <Text
+              style={{
+                fontSize: RFValue(16),
+                fontFamily: fonts.bold,
+                color: colors.black,
+                marginTop: '4%',
+              }}>
+              {title}
+            </Text>
 
-            <View style={{marginHorizontal: 24}}>
-              <Text
-                style={{
-                  fontSize: RFValue(16),
-                  fontFamily: fonts.bold,
-                  color: colors.black,
-                  marginTop: '4%',
-                }}>
-               {title}
-              </Text>
-
-              {cancelRideInst?.map((item, index) => {
-                return (
-                  <View style={{justifyContent: 'center'}}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={()=>{onCancelReason(item)}}
-                      key={index}
+            {cancelRideInst?.map((item, index) => {
+              return (
+                <View style={{justifyContent: 'center'}}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      onCancelReason(item);
+                    }}
+                    key={index}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      height: hp('7%'),
+                    }}>
+                    <Text
                       style={{
-                        flexDirection: 'row',
-                        marginTop: '2%',
-                        alignItems: 'center',
-                        height: hp('7%'),
+                        fontSize: RFValue(14),
+                        fontFamily: fonts.regular,
+                        marginLeft: '3%',
+                        color: '#242424',
                       }}>
-                      <Text
-                        style={{
-                          fontSize: RFValue(14),
-                          fontFamily: fonts.regular,
-                          marginLeft: '3%',
-                          color: '#242424',
-                        }}>
-                        {item?.title}
-                      </Text>
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        height: 2,
-                        backgroundColor: '#D9D9D9',
-                        // marginTop: '1%',
-                      }}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-            <Spacer space={'8%'} />
-            <CTA
-              title={'Wait for driver'}
-              textTransform={'capitalize'}
-              onPress={onClose}
-              bottomCheck={1}
-            />
+                      {item?.title}
+                    </Text>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      height: 2,
+                      backgroundColor: '#D9D9D9',
+                      // marginTop: '1%',
+                    }}
+                  />
+                </View>
+              );
+            })}
           </View>
+          <Spacer space={'8%'} />
+          <CTA
+            title={'Wait for driver'}
+            textTransform={'capitalize'}
+            onPress={onClose}
+            bottomCheck={1}
+          />
         </View>
-      </Modal>
+      </View>
+    </Modal>
   );
 };
 

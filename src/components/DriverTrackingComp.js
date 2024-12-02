@@ -78,12 +78,12 @@ const styles = StyleSheet.create({
   },
   packetImageView: {
     position: 'absolute',
-    top:hp('20%'),
+    top:hp('16%'),
     right: '0.1%',
   },
   packetImage: {
-    height: 100,
-    width: 100,
+    height: 90,
+    width: 90,
   },
   bottomLine: {
     height: 1,

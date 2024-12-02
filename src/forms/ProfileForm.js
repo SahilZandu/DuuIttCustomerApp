@@ -249,7 +249,7 @@ const ProfileForm = ({navigation}) => {
 
                 <DropDownLabelComp
                   position={'relative'}
-                  marginTop={'-12%'}
+                  marginTop={hp('-4%')}
                   name={'gender'}
                   title={'Gender'}
                   value={initialValues.gender}

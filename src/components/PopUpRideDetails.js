@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -50,13 +50,13 @@ const PopUpRideDetails = ({
         <View
           style={{
             backgroundColor: '#FFFFFF',
-            width:wp('100%') ,
+            width: wp('100%'),
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
-            paddingBottom: '12%',
+            paddingBottom:Platform.OS == 'ios'?hp('5%') : hp('3%'),
             // height: hp('80%'),
           }}>
-          <View style={{marginHorizontal: 20, marginTop: '6%'}}>
+          <View style={{marginHorizontal: 20, marginTop: hp('3%')}}>
             <Text
               style={{
                 fontSize: RFValue(15),
@@ -91,7 +91,7 @@ const PopUpRideDetails = ({
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-around',
-                marginTop: '10%',
+                marginTop:hp("3.5%"),
               }}>
               <BTN
                 backgroundColor={colors.lightGreen}

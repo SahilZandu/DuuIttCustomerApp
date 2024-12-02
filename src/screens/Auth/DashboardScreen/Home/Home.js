@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   View,
-  KeyboardAvoidingView,
   Image,
   PermissionsAndroid,
   Platform,
@@ -13,7 +12,6 @@ import {styles} from './styles';
 import {homeCS} from '../../../../stores/DummyData/Home';
 import ChangeRoute from '../../../../components/ChangeRoute';
 import {mainArray} from '../../../../stores/DummyData/Home';
-import HomeSlider from '../../../../components/slider/homeSlider';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import RenderOffer from '../../../../components/RenderOffer';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
@@ -30,21 +28,12 @@ import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
 import {setCurrentLocation} from '../../../../components/GetAppLocation';
 
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
 
 export default function Home({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {saveFcmToken} = rootStore.dashboardStore;
   useNotifications(navigation);
-
-  const [sliderItems, setSliderItems] = useState(imageArray);
   const [internet, setInternet] = useState(true);
-
   useFocusEffect(
     useCallback(() => {
       requestNotificationPermission();
@@ -164,9 +153,6 @@ export default function Home({navigation}) {
               keyboardShouldPersistTaps={'handled'}>
               <View style={styles.innerView}>
                 <ChangeRoute data={homeCS} navigation={navigation} />
-
-                <HomeSlider data={sliderItems} paginationList={true} />
-
                 <RenderOffer data={mainArray} />
               </View>
               <View style={styles.bottomImageView}>

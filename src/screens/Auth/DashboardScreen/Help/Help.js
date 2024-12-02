@@ -157,6 +157,54 @@ const upperIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22
 </svg>`;
 
 
+// import React from 'react';
+// import { View, StyleSheet } from 'react-native';
+// import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
+
+// export default function Help() {
+//   return (
+//     <View style={styles.container}>
+//       <Svg height="200" width="200" viewBox="0 0 200 200">
+//         {/* Gradient Definition */}
+//         <Defs>
+//           <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+//             <Stop offset="0%" stopColor="blue" stopOpacity="1" />
+//             <Stop offset="10%" stopColor="cyan" stopOpacity="1" />
+//             <Stop offset="30%" stopColor="gray" stopOpacity="1" />
+//           </LinearGradient>
+//         </Defs>
+
+//         {/* Half Arc Path */}
+//         <Path
+//           d="M 10,100 A 90,90 0 0,1 190,100" // Half arc path
+//           fill="none"
+//           stroke="url(#grad)" // Use the gradient as stroke
+//           strokeWidth="10"
+//         />
+
+//         {/* Transparent Half */}
+//         {/* <Path
+//           d="M 190,100 A 90,90 0 0,1 10,100" // Other half of the arc
+//           fill="none"
+//           stroke="gray" // Set a light or transparent color
+//           strokeOpacity="0.2" // Adjust visibility of the non-filled half
+//           strokeWidth="10"
+//         /> */}
+//       </Svg>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#fff',
+  
+//   },
+// });
+
 
 
 // import React, {Component, useCallback, useEffect, useState} from 'react';

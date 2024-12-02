@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     width: wp('89%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6%',
+    marginTop: '5%',
   },
   touchView: {
     justifyContent: 'center',

@@ -21,6 +21,7 @@ import Url from '../../api/Url';
 import {getCurrentLocation, setCurrentLocation} from '../GetAppLocation';
 import {getGeoCodes} from '../GeoCodeAddress';
 import {useFocusEffect} from '@react-navigation/native';
+import { rootStore } from '../../stores/rootStore';
 
 let geoLocation ={
   lat: null,
@@ -28,6 +29,7 @@ let geoLocation ={
 }
 
 const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
+  const {currentAddress}=rootStore.myAddressStore
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -36,7 +38,7 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
 
     return d ? d : '';
   };
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(currentAddress?.address);
   const [isRefersh, setIsRefersh] = useState(false);
   // const [geoLocation, setGeoLocation] = useState({
   //   lat: getLocation('lat'),
@@ -45,20 +47,21 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
 
   useFocusEffect(
     useCallback(() => {
+      setAddress(currentAddress?.address)
       setCurrentLocation();
       setTimeout(()=>{
         if (getLocation) {
           onUpdateLatLng();
           setIsRefersh(true)
         }
-      },1000)
+      },300)
     },[appUserInfo]),
   );
 
   useEffect(()=>{
     setTimeout(() => {
       getCurrentAddress();
-    }, 1000);
+    },500);
   },[isRefersh])
 
   const onUpdateLatLng = () => {
@@ -69,7 +72,7 @@ const DashboardHeader2 = ({navigation, value, onPress, appUserInfo}) => {
     setIsRefersh(true);
     setTimeout(() => {
       setIsRefersh(false);
-    }, 1000);
+    },500);
   };
 
   const getCurrentAddress = async () => {

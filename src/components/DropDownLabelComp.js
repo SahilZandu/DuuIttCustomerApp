@@ -58,7 +58,7 @@ const DropDownLabelComp = ({
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: '3%',
+                marginTop: key == 0 ? '1%' : '3%',
               }}
               key={key}
               onPress={() => {

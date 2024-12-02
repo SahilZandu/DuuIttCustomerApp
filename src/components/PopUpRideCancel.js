@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,14 +12,13 @@ import Spacer from '../halpers/Spacer';
 import BTN from './cta/BTN';
 import {fonts} from '../theme/fonts/fonts';
 
-
 const PopUpRideCancel = ({
   isVisible,
   onClose,
   title,
   message,
   onCancelRequest,
-  loading
+  loading,
 }) => {
   return (
     <Modal
@@ -46,14 +45,13 @@ const PopUpRideCancel = ({
         }}>
         <View
           style={{
-            backgroundColor:colors.white,
+            backgroundColor: colors.white,
             width: '100%',
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
-            paddingBottom: '12%',
-            // height: hp('80%'),
+            paddingBottom: Platform.OS == 'ios' ? hp('5%') : hp('3%'),
           }}>
-          <Spacer space={'2%'} />
+          <Spacer space={'1%'} />
 
           <View style={{marginHorizontal: 24}}>
             <Text

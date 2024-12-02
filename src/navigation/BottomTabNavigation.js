@@ -50,8 +50,8 @@ export function DashboardBottomNavigator  () {
               break;
             case 'tab2':
               iconName = focused
-                ? bottomTabIcons.focusPromoIcon
-                : bottomTabIcons.promoIcon;
+                ? bottomTabIcons.focusExploreIcon
+                : bottomTabIcons.exploreIcon;
               break;
             case 'tab3':
                 iconName = focused
@@ -83,7 +83,7 @@ export function DashboardBottomNavigator  () {
               label = 'Home';
               break;
             case 'tab2':
-              label = 'Offers';
+              label = 'Explore';
               break;
             case 'tab3':
               label = 'Orders';
@@ -97,9 +97,10 @@ export function DashboardBottomNavigator  () {
 
           return (
             <View style={{
-                marginTop:'-5%',
+                // marginTop:hp('-4%'),
                 justifyContent:'center',
-                alignItems:'center'
+                alignItems:'center',
+                bottom:hp('0.8%')
                 }}>
             <Text style={{
                 textAlign:'center',
@@ -195,8 +196,8 @@ export function RideBottomNavigator  () {
             //   break;
             default:
               iconName = focused
-                ? bottomTabIcons.focusHomeIcon
-                : bottomTabIcons.homeIcom;
+                ? bottomTabIcons.focusRideIcon
+                : bottomTabIcons.rideIcon;
           }
           return (
             <View style={styles.iconContainer}>
@@ -227,9 +228,10 @@ export function RideBottomNavigator  () {
 
           return (
             <View style={{
-                marginTop:'-5%',
+                // marginTop:'-5%',
                 justifyContent:'center',
-                alignItems:'center'
+                alignItems:'center',
+                bottom:hp('0.8%')
                 }}>
             <Text style={{
                 textAlign:'center',
@@ -325,8 +327,8 @@ export function FoodBottomNavigator  () {
             //   break;
             default:
               iconName = focused
-                ? bottomTabIcons.focusHomeIcon
-                : bottomTabIcons.homeIcom;
+                ? bottomTabIcons.focusOrderIcon
+                : bottomTabIcons.foodIcon;
           }
           return (
             <View style={styles.iconContainer}>
@@ -357,9 +359,10 @@ export function FoodBottomNavigator  () {
 
           return (
             <View style={{
-                marginTop:'-5%',
+                // marginTop:'-5%',
                 justifyContent:'center',
-                alignItems:'center'
+                alignItems:'center',
+                bottom:hp('0.8%')
                 }}>
             <Text style={{
                 textAlign:'center',
@@ -455,8 +458,8 @@ export function ParcelBottomNavigator  () {
             //   break;
             default:
               iconName = focused
-                ? bottomTabIcons.focusHomeIcon
-                : bottomTabIcons.homeIcom;
+                ? bottomTabIcons.focusParcelIcon
+                : bottomTabIcons.parcelIcon;
           }
           return (
             <View style={styles.iconContainer}>
@@ -487,9 +490,10 @@ export function ParcelBottomNavigator  () {
 
           return (
             <View style={{
-                marginTop:'-5%',
+                // marginTop:'-5%',
                 justifyContent:'center',
-                alignItems:'center'
+                alignItems:'center',
+                bottom:hp('0.8%')
                 }}>
             <Text style={{
                 textAlign:'center',
@@ -559,6 +563,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+    marginTop:hp('-1%')
     // paddingBottom: '0%',
   },
 //   tabBarLabelStyle:{
@@ -572,7 +577,7 @@ const styles = {
     borderTopRightRadius:15,
     borderTopLeftRadius:15,
     paddingVertical: '2%',
-    height: hp('7%'),
+    height: hp('7.5%'),
     backgroundColor:colors.white, // Make the background transparent
     borderTopWidth:0,
     paddingBottom: 0,

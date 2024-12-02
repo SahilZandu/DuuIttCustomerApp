@@ -287,7 +287,7 @@ const TrackingOrderForm = ({navigation}) => {
 
                   name: item?.rider?.name
                     ? item?.rider?.name
-                    : 'Felicia Cudmore',
+                    : 'DuuItt Rider',
                   rating: '4.5',
                 }}
                 onMessage={() => {

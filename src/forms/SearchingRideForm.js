@@ -90,7 +90,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   const [rideDetailsVisible, setRideDetailsVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(imageArray);
   const [multipleRider, setMultipleRider] = useState(true);
-  const [minMaxHp, setMinMaxHp] = useState(screenHeight(79));
+  const [minMaxHp, setMinMaxHp] = useState(screenHeight(78));
 
   const getLocation = type => {
     let d =
@@ -427,7 +427,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
       if (nativeEvent?.translationY >= 0) {
         setMinMaxHp(screenHeight(35));
       } else {
-        setMinMaxHp(screenHeight(79));
+        setMinMaxHp(screenHeight(78));
       }
     }
     // if(nativeEvent?.absoluteY >= 451 && nativeEvent?.absoluteY <= 600){
@@ -528,7 +528,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
                     onDotPress();
                   }}
                 />
-                {minMaxHp == screenHeight(79) && (
+                {minMaxHp == screenHeight(78) && (
                   <>
                     <ImageNameRatingComp
                     parcelInfo={parcelInfo}
