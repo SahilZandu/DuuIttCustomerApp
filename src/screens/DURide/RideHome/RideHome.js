@@ -249,7 +249,7 @@ export default function RideHome({navigation}) {
               </View>
               <View style={styles.bottomImageView}>
                 <Image
-                  resizeMode="cover"
+                  resizeMode='contain'
                   style={styles.bottomImage}
                   source={appImages.rideHomeBootmImage}
                 />

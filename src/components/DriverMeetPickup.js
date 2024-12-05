@@ -15,21 +15,15 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {appImages, appImagesSvg} from '../commons/AppImages';
+import { silderArray } from '../stores/DummyData/Home';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import MeetingPickupComp from './MeetPickupComp';
 import HomeSlider from './slider/homeSlider';
 
 
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
-
 const DriverMeetPickup = ({topLine,sliderData,onPressDot}) => {
-  const [sliderItems, setSliderItems] = useState(imageArray);
+  const [sliderItems, setSliderItems] = useState(silderArray);
 
   return (
     <View>

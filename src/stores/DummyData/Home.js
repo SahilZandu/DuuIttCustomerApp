@@ -156,3 +156,12 @@ export const pickUpHistory = [
     address: 'Airport Road, Sector 118, Sector 73, Sahibzada....',
   },
 ];
+
+export const silderArray = [
+  {id: 1, image: appImages.sliderImage1},
+  {id: 2, image: appImages.sliderImage2},
+  {id: 3, image: appImages.sliderImage1},
+  {id: 4, image: appImages.sliderImage2},
+];
+
+

@@ -125,6 +125,7 @@ import {
   View,
   Image,
   FlatList,
+  Platform,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {SvgXml} from 'react-native-svg';
@@ -136,6 +137,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {screenHeight} from '../halpers/matrics';
+import {Surface} from 'react-native-paper';
 
 const ChangeRoute = ({data, navigation}) => {
   const onRoutePress = item => {
@@ -153,126 +155,140 @@ const ChangeRoute = ({data, navigation}) => {
   const renderItem = ({item, index}) => {
     return (
       <>
-        {index % 2 == 0 ? (
-          <TouchableOpacity
-            onPress={() => {
-              onRoutePress(item);
-            }}
-            activeOpacity={0.8}
-            key={index}
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              height: screenHeight(14),
-              backgroundColor: colors.white,
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: colors.black30,
-              marginTop: '5%',
-            }}>
-            <View style={{flex: 1, marginLeft: wp('5%'), marginTop: hp('2%')}}>
-              <SvgXml xml={item?.duIcon} />
-              <Text
-                style={{
-                  fontSize: RFValue(15),
-                  fontFamily: fonts.bold,
-                  color: colors.color27,
-                  marginTop: '2%',
-                }}>
-                {item?.name}
-              </Text>
-
-              <Text
-                numberOfLines={2}
-                style={{
-                  fontSize: RFValue(12),
-                  fontFamily: fonts.regular,
-                  color: colors.black75,
-                  marginTop: '1%',
-                  width: wp('45%'),
-                }}>
-                {item?.title}
-              </Text>
-            </View>
-            <View
+        <Surface
+          elevation={2}
+          style={{
+            shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black85, // You can customize shadow color
+            backgroundColor: colors.white,
+            alignSelf: 'center',
+            borderRadius: 10,
+            height: hp('14%'),
+            width: wp('88%'),
+            marginTop: '5%',
+            // paddingVertical: '5%',
+          }}>
+          {index % 2 == 0 ? (
+            <TouchableOpacity
+              onPress={() => {
+                onRoutePress(item);
+              }}
+              activeOpacity={0.8}
+              key={index}
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: wp('3%'),
+                flex: 1,
+                flexDirection: 'row',
+                // height: screenHeight(14),
+                // backgroundColor: colors.white,
+                // borderRadius: 10,
+                // borderWidth: 1,
+                // borderColor: colors.black30,
+                // marginTop: '5%',
               }}>
-              <Image
-                resizeMode="contain"
-                style={{
-                  alignSelf: 'center',
-                  width: wp('32%'),
-                  height: 130,
-                  bottom: hp('-1%'),
-                }}
-                source={item?.image}
-              />
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              onRoutePress(item);
-            }}
-            activeOpacity={0.8}
-            key={index}
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              height: screenHeight(14),
-              backgroundColor: colors.white,
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: colors.colorD9,
-              marginTop: '5%',
-            }}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginLeft: wp('5%'),
-              }}>
-              <Image
-                resizeMode="contain"
-                style={{
-                  alignSelf: 'center',
-                  width: wp('32%'),
-                  height: 130,
-                  bottom: hp('-1%'),
-                  left: wp('-2%'),
-                }}
-                source={item?.image}
-              />
-            </View>
-            <View style={{marginLeft: wp('8%'), marginTop: hp('2%')}}>
-              <SvgXml xml={item?.duIcon} />
-              <Text
-                style={{
-                  fontSize: RFValue(15),
-                  fontFamily: fonts.bold,
-                  color: colors.color27,
-                  marginTop: '2%',
-                }}>
-                {item?.name}
-              </Text>
+              <View
+                style={{flex: 1, marginLeft: wp('5%'), marginTop: hp('2%')}}>
+                <SvgXml xml={item?.duIcon} />
+                <Text
+                  style={{
+                    fontSize: RFValue(15),
+                    fontFamily: fonts.bold,
+                    color: colors.color27,
+                    marginTop: '2%',
+                  }}>
+                  {item?.name}
+                </Text>
 
-              <Text
-                numberOfLines={2}
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontSize: RFValue(12),
+                    fontFamily: fonts.regular,
+                    color: colors.black75,
+                    marginTop: '1%',
+                    width: wp('45%'),
+                  }}>
+                  {item?.title}
+                </Text>
+              </View>
+              <View
                 style={{
-                  fontSize: RFValue(12),
-                  fontFamily: fonts.regular,
-                  color: colors.black75,
-                  marginTop: '1%',
-                  width: wp('45%'),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: wp('3%'),
                 }}>
-                {item?.title}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    alignSelf: 'center',
+                    width: wp('32%'),
+                    height: 130,
+                    bottom: hp('-1%'),
+                  }}
+                  source={item?.image}
+                />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                onRoutePress(item);
+              }}
+              activeOpacity={0.8}
+              key={index}
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                // height: screenHeight(14),
+                // backgroundColor: colors.white,
+                // borderRadius: 10,
+                // borderWidth: 1,
+                // borderColor: colors.colorD9,
+                // marginTop: '5%',
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginLeft: wp('5%'),
+                }}>
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    alignSelf: 'center',
+                    width: wp('32%'),
+                    height: 130,
+                    bottom: hp('-1%'),
+                    left: wp('-2%'),
+                  }}
+                  source={item?.image}
+                />
+              </View>
+              <View style={{marginLeft: wp('8%'), marginTop: hp('2%')}}>
+                <SvgXml xml={item?.duIcon} />
+                <Text
+                  style={{
+                    fontSize: RFValue(15),
+                    fontFamily: fonts.bold,
+                    color: colors.color27,
+                    marginTop: '2%',
+                  }}>
+                  {item?.name}
+                </Text>
+
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontSize: RFValue(12),
+                    fontFamily: fonts.regular,
+                    color: colors.black75,
+                    marginTop: '1%',
+                    width: wp('45%'),
+                  }}>
+                  {item?.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        </Surface>
       </>
     );
   };

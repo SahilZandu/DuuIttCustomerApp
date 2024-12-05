@@ -21,14 +21,8 @@ import {rootStore} from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
 import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
+import { silderArray } from '../stores/DummyData/Home';
 
-
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
 
 const RidePriceForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
@@ -39,7 +33,7 @@ const RidePriceForm = ({navigation}) => {
   const [dropLocation, setDropLocation] = useState('');
   const [weight, setWeight] = useState(20);
   const [quantity, setQuantity] = useState(1);
-  const [sliderItems, setSliderItems] = useState(imageArray);
+  const [sliderItems, setSliderItems] = useState(silderArray);
   const [isAddressModal, setIsAddressModal] = useState(false);
   const [isStatus, setIsStatus] = useState('');
   const [isSecure, setIsSecure] = useState(false);

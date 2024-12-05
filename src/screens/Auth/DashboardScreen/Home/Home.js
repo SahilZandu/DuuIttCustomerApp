@@ -149,6 +149,7 @@ export default function Home({navigation}) {
           <DashboardHeader title={'Home'} />
           <View style={styles.mainView}>
             <AppInputScroll
+            Pb={'0%'}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
               <View style={styles.innerView}>
@@ -157,7 +158,7 @@ export default function Home({navigation}) {
               </View>
               <View style={styles.bottomImageView}>
                 <Image
-                  resizeMode="cover"
+                  resizeMode='contain'
                   style={styles.bottomImage}
                   source={appImages.mainHomeBootmImage}
                 />

@@ -17,7 +17,6 @@ export const styles = StyleSheet.create({
   },
   mainView:{
     flex:1,
-    // marginHorizontal:10
   },
   innerView:{
     justifyContent:'center',

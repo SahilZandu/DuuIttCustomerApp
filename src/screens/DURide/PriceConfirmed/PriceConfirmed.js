@@ -27,14 +27,9 @@ import HomeSlider from '../../../components/slider/homeSlider';
 import {rootStore} from '../../../stores/rootStore';
 import MapRoute from '../../../components/MapRoute';
 import {PanGestureHandler} from 'react-native-gesture-handler';
+import { silderArray } from '../../../stores/DummyData/Home';
 
 const paymentMethod = ['Cash', 'QR Code'];
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
 
 export default function PriceConfirmed({navigation, route}) {
   const {item} = route.params;
@@ -45,7 +40,7 @@ export default function PriceConfirmed({navigation, route}) {
   const [initialValues, setInitialValues] = useState({
     paymentMethods: 'Cash',
   });
-  const [sliderItems, setSliderItems] = useState(imageArray);
+  const [sliderItems, setSliderItems] = useState(silderArray);
   const [total, setTotal] = useState(0);
   const [minMaxHp, setMinMaxHp] = useState(hp('80%'));
   const [pickDropDetails, setPickDropDetails] = useState(item);

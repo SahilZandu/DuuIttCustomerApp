@@ -35,6 +35,7 @@ import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
 import InputFieldLabel from '../components/InputFieldLabel';
 import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
+import { silderArray } from '../stores/DummyData/Home';
 
 // let categories = [
 //   {id: 1, active: 0, name: 'Documents'},
@@ -64,12 +65,6 @@ const parcelInst = [
   },
 ];
 
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
 
 const PriceDetailsForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
@@ -82,7 +77,7 @@ const PriceDetailsForm = ({navigation}) => {
   const [quantity, setQuantity] = useState(1);
   // const [categoriesShow, setCategoriesShow] = useState(categories);
   // const [selectCate, setSelectCate] = useState([]);
-  const [sliderItems, setSliderItems] = useState(imageArray);
+  const [sliderItems, setSliderItems] = useState(silderArray);
   const [isAddressModal, setIsAddressModal] = useState(false);
   const [isStatus, setIsStatus] = useState('');
   const [isSecure, setIsSecure] = useState(false);

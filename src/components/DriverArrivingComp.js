@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
   },
   textImageView: {
     flexDirection: 'row',
-    marginTop: '3%',
+    justifyContent:'center'
+    // marginTop: '1%',
   },
   DriverArriveText: {
     flex: 1,

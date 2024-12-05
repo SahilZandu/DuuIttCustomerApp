@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View,Platform,Text } from 'react-native';
+import {View, Platform, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   heightPercentageToDP as hp,
@@ -19,12 +19,9 @@ import RideHome from '../screens/DURide/RideHome/RideHome';
 import FoodHome from '../screens/DUFood/FoodHome/FoodHome';
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 
-
-
-
 const Tab = createBottomTabNavigator();
 
-export function DashboardBottomNavigator  () {
+export function DashboardBottomNavigator() {
   const [update, setUpdate] = useState(true);
 
   const handleAnimation = () => {
@@ -33,7 +30,6 @@ export function DashboardBottomNavigator  () {
       setUpdate(true);
     }, 200);
   };
-
 
   return (
     <Tab.Navigator
@@ -54,12 +50,12 @@ export function DashboardBottomNavigator  () {
                 : bottomTabIcons.exploreIcon;
               break;
             case 'tab3':
-                iconName = focused
+              iconName = focused
                 ? bottomTabIcons.focusOrderIcon
                 : bottomTabIcons.orderIcon;
               break;
             case 'tab4':
-                iconName = focused
+              iconName = focused
                 ? bottomTabIcons.focusProfileIcon
                 : bottomTabIcons.profileIcon;
               break;
@@ -70,9 +66,7 @@ export function DashboardBottomNavigator  () {
           }
           return (
             <View style={styles.iconContainer}>
-              <SvgXml
-                xml={iconName}
-              />
+              <SvgXml xml={iconName} />
             </View>
           );
         },
@@ -96,22 +90,23 @@ export function DashboardBottomNavigator  () {
           }
 
           return (
-            <View style={{
+            <View
+              style={{
                 // marginTop:hp('-4%'),
-                justifyContent:'center',
-                alignItems:'center',
-                bottom:hp('0.8%')
+                justifyContent: 'center',
+                alignItems: 'center',
+                bottom: hp('0.8%'),
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: focused ? colors.main : colors.colorAF,
+                  fontSize: RFValue(11),
+                  fontWeight: focused ? '600' : '500',
+                  textTransform: 'uppercase',
                 }}>
-            <Text style={{
-                textAlign:'center',
-                color: focused ? colors.main : colors.colorAF,
-               fontSize:RFValue(11),
-              fontWeight:focused ? '600' :'500',
-              textTransform:'uppercase',
-            }}
-             >
-              {label}
-            </Text>
+                {label}
+              </Text>
             </View>
           );
         },
@@ -149,13 +144,11 @@ export function DashboardBottomNavigator  () {
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
       />
-
     </Tab.Navigator>
   );
-};
+}
 
-
-export function RideBottomNavigator  () {
+export function RideBottomNavigator() {
   const [update, setUpdate] = useState(true);
 
   const handleAnimation = () => {
@@ -164,7 +157,6 @@ export function RideBottomNavigator  () {
       setUpdate(true);
     }, 200);
   };
-
 
   return (
     <Tab.Navigator
@@ -185,7 +177,7 @@ export function RideBottomNavigator  () {
             //     : bottomTabIcons.activityIcon;
             //   break;
             case 'tab2':
-                iconName = focused
+              iconName = focused
                 ? bottomTabIcons.focusAddresIcon
                 : bottomTabIcons.addressIcon;
               break;
@@ -201,9 +193,7 @@ export function RideBottomNavigator  () {
           }
           return (
             <View style={styles.iconContainer}>
-              <SvgXml
-                xml={iconName}
-              />
+              <SvgXml xml={iconName} />
             </View>
           );
         },
@@ -227,22 +217,23 @@ export function RideBottomNavigator  () {
           }
 
           return (
-            <View style={{
+            <View
+              style={{
                 // marginTop:'-5%',
-                justifyContent:'center',
-                alignItems:'center',
-                bottom:hp('0.8%')
+                justifyContent: 'center',
+                alignItems: 'center',
+                bottom: hp('0.8%'),
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: focused ? colors.main : colors.colorAF,
+                  fontSize: RFValue(11),
+                  fontWeight: focused ? '600' : '500',
+                  textTransform: 'uppercase',
                 }}>
-            <Text style={{
-                textAlign:'center',
-                color: focused ? colors.main : colors.colorAF,
-               fontSize:RFValue(11),
-              fontWeight:focused ? '600' :'500',
-              textTransform:'uppercase',
-            }}
-             >
-              {label}
-            </Text>
+                {label}
+              </Text>
             </View>
           );
         },
@@ -273,7 +264,7 @@ export function RideBottomNavigator  () {
         component={MyAddress}
         // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
-        initialParams={{screenName: 'ride' }} // Pass initial params
+        initialParams={{screenName: 'ride'}} // Pass initial params
       />
       {/* <Tab.Screen
         name="tab4"
@@ -281,12 +272,11 @@ export function RideBottomNavigator  () {
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
       /> */}
-
     </Tab.Navigator>
   );
-};
+}
 
-export function FoodBottomNavigator  () {
+export function FoodBottomNavigator() {
   const [update, setUpdate] = useState(true);
 
   const handleAnimation = () => {
@@ -295,7 +285,6 @@ export function FoodBottomNavigator  () {
       setUpdate(true);
     }, 200);
   };
-
 
   return (
     <Tab.Navigator
@@ -315,11 +304,11 @@ export function FoodBottomNavigator  () {
             //     ? bottomTabIcons.focusOrderIcon
             //     : bottomTabIcons.orderIcon;
             //   break;
-              case 'tab2':
-                iconName = focused
-                  ? bottomTabIcons.focusAddresIcon
-                  : bottomTabIcons.addressIcon;
-                break;
+            case 'tab2':
+              iconName = focused
+                ? bottomTabIcons.focusAddresIcon
+                : bottomTabIcons.addressIcon;
+              break;
             // case 'tab4':
             //     iconName = focused
             //     ? bottomTabIcons.focusProfileIcon
@@ -332,9 +321,7 @@ export function FoodBottomNavigator  () {
           }
           return (
             <View style={styles.iconContainer}>
-              <SvgXml
-                xml={iconName}
-              />
+              <SvgXml xml={iconName} />
             </View>
           );
         },
@@ -358,22 +345,23 @@ export function FoodBottomNavigator  () {
           }
 
           return (
-            <View style={{
+            <View
+              style={{
                 // marginTop:'-5%',
-                justifyContent:'center',
-                alignItems:'center',
-                bottom:hp('0.8%')
+                justifyContent: 'center',
+                alignItems: 'center',
+                bottom: hp('0.8%'),
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: focused ? colors.main : colors.colorAF,
+                  fontSize: RFValue(11),
+                  fontWeight: focused ? '600' : '500',
+                  textTransform: 'uppercase',
                 }}>
-            <Text style={{
-                textAlign:'center',
-                color: focused ? colors.main : colors.colorAF,
-               fontSize:RFValue(11),
-              fontWeight:focused ? '600' :'500',
-              textTransform:'uppercase',
-            }}
-             >
-              {label}
-            </Text>
+                {label}
+              </Text>
             </View>
           );
         },
@@ -404,7 +392,7 @@ export function FoodBottomNavigator  () {
         component={MyAddress}
         // options={{tabBarLabel: 'Orders'}}
         listeners={{tabPress: handleAnimation}}
-        initialParams={{screenName: 'food' }} // Pass initial params
+        initialParams={{screenName: 'food'}} // Pass initial params
       />
       {/* <Tab.Screen
         name="tab4"
@@ -412,12 +400,11 @@ export function FoodBottomNavigator  () {
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
       /> */}
-
     </Tab.Navigator>
   );
-};
+}
 
-export function ParcelBottomNavigator  () {
+export function ParcelBottomNavigator() {
   const [update, setUpdate] = useState(true);
 
   const handleAnimation = () => {
@@ -426,7 +413,6 @@ export function ParcelBottomNavigator  () {
       setUpdate(true);
     }, 200);
   };
-
 
   return (
     <Tab.Navigator
@@ -447,7 +433,7 @@ export function ParcelBottomNavigator  () {
             //   : bottomTabIcons.orderIcon;
             //   break;
             case 'tab2':
-                iconName = focused
+              iconName = focused
                 ? bottomTabIcons.focusAddresIcon
                 : bottomTabIcons.addressIcon;
               break;
@@ -463,9 +449,7 @@ export function ParcelBottomNavigator  () {
           }
           return (
             <View style={styles.iconContainer}>
-              <SvgXml
-                xml={iconName}
-              />
+              <SvgXml xml={iconName} />
             </View>
           );
         },
@@ -489,22 +473,23 @@ export function ParcelBottomNavigator  () {
           }
 
           return (
-            <View style={{
+            <View
+              style={{
                 // marginTop:'-5%',
-                justifyContent:'center',
-                alignItems:'center',
-                bottom:hp('0.8%')
+                justifyContent: 'center',
+                alignItems: 'center',
+                bottom: hp('0.8%'),
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: focused ? colors.main : colors.colorAF,
+                  fontSize: RFValue(11),
+                  fontWeight: focused ? '600' : '500',
+                  textTransform: 'uppercase',
                 }}>
-            <Text style={{
-                textAlign:'center',
-                color: focused ? colors.main : colors.colorAF,
-               fontSize:RFValue(11),
-              fontWeight:focused ? '600' :'500',
-              textTransform:'uppercase',
-            }}
-             >
-              {label}
-            </Text>
+                {label}
+              </Text>
             </View>
           );
         },
@@ -535,7 +520,7 @@ export function ParcelBottomNavigator  () {
         component={MyAddress}
         // options={{tabBarLabel: 'MyAddress'}}
         listeners={{tabPress: handleAnimation}}
-        initialParams={{screenName: 'parcel' }} // Pass initial params
+        initialParams={{screenName: 'parcel'}} // Pass initial params
       />
       {/* <Tab.Screen
         name="tab4"
@@ -543,13 +528,9 @@ export function ParcelBottomNavigator  () {
         // options={{tabBarLabel: 'Profile'}}
         listeners={{tabPress: handleAnimation}}
       /> */}
-
     </Tab.Navigator>
   );
-};
-
-
-
+}
 
 const styles = {
   main: {
@@ -558,30 +539,31 @@ const styles = {
     alignItems: 'center',
     backgroundColor: colors.white,
   },
-  
+
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop:hp('-1%')
+    marginTop: hp('-1%'),
     // paddingBottom: '0%',
   },
-//   tabBarLabelStyle:{
-//     fontSize: RFValue(11),
-//     fontFamily: fonts.bold,
-//     letterSpacing: 0.80,
-//     textTransform: 'capitalize',
-//     bottom: '17%',
-//   },
+  //   tabBarLabelStyle:{
+  //     fontSize: RFValue(11),
+  //     fontFamily: fonts.bold,
+  //     letterSpacing: 0.80,
+  //     textTransform: 'capitalize',
+  //     bottom: '17%',
+  //   },
   tabBarStyle: {
-    borderTopRightRadius:15,
-    borderTopLeftRadius:15,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
     paddingVertical: '2%',
     height: hp('7.5%'),
-    backgroundColor:colors.white, // Make the background transparent
-    borderTopWidth:0,
+    backgroundColor: colors.white, // Make the background transparent
+    borderTopWidth: 0,
     paddingBottom: 0,
-    shadowColor: Platform.OS === 'android' ? colors.black : 'rgba(0, 0, 0, 0.2)',
+    shadowColor:
+      Platform.OS === 'android' ? colors.black : 'rgba(0, 0, 0, 0.2)',
     shadowOffset: {
       width: 0,
       height: 0,
@@ -589,11 +571,5 @@ const styles = {
     shadowOpacity: 1,
     shadowRadius: 2,
     elevation: 20,
-    
   },
 };
-
-
-
-
-

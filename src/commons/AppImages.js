@@ -1,5 +1,5 @@
 export const appImagesSvg = {
-  backArrow: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  backArrow: `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none">
   <rect width="24" height="24" rx="8" fill="#000000" fill-opacity="0.00"/>
   <path d="M19 12H5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M12 19L5 12L12 5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

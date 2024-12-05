@@ -21,23 +21,17 @@ import GiftCard from './GiftCard';
 import Rewards from './Rewards';
 import NoInternet from '../../../../components/NoInternet';
 import {fetch} from '@react-native-community/netinfo';
+import { silderArray } from '../../../../stores/DummyData/Home';
 
 
 const tabs = [{text: 'Gift cards'}, {text: 'Rewards'}];
 
 let defaultType = 'Gift cards';
 
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
-
 export default function Promo({navigation}) {
-  const [sliderItems, setSliderItems] = useState(imageArray);
-  const [sliderItems1, setSliderItems1] = useState(imageArray);
-  const [sliderItems2, setSliderItems2] = useState(imageArray);
+  const [sliderItems, setSliderItems] = useState(silderArray);
+  const [sliderItems1, setSliderItems1] = useState(silderArray);
+  const [sliderItems2, setSliderItems2] = useState(silderArray);
   const [initialValues, setInitialValues] = useState({
     feedback: '',
   });

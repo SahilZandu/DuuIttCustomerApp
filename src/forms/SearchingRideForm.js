@@ -59,13 +59,8 @@ import Url from '../api/Url';
 import FastImage from 'react-native-fast-image';
 import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
+import { silderArray } from '../stores/DummyData/Home';
 
-let imageArray = [
-  {id: 1, image: appImages.sliderImage1},
-  {id: 2, image: appImages.sliderImage2},
-  {id: 3, image: appImages.sliderImage1},
-  {id: 4, image: appImages.sliderImage2},
-];
 
 const SearchingRideForm = ({navigation, route, screenName}) => {
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
@@ -88,7 +83,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   const [visible, setVisible] = useState(false);
   const [cancelVisible, setCancelVisible] = useState(false);
   const [rideDetailsVisible, setRideDetailsVisible] = useState(false);
-  const [sliderItems, setSliderItems] = useState(imageArray);
+  const [sliderItems, setSliderItems] = useState(silderArray);
   const [multipleRider, setMultipleRider] = useState(true);
   const [minMaxHp, setMinMaxHp] = useState(screenHeight(78));
 
