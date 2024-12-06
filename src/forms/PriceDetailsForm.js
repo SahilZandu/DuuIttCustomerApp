@@ -35,7 +35,7 @@ import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
 import InputFieldLabel from '../components/InputFieldLabel';
 import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
-import { silderArray } from '../stores/DummyData/Home';
+import {silderArray} from '../stores/DummyData/Home';
 
 // let categories = [
 //   {id: 1, active: 0, name: 'Documents'},
@@ -64,7 +64,6 @@ const parcelInst = [
     title: 'You can send liquid products upto (1kg-5kg)',
   },
 ];
-
 
 const PriceDetailsForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
@@ -133,7 +132,7 @@ const PriceDetailsForm = ({navigation}) => {
       receiver_address: newReceiverAddress,
       billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
       isSecure: isSecure,
-      order_type:'parcel',
+      order_type: 'parcel',
     };
     console.log('newdata--', newdata);
 
@@ -430,7 +429,8 @@ const PriceDetailsForm = ({navigation}) => {
             </AppInputScroll>
           </KeyboardAvoidingView>
 
-          <View style={{backgroundColor: colors.white, height: hp('9%')}}>
+          <View
+            style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
             <FormButton loading={loading} onPress={handlePrice} />
           </View>
         </>
@@ -440,7 +440,8 @@ const PriceDetailsForm = ({navigation}) => {
         onClose={() => {
           setIsAddressModal(false);
         }}>
-        <View style={{height: hp('58%'), backgroundColor: colors.white}}>
+        <View
+          style={{height: hp('58%'), backgroundColor: colors.appBackground}}>
           <SenderReceiverForm
             navigation={navigation}
             pickDrop={isStatus}

@@ -562,6 +562,7 @@ const styles = {
     backgroundColor: colors.white, // Make the background transparent
     borderTopWidth: 0,
     paddingBottom: 0,
+    position:'absolute',
     shadowColor:
       Platform.OS === 'android' ? colors.black : 'rgba(0, 0, 0, 0.2)',
     shadowOffset: {
@@ -571,5 +572,6 @@ const styles = {
     shadowOpacity: 1,
     shadowRadius: 2,
     elevation: 20,
+    // marginBottom:'3%'
   },
 };

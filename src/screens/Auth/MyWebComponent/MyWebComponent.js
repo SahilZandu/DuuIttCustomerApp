@@ -8,6 +8,7 @@ import {
 } from '../../../halpers/AppLink';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import Header from '../../../components/header/Header';
+import { colors } from '../../../theme/colors';
 
 export default function MyWebComponent({navigation, route}) {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,7 @@ export default function MyWebComponent({navigation, route}) {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor:colors.appBackground,}}>
       <Header
         onPress={() => {
           navigation.goBack();
@@ -31,14 +32,14 @@ export default function MyWebComponent({navigation, route}) {
       {loading && (
         <View
           style={{
-            height: hp('70%'),
+            height: hp('100%'),
             justifyContent: 'center',
             alignItems: 'center',
           }}>
           <ActivityIndicator size="large" color="#00ff00" />
         </View>
       )}
-      <View style={{flex: 1}}>
+      <View style={{flex: 1,}}>
         <WebView
           style={{flex: 1}}
           source={{uri: link}}

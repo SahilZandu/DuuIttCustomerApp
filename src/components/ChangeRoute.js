@@ -158,7 +158,7 @@ const ChangeRoute = ({data, navigation}) => {
         <Surface
           elevation={2}
           style={{
-            shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black85, // You can customize shadow color
+            shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
             backgroundColor: colors.white,
             alignSelf: 'center',
             borderRadius: 10,

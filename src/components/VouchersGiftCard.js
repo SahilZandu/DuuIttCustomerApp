@@ -30,7 +30,7 @@ const VouchersGiftCard = ({item, index, onViewPress, onBuyPress}) => {
 
   return (
     <View index={index} style={styles.container}>
-      <Surface elevation={3} style={styles.surfaceView}>
+      <Surface elevation={2} style={styles.surfaceView}>
         <View style={styles.innerMainView}>
           <View style={styles.imageView}>
             <View style={styles.outerViewCircel}>

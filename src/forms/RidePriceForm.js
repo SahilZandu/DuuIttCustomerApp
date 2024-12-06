@@ -156,7 +156,7 @@ const RidePriceForm = ({navigation}) => {
             </AppInputScroll>
           </KeyboardAvoidingView>
 
-          <View style={{backgroundColor: colors.white, height: hp('9%')}}>
+          <View style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
             <FormButton loading={loading} onPress={handlePrice} />
           </View>
         </>

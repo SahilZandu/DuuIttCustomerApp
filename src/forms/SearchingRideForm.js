@@ -68,7 +68,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   const {appUser} = rootStore.commonStore;
   const {updateOrderStatus} = rootStore.orderStore;
   const refRBSheet = useRef(null);
-  const {paymentMethod} = route.params;
+  const {paymentMethod,totalAmount} = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
   const [searchingFind, setSearchingFind] = useState('searching');
@@ -333,6 +333,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
       parcel_id: info?._id,
       geo_location: info?.sender_address?.geo_location,
       paymentMode: paymentMethod === 'Cash' ? 'cash' : 'online',
+      total_amount: totalAmount
     };
 
     const res = await parcelsFindRider(value, handleLoadingRider);
@@ -648,7 +649,7 @@ export default SearchingRideForm;
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.appBackground,
   },
   mapView: {
     flex: 1,

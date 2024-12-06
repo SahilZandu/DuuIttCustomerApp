@@ -51,7 +51,7 @@ function InputFieldLabel({
                 position: 'absolute',
                 top: -10,
                 left: marginLeft ? marginLeft : '5%',
-                backgroundColor: colors.white, // Use the same color as the screen background
+                backgroundColor: colors.appBackground, // Use the same color as the screen background
                 zIndex: 1, // Ensure it's above the input
                 paddingHorizontal: 5,
                 fontSize: RFValue(12),
@@ -68,8 +68,9 @@ function InputFieldLabel({
               alignItems: 'center',
               borderRadius: 10,
               borderWidth: borderWidth ? borderWidth : 1,
-              borderColor: colors.colorD9,
+              borderColor: colors.colorBB,
               paddingHorizontal: '4%',
+              backgroundColor:colors.appBackground
             }}>
             <TextInput
               editable={!rightIcon}
@@ -86,7 +87,7 @@ function InputFieldLabel({
                 height: hp('5.8%'),
                 color: colors.black,
                 fontSize: RFValue(13),
-                marginLeft:'2%'
+                marginLeft:'2%',
               }}
               maxLength={maxLength}
               {...otherProps}

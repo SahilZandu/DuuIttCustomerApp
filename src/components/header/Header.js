@@ -11,7 +11,7 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: colors.white,
+        backgroundColor:colors.appBackground,
         alignItems: 'center',
         paddingBottom: '3%',
         marginTop: '4%',

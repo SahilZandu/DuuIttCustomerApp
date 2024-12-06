@@ -393,7 +393,7 @@ export default TrackingOrderForm;
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: colors.screenBackground,
+    backgroundColor: colors.appBackground,
   },
   trackingSurfaceView: {
     shadowColor: colors.black50,

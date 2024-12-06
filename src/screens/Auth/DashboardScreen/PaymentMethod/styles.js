@@ -10,7 +10,7 @@ import { colors } from '../../../../theme/colors';
 export const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.appBackground,
   },
   upperMainView: {
     marginHorizontal: 20,

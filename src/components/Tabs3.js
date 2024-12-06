@@ -109,7 +109,7 @@ export default function Tabs3({
   };
 
   return (
-    <View>
+    <View style={{backgroundColor:colors.appBackground,justifyContent:'center'}}>
       <ScrollView
         bounces={false}
         ref={scrollViewRef}
@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
     height: screenHeight(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.white,
-    borderColor: isSelected ? colors.main : colors.white,
+    backgroundColor: colors.appBackground,
+    borderColor: isSelected ? colors.main : colors.appBackground,
     marginHorizontal: -3,
     borderBottomWidth: 2,
     marginLeft: index !== 0 ? '5%' : 0,

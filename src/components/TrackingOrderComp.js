@@ -31,7 +31,7 @@ const TrackingOrderComp = ({navigation, trackedArray}) => {
           navigation.navigate('trackingOrder');
         }}
         activeOpacity={0.9}>
-        <Surface elevation={3} style={styles.viewDetailsSurfaceView}>
+        <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
           <View style={styles.innerView}>
             <Image
               resizeMode="contain"
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   main: {
     position: 'absolute',
     alignSelf: 'center',
-    bottom: '1%',
+    bottom:hp('8.5%'),
   },
   upperSurfaceView: {
     width: wp('85%'),

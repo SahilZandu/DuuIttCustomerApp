@@ -179,7 +179,7 @@ export default function AddMyAddress({navigation, route}) {
       <Formik
         initialValues={initialValues}
         validationSchema={addMyAddressValidations()}>
-        <View style={{marginTop: '2%'}}>
+        <View style={{marginTop: '2%',justifyContent:'center'}}>
           <Text
             style={{
               fontSize: RFValue(17),
@@ -337,7 +337,7 @@ export default function AddMyAddress({navigation, route}) {
             }}>
             <View
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor:colors.appBackground,
                 width: '100%',
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10,

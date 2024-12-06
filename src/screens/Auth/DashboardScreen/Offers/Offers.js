@@ -74,7 +74,7 @@ export default function Offers({navigation}) {
         <>
           <DashboardHeader title={'Explore'} />
             <AppInputScroll
-            Pb={'20%'}
+            Pb={'35%'}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
               <View style={styles.innerMainView}>

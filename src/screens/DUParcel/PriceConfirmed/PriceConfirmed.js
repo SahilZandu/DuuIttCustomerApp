@@ -27,8 +27,16 @@ import HomeSlider from '../../../components/slider/homeSlider';
 import {rootStore} from '../../../stores/rootStore';
 import MapRoute from '../../../components/MapRoute';
 import {PanGestureHandler} from 'react-native-gesture-handler';
-import { silderArray } from '../../../stores/DummyData/Home';
+import {silderArray} from '../../../stores/DummyData/Home';
+import ModalPopUp from '../../../components/ModalPopUp';
+import {colors} from '../../../theme/colors';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {fonts} from '../../../theme/fonts/fonts';
+import {SvgXml} from 'react-native-svg';
+import LinearGradient from 'react-native-linear-gradient';
+import BTN from '../../../components/cta/BTN';
 
+let priceArray = [0, 10, 20, 30, 40, 50];
 const paymentMethod = ['Cash', 'QR Code'];
 
 export default function PriceConfirmed({navigation, route}) {
@@ -44,6 +52,10 @@ export default function PriceConfirmed({navigation, route}) {
   const [total, setTotal] = useState(0);
   const [minMaxHp, setMinMaxHp] = useState(hp('80%'));
   const [pickDropDetails, setPickDropDetails] = useState(item);
+  const [isPriceModal, setIsPriceModal] = useState(false);
+  const [fare, setFare] = useState(0);
+  const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedWidth, setSelectedWidth] = useState('0%');
 
   useFocusEffect(
     useCallback(() => {
@@ -54,6 +66,7 @@ export default function PriceConfirmed({navigation, route}) {
   useEffect(() => {
     if (Object?.keys(item || {})?.length > 0) {
       setTotal(item?.total_amount);
+      setFare(item?.total_amount);
       setPickUpLocation(item?.sender_address?.address);
       setDropLocation(item?.receiver_address?.address);
       setPickDropDetails(item);
@@ -74,8 +87,18 @@ export default function PriceConfirmed({navigation, route}) {
   };
 
   const handleFindRider = value => {
+    setInitialValues(value);
+    setMinMaxHp(hp('35%'));
+    setIsPriceModal(true);
+    //  navigation.navigate('searchingRide', {
+    //   paymentMethod: value?.paymentMethods,
+    // });
+  };
+
+  const handlePriceFindRider = () => {
     navigation.navigate('searchingRide', {
-      paymentMethod: value?.paymentMethods,
+      paymentMethod: initialValues?.paymentMethods,
+      totalAmount:total,
     });
   };
 
@@ -86,6 +109,53 @@ export default function PriceConfirmed({navigation, route}) {
     } else {
       setMinMaxHp(hp('80%'));
     }
+  };
+
+  const onNegative = () => {
+    if (fare < total) {
+      let newFare = total - 10;
+      let newCount = selectedCount - 0.2;
+      let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
+      setTotal(Number(newFare));
+      setSelectedCount(newCount);
+      setSelectedWidth(newWidth);
+    }
+  };
+
+  const onPositive = () => {
+    if (fare + priceArray.at(-1) > total) {
+      let newFare = total + 10;
+      let newCount = selectedCount + 0.2;
+      let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
+      setTotal(Number(newFare));
+      setSelectedCount(newCount);
+      setSelectedWidth(newWidth);
+    }
+  };
+
+  const ProgressBarWithGradient = ({progress}) => {
+    return (
+      <View
+        style={{
+          width: wp('86%'),
+          height: hp('0.9%'),
+          backgroundColor: colors.colorC5,
+          borderRadius: 5,
+          overflow: 'hidden',
+
+          alignSelf: 'center',
+        }}>
+        <LinearGradient
+          colors={['#28B056', '#63BE82', '#9DCBAD']} // Gradient colors
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}
+          style={{
+            width: `${progress * 100}%`, // Dynamic width based on progress
+            height: '100%',
+          }}
+        />
+      </View>
+    );
   };
 
   return (
@@ -159,6 +229,125 @@ export default function PriceConfirmed({navigation, route}) {
           </Formik>
         </Animated.View>
       </PanGestureHandler>
+      <ModalPopUp
+        isVisible={isPriceModal}
+        onClose={() => {
+          setIsPriceModal(false);
+        }}>
+        <View
+          style={{
+            height: hp('48%'),
+            backgroundColor: colors.white,
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          }}>
+          <View style={{marginHorizontal: 20}}>
+            <Text
+              style={{
+                fontSize: RFValue(15),
+                fontFamily: fonts.bold,
+                color: colors.black,
+                marginTop: '5%',
+              }}>
+              Raise your fair
+            </Text>
+            <Text
+              style={{
+                fontSize: RFValue(13),
+                fontFamily: fonts.regular,
+                color: colors.color24,
+                marginTop: '3%',
+                lineHeight: 20,
+              }}>
+              We charge no commission. Full amount goes to the rider
+            </Text>
+
+            <Text
+              style={{
+                fontSize: RFValue(32),
+                fontFamily: fonts.semiBold,
+                color: colors.black,
+                marginTop: '5%',
+                textAlign: 'center',
+              }}>
+              {currencyFormat(total)}
+            </Text>
+            <Text
+              style={{
+                fontSize: RFValue(12),
+                fontFamily: fonts.regular,
+                color: colors.black,
+                marginTop: '3%',
+                textAlign: 'center',
+              }}>
+              You can also directly type the fare
+            </Text>
+            <View style={{justifyContent: 'center', marginTop: hp('3%')}}>
+              <ProgressBarWithGradient progress={selectedCount} />
+              <SvgXml
+                style={{
+                  position: 'absolute',
+                  justifyContent: 'center',
+                  left: selectedWidth,
+                }}
+                xml={appImagesSvg.progessBarIcon}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                marginHorizontal: 10,
+                marginTop: '6%',
+              }}>
+              {priceArray?.map((item, i) => {
+                return (
+                  <View>
+                    <Text>{item}</Text>
+                  </View>
+                );
+              })}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                marginHorizontal: 10,
+                marginTop: '4%',
+              }}>
+              <SvgXml
+                onPress={() => {
+                  onNegative();
+                }}
+                width={30}
+                height={30}
+                xml={appImagesSvg.progessNegative}
+              />
+              <SvgXml
+                onPress={() => {
+                  onPositive();
+                }}
+                width={30}
+                height={30}
+                xml={appImagesSvg.progessPositive}
+              />
+            </View>
+            <View style={{marginTop: '10%'}}>
+              <BTN
+                width={wp('86%')}
+                title={`Book Now for ${currencyFormat(total)}`}
+                textTransform={'capitalize'}
+                onPress={() => {
+                  handlePriceFindRider();
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </ModalPopUp>
     </View>
   );
 }

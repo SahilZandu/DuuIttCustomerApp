@@ -335,6 +335,32 @@ export const appImagesSvg = {
   </clipPath>
   </defs>
   </svg>`,
+  progessBarIcon:`<svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+  <rect x="2.32715" y="2" width="28.4138" height="28" rx="14" stroke="#28B056" stroke-opacity="0.2" stroke-width="4"/>
+  <circle cx="16.3271" cy="16" r="10" fill="#28B056" stroke="white" stroke-width="4"/>
+  </svg>`,
+  progessNegative:`<svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+  <g clip-path="url(#clip0_4719_2359)">
+  <path d="M10.5 20C16.0228 20 20.5 15.5228 20.5 10C20.5 4.47715 16.0228 0 10.5 0C4.97715 0 0.5 4.47715 0.5 10C0.5 15.5228 4.97715 20 10.5 20Z" fill="#CCFBDC"/>
+  <path d="M7.1416 10H13.8588" stroke="#59D884" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_4719_2359">
+  <rect width="20" height="20" fill="white" transform="translate(0.5)"/>
+  </clipPath>
+  </defs>
+  </svg>`,
+  progessPositive:`<svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+  <g clip-path="url(#clip0_4719_2354)">
+  <path d="M10.5 20C16.0228 20 20.5 15.5228 20.5 10C20.5 4.47715 16.0228 0 10.5 0C4.97715 0 0.5 4.47715 0.5 10C0.5 15.5228 4.97715 20 10.5 20Z" fill="#28B056"/>
+  <path d="M10.5002 6.64148V13.3587M7.1416 10.0001H13.8588" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <defs>
+  <clipPath id="clip0_4719_2354">
+  <rect width="20" height="20" fill="white" transform="translate(0.5)"/>
+  </clipPath>
+  </defs>
+  </svg>`
 };
 
 export const bottomTabIcons = {

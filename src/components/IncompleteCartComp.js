@@ -36,7 +36,7 @@ const IncompleteCartComp = ({
 
   return (
     <View style={styles.main(trackedArray)}>
-      <Surface elevation={3} style={styles.viewDetailsSurfaceView}>
+      <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
         <View style={styles.innerView}>
           {/* <Image
               resizeMode="contain"
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   main: trackedArray => ({
     position: 'absolute',
     alignSelf: 'center',
-    bottom: trackedArray?.length > 0 ? screenHeight(12) : screenHeight(1),
+    bottom: trackedArray?.length > 0 ? screenHeight(19) : screenHeight(8.5),
   }),
   viewDetailsSurfaceView: {
     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color

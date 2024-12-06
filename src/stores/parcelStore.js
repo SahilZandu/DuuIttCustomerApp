@@ -88,6 +88,7 @@ export default class ParcelStore {
       parcel_id: value?.parcel_id,
       geo_location: value?.geo_location,
       payment_mode: value?.paymentMode,
+      total_amount: value?.total_amount
     };
 
     console.log('requestData:-', requestData);

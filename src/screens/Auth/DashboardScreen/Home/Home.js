@@ -149,7 +149,6 @@ export default function Home({navigation}) {
           <DashboardHeader title={'Home'} />
           <View style={styles.mainView}>
             <AppInputScroll
-            Pb={'0%'}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
               <View style={styles.innerView}>

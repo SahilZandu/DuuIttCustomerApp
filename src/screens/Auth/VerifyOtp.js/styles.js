@@ -10,7 +10,7 @@ import {
 export const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.appBackground,
   },
   mainContainer: {
     marginHorizontal: 30,

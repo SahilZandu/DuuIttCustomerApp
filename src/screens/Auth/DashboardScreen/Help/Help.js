@@ -78,7 +78,7 @@ export default function Help({navigation}) {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor:colors.white}}>
+    <View style={{flex: 1, backgroundColor:colors.appBackground}}>
         <Header
         onPress={() => {
           navigation.goBack();

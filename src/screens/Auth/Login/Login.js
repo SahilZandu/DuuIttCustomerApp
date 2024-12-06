@@ -2,27 +2,15 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {
   Text,
   View,
-  StyleSheet,
   ScrollView,
-  Pressable,
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
-  Alert,
 } from 'react-native';
 import {colors} from '../../../theme/colors';
 import LoginForm from '../../../forms/LoginForm';
-import {RFValue} from 'react-native-responsive-fontsize';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import {appImages} from '../commons/AppImages';
-import {SvgXml} from 'react-native-svg';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImagesSvg} from '../../../commons/AppImages';
 import Spacer from '../../../halpers/Spacer';
 import {Strings} from '../../../translates/strings';
 import {styles} from './styles';

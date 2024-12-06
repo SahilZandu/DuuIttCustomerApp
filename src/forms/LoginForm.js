@@ -13,6 +13,7 @@ import {Strings} from '../translates/strings';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import { rootStore } from '../stores/rootStore';
+import { colors } from '../theme/colors';
 
 const initialValues = {
   email: '',
@@ -111,7 +112,7 @@ export default LoginForm;
 const styles = StyleSheet.create({
 
   main:{
-    width: wp('85%'), alignSelf: 'center'
+    width: wp('85%'), alignSelf: 'center',
   },
 
   forgotView:{

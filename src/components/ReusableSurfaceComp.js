@@ -8,7 +8,7 @@ import {screenHeight, screenWidth} from '../halpers/matrics';
 
 const ReusableSurfaceComp = ({title, children}) => {
   return (
-    <Surface elevation={3} style={styles.container}>
+    <Surface elevation={2} style={styles.container}>
       <View style={styles.innerView}>
         <View style={styles.titleView} />
         <Text style={styles.title}>{title}</Text>

@@ -136,7 +136,7 @@ const GiftCard = ({navigation}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={giftMessageValidations()}>
-      <View style={{flex: 1, backgroundColor: colors.white}}>
+      <View style={{flex: 1, backgroundColor: colors.appBackground}}>
         <Header
           backArrow={true}
           title={'Gift Cards'}

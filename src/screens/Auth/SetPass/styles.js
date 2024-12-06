@@ -10,10 +10,11 @@ import {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.colors.appBackground,
   },
   screen: {
-    backgroundColor: colors.white,
+    // backgroundColor: colors.white,
+    justifyContent:'center'
   },
   orText: {
     fontSize: RFValue(13),

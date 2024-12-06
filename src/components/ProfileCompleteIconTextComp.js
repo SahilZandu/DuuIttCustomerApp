@@ -22,7 +22,7 @@ const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
   },[appUser])
 
   return (
-    <Surface elevation={3} style={styles.container}>
+    <Surface elevation={2} style={styles.container}>
       <View key={0} style={styles.innerView}>
         <TouchableOpacity
           activeOpacity={0.8}

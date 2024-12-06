@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, Image, DeviceEventEmitter} from 'react-native';
-import {appImages} from '../../../commons/AppImages';
+import {View, Image, DeviceEventEmitter, Text} from 'react-native';
+import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {styles} from './styles';
 import {
   heightPercentageToDP as hp,
@@ -70,6 +70,7 @@ export default function FoodHome({navigation}) {
     setVisible(false);
   };
 
+
   return (
     <View style={styles.container}>
       {internet == false ? (
@@ -131,12 +132,11 @@ export default function FoodHome({navigation}) {
                 />
               </View> */}
 
-              <View style={{marginHorizontal: 20,justifyContent:'center'}}>
+              <View style={{marginHorizontal: 20, justifyContent: 'center'}}>
                 <View
                   style={{
                     marginHorizontal: -10,
                     alignContent: 'center',
-                    // justifyContent: 'center',
                   }}>
                   <FoodSlider
                     data={sliderItems}

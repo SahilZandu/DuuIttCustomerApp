@@ -329,7 +329,7 @@ const SetLocationHistory = ({navigation}) => {
       </View>
       {(senderAddress?.address?.length > 0 &&
        receiverAddress?.address?.length > 0) &&
-       <View style={{backgroundColor:colors.white,height:hp("8%")}}>
+       <View style={{backgroundColor:colors.appBackground,height:hp("8%")}}>
         <Spacer space={'5%'}/>
        <CTA title={'continue'}
        onPress={()=>{ navigation.navigate('priceDetails')}}

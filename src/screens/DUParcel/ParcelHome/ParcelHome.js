@@ -7,9 +7,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
@@ -22,10 +19,8 @@ import MapRoute from '../../../components/MapRoute';
 import {setCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import moment from 'moment';
-import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import TrackingOrderComp from '../../../components/TrackingOrderComp';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
-import {getTabBarHeight} from '@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar';
 import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
@@ -170,10 +165,10 @@ export default function ParcelHome({navigation}) {
   //   setRecentOrder(res);
   // };
 
-  const handleLoading = v => {
-    setLoading(v);
-    console.log('yes it is being ...');
-  };
+  // const handleLoading = v => {
+  //   setLoading(v);
+  //   console.log('yes it is being ...');
+  // };
 
   const onUpdateUserInfo = () => {
     const {appUser} = rootStore.commonStore;
@@ -189,11 +184,11 @@ export default function ParcelHome({navigation}) {
 
   const getHeight = (trackedArray, incompletedArray) => {
     if (trackedArray?.length > 0 && incompletedArray?.length > 0) {
-      return '40%';
+      return hp('25%');
     } else if (trackedArray?.length > 0 || incompletedArray?.length > 0) {
-      return '22%';
+      return hp('16%');
     } else {
-      return '5%';
+      return hp('5%');
     }
   };
 
@@ -207,6 +202,7 @@ export default function ParcelHome({navigation}) {
       navigation.navigate('searchingRide', {
         paymentMethod:
           incompletedArray[0]?.payment_mode == 'cash' ? 'Cash' : 'Online',
+           totalAmount:incompletedArray[0]?.total_amount,
       });
     } else {
       navigation.navigate('priceConfirmed', {

@@ -8,6 +8,7 @@ import {
 import {rootStore} from '../../../stores/rootStore';
 import notifee, {AuthorizationStatus} from '@notifee/react-native';
 import { setCurrentLocation } from '../../../components/GetAppLocation';
+import { colors } from '../../../theme/colors';
 
 
 export default function Splash({navigation}) {
@@ -54,7 +55,7 @@ export default function Splash({navigation}) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#28B056',
+    backgroundColor:colors.main,
     justifyContent: 'center',
     alignItems: 'center',
   },

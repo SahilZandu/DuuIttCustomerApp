@@ -151,11 +151,11 @@ export default function RideHome({navigation}) {
 
   const getHeight = (trackedArray, incompletedArray) => {
     if (trackedArray?.length > 0 && incompletedArray?.length > 0) {
-      return '40%';
+      return hp('25%');
     } else if (trackedArray?.length > 0 || incompletedArray?.length > 0) {
-      return '22%';
+      return hp('16%');
     } else {
-      return '5%';
+      return hp('5%');
     }
   };
 
@@ -171,6 +171,7 @@ export default function RideHome({navigation}) {
       navigation.navigate('searchingRide', {
         paymentMethod:
           incompletedArray[0]?.payment_mode == 'cash' ? 'Cash' : 'Online',
+          totalAmount:incompletedArray[0]?.total_amount,
       });
     } else {
       navigation.navigate('priceConfirmed', {

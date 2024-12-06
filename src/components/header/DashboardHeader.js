@@ -268,18 +268,18 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
     }
   };
   return (
-    <View style={{backgroundColor: colors.white}}>
+    <View style={{backgroundColor:colors.appBackground,}}>
       <View
         style={{
           flexDirection: 'row',
-          backgroundColor: colors.backColorMain,
+          backgroundColor: colors.appBackground,
           alignItems: 'center',
           paddingBottom: '2%',
           marginTop: '4%',
           paddingHorizontal: 20,
         }}>
         <View
-          style={{flex: 1, backgroundColor: colors.white, marginLeft: '1%'}}>
+          style={{flex: 1, backgroundColor: colors.appBackground, marginLeft: '1%'}}>
           <Text
             numberOfLines={1}
             style={{

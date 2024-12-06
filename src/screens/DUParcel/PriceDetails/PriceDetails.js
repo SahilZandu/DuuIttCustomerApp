@@ -447,32 +447,14 @@
 
 
 
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {
-  Text,
-  TouchableOpacity,
   View,
-  Image,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
-import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
-import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import Header from '../../../components/header/Header';
-import SenderReceiverForm from '../../../forms/SenderReceiverForm';
 import PriceDetailsForm from '../../../forms/PriceDetailsForm';
 
 

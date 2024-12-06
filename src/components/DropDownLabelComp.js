@@ -103,7 +103,7 @@ const DropDownLabelComp = ({
             {
               top: position && isOpen ? '-0.1%' : '-0.5%',
               left: '5%',
-              backgroundColor: colors.white,
+              backgroundColor: colors.appBackground,
             },
           ]}>
           {title}
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: colors.colorD9,
+    borderColor: colors.colorBB,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

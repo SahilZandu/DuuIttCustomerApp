@@ -95,7 +95,7 @@ const DashboardHeader2 = ({
   return (
     <View
       style={{
-        backgroundColor: colors.backColorMain,
+        backgroundColor: colors.appBackground,
         // alignItems: 'center',
         justifyContent: 'center',
         paddingBottom: '3%',
@@ -117,7 +117,7 @@ const DashboardHeader2 = ({
         </TouchableOpacity>
 
         <View
-          style={{flex: 1, backgroundColor: colors.white, marginRight: '1%'}}>
+          style={{flex: 1, backgroundColor: colors.appBackground, marginRight: '1%'}}>
           <Text
             numberOfLines={1}
             style={{
@@ -178,7 +178,7 @@ const DashboardHeader2 = ({
               alignSelf: 'center',
               borderRadius: 10,
               borderWidth: 1,
-              borderColor: colors.screenBackground,
+              borderColor: colors.colorD9,
               backgroundColor: colors.screenBackground,
             }}>
             <TextInput

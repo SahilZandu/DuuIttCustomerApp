@@ -10,7 +10,7 @@ import {fonts} from '../../../theme/fonts/fonts';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.appBackground,
   },
   main: {
     flex: 1,
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
   btnView: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    bottom: '2%',
+    bottom:hp('8%'),
     right: wp('5%'),
     justifyContent: 'center',
     alignItems: 'center',

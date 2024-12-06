@@ -12,7 +12,6 @@ import { rootStore } from '../stores/rootStore';
 let data = {};
 
 export function useNotifications(navigation) {
-  const {appUser} = rootStore.commonStore;
   const {setAddParcelInfo}=rootStore.parcelStore;
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export function useNotifications(navigation) {
       data = remoteMessage?.data;
      
       // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
-      notifee.displayNotification(newa);
+       await notifee.displayNotification(newa);
 
       if (remoteMessage?.data?.route == "searchingRide") {
         let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data)
@@ -56,7 +55,6 @@ export function useNotifications(navigation) {
         // navigation.navigate('newOrder');
          DeviceEventEmitter.emit('picked', pickedDetails)
        } 
-
        if (remoteMessage?.data?.route == "dropped") {
         let droppedDetails = JSON.parse(remoteMessage?.data?.notification_data)
         //  setAddParcelInfo({})
@@ -70,52 +68,52 @@ export function useNotifications(navigation) {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = messaging().setBackgroundMessageHandler(
-      async remoteMessage => {
-        const channelId = await notifee.createChannel({
-        id: 'duuittcustomer.com',
-        name: 'duuitt',
-        priority: 'high',
-        });
-        (remoteMessage.notification.android = {
-          channelId: channelId,
-        }),
-          console.log('background notification:testing', remoteMessage);
-        // await notifee.incrementBadgeCount();
-        // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
-        if (remoteMessage?.data?.route == "searchingRide") {
-          let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data)
-          setAddParcelInfo(acceptedDetails)
-          console.log('JSON.parse searchingRide notification',acceptedDetails);
-          // navigation.navigate('newOrder');
-          DeviceEventEmitter.emit('newOrder', acceptedDetails)
-         } 
+  // useEffect(() => {
+  //   const unsubscribe = messaging().setBackgroundMessageHandler(
+  //     async remoteMessage => {
+  //       const channelId = await notifee.createChannel({
+  //       id: 'duuittcustomer.com',
+  //       name: 'duuitt',
+  //       priority: 'high',
+  //       });
+  //       (remoteMessage.notification.android = {
+  //         channelId: channelId,
+  //       }),
+  //         console.log('background notification:testing', remoteMessage);
+  //       // await notifee.incrementBadgeCount();
+  //       // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
+  //       if (remoteMessage?.data?.route == "searchingRide") {
+  //         let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data)
+  //         setAddParcelInfo(acceptedDetails)
+  //         console.log('JSON.parse searchingRide notification',acceptedDetails);
+  //         // navigation.navigate('newOrder');
+  //         DeviceEventEmitter.emit('newOrder', acceptedDetails)
+  //        } 
   
-         if (remoteMessage?.data?.route == "home") {
-          let cancelDetails = JSON.parse(remoteMessage?.data?.notification_data)
-           setAddParcelInfo(cancelDetails)
-           console.log('JSON.parse cancelDetails notification',cancelDetails);
-           DeviceEventEmitter.emit('cancelOrder', cancelDetails)
-         } 
-         if (remoteMessage?.data?.route == "picked") {
-          let pickedDetails = JSON.parse(remoteMessage?.data?.notification_data)
-           setAddParcelInfo(pickedDetails)
-           console.log('JSON.parse picked notification',pickedDetails);
-           DeviceEventEmitter.emit('picked', pickedDetails)
-         } 
+  //        if (remoteMessage?.data?.route == "home") {
+  //         let cancelDetails = JSON.parse(remoteMessage?.data?.notification_data)
+  //          setAddParcelInfo(cancelDetails)
+  //          console.log('JSON.parse cancelDetails notification',cancelDetails);
+  //          DeviceEventEmitter.emit('cancelOrder', cancelDetails)
+  //        } 
+  //        if (remoteMessage?.data?.route == "picked") {
+  //         let pickedDetails = JSON.parse(remoteMessage?.data?.notification_data)
+  //          setAddParcelInfo(pickedDetails)
+  //          console.log('JSON.parse picked notification',pickedDetails);
+  //          DeviceEventEmitter.emit('picked', pickedDetails)
+  //        } 
   
-         if (remoteMessage?.data?.route == "dropped") {
-          let droppedDetails = JSON.parse(remoteMessage?.data?.notification_data)
-          //  setAddParcelInfo({})
-           console.log('JSON.parse notification',droppedDetails);
-           DeviceEventEmitter.emit('dropped', droppedDetails)
-         } 
+  //        if (remoteMessage?.data?.route == "dropped") {
+  //         let droppedDetails = JSON.parse(remoteMessage?.data?.notification_data)
+  //         //  setAddParcelInfo({})
+  //          console.log('JSON.parse notification',droppedDetails);
+  //          DeviceEventEmitter.emit('dropped', droppedDetails)
+  //        } 
 
-      },
-    );
-    return unsubscribe;
-  }, []);
+  //     },
+  //   );
+  //   return unsubscribe;
+  // }, []);
 
   useEffect(() => {
     //   body: 'Custom sound',
@@ -171,7 +169,6 @@ export function useNotifications(navigation) {
     return unsubscribe;
   }, []);
 
- 
 
   useEffect(() => {
     const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {

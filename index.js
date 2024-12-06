@@ -11,12 +11,14 @@ import notifee, {
   AndroidCategory,
   EventType,
 } from '@notifee/react-native';
+import handleBackNotification from './src/halpers/useBackNotificationEmit';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
   // global.isBackGround = true
   // global.notificationData = remoteMessage?.data
   await notifee.incrementBadgeCount();
+  handleBackNotification(remoteMessage)
 });
  
  AppRegistry.registerComponent(appName, () => App);

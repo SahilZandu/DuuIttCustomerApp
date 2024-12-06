@@ -12,7 +12,7 @@ import { screenHeight, screenWidth } from '../halpers/matrics';
 
 const ProfileUpperShowComp = ({navigation, appUser, item}) => {
   return (
-    <Surface elevation={3} style={styles.surfaceView}>
+    <Surface elevation={2} style={styles.surfaceView}>
       <View style={styles.container}>
         <View style={styles.innerView}>
           <View style={styles.imageTextMainView}>

@@ -38,13 +38,13 @@ const DashbordScreens = [
 
 export function setBarColor(screen) {
   if (primaryScreens.includes(screen)) {
-    return '#28B056';
+    return  colors.main;;
   } else if (authScreens?.includes(screen)) {
-    return '#FFFFFF';
+    return colors.appBackground;
   } else if (DashbordScreens?.includes(screen)) {
-    return '#FFFFFF';
+    return  colors.appBackground;;
   } else {
-    return '#FFFFFF';
+    return  colors.appBackground;;
   }
 }
 

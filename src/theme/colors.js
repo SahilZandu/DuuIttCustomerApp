@@ -54,7 +54,9 @@ export const colors = {
     color8F:'#8F8F8F',
     colorC1:'#C1C1C1',
     colorFB:'#FB8C00',
-    colorFF:'#FFA726'
+    colorFF:'#FFA726',
+    colorBB:'#BBBBBB',
+    colorC5:'#C5C5C5'
    
     
    

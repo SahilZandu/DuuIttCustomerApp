@@ -45,7 +45,7 @@ const Vouchers = ({navigation}) => {
           navigation.goBack();
         }}
       />
-      <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
+      <AppInputScroll Pb={'20%'} padding={true} keyboardShouldPersistTaps={'handled'}>
         <View style={styles.upperMainView}>
           {payToUnlock == false ? (
             <Surface elevation={3} style={styles.surfaceView}>

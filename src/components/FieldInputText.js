@@ -56,7 +56,7 @@ function FieldInputText({
               position: 'absolute',
               top: marginTop ? marginTop : -10,
               left: marginLeft ? marginLeft : '5%',
-              backgroundColor: colors.white, // Use the same color as the screen background
+              backgroundColor: colors.appBackground, // Use the same color as the screen background
               zIndex: 1, // Ensure it's above the input
               paddingHorizontal: 5,
               fontSize: RFValue(12),
@@ -87,7 +87,7 @@ function FieldInputText({
             alignItems: 'center',
             borderRadius: borderRadius ? borderRadius : 10,
             borderWidth: borderWidth ? borderWidth : 1,
-            borderColor: borderColor ? borderColor : colors?.colorD9,
+            borderColor: borderColor ? borderColor : colors?.colorBB,
             height: hp('5.8%'),
           }}>
           <Text
