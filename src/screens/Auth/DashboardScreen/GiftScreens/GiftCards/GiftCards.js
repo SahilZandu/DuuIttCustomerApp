@@ -88,6 +88,7 @@ const GiftCard = ({navigation}) => {
       title: 'This amount is directly enter in your wallet',
       amount: 0,
     },
+    
   ];
 
   const handleTabGiftPress = async text => {
