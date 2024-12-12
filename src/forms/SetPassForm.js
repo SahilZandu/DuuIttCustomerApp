@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
 import CTA from '../components/cta/CTA';
 import {Formik, useFormikContext} from 'formik';
-import {loginValidations} from './formsValidation/loginValidations';
 import InputField from '../components/InputField';
 import {
   heightPercentageToDP as hp,
@@ -10,8 +9,6 @@ import {
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
 import {Strings} from '../translates/strings';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
 import {setPassValidations} from './formsValidation/setPassValidations';
 import { rootStore } from '../stores/rootStore';
 

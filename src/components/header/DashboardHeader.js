@@ -268,15 +268,16 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
     }
   };
   return (
-    <View style={{backgroundColor:colors.appBackground,}}>
       <View
         style={{
           flexDirection: 'row',
           backgroundColor: colors.appBackground,
           alignItems: 'center',
-          paddingBottom: '2%',
+          paddingBottom: '2.5%',
           marginTop: '4%',
           paddingHorizontal: 20,
+          borderBottomColor:colors.colorD9,
+          borderBottomWidth:1
         }}>
         <View
           style={{flex: 1, backgroundColor: colors.appBackground, marginLeft: '1%'}}>
@@ -285,7 +286,7 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
             style={{
               fontSize: RFValue(15),
               fontFamily: fonts.semiBold,
-              color: colors.main,
+              color: colors.black,
             }}>
            {title}
           </Text>
@@ -373,7 +374,7 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
         </View>
       )}
       </View>
-    </View>
+  
   );
 };
 

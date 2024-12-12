@@ -1,8 +1,7 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Text,
   View,
-  KeyboardAvoidingView,
   FlatList,
   ActivityIndicator,
   DeviceEventEmitter,
@@ -13,7 +12,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import AppInputScroll from '../../../../halpers/AppInputScroll';
 import CardOrder from '../../../../components/CardOrder';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
@@ -130,37 +128,32 @@ export default function Orders({navigation}) {
               tabPress={handleTabPress}
               type={type}
             />
-              <AppInputScroll
-                padding={true}
-                keyboardShouldPersistTaps={'handled'}>
-                <View style={styles.offerTextView}>
-                  <Text style={styles.offerText}>Offers You Can’t Miss</Text>
-                </View>
-                {loading == true ? (
-                  <AnimatedLoader type={'orderHistoryLoader'} />
+            {/* <View style={styles.offerTextView}>
+              <Text style={styles.offerText}>Offers You Can’t Miss</Text>
+            </View> */}
+            {loading == true ? (
+              <AnimatedLoader type={'orderHistoryLoader'} />
+            ) : (
+              <View style={{flex: 1}}>
+                {orderList?.length > 0 ? (
+                  <FlatList
+                    contentContainerStyle={{paddingBottom: '30%'}}
+                    scrollEnabled={true}
+                    showsVerticalScrollIndicator={false}
+                    data={orderList}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    onEndReached={loadMoredata}
+                    onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
+                    ListFooterComponent={renderFooter}
+                  />
                 ) : (
-                  <View style={{flex: 1}}>
-                    {orderList?.length > 0 ? (
-                      <FlatList
-                        contentContainerStyle={{paddingBottom: '30%'}}
-                        nestedScrollEnable={true}
-                        scrollEnabled={false}
-                        showsVerticalScrollIndicator={false}
-                        data={orderList}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                        onEndReached={loadMoredata}
-                        onEndReachedThreshold={0.1} // Trigger when the user scrolls 10% from the bottom
-                        ListFooterComponent={renderFooter}
-                      />
-                    ) : (
-                      <View style={styles.NoDataView}>
-                        <Text style={styles.NoDataText}>No Record Found</Text>
-                      </View>
-                    )}
+                  <View style={styles.NoDataView}>
+                    <Text style={styles.NoDataText}>No Record Found</Text>
                   </View>
                 )}
-              </AppInputScroll>
+              </View>
+            )}
           </View>
         </>
       )}

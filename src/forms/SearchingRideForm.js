@@ -47,16 +47,12 @@ import {
   GestureHandlerRootView,
   PanGestureHandler,
 } from 'react-native-gesture-handler';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {screenHeight, screenWidth} from '../halpers/matrics';
-import Svg, {SvgXml} from 'react-native-svg';
 import {
   cancelParcel,
   cancelParcelRide,
   cancelRide,
 } from '../stores/DummyData/CancelData';
-import Url from '../api/Url';
-import FastImage from 'react-native-fast-image';
 import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import { silderArray } from '../stores/DummyData/Home';

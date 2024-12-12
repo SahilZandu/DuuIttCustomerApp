@@ -10,10 +10,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages} from '../commons/AppImages';
 import AppInputScroll from '../halpers/AppInputScroll';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
 import {colors} from '../theme/colors';
 import PickDropLocation from '../components/PickDropLocation';
 import {useFocusEffect} from '@react-navigation/native';

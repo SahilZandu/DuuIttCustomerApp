@@ -13,21 +13,17 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import Spacer from '../halpers/Spacer';
-import {Strings} from '../translates/strings';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import {Surface} from 'react-native-paper';
 import {colors} from '../theme/colors';
 import {appImages, appImagesSvg} from '../commons/AppImages';
-import Svg, {SvgXml} from 'react-native-svg';
 import DriverTrackingProfileComp from '../components/DriverTrackingProfileComp';
 import DriverTrackingComp from '../components/DriverTrackingComp';
 import TextRender from '../components/TextRender';
 import {currencyFormat} from '../halpers/currencyFormat';
 import {FlatList} from 'react-native-gesture-handler';
 import {rootStore} from '../stores/rootStore';
-import Url from '../api/Url';
 import TrackingDetailsComp from '../components/TrackingDetailsComp';
 import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
@@ -76,10 +72,6 @@ const TrackingOrderForm = ({navigation}) => {
   const [isModalTrack, setIsModalTrack] = useState(false);
   const [trackItem, setTrackItem] = useState({});
   const [origin, setOrigin] = useState({});
-
-  // useEffect(() => {
-  //   getTrackingOrder();
-  // }, []);
 
   const getLocation = type => {
     let d =
@@ -221,11 +213,6 @@ const TrackingOrderForm = ({navigation}) => {
   };
 
   const onViewDetails = (status, index) => {
-    // if (isSelected == index) {
-    //   setIsSelected('');
-    // } else {
-    //   setIsSelected(index);
-    // }
     setIsSelected(prev => (prev === index ? null : index));
     const res = setTrackStatus(status);
     // console.log('res--', res);

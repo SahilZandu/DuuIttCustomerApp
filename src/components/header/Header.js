@@ -15,11 +15,13 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone
         alignItems: 'center',
         paddingBottom: '3%',
         marginTop: '4%',
+        // borderBottomColor:colors.colorD9,
+        // borderBottomWidth:1
       }}>
       {backArrow && (
         <TouchableOpacity
           activeOpacity={0.9}
-          hitSlop={{top:10,bottom:10,left:20,right:20}}
+          hitSlop={{top:20,bottom:20,left:20,right:20}}
           onPress={onPress}
           style={{marginLeft: '4%'}}>
           <SvgXml xml={appImagesSvg.backArrow} />
@@ -28,7 +30,7 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone
       <Text
         style={{
           flex: 1,
-          fontSize: RFValue(12),
+          fontSize: RFValue(15),
           fontFamily: fonts.semiBold,
           color: colors.black,
           marginLeft: backArrow ? '3%' :'6%',

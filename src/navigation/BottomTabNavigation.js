@@ -555,6 +555,7 @@ const styles = {
   //     bottom: '17%',
   //   },
   tabBarStyle: {
+    position:'absolute',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
     paddingVertical: '2%',
@@ -562,7 +563,6 @@ const styles = {
     backgroundColor: colors.white, // Make the background transparent
     borderTopWidth: 0,
     paddingBottom: 0,
-    position:'absolute',
     shadowColor:
       Platform.OS === 'android' ? colors.black : 'rgba(0, 0, 0, 0.2)',
     shadowOffset: {

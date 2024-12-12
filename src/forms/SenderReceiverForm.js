@@ -162,9 +162,6 @@ import CTA from '../components/cta/CTA';
 import {Formik, useFormikContext} from 'formik';
 import Spacer from '../halpers/Spacer';
 import AppInputScroll from '../halpers/AppInputScroll';
-import InputField from '../components/InputField';
-import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
-import PickDropAddressEdit from '../components/PickDropAddressEdit';
 import {rootStore} from '../stores/rootStore';
 import InputFieldLabel from '../components/InputFieldLabel';
 import {

@@ -96,11 +96,12 @@ const DashboardHeader2 = ({
     <View
       style={{
         backgroundColor: colors.appBackground,
-        // alignItems: 'center',
         justifyContent: 'center',
         paddingBottom: '3%',
         marginTop: '4%',
         paddingHorizontal: 20,
+        borderBottomColor:colors.colorD9,
+        borderBottomWidth:1
       }}>
       <View
         style={{
@@ -109,7 +110,7 @@ const DashboardHeader2 = ({
           justifyContent: 'center',
         }}>
         <TouchableOpacity
-          hitSlop={{top: 10, bottom: 10, left: 20, right: 20}}
+          hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
           activeOpacity={0.9}
           onPress={onPress}
           style={{marginRight: '4%', marginLeft: '-2%'}}>
@@ -121,9 +122,9 @@ const DashboardHeader2 = ({
           <Text
             numberOfLines={1}
             style={{
-              fontSize: RFValue(13),
+              fontSize: RFValue(15),
               fontFamily: fonts.semiBold,
-              color: colors.main,
+              color: colors.black,
               width: wp('68%'),
             }}>
             Hello {appUserInfo?.name}

@@ -17,17 +17,14 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import {Strings} from '../translates/strings';
 import {appImages, appImagesSvg} from '../commons/AppImages';
 import {SvgXml} from 'react-native-svg';
 import AppInputScroll from '../halpers/AppInputScroll';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
 import {colors} from '../theme/colors';
-import {Surface} from 'react-native-paper';
 import PickDropLocation from '../components/PickDropLocation';
 import {useFocusEffect} from '@react-navigation/native';
-import TabsTouch from '../components/TabsTouch';
 import {rootStore} from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
 import DotTextComp from '../components/DotTextComp';
@@ -36,15 +33,6 @@ import SenderReceiverForm from './SenderReceiverForm';
 import InputFieldLabel from '../components/InputFieldLabel';
 import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
 import {silderArray} from '../stores/DummyData/Home';
-
-// let categories = [
-//   {id: 1, active: 0, name: 'Documents'},
-//   {id: 2, active: 0, name: 'Glass'},
-//   {id: 3, active: 0, name: 'Liquid'},
-//   {id: 4, active: 0, name: 'Food'},
-//   {id: 5, active: 0, name: 'Electronic'},
-//   {id: 6, active: 0, name: 'Others'},
-// ];
 
 const parcelInst = [
   {
@@ -74,8 +62,6 @@ const PriceDetailsForm = ({navigation}) => {
   const [dropLocation, setDropLocation] = useState('');
   const [weight, setWeight] = useState(20);
   const [quantity, setQuantity] = useState(1);
-  // const [categoriesShow, setCategoriesShow] = useState(categories);
-  // const [selectCate, setSelectCate] = useState([]);
   const [sliderItems, setSliderItems] = useState(silderArray);
   const [isAddressModal, setIsAddressModal] = useState(false);
   const [isStatus, setIsStatus] = useState('');
@@ -90,10 +76,6 @@ const PriceDetailsForm = ({navigation}) => {
     }, []),
   );
 
-  // useEffect(()=>{
-  //   InitailsCate();
-  // },[])
-
   const getCheckSenderReceiverData = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
     console.log(
@@ -105,15 +87,6 @@ const PriceDetailsForm = ({navigation}) => {
     setDropLocation(receiverAddress?.address);
   };
 
-  // const InitailsCate = () => {
-  //   categoriesShow?.map((value, i) => {
-  //     value.active = 0;
-  //     return {...value};
-  //   });
-  //   setCategoriesShow([...categoriesShow]);
-  //   onSelectedCate(categoriesShow);
-  // };
-
   const handlePrice = async values => {
     let newReceiverAddress = {...receiverAddress};
     if (isSecure == true && values?.phone) {
@@ -122,7 +95,6 @@ const PriceDetailsForm = ({navigation}) => {
         phone: Number(values?.phone),
       };
     }
-    // console.log('newReceiverAddress---',newReceiverAddress);
 
     const newdata = {
       weight: weight,
@@ -144,27 +116,6 @@ const PriceDetailsForm = ({navigation}) => {
   const handleLoading = v => {
     setLoading(v);
   };
-
-  // const onPressCategories = item => {
-  //   categoriesShow?.map((value, i) => {
-  //     if (value?.id == item?.id) {
-  //       value.active = value?.active == 0 ? 1 : 0;
-  //     }
-  //     return {...value};
-  //   });
-  //   setCategoriesShow([...categoriesShow]);
-  //   onSelectedCate(categoriesShow);
-  // };
-
-  // const onSelectedCate = cateArray => {
-  //   const selectedArray = cateArray?.filter((item, i) => {
-  //     return item.active == 1;
-  //   });
-
-  //   console.log('selectedArray--', selectedArray);
-
-  //   setSelectCate([...selectedArray]);
-  // };
 
   const FormButton = ({loading, onPress}) => {
     const {dirty, isValid, values} = useFormikContext();
@@ -293,32 +244,6 @@ const PriceDetailsForm = ({navigation}) => {
                   }}
                 />
 
-                {/* <View style={{marginTop: '7%'}}>
-              <Text style={styles.weightText}>Weight</Text>
-              <Surface elevation={3} style={styles.weightTextSurface}>
-                <View style={styles.weightInnerView}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.weightImage}
-                    source={appImages.weightIcon}
-                  />
-                  <TextInput
-                    placeholderTextColor={colors.color95}
-                    keyboardType="numeric"
-                    style={styles.weightTextInput}
-                    onChangeText={setWeight}
-                    value={weight}
-                    placeholder="Enter your package weight"
-                  />
-                  <Text style={styles.weightKGText}>Kg</Text>
-                </View>
-              </Surface>
-              <Text
-                style={styles.parcelMaxWeight}>
-                Parcel items maximum weight up to 20kg
-              </Text>
-            </View> */}
-
                 <View style={{marginTop: '4%'}}>
                   <Text style={styles.parcelInstView}>Parcel Instructions</Text>
 
@@ -334,97 +259,11 @@ const PriceDetailsForm = ({navigation}) => {
                     })}
                   </View>
                 </View>
-
-                {/* <View style={{marginTop: '7%'}}>
-              <Text style={styles.quantityText}>Package Quantity</Text>
-              <Surface elevation={2} style={styles.quantitySurface}>
-                <View style={styles.quantitInnerView}>
-                  <Text style={styles.quantity}>{quantity} Package</Text>
-                  <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (quantity > 1) {
-                          setQuantity(quantity - 1);
-                        }
-                      }}
-                      activeOpacity={0.8}
-                      style={styles.touchNegative}>
-                      <Image
-                        resizeMode="contain"
-                        style={styles.negativeImage}
-                        source={appImages.negativeIcon}
-                      />
-                    </TouchableOpacity>
-                    <Text>{'  '}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (quantity < 20) {
-                          setQuantity(quantity + 1);
-                        }
-                      }}
-                      activeOpacity={0.8}
-                      style={styles.touchPositive}>
-                      <Image
-                        resizeMode="contain"
-                        style={styles.positiveImage}
-                        source={appImages.positiveIcon}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </Surface>
-            </View> */}
-
-                {/* <View style={{marginTop: '7%'}}>
-              <Text style={styles.categoriesText}>Categories</Text>
-              <TabsTouch
-                data={categoriesShow}
-                onPassCate={item => {
-                  onPressCategories(item);
-                }}
-              />
-            </View> */}
               </View>
               <View style={{marginHorizontal: 10}}>
                 <HomeSlider data={sliderItems} />
               </View>
-              {/* <View style={{marginTop: '6%', marginHorizontal: 20}}>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: hp('5%'),
-                width: wp('52%'),
-              }}
-              onPress={() => {
-                setIsSecure(!isSecure);
-              }}
-              activeOpacity={0.9}>
-              {isSecure == true ? (
-                <SvgXml xml={appImagesSvg.checkBox} />
-              ) : (
-                <SvgXml xml={appImagesSvg.unCheckBox} />
-              )}
-              <Text
-                style={{
-                  marginLeft: '2%',
-                  fontSize: RFValue(12),
-                  fontFamily: fonts.medium,
-                  color: colors.black85,
-                }}>
-                Secure parcel devivery
-              </Text>
-            </TouchableOpacity>
-            <Spacer space={'-5%'}/>
-            {isSecure && <InputFieldLabel
-                  borderWidth={1}
-                  inputLabel={"Receiver's mobile number"}
-                  keyboardType="number-pad"
-                  name={'phone'}
-                  placeholder={'Enter mobile number'}
-                  maxLength={10}
-                />}
-          </View> */}
+
               <SecureTextData />
             </AppInputScroll>
           </KeyboardAvoidingView>

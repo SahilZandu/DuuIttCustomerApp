@@ -10,7 +10,6 @@ import { Strings } from '../../../translates/strings';
 import {styles} from './styles';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 import Header from '../../../components/header/Header';
-import ForgotForm from '../../../forms/ForgotForm';
 import SetPassForm from '../../../forms/SetPassForm';
 
 
