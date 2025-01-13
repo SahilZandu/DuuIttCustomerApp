@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* DuuIttAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DuuIttAppTests.m */; };
+		0453B1562D0C118C00A455D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0453B1552D0C118C00A455D5 /* GoogleService-Info.plist */; };
 		0C80B921A6F3F58F76C31292 /* libPods-DuuIttApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-DuuIttApp.a */; };
-		0D7F75722CD0923900F78996 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0D7F75712CD0923900F78996 /* GoogleService-Info.plist */; };
 		0DAD32A32CBD2C1700983B08 /* KumbhSans-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DAD32A22CBD2C1700983B08 /* KumbhSans-Black.ttf */; };
 		0DAD32A52CBD2C2100983B08 /* KumbhSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DAD32A42CBD2C2100983B08 /* KumbhSans-Bold.ttf */; };
 		0DAD32A72CBD2C3200983B08 /* KumbhSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DAD32A62CBD2C3200983B08 /* KumbhSans-Light.ttf */; };
@@ -38,7 +38,7 @@
 		00E356EE1AD99517003FC87E /* DuuIttAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DuuIttAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* DuuIttAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DuuIttAppTests.m; sourceTree = "<group>"; };
-		0D7F75712CD0923900F78996 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Documents/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0453B1552D0C118C00A455D5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../firenaseFiles/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0D7F75732CD0CC5E00F78996 /* DuuIttApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DuuIttApp.entitlements; path = DuuIttApp/DuuIttApp.entitlements; sourceTree = "<group>"; };
 		0DAD32A22CBD2C1700983B08 /* KumbhSans-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "KumbhSans-Black.ttf"; path = "../../src/theme/fonts/KumbhSans-Black.ttf"; sourceTree = "<group>"; };
 		0DAD32A42CBD2C2100983B08 /* KumbhSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "KumbhSans-Bold.ttf"; path = "../../src/theme/fonts/KumbhSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -150,7 +150,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				0D7F75712CD0923900F78996 /* GoogleService-Info.plist */,
+				0453B1552D0C118C00A455D5 /* GoogleService-Info.plist */,
 				0DD3BAB92C4E80DA001A2F6E /* fonts */,
 				13B07FAE1A68108700A75B9A /* DuuIttApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -285,7 +285,7 @@
 				0DAD32AB2CBD2C4100983B08 /* KumbhSans-Regular.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0DAD32A92CBD2C3A00983B08 /* KumbhSans-Medium.ttf in Resources */,
-				0D7F75722CD0923900F78996 /* GoogleService-Info.plist in Resources */,
+				0453B1562D0C118C00A455D5 /* GoogleService-Info.plist in Resources */,
 				20AED7BD959D575544F5E230 /* PrivacyInfo.xcprivacy in Resources */,
 				0DAD32AD2CBD2C4700983B08 /* KumbhSans-SemiBold.ttf in Resources */,
 			);
@@ -524,7 +524,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = DuuIttApp/DuuIttApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = DuuIttApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -539,6 +542,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = DuuIttApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -552,7 +556,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = DuuIttApp/DuuIttApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = DuuIttApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -566,6 +573,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = DuuIttApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

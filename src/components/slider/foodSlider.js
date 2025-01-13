@@ -105,7 +105,7 @@ import Carousel from 'react-native-new-snap-carousel';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-const FoodSlider = ({ data, onSliderPress, imageWidth, imageHeight, paginationList }) => {
+const FoodSlider = ({ data,oneCard, onSliderPress, imageWidth, imageHeight, paginationList }) => {
   const carouselRef = useRef(null);
   const [stateIndex, setStateIndex] = useState(0);
 
@@ -120,10 +120,10 @@ const FoodSlider = ({ data, onSliderPress, imageWidth, imageHeight, paginationLi
         borderRadius: 10,
         borderColor: colors.main,
         borderWidth: 0.3,
-        right:wp("10%")
+        right:oneCard ? 0 : wp("10%")
       }}>
       <Image
-        resizeMode="stretch"
+        resizeMode= {oneCard ?'st' :"stretch"}
         style={{
           width: imageWidth ? imageWidth : wp('45%'), // Adjust for two images
           height: imageHeight ? imageHeight : hp('18%'),
@@ -183,7 +183,7 @@ const FoodSlider = ({ data, onSliderPress, imageWidth, imageHeight, paginationLi
         data={data}
         renderItem={renderItem}
         sliderWidth={viewportWidth}
-        itemWidth={viewportWidth / 1.3} // Adjust to fit two items per screen
+        itemWidth={oneCard ? viewportWidth : viewportWidth/1.3 } // Adjust to fit two items per screen
         loop={true}
         autoplay={true}
         autoplayDelay={1000}

@@ -1,0 +1,240 @@
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {fonts} from '../../../theme/fonts/fonts';
+export const categoryStyles = {
+  categoryMainConatiner: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingLeft: hp('2%'),
+    paddingRight: hp('2%'),
+  },
+  categorySubConatiner: {
+    marginTop: hp('2%'),
+    flexDirection: 'row',
+  },
+  listContainer: {
+    flex: 1,
+    marginTop: hp('0.5%'),
+  },
+  headingText: {
+    fontSize: RFValue(16),
+    fontFamily: fonts.semiBold,
+    marginBottom: hp('2%'),
+    color: '#000000',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    marginTop: hp('2%'),
+    alignItems: 'center',
+  },
+  searchSubConatiner: {
+    width: wp('10%'),
+    height: hp('6%'),
+    flex: 1,
+    paddingVertical: 0,
+  },
+  categorySearchConatiner: {
+    flex: 1,
+    flexDirection: 'row',
+    height: hp('6%'),
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: hp('2%'),
+    paddingRight: hp('2%'),
+    borderColor: '#D9D9D9',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    backgroundColor: '#F4F4F4',
+  },
+  categorySubSearchConatiner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: wp('70%'),
+    height: hp('6%'),
+  },
+  categorySearchText: {
+    fontSize: RFValue(14),
+    paddingLeft: hp('2%'),
+    paddingRight: hp('2%'),
+    width: wp('65%'),
+    fontFamily: fonts.regular,
+  },
+  categoryCardConatiner: {
+    borderBottomStartRadius: 15,
+    borderBottomEndRadius: 15,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    backgroundColor: 'white',
+    borderWidth: 0.5,
+    elevation: 5,
+    borderColor: '#D9D9D9',
+    width: wp('90%'),
+    shadowColor: '#D9D9D9',
+    shadowOffset: {width: -1, height: 6},
+    shadowOpacity: 0.6,
+    shadowRadius: 5,
+    paddingBottom: hp('2%'),
+    marginBottom: hp('4%'),
+  },
+
+  categoryCardSubConatiner: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? hp('1%') : hp('1%'),
+    left: Platform.OS === 'ios' ? hp('1%') : hp('1%'),
+    paddingLeft: hp('0.5%'),
+    paddingRight: hp('0.5%'),
+    paddingTop: hp('0.5%'),
+    paddingBottom: hp('0.5%'),
+    backgroundColor: '#FFFFFF',
+    borderRadius: 5,
+  },
+  categoryCardImage: {
+    width: wp('90%'),
+    height: hp('20%'),
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  categoryDuration: {
+    marginLeft: hp('0.6%'),
+    marginRight: hp('0.6%'),
+    fontFamily: fonts.regular,
+  },
+  categoryDistance: {
+    fontSize: RFValue(9),
+    color: 'black',
+    fontFamily: fonts.regular,
+  },
+  categoryRating: {
+    backgroundColor: '#F9BD00',
+    flexDirection: 'row',
+    height: hp('3%'),
+    marginTop: hp('-1.5%'),
+    borderRadius: 6,
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  categoryRatingText: {
+    color: '#FFFFFF',
+    fontSize: RFValue(10),
+    fontFamily: fonts.semiBold,
+  },
+  categorylikeContainer: {
+    height: 40,
+    width: 40,
+    marginTop: -20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    borderWidth: 0.3,
+    borderColor: '#D9D9D9',
+    shadowColor: '#171717',
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+  categoryFilterConatiner:{
+    flexDirection: 'row',
+    borderRadius: 20,
+    borderWidth: 1,
+    elevation: 50,
+    alignItems: 'center',
+    marginBottom: hp('2%'),
+    alignSelf: 'center',
+    paddingLeft: hp('1.5%'),
+    paddingRight: hp('1.5%'),
+    paddingTop: hp('1%'),
+    paddingBottom: hp('1%'),
+    shadowColor: '#D9D9D9',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
+    marginRight: hp('1%'),
+  },
+  categoryfilterText:{
+    fontSize: RFValue(10),
+    fontFamily: fonts.regular,
+  },
+
+  filterConatiner:{
+    height:20,
+    width:20,
+    borderWidth:1,borderRadius:6
+  },
+  crossConatiner:{
+    marginBottom: hp('2%'),
+    backgroundColor: 'black',
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    alignSelf: 'center',
+
+},
+orderDescriptionContainer:{
+  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: hp('2%'),
+},
+orderTitle:{
+  color: 'black',
+  marginTop: hp('1%'),
+  fontSize: RFValue(16),
+  fontFamily: fonts.semiBold,
+},
+orderDescription:{
+  color: '#8F8F8F',
+  marginTop: hp('1%'),
+  fontSize: RFValue(11),
+  fontFamily: fonts.regular,
+},
+orderlistConatiner:{
+  width: wp('90%'),
+  backgroundColor: '#FFFFFF',
+  alignSelf: 'center',
+  marginTop: hp('1.5%'),
+  borderRadius: 6,
+  padding: hp('1.5%'),
+},
+orderListTitle:{
+  fontFamily: fonts.semiBold,
+  fontSize: RFValue(14),
+  color: '#303030',
+},
+orderListSubtitle:{
+  fontFamily: fonts.regular,
+  fontSize: RFValue(12),
+  color: '#8F8F8F',
+  marginTop: hp('1%'),
+},
+orderCustomizeConatiner:{
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: hp('1.5%'),
+},
+orderCustomizeTitle:{
+
+},
+
+orderCustomizeCheckbox:{
+  borderWidth: 1,
+            height: 20,
+            width: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 6,
+},
+orderCustomizesubCheckBox:{
+  height: 13,
+              width: 13,   
+              borderRadius: 2,
+},
+categoryListConatiner:{
+  
+}
+
+};

@@ -6,4 +6,5 @@ export const fonts = {
     light: 'KumbhSans-Light',
     black:'KumbhSans-Black',
   };
+
   

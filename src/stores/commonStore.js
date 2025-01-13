@@ -60,4 +60,5 @@ export default class CommonStore {
       (async () => await AsyncStorage.removeItem('appUser'))();
     }
   };
+
 }

@@ -163,5 +163,11 @@ export const silderArray = [
   {id: 3, image: appImages.sliderImage1},
   {id: 4, image: appImages.sliderImage2},
 ];
+export const silderArrayOrder = [
+  {id: 1, image: appImages.boat},
+  {id: 2, image: appImages.boat},
+  {id: 3, image: appImages.boat},
+  {id: 4, image: appImages.boat},
+];
 
 
