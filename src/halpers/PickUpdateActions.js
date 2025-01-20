@@ -59,6 +59,15 @@ export default function PickUpdateActions({onSelectUri, name}) {
     }
   };
 
+  const requestGalleryPermission = async () => {
+    const result = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+    if (result === RESULTS.GRANTED) {
+      console.log('Gallery permission granted');
+    } else {
+      console.log('Gallery permission denied');
+    }
+  };
+
   const onHandleCamera = async () => {
     const img = await LaunchCamera();
     console.log('result', img);
