@@ -17,6 +17,8 @@ import ParcelHome from '../screens/DUParcel/ParcelHome/ParcelHome';
 import Offers from '../screens/Auth/DashboardScreen/Offers/Offers';
 import RideHome from '../screens/DURide/RideHome/RideHome';
 import FoodHome from '../screens/DUFood/FoodHome/FoodHome';
+import ResturantMenuProducts from '../screens/DUFood/Restaurent/ResturantMenuProducts';
+ 
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 
 const Tab = createBottomTabNavigator();
@@ -331,6 +333,10 @@ export function FoodBottomNavigator() {
             case 'tab1':
               label = 'Food';
               break;
+            // case 'tab1':
+            //   label = 'resturantProducts';
+            //   break;
+              
             // case 'tab2':
             //   label = 'Orders';
             //   break;
@@ -378,6 +384,7 @@ export function FoodBottomNavigator() {
       <Tab.Screen
         name="tab1"
         component={FoodHome}
+        // component={ResturantMenuProducts}
         // options={{tabBarLabel: 'Home'}}
         listeners={{tabPress: handleAnimation}}
       />

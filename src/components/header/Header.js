@@ -6,12 +6,12 @@ import {appImagesSvg} from '../../commons/AppImages';
 import {colors} from '../../theme/colors';
 import {fonts} from '../../theme/fonts/fonts';
 
-const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone}) => {
+const Header = ({shareSVG,bgColor,onPress, title, backArrow, shareIcon, onPressShare,onPressPhone}) => {
   return (
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor:colors.appBackground,
+        backgroundColor:bgColor?bgColor:colors.appBackground,
         alignItems: 'center',
         paddingBottom: '3%',
         marginTop: '4%',
@@ -44,7 +44,8 @@ const Header = ({onPress, title, backArrow, shareIcon, onPressShare,onPressPhone
           activeOpacity={0.9}
           onPress={onPressShare}
           style={{marginRight: '5%'}}>
-          <SvgXml xml={appImagesSvg.shareIcon} />
+          <SvgXml xml={shareSVG ? shareSVG : 
+            appImagesSvg.shareIcon} />
         </TouchableOpacity>
       )}
        {onPressPhone && (
