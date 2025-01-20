@@ -7,7 +7,8 @@ import DashboardStore from './dashboardStore';
 import OrderStore from './orderStore';
 import cartStore from './cartStore';
 import CartStore from './cartStore';
-
+import FoodDashStore from './foodDashStore'; 
+// import FoodDashboardStore from './foodDashBoardStore';
 
 export const rootStore = {
   authStore: new AuthStore(),
@@ -17,5 +18,6 @@ export const rootStore = {
   parcelStore :new ParcelStore(),
   dashboardStore :new DashboardStore(),
   orderStore : new OrderStore(),
+  foodDashboardStore : new FoodDashStore(),
 };
 export const RootStoreContext = createContext(rootStore);

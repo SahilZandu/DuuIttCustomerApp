@@ -1293,7 +1293,7 @@ const ResturantProducts = memo(({navigation, route}) => {
                 )}
               />
 
-              <View
+              {/* <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -1409,7 +1409,7 @@ const ResturantProducts = memo(({navigation, route}) => {
                   {'Report an issue with the menu '}
                 </Text>
                 <SvgXml xml={appImagesSvg.reportMenu} />
-              </View>
+              </View> */}
             </>
           ) : (
             <View
@@ -1527,6 +1527,9 @@ const ResturantProducts = memo(({navigation, route}) => {
               //varient_price: null,
             };
           var obj = {
+            product_addon_groups:CustomizeItem.product_addon_groups,
+            combination:CustomizeItem.combination,
+            product_varient_group:CustomizeItem.product_varient_group,
             quantity: quan,
             sellingprice: sellAmount,
             addons: addons,

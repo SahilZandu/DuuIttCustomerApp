@@ -5,6 +5,7 @@ import FoodHome from '../screens/DUFood/FoodHome/FoodHome';
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
 
+import CategoryViseFoodListing from '../screens/DUFood/FoodHome/CategoryViseFoodListing';
 import ResturantProducts from '../screens/DUFood/Restaurent/ResturantMenuProducts';
 import RestaurantDetail from '../screens/DUFood/Restaurent/RestaurantDetail';
 import OrderPlaced from '../screens/DUFood/Tracking/OrderPlaced';
@@ -34,8 +35,9 @@ export default function FoodRoutes(props) {
        <Stack.Screen name="cart" component={Cart} />
        <Stack.Screen name="couponsList" component={CouponsList} />
        <Stack.Screen name="couponDetail" component={CouponDetail} />
-
        
+       <Stack.Screen name="categoryViseFoodListing" component={CategoryViseFoodListing} />
+
        <Stack.Screen name="myAddress" component={MyAddress} />
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
        

@@ -11,7 +11,7 @@ import MyAddressLoader from './MyAddressLoader';
 import OrderHistoryLoader from './OrderHistoryLoader';
 import RecentOrderLoader from './RecentOrderLoader';
 import TrackingOrderLoader from './TrackingOderLoader';
-
+import FoodHomeLoader from './FoodHomeLoader';
 
 const AnimatedLoader = ({type,absolute}) => {
   return (
@@ -23,7 +23,8 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'recentOrderLoader' && <RecentOrderLoader />}
       {type == 'trackingOrderLoader' && <TrackingOrderLoader/>}
       {type == 'multipleRiderLoader' &&  <MultipleRiderLoader/>}
-      
+      {type == 'foodHomeLoader' &&  <FoodHomeLoader/>}
+ 
       
       
     

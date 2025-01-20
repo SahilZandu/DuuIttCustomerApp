@@ -223,6 +223,18 @@ export default class CartStore {
     }
   };
 
+
+   getIPrice =  updatedItem => {
+    if (updatedItem?.addons && updatedItem?.addons.length > 0) {
+      let addonsTotalPrice = updatedItem?.addons.reduce((total, item) => {
+        return total + item.addon_price;
+      }, 0);
+      return (parseInt(updatedItem?.sellingprice) + parseInt(addonsTotalPrice)) * updatedItem.quantity ;
+    } else {
+      return updatedItem?.sellingprice * updatedItem.quantity ;
+    }
+  };
+
   updateCartItemInAsync = async updatedItem => {
     console.log('Updated item>', updatedItem);
     try {
@@ -244,7 +256,9 @@ export default class CartStore {
             quantity: updatedItem[0].quantity, // update the quantity
             //sellingprice: updatedItem[0].sellingprice* updatedItem[0].quantity,
             //subtotalprice: updatedItem[0].sellingprice* updatedItem[0].quantity,
-            finalprice: updatedItem[0].sellingprice * updatedItem[0].quantity,
+            finalprice: this.getIPrice(updatedItem[0]),
+
+            //  dfd   finalprice: updatedItem[0].sellingprice * updatedItem[0].quantity,
             //total_amount: updatedItem.product.iPrice * updatedItem.quantity, // update total_amount
             //grand_total: updatedItem.product.iPrice * updatedItem.quantity, // update grand_total
           };

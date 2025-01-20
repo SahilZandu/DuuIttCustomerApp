@@ -1,7 +1,10 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, Image, FlatList, DeviceEventEmitter, Text} from 'react-native';
+import {View,Pressable, Image, FlatList, DeviceEventEmitter, Text} from 'react-native';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {styles} from './styles';
+import {RFValue} from 'react-native-responsive-fontsize';
+import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,7 +15,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import {homeRideCS, silderArray} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
-import {setCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
@@ -24,13 +26,28 @@ import DashboardFilters from './DashboardFilters';
 import RestaurantsCard from '../../../components/Cards/RestaurantsCard';
 import DashboardCartBtn from '../Components/DashboardCartBtn';
 import DashboardTrackOrderBtn from '../Components/DashboardTrackOrderBtn';
+import {getCurrentLocation, setCurrentLocation} from '../../../components/GetAppLocation';
+import { fonts } from '../../../theme/fonts/fonts';
+
+let geoLocation = {
+  lat: null,
+  lng: null,
+};
 
 export default function FoodHome({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {saveCartItem, deleteCart,loadCartList,getRestraurent} = rootStore.cartStore;
+  let selectedFilter = '';
+  const [loading, setLoading] = useState(
+    restaurentList?.length > 0 ? false : true,
+  );
   const [restoInfo, setRestoInfo] = useState({});
   const [cartItems, setcartItems] = useState([]);
-
+  const { restaurentList,restaurentAll} =
+  rootStore.foodDashboardStore;
+  const [orderList, setOrderList] = useState(restaurentList);
+  const [loadingMore, setLoadingMore] = useState(false);
+  let perPage = 20;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
 
   const [internet, setInternet] = useState(true);
@@ -39,7 +56,20 @@ export default function FoodHome({navigation}) {
   const [visible, setVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(silderArray);
   const [isOtherCart, setIsOtherCart] = useState(false);
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
 
+    return d ? d : '';
+  };
+  const getOrderList = async () => {
+    console.log('getOrderList')
+    const res = await restaurentAll(geoLocation,selectedFilter, perPage, handleLoading);
+    setOrderList(res);
+    setLoadingMore(false);
+  };
   const repeatOrdersList = [
     {
       id: '1',
@@ -137,17 +167,49 @@ export default function FoodHome({navigation}) {
     // Add more restaurants as needed
   ];
 
+  const handleLoading = v => {
+    setLoading(v);
+  };
+
   useFocusEffect(
     useCallback(() => {
       checkInternet();
+     
       handleAndroidBackButton(navigation);
       setCurrentLocation();
+      setTimeout(() => {
+        if (getLocation) {
+          onUpdateLatLng();
+          // setIsRefersh(true);
+          console.log('geoLocation>',geoLocation.lat+' '+geoLocation.lng)
+          getOrderList();
+        }
+      }, 300);
       onUpdateUserInfo();
+      console.log('appUserInfo._id>',appUserInfo._id)
+   
+      
       onRestaurentInfo();
       getCartItemsCount();
     }, []),
   );
 
+  const onUpdateLatLng = () => {
+    geoLocation = {
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    };
+    
+  };
+
+  const loadMoredata = () => {
+    console.log('load more');
+    if (!loadingMore && orderList?.length >= perPage) {
+      perPage = perPage + 20;
+      setLoadingMore(true);
+      getOrderList();
+    }
+  };
   const onUpdateUserInfo = () => {
     const {appUser} = rootStore.commonStore;
     setAppUserInfo(appUser);
@@ -212,6 +274,12 @@ export default function FoodHome({navigation}) {
     </View>
   );
   const renderProductItem = ({item}) => (
+    <Pressable
+        onPress={() =>
+          // alert('under progress')
+          navigation.navigate('categoryViseFoodListing',{category:item.name})
+        }
+      >
     <View style={[styles.itemContainer, {alignItems: 'center'}]}>
       <Image source={item.imageUrl} resizeMode="cover" style={styles.image} />
 
@@ -221,6 +289,7 @@ export default function FoodHome({navigation}) {
         {item.name}
       </Text>
     </View>
+    </Pressable>
   );
   const AddButton = () => {
     return (
@@ -268,9 +337,9 @@ export default function FoodHome({navigation}) {
     );
   };
 
-  function topRestaurentItem(item, index) {
-    return (
-      <View key={index}>
+
+  const topRestaurentItem = ({item}) => (
+      // <View key={index}>
         <RestaurantsCard
           item={item}
           navigation={navigation}
@@ -278,9 +347,9 @@ export default function FoodHome({navigation}) {
             // handleLikeUnlike(like, item)
           }}
         />
-      </View>
+      // </View>
     );
-  }
+
 
   const onSuccessResult = item => {
     console.log('item=== onSuccessResult', item);
@@ -315,6 +384,10 @@ export default function FoodHome({navigation}) {
       {internet == false ? (
         <NoInternet />
       ) : (
+
+        loading == true ? (
+          <AnimatedLoader type={'foodHomeLoader'} />
+        ) : (
         <>
           <DashboardHeader2
             navigation={navigation}
@@ -413,7 +486,9 @@ export default function FoodHome({navigation}) {
                   <View style={{marginTop: 10}}>
                     <DashboardFilters
                       onChange={f => {
-                        // filters = f;
+                        console.log('f>',f)
+                        selectedFilter = f;
+                        getOrderList();
                         // getLocationCurrent();
                       }}
                     />
@@ -426,10 +501,20 @@ export default function FoodHome({navigation}) {
                       alignItems: 'center',
                       marginTop: 20,
                     }}>
-                    {topRestaurentsList?.length > 0 ? (
-                      topRestaurentsList?.map((item, key) =>
-                        topRestaurentItem(item, key),
-                      )
+                    {orderList?.length > 0 ? (
+                      <FlatList
+                      data={orderList}
+                      renderItem={topRestaurentItem}
+                      keyExtractor={item => item.id}
+                      
+                      onEndReached={loadMoredata}
+                      onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
+                     
+                      contentContainerStyle={styles.listContainer}
+                    />
+                      // topRestaurentsList?.map((item, key) =>
+                      //   topRestaurentItem(item, key),
+                      // )
                     ) : (
                       <View
                         style={{
@@ -442,7 +527,7 @@ export default function FoodHome({navigation}) {
                         <Text
                           style={{
                             fontSize: RFValue(12),
-                            fontFamily: latoFonts.regular,
+                            fontFamily: fonts.regular,
                             color: 'rgba(0, 0, 0, 0.65)',
                           }}>
                           There aren't any nearby restaurants at the moment.
@@ -502,6 +587,8 @@ export default function FoodHome({navigation}) {
             </View>
           )}
         </>
+
+        )
       )}
       <MikePopUp
         visible={visible}

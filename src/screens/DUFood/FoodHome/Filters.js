@@ -16,8 +16,8 @@ export const Filters = [
   {
     id: '5',
     name: 'Non Veg Only',
-    type: 'non_veg',
-    key: 'non_veg',
+    type: 'non-veg',
+    key: 'non-veg',
   },
   {
     id: '6',

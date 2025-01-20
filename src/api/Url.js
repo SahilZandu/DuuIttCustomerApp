@@ -20,6 +20,8 @@ export default  {
     testMessage:'test/message',
     updateOrderStatus:'orders/update-order-status',
 
+    restaurentAll:'restaurant/all',
+
 
    
    

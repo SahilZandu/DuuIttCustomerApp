@@ -13,21 +13,27 @@ import {SvgXml} from 'react-native-svg';
 let f = [];
 
 const DashboardFilters = ({onChange}) => {
-  const [selected, setSelected] = useState([]);
+  // const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState('');
   const [update, setupdate] = useState(true);
   //const { setFilterRating, setDashfilter } = rootStore.homeStore
 
   const handleSelect = async item => {
-    if (selected.includes(item.name)) {
-      await setSelected(selected.filter(i => i !== item.name));
-      setFilterValues(selected.filter(i => i !== item.name));
-    } else {
-      await setSelected([...selected, item.name]);
-      setFilterValues([...selected, item.name]);
-    }
-    // setSelected(item.name);
+    // if (selected.includes(item.name)) {
+    //   await setSelected(selected.filter(i => i !== item.name));
+    //   setFilterValues(selected.filter(i => i !== item.name));
+    // } else {
+    //   await setSelected([...selected, item.name]);
+    //   setFilterValues([...selected, item.name]);
+    // }
+     setSelected(item.name);
 
     setupdate(!update);
+    if (item.name!=='') {
+   onChange(item.type);
+ } else {
+   onChange('');
+ }
   };
 
   const setFilterValues = v => {
@@ -35,9 +41,9 @@ const DashboardFilters = ({onChange}) => {
       let veg = v.includes('Veg-only') ? {veg: 'veg'} : {};
       let nonveg = v.includes('NonVeg-only') ? {'non-veg': 'non-veg'} : {};
       // let rating = v.includes('Rating 4.0+') ? {rating: '4'} : {};
-      let rating = v.includes('Rating 4.0+') ? '4' : '0';
-      let offers = v.includes('Great Offers') ? {offers: 'offers'} : {};
-      let f = {...veg, ...nonveg,...offers};
+      //let rating = v.includes('Rating 4.0+') ? '4' : '0';
+      //let offers = v.includes('Great Offers') ? {offers: 'offers'} : {};
+      let f = {...veg, ...nonveg};
        setDashfilter(f)
        setFilterRating(rating)
       onChange(f);
@@ -62,17 +68,20 @@ const DashboardFilters = ({onChange}) => {
             style={{
               height: hp('5%'),
               borderRadius: 20,
-              borderWidth:selected.includes(item.name) ? 0 : 1,
+              // borderWidth:selected.includes(item.name) ? 0 : 1,
+              borderWidth:selected===item.name ? 0 : 1,
               marginLeft: 12,
               paddingHorizontal: '3%',
               marginTop: '1%',
               borderWidth:1,
               alignItems: 'center',
               justifyContent: 'center',
-              borderColor: selected.includes(item.name)
+              // borderColor: selected.includes(item.name)
+              borderColor: selected===item.name 
               ? '#28B056'
               : '#BBBBBB',
-              backgroundColor: selected.includes(item.name)
+              // backgroundColor: selected.includes(item.name)
+              backgroundColor: selected===item.name 
                 ? '#D6FFE473'
                 : 'white',
               flexDirection: 'row',
@@ -81,12 +90,17 @@ const DashboardFilters = ({onChange}) => {
               style={{
                 fontFamily: fontsDmSan.regular,
                 fontSize: RFValue(12),
-                color: selected.includes(item.name) ? '#28B056' : 'rgba(0, 0, 0, 0.65)',
+                // color: selected.includes(item.name) 
+                color: selected===item.name 
+                ? '#28B056' : 'rgba(0, 0, 0, 0.65)',
               }}>
               {item.name}{' '}
             </Text>
 
-            {selected.includes(item.name) && <SvgXml style={{}} xml={icon} />}
+            {
+            // selected.includes(item.name) 
+            selected===item.name 
+            && <SvgXml style={{}} xml={icon} />}
           </Pressable>
         ))}
       </ScrollView>

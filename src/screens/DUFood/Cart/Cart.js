@@ -31,7 +31,7 @@ import CartBill from './CartBill';
 // import {TouchableOpacity} from 'react-native-gesture-handler';
 import CartCoupanApply from './CartCoupanApply';
 import {useFocusEffect} from '@react-navigation/native';
-// import CartItemUpdate from '../Components/CartItemUpdate';
+import CartItemUpdate from './CartItemUpdate';
 // import Base_Image_Url from '../api/Url';
 // import CancellationPolicy from './CancellationPolicy';
 // import PerparationNotice from './PerparationNotice';
@@ -81,18 +81,18 @@ const Cart = ({navigation, route}) => {
   ];
   console;
 
-   const {
-  //   getCart,
-     setCart,
-  //   setCartEmpty,
-  //   saveInstructions,
-  //   updateCartItem,
-  //   applyCoupon,
-  //   removeApplyCoupon,
-  //   getCouponList,
-  //   cartOffer,
-  //   checkCartIsVaild,
-   } = rootStore.cartStore;
+  const {
+    //   getCart,
+    setCart,
+    //   setCartEmpty,
+    //   saveInstructions,
+    //   updateCartItem,
+    //   applyCoupon,
+    //   removeApplyCoupon,
+    //   getCouponList,
+    //   cartOffer,
+    //   checkCartIsVaild,
+  } = rootStore.cartStore;
 
   // const {createOrder, getOrgDistance} = rootStore.orderStore;
 
@@ -102,7 +102,7 @@ const Cart = ({navigation, route}) => {
   const {saveCartItem, loadCartList} = rootStore.cartStore;
 
   const [appCart, setAppCart] = useState({
-    cartitems:[]
+    cartitems: [],
   });
   const [cartTotal, setCartTotal] = useState(0);
   const [isAudio, setIsAudio] = useState(false);
@@ -124,10 +124,14 @@ const Cart = ({navigation, route}) => {
 
   // const [cartBillG, setCartBillG] = useState(null);
   const [cartBillG, setCartBillG] = useState({
-    cartTotal: 200,
-    tax: 20,
-    pfree: 22,
-    discount: 24,
+    cartTotal: 0,
+    platformFree: 0,
+    deliveryFree: 0,
+    gstRestorentCharges: 0,
+    grandTotal:0,
+    couponDiscount:0,
+    topay:0,
+  
   });
   const [userOrgDistance, setUserOrgDistance] = useState(null);
 
@@ -153,8 +157,6 @@ const Cart = ({navigation, route}) => {
   // }, [loadingOffer]);
 
   useEffect(() => {
-    
-    
     getUserCart();
   }, []);
 
@@ -326,13 +328,10 @@ const Cart = ({navigation, route}) => {
   const onSuccess = data => {
     let paymentId = data?.razorpay_payment_id;
     // createOrder(appCart, cartBillG, handleSuccess, handleLoading, paymentId);
-    navigation.navigate('orderPlaced',
-    {
-     restaurant: [],
-     // restaurant: isOtherCart?.orgdata,
-   }
-   );
-
+    navigation.navigate('orderPlaced', {
+      restaurant: [],
+      // restaurant: isOtherCart?.orgdata,
+    });
   };
 
   const onError = () => {
@@ -356,15 +355,29 @@ const Cart = ({navigation, route}) => {
   };
 
   const getUserCart = async () => {
-   
-    
     const cart = await loadCartList();
     console.log('user cart', cart);
     if (cart) {
       setAppCart({
-        cartitems:cart
+        cartitems: cart,
       });
-     // getUserOrgDistance(cart?.org_id);
+      let finalPrice = 0;
+      cart.map(
+        (item, key) => (finalPrice = finalPrice + item.finalprice),
+      );
+      let discount = 10;
+console.log('finalPrice>',finalPrice);
+      // const afterDicountPrice = finalPrice - discount;
+      setCartBillG({
+        cartTotal: finalPrice,
+        platformFree: 5,
+        deliveryFree: 10,
+        gstRestorentCharges: 20,
+        grandTotal:finalPrice+5+10+20,
+        couponDiscount:100,
+        topay:(finalPrice+5+10+20)-100,
+      });
+      // getUserOrgDistance(cart?.org_id);
     } else {
       navigation.goBack();
     }
@@ -381,7 +394,6 @@ const Cart = ({navigation, route}) => {
       item.addon_item && item.addon_item.length > 0 ? item.addon_item : null;
     const iPrice = item?.finalprice;
 
-
     // quantity: quan,
     // sellingprice: sellAmount,
     // addons: addons,
@@ -393,7 +405,7 @@ const Cart = ({navigation, route}) => {
     // productid: prdId,
     // product_id:prdId,
     // itemsUID:prdId,
-console.log('clicked>');
+    console.log('clicked>');
     await setCart(
       item,
       quan,
@@ -404,7 +416,10 @@ console.log('clicked>');
       addons,
       iPrice,
     );
-    getUserCart();
+    setTimeout(() => {
+      getUserCart(); 
+    }, 800);
+   
   };
 
   const onSucces = () => {
@@ -447,7 +462,6 @@ console.log('clicked>');
           backgroundColor: 'white',
           position: 'absolute',
           bottom: 0,
-         
 
           alignItems: 'center',
           borderTopEndRadius: 10,
@@ -459,7 +473,7 @@ console.log('clicked>');
           shadowRadius: 8,
           shadowOffset: {width: 0, height: 4},
           justifyContent: 'center',
-          
+
           width: '100%',
           padding: '5%',
         }}>
@@ -490,19 +504,18 @@ console.log('clicked>');
           onPress={() => {
             handleOrderCreate();
           }}>
-          
           <Text
             style={{
               backgroundColor: '#28B056',
-              width:wp('90%'),
+              width: wp('90%'),
               borderRadius: 20,
-             height:45,
+              height: 45,
               fontFamily: fonts.medium,
               fonts: RFValue(20),
               overflow: 'hidden',
               color: colors.white,
-              textAlign:'center',
-              textAlignVertical:'center'
+              textAlign: 'center',
+              textAlignVertical: 'center',
             }}>
             Place Order
           </Text>
@@ -543,6 +556,7 @@ console.log('clicked>');
     idForUpdate = item.itemsUID;
     itemForEdit = null;
     itemForEdit = item;
+    console.log('handleEdit>', item);
     setIsEdit(true);
   };
 
@@ -720,15 +734,52 @@ console.log('clicked>');
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text
+                        style={{
+                          alignSelf: 'flex-start',
+                          fontFamily: fonts.medium,
+                          fontSize: RFValue(12),
+                          color: '#242424',
+                        }}>
+                        Total Bill
+                      </Text>
+
+                      {/* Line in center */}
+                      <View
+                        style={{
+                          
+                          height: 1,
+                          backgroundColor: 'gray',
+                          marginHorizontal: 5, // Space between text and line
+                        }}
+                      />
+
+                      {/* cartTotal with gray color and underline */}
+                      <Text
+                        style={{
+                          color: 'gray',
+                          textDecorationLine: 'line-through', 
+                          fontFamily: fonts.medium,
+                          fontSize: RFValue(12),
+                        }}>
+                          
+                        {currencyFormat(cartBillG.cartTotal)}
+                      </Text>
+
+                      {/* After Discount Price */}
+                     
+                    </View>
                     <Text
-                      style={{
-                        alignSelf: 'flex-start',
-                        fontFamily: fonts.medium,
-                        fontSize: RFValue(12),
-                        color: '#242424',
-                      }}>
-                      Total Bill ₹460 ₹450
-                    </Text>
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: RFValue(12),
+                          color: '#242424',
+                          marginLeft:4,
+                        }}>
+                           
+                        {currencyFormat(cartBillG.topay)}
+                      </Text>
                     <Text
                       style={{
                         alignSelf: 'flex-start',
@@ -903,6 +954,7 @@ console.log('clicked>');
       <BillSummary
         // menu={orgMenu}
         visible={isBillDetail}
+        cartBillG={cartBillG}
         onClose={() => setIsBillDetail(false)}
         onSelectMenu={key => {
           scrollToGroup_(key);
@@ -973,7 +1025,7 @@ console.log('clicked>');
         }}
       /> */}
 
-      {/* <CartItemUpdate
+      <CartItemUpdate
         visible={isEdit}
         close={() => setIsEdit(false)}
         onUpdate={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
@@ -1000,9 +1052,10 @@ console.log('clicked>');
           getUserCart();
         }}
         cartItem={itemForEdit}
-        product={itemForEdit?.product}
-        imageUrl={imageUrl}
-      /> */}
+        product={itemForEdit?.addons}
+        // product={itemForEdit?.products}
+        // imageUrl={imageUrl}
+      />
     </View>
   );
 };

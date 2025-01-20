@@ -9,8 +9,9 @@ import {SvgXml} from 'react-native-svg';
 import {fonts} from '../../../theme/fonts/fonts';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import DotedLine from './DotedLine';
+import { currencyFormat } from '../../../halpers/currencyFormat';
 
-const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
+const BillSummary = ({visible,cartBillG, onClose, menu, onSelectMenu}) => {
   return (
     <Modal
       animationType="fade"
@@ -88,7 +89,9 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#646464',
                 }}>
-                ₹460.00
+               
+  
+                {currencyFormat(cartBillG.cartTotal)}
               </Text>
             </View>
             <View
@@ -115,7 +118,8 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#646464',
                 }}>
-                ₹10
+                    
+                {currencyFormat(cartBillG.deliveryFree)}
               </Text>
             </View>
             <View
@@ -142,7 +146,8 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#646464',
                 }}>
-                ₹5
+                  
+                {currencyFormat(cartBillG.platformFree)}
               </Text>
             </View>
 
@@ -170,7 +175,8 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#646464',
                 }}>
-                ₹20.18
+                   
+                {currencyFormat(cartBillG.gstRestorentCharges)}
               </Text>
             </View>
             <View style={{paddingHorizontal: 16}}>
@@ -201,7 +207,8 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#000',
                 }}>
-                ₹495.18
+                  
+                {currencyFormat(cartBillG.grandTotal)}
               </Text>
             </View>
 
@@ -229,7 +236,8 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#28B056',
                 }}>
-                -₹100
+                
+    {currencyFormat(cartBillG.couponDiscount)}
               </Text>
             </View>
 
@@ -257,7 +265,8 @@ const BillSummary = ({visible, onClose, menu, onSelectMenu}) => {
                   fontSize: RFValue(14),
                   color: '#000',
                 }}>
-                ₹395.18
+                    
+                {currencyFormat(cartBillG.topay)}
               </Text>
             </View>
 

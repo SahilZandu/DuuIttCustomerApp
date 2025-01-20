@@ -49,13 +49,13 @@ function calculateTime(distance, speed) {
   }
 }
 
-const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
+const RestaurantsCard = ({item, navigation, isHorizontal, onLike }) => {
   const distnace = item?.distance && item?.distance?.toFixed(1) + ' ' + 'KM';
-
+console.log('item>>',item)
   const [like, setLike] = useState(item?.islike == 1 ? true : false);
   const [isResOpen, setIsResOpen] = useState(
-    // item.rest_open != null ? true : false,
-    true,
+    item.is_online ? true : false,
+ 
   );
 
   useEffect(() => {
@@ -66,6 +66,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
     <View style={{backgroundColor: '#ffffff', marginBottom: 20}}>
       <View
         style={{
+          opacity: isResOpen ? 1 : 0.4,
           backgroundColor: '#FEF0F3', // Example color (can be any color)
           height: hp('10%'), // Height of the bottom view
           borderBottomLeftRadius: 20, // Rounded bottom-left corner
@@ -85,9 +86,10 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
             alignItems: 'center',
             marginStart: 10,
           }}>
-          <SvgXml xml={flat} />
+          <SvgXml 
+          xml={isResOpen ? flat : flatOfline } />
           <Text style={{
-            color: '#ED0826', 
+            color: isResOpen ?'#ED0826': 'rgba(0, 0, 0, 0.65)', 
             fontFamily:fonts.semiBold,
             marginStart: 4}}>
             Flat 125 OFF above 319
@@ -97,13 +99,17 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
       <Pressable
         onPress={() =>
           // alert('under progress')
+          (item.is_online)?
           navigation.navigate('resturantProducts', {
             item: item,
           })
+        : ''
         }
         style={[
           styles.container,
           {
+            opacity: isResOpen ? 1 : 0.5,
+
             width: isHorizontal ? wp('85%') : wp('95%'),
           },
         ]}>
@@ -136,7 +142,6 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
                 // width: isHorizontal ? wp('79%') : wp('89%'),
                 width: isHorizontal ? wp('85%') : wp('95%'),
                 height: isHorizontal ? hp('20%') : hp('25%'),
-                opacity: isResOpen ? 1 : 0.6,
               },
             ]}
             source={
@@ -164,6 +169,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
             }}>
             <View
               style={{
+                flex:1,
                 flexDirection: 'row',
                 alignItems: 'center',
                 backgroundColor: '#28B056',
@@ -174,7 +180,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
               }}>
               <SvgXml
                 fill={isResOpen ? '#ffffff' : 'rgba(0, 0, 0, 0.65)'}
-                xml={pureVeg}
+                xml={startIcon}
               />
               <Text
                 style={{
@@ -244,7 +250,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
             </Pressable>
           </View>
 
-          {item?.veg_nonveg == 'veg' && (
+          {item?.veg_non_veg == 'veg' && (
             <View
               style={{
                 marginTop: 20,
@@ -332,7 +338,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
               fontFamily: fonts.medium,
               color: '#646464',
             }}>
-            It is a long established fact that
+{item?.about}
           </Text>
         </View>
 
@@ -397,6 +403,10 @@ const startIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14
 
 const flat = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="6.5" cy="6.5" r="6.5" fill="#ED0826"/>
+<path d="M8.14469 3.76746L9.02015 4.64293L4.64281 9.02028L3.76734 8.14476L8.14469 3.76746ZM5.29942 5.2995C4.93677 5.66213 4.34884 5.66213 3.98621 5.2995C3.62358 4.93692 3.62358 4.34896 3.98621 3.98633C4.34884 3.6237 4.93677 3.6237 5.29942 3.98633C5.66206 4.34896 5.66206 4.93692 5.29942 5.2995ZM7.48807 8.80139C7.12543 8.43875 7.12543 7.85084 7.48807 7.4882C7.8507 7.12556 8.43861 7.12556 8.80125 7.4882C9.16389 7.85084 9.16389 8.43875 8.80125 8.80139C8.43861 9.16402 7.8507 9.16402 7.48807 8.80139Z" fill="white"/>
+</svg>`;
+const flatOfline = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="6.5" cy="6.5" r="6.5" fill="#D3D3D3"/>
 <path d="M8.14469 3.76746L9.02015 4.64293L4.64281 9.02028L3.76734 8.14476L8.14469 3.76746ZM5.29942 5.2995C4.93677 5.66213 4.34884 5.66213 3.98621 5.2995C3.62358 4.93692 3.62358 4.34896 3.98621 3.98633C4.34884 3.6237 4.93677 3.6237 5.29942 3.98633C5.66206 4.34896 5.66206 4.93692 5.29942 5.2995ZM7.48807 8.80139C7.12543 8.43875 7.12543 7.85084 7.48807 7.4882C7.8507 7.12556 8.43861 7.12556 8.80125 7.4882C9.16389 7.85084 9.16389 8.43875 8.80125 8.80139C8.43861 9.16402 7.8507 9.16402 7.48807 8.80139Z" fill="white"/>
 </svg>`;
 
