@@ -4,10 +4,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {appImagesSvg,} from '../commons/AppImages';
-import {colors} from '../theme/colors'
+import {appImagesSvg} from '../commons/AppImages';
+import {colors} from '../theme/colors';
 
-import { fonts} from '../theme/fonts/fonts';
+import {fonts} from '../theme/fonts/fonts';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {SvgXml} from 'react-native-svg';
 // import Spacer from './Spacer';
@@ -18,7 +18,7 @@ export default function OrderVarientsComponent({
   onSelectId,
   combination,
   varientGroup,
-  isResOpen
+  isResOpen,
 }) {
   const getVName = () => {
     if (varientGroup && varientGroup.length > 0) {
@@ -31,39 +31,24 @@ export default function OrderVarientsComponent({
   };
 
   return (
-    <View pointerEvents={isResOpen ?  'auto' : 'none'} 
-     style={{opacity: isResOpen ? 1 : 0.6
-     ,backgroundColor: 'white',
-     borderRadius:10,
-     shadowOffset:true,
-     shadowColor: '#000',  // Shadow color (black)
-     shadowOffset: { width: 0, height: 2 },  // Horizontal and vertical offset
-     shadowOpacity: 0.3,  // Opacity of the shadow
-     shadowRadius: 5,  // Blur radius of the shadow
-     elevation: 5,  // Android shadow (elevation must be set to display shadow on Android)
-     
-     shadowRadius:10,
-     margin:wp('5%'),
-     marginTop: '1.2%',
-     paddingHorizontal: '5%',}}>
+    <View
+      pointerEvents={isResOpen ? 'auto' : 'none'}
+      style={[
+        styles.container,
+        {
+          opacity: isResOpen ? 1 : 0.6,
+        },
+      ]}>
       <View style={styles.uprerTextView}>
         <Text style={styles.baseText}>{getVName()}</Text>
         <Text style={styles.selectText}>Select any 1 option</Text>
-        <View
-                style={{
-                  flex:1,
-                  height:2,
-                  marginBottom:10,
-                  marginTop:10,
-                  backgroundColor:colors.appBackground
-                }}/>
+        <View style={styles.bottomLineView} />
       </View>
-      
+
       {combination?.length > 0 && (
         <View style={styles.mainViewRender}>
           {combination?.map((value, i) => {
             return (
-             
               <TouchableOpacity
                 key={i}
                 onPress={() => {
@@ -75,15 +60,13 @@ export default function OrderVarientsComponent({
                 }}
                 hitSlop={styles.hitSlotTouch}
                 activeOpacity={0.8}
-                style={styles.touchView}
-                >
+                style={styles.touchView}>
                 <View style={styles.varientNameView}>
                   <Text numberOfLines={1} style={styles.varientName(id, value)}>
                     {value?.second_gp?.name
                       ? `${value?.first_gp?.name} - ${value?.second_gp?.name}`
                       : `${value?.first_gp?.name}`}
                   </Text>
-                 
                 </View>
                 {/* <Text style={styles.priceText(id, value)}>
                   {currencyFormat(value?.price)}
@@ -104,26 +87,41 @@ export default function OrderVarientsComponent({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    opacity: 1,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    shadowOffset: true,
+    shadowColor: colors.black, // Shadow color (black)
+    shadowOffset: {width: 0, height: 2}, // Horizontal and vertical offset
+    shadowOpacity: 0.3, // Opacity of the shadow
+    shadowRadius: 5, // Blur radius of the shadow
+    elevation: 5, // Android shadow (elevation must be set to display shadow on Android)
+    shadowRadius: 10,
+    marginHorizontal:'4%',
+    marginTop: '4%',
+    paddingHorizontal: '5%',
+    paddingBottom:'2%'
+  },
   upperViewMain: {
     backgroundColor: colors.white,
     marginTop: hp('0.4%'),
     justifyContent: 'center',
   },
   uprerTextView: {
-    
     marginTop: '1.2%',
     paddingTop: '3%',
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
   },
   baseText: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(13),
     fontFamily: fonts.semiBold,
-    color: colors.black,
+    color: colors.black85,
   },
   selectText: {
-    fontSize: RFValue(12),
+    fontSize: RFValue(13),
     fontFamily: fonts.regular,
-    color: colors.black,
+    color: colors.color64,
     marginTop: hp('0.5%'),
   },
 
@@ -151,17 +149,20 @@ const styles = StyleSheet.create({
   varientName: (vCId, value) => ({
     fontFamily: vCId == value?.id ? fonts.medium : fonts.regular,
     fontSize: RFValue(13),
-    color:
-      vCId == value?.id ? '#28B056' : '#646464',
+    color: vCId == value?.id ? colors.main : colors.color64,
     width: wp('70%'),
   }),
   priceText: (vCId, value) => ({
     fontFamily: vCId == value?.id ? fonts.medium : fonts.regular,
     fontSize: RFValue(13),
-    color:
-      vCId == value?.id ? colors.black : colors.appBackground,
+    color: vCId == value?.id ? colors.black : colors.appBackground,
     right: 10,
   }),
+  bottomLineView: {
+    height: 1,
+    marginTop: '4%',
+    backgroundColor: colors.colorD9,
+  },
 });
 const uncheck = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#D9D9D9"/>

@@ -8,7 +8,7 @@ const TextRender = ({title, value, bottomLine,titleStyle,valueStyle,lineStyle}) 
   return (
     <>
       <View style={styles.container}>
-        <Text style={[styles.title,titleStyle]}>{title}</Text>
+        <Text numberOfLines={1} style={[styles.title,titleStyle]}>{title}</Text>
         <Text style={[styles.value,valueStyle]}>{value}</Text>
       </View>
       {bottomLine && <View style={[styles.bottomLine,lineStyle]} />}
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     fontFamily: fonts.regular,
     color: colors.black,
+    marginRight:'9%'
   },
   value: {
     fontSize: RFValue(13),

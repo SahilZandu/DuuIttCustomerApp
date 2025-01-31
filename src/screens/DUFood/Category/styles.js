@@ -4,6 +4,7 @@ import {
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../theme/fonts/fonts';
+import {colors} from '../../../theme/colors';
 export const categoryStyles = {
   categoryMainConatiner: {
     flex: 1,
@@ -136,7 +137,7 @@ export const categoryStyles = {
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  categoryFilterConatiner:{
+  categoryFilterConatiner: {
     flexDirection: 'row',
     borderRadius: 20,
     borderWidth: 1,
@@ -154,87 +155,82 @@ export const categoryStyles = {
     shadowRadius: 3,
     marginRight: hp('1%'),
   },
-  categoryfilterText:{
+  categoryfilterText: {
     fontSize: RFValue(10),
     fontFamily: fonts.regular,
   },
 
-  filterConatiner:{
-    height:20,
-    width:20,
-    borderWidth:1,borderRadius:6
+  filterConatiner: {
+    height: 20,
+    width: 20,
+    borderWidth: 1,
+    borderRadius: 6,
   },
-  crossConatiner:{
+  crossConatiner: {
     marginBottom: hp('2%'),
-    backgroundColor: 'black',
+    backgroundColor: colors.black,
     width: 40,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
     alignSelf: 'center',
+  },
+  orderDescriptionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: hp('2%'),
+  },
+  orderTitle: {
+    color: 'black',
+    marginTop: hp('1%'),
+    fontSize: RFValue(16),
+    fontFamily: fonts.semiBold,
+  },
+  orderDescription: {
+    color: '#8F8F8F',
+    marginTop: hp('1%'),
+    fontSize: RFValue(11),
+    fontFamily: fonts.regular,
+  },
+  orderlistConatiner: {
+    width: wp('90%'),
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'center',
+    marginTop: hp('1.5%'),
+    borderRadius: 6,
+    padding: hp('1.5%'),
+  },
+  orderListTitle: {
+    fontFamily: fonts.semiBold,
+    fontSize: RFValue(14),
+    color: '#303030',
+  },
+  orderListSubtitle: {
+    fontFamily: fonts.regular,
+    fontSize: RFValue(12),
+    color: '#8F8F8F',
+    marginTop: hp('1%'),
+  },
+  orderCustomizeConatiner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: hp('1.5%'),
+  },
+  orderCustomizeTitle: {},
 
-},
-orderDescriptionContainer:{
-  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: hp('2%'),
-},
-orderTitle:{
-  color: 'black',
-  marginTop: hp('1%'),
-  fontSize: RFValue(16),
-  fontFamily: fonts.semiBold,
-},
-orderDescription:{
-  color: '#8F8F8F',
-  marginTop: hp('1%'),
-  fontSize: RFValue(11),
-  fontFamily: fonts.regular,
-},
-orderlistConatiner:{
-  width: wp('90%'),
-  backgroundColor: '#FFFFFF',
-  alignSelf: 'center',
-  marginTop: hp('1.5%'),
-  borderRadius: 6,
-  padding: hp('1.5%'),
-},
-orderListTitle:{
-  fontFamily: fonts.semiBold,
-  fontSize: RFValue(14),
-  color: '#303030',
-},
-orderListSubtitle:{
-  fontFamily: fonts.regular,
-  fontSize: RFValue(12),
-  color: '#8F8F8F',
-  marginTop: hp('1%'),
-},
-orderCustomizeConatiner:{
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  marginBottom: hp('1.5%'),
-},
-orderCustomizeTitle:{
-
-},
-
-orderCustomizeCheckbox:{
-  borderWidth: 1,
-            height: 20,
-            width: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 6,
-},
-orderCustomizesubCheckBox:{
-  height: 13,
-              width: 13,   
-              borderRadius: 2,
-},
-categoryListConatiner:{
-  
-}
-
+  orderCustomizeCheckbox: {
+    borderWidth: 1,
+    height: 20,
+    width: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
+  },
+  orderCustomizesubCheckBox: {
+    height: 13,
+    width: 13,
+    borderRadius: 2,
+  },
+  categoryListConatiner: {},
 };

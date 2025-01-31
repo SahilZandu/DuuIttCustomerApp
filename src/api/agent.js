@@ -70,9 +70,14 @@ export const agent = {
   customersFcmToken: body => requests.post(Url.customersFcmToken, body),
   testMessage: body => requests.post(Url.testMessage, body),
   updateOrderStatus: body => requests.post(Url.updateOrderStatus, body),
-  
-  
-
+  allDishCategory:() => requests.get(Url.allDishCategory),
+  restaurantListAccordingCategory: body => requests.post(Url.restaurantListaccordingCategory, body),
+  restaurantUnderMenuGroup: body => requests.post(Url.restaurantUnderMenuGroup, body),
+  restaurantListForDishCategory: body => requests.post(Url.restaurantListForDishCategory, body),
+  // cart
+  setCart: body => requests.post(Url.setCart, body),
+  updateCart: body => requests.post(Url.updateCart, body),
+  getCart: body => requests.post(Url.getCart, body),
 };
 
 const requests = {

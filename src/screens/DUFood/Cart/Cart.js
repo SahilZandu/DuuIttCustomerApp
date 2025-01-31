@@ -7,10 +7,12 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  StyleSheet,
+  Platform,
 } from 'react-native';
 import {rootStore} from '../../../stores/rootStore';
 import {SvgXml} from 'react-native-svg';
-import {styles} from './styles';
+// import {styles} from './styles';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -20,22 +22,12 @@ import {fonts} from '../../../theme/fonts/fonts';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {currencyFormat} from '../../../halpers/currencyFormat';
 import Header from '../../../components/header/Header';
-// import CartHeader from './CartHeader';
 import {usePayment} from '../../../halpers/usePayment';
 import CartItems from './CartItems';
-// import CartInstructions from './CartInstructions';
 import CartBill from './CartBill';
-// import CTA from '../Components/CTA/CTA';
-// import PickedOrderModalComponent from '../Components/PickedOrderModalComponent';
-// import RazorpayCheckout from 'react-native-razorpay';
-// import {TouchableOpacity} from 'react-native-gesture-handler';
 import CartCoupanApply from './CartCoupanApply';
 import {useFocusEffect} from '@react-navigation/native';
 import CartItemUpdate from './CartItemUpdate';
-// import Base_Image_Url from '../api/Url';
-// import CancellationPolicy from './CancellationPolicy';
-// import PerparationNotice from './PerparationNotice';
-// import { usePayment } from '../helpers/usePayment';
 import DotedLine from '../Components/DotedLine';
 import {colors} from '../../../theme/colors';
 import BillSummary from '../Components/BillSummary';
@@ -48,59 +40,45 @@ import {
   PlayerState,
   FinishMode,
 } from '@simform_solutions/react-native-audio-waveform';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import {Surface} from 'react-native-paper';
+import BTN from '../../../components/cta/BTN';
+import PaymentBtn from '../../../components/cta/PaymentBtn';
+import DeliveryCart from './DeliveryCart';
+import Url from '../../../api/Url';
 let itemForEdit = null;
 
 let idForUpdate = null;
 
+const recomendedOrdersList = [
+  {
+    id: '1',
+    name: 'Pav Bhaji',
+    imageUrl: appImages.foodIMage,
+  },
+  {
+    id: '2',
+    name: 'Kdi Paneer',
+    imageUrl: appImages.foodIMage,
+  },
+  {
+    id: '3',
+    name: 'Samosa (2 Pieces)',
+    imageUrl: appImages.foodIMage,
+  },
+  {
+    id: '4',
+    name: 'Pav Bhaji',
+    imageUrl: appImages.foodIMage,
+  },
+  // Add more restaurants as needed
+];
+
 const Cart = ({navigation, route}) => {
   const {restaurant} = route.params;
-  const stref = useRef(null);
+  const {setCart, getCart, updateCart} =rootStore.cartStore;
+    const {appUser} = rootStore.commonStore;
   const [isPlaying, setIsPLayig] = useState(false);
-  const recomendedOrdersList = [
-    {
-      id: '1',
-      name: 'Pav Bhaji',
-      imageUrl: appImages.foodIMage,
-    },
-    {
-      id: '2',
-      name: 'Kdi Paneer',
-      imageUrl: appImages.foodIMage,
-    },
-    {
-      id: '3',
-      name: 'Samosa (2 Pieces)',
-      imageUrl: appImages.foodIMage,
-    },
-    {
-      id: '4',
-      name: 'Pav Bhaji',
-      imageUrl: appImages.foodIMage,
-    },
-    // Add more restaurants as needed
-  ];
-  console;
-
-  const {
-    //   getCart,
-    setCart,
-    //   setCartEmpty,
-    //   saveInstructions,
-    //   updateCartItem,
-    //   applyCoupon,
-    //   removeApplyCoupon,
-    //   getCouponList,
-    //   cartOffer,
-    //   checkCartIsVaild,
-  } = rootStore.cartStore;
-
-  // const {createOrder, getOrgDistance} = rootStore.orderStore;
-
-  // const imageUrl = Base_Image_Url?.Base_Image_UrlProduct;
-
-  // const [appCart, setAppCart] = useState(null);
-  const {saveCartItem, loadCartList} = rootStore.cartStore;
-
   const [appCart, setAppCart] = useState({
     cartitems: [],
   });
@@ -110,8 +88,6 @@ const Cart = ({navigation, route}) => {
   const [instuctions, setInstuctions] = useState(
     'Add instructions for delivery partner',
   );
-
-  const [tax, setTax] = useState(0);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [offerCart, setOfferCart] = useState([]);
@@ -128,193 +104,19 @@ const Cart = ({navigation, route}) => {
     platformFree: 0,
     deliveryFree: 0,
     gstRestorentCharges: 0,
-    grandTotal:0,
-    couponDiscount:0,
-    topay:0,
-  
+    grandTotal: 0,
+    couponDiscount: 0,
+    topay: 0,
   });
   const [userOrgDistance, setUserOrgDistance] = useState(null);
+  const [cartList, setCartList] = useState({});
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     getUserCart();
-  //     getOfferCart();
-  //     const {cartOffer} = rootStore.cartStore;
-  //     console.log('offer card', cartOffer);
-  //     if (cartOffer?.coupon_code) {
-  //       setTimeout(() => {
-  //         setActiveOffer(cartOffer);
-  //       }, 300);
-  //     }
-  //   }, [cartOffer, loadingOffer]),
-  // );
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     const {cartOffer} = rootStore.cartStore;
-  //     setActiveOffer(cartOffer);
-  //   }, 300);
-  // }, [loadingOffer]);
-
-  useEffect(() => {
-    getUserCart();
-  }, []);
-
-  useEffect(() => {
-    if (appCart) {
-      const intervalId = setInterval(() => {
-        reFreshDistance(appCart?.org_id);
-      }, 30000);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [appCart]);
-
-  const reFreshDistance = id => {
-    getUserOrgDistance(id);
-  };
-
-  const startNewPlayer = async () => {
-    // currentPlayingRef = stref;
-    if (stref.current?.currentState === PlayerState.paused) {
-      await stref.current?.resumePlayer();
-    } else {
-      console.log('ply>');
-      setIsPLayig(!isPlaying);
-      await stref.current?.startPlayer({
-        finishMode: FinishMode.stop,
-      });
-    }
-  };
-
-  const stopPlayer = async () => {
-    if (stref?.current?.currentState === PlayerState.playing) {
-      setIsPLayig(false);
-      stref?.current?.stopPlayer();
-    }
-  };
-
-  const getOfferCart = async () => {
-    const resOffer = await getCouponList();
-    console.log('resOffer===', resOffer);
-    setOfferCart(resOffer);
-  };
-  const AddInstruction = () => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          setIsInstruction(!isInstruction);
-        }}
-        style={{
-          flexDirection: 'row',
-          alignSelf: 'flex-start',
-          backgroundColor: 'white',
-          padding: 10,
-          alignItems: 'center',
-          marginTop: 10,
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: '#CACACA',
-          elevation: 4,
-          shadowColor: '#000',
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          shadowOffset: {width: 0, height: 4},
-        }}>
-        <Image
-          style={{width: 12, height: 12, marginEnd: 10}}
-          source={appImages.retaurentNote}
-        />
-        {isTxtInst && (
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              fontSize: RFValue(11),
-              color: '#242424',
-            }}>
-            {instuctions}
-          </Text>
-        )}
-
-        {isAudio && (
-          <View
-            style={{
-              paddingHorizontal: 16,
-              flexDirection: 'row',
-              width: '90%',
-              backgroundColor: 'white',
-              alignItems: 'center',
-            }}>
-            <SvgXml
-              xml={isPlaying ? appImagesSvg.stopRed : appImagesSvg.playRed}
-            />
-            <Text
-              style={{
-                fontFamily: fonts.medium,
-                fontSize: RFValue(11),
-                color: '#242424',
-                marginLeft: 10,
-              }}>
-              {'Audio Instuctions'}
-            </Text>
-            {/* <TouchableOpacity
-                  onPress={() => {
-                    isPlaying ? stopPlayer() : startNewPlayer();
-                  }}>
-                  <SvgXml
-                    xml={
-                      isPlaying ? appImagesSvg.stopRed : appImagesSvg.playRed
-                    }
-                  />
-                   
-                </TouchableOpacity>
-                <View
-                  style={{
-                    marginLeft: 10,
-                    width: '80%',
-                    justifyContent: 'center',
-                    height: 20,
-                    paddingEnd:20
-                    
-                  }}>
-                  <Waveform
-                    mode="static"
-                    ref={stref}
-                    path={instuctions}
-                    candleSpace={2}
-                    candleWidth={4}
-                    scrubColor="#28B056"
-                    waveColor="gray"
-                    onPlayerStateChange={playerState => {
-                      console.log('playerState', playerState);
-                      if (playerState === 'stopped') {
-                        setIsPLayig(false);
-                      }
-                    }}
-                    onPanStateChange={isMoving => console.log(isMoving)}
-                    onCurrentProgressChange={(
-                      currentProgress,
-                      songDuration,
-                    ) => {
-                      console.log(
-                        `currentProgress ${currentProgress}, songDuration ${songDuration}`,
-                      );
-                    }}
-                  />
-                </View> */}
-          </View>
-        )}
-      </TouchableOpacity>
-    );
-  };
-
-  const getUserOrgDistance = async orgId => {
-    if (orgId) {
-      const getDi = await getOrgDistance(orgId);
-      console.log('getdii', getDi);
-      setUserOrgDistance(getDi ? getDi.travel_time : null);
-    }
-  };
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton(navigation);
+      getUserCart();
+    }, []),
+  );
 
   const handleSuccess = data => {
     setCartEmpty();
@@ -340,42 +142,26 @@ const Cart = ({navigation, route}) => {
 
   const handleOrderCreate = async () => {
     usePayment(cartBillG, onSuccess, onError);
-    // setLoading(true);
-
-    // let checkIsCartValid = await checkCartIsVaild();
-
-    // console.log('get cart is valid:', checkIsCartValid);
-
-    // if (checkIsCartValid) {
-    //    usePayment(cartBillG,onSuccess, onError)
-    //   //  createOrder(appCart, cartBillG, handleSuccess, handleLoading);
-    // } else {
-    //   setLoading(false);
-    // }
   };
 
   const getUserCart = async () => {
-    const cart = await loadCartList();
+    // const cart = await loadCartList();
+    const cart = await getCart(restaurant);
+    console.log('getUserCart:-cart', cart);
     console.log('user cart', cart);
-    if (cart) {
+    setCartList(cart ?? {});
+    if (cart?.food_item?.length > 0) {
       setAppCart({
-        cartitems: cart,
+        cartitems: cart?.food_item,
       });
-      let finalPrice = 0;
-      cart.map(
-        (item, key) => (finalPrice = finalPrice + item.finalprice),
-      );
-      let discount = 10;
-console.log('finalPrice>',finalPrice);
-      // const afterDicountPrice = finalPrice - discount;
       setCartBillG({
-        cartTotal: finalPrice,
+        cartTotal: cart?.grand_total,
         platformFree: 5,
         deliveryFree: 10,
         gstRestorentCharges: 20,
-        grandTotal:finalPrice+5+10+20,
-        couponDiscount:100,
-        topay:(finalPrice+5+10+20)-100,
+        grandTotal: cart?.grand_total + 5 + 10 + 20,
+        couponDiscount: 100,
+        topay: cart?.grand_total + 5 + 10 + 20 - 10,
       });
       // getUserOrgDistance(cart?.org_id);
     } else {
@@ -387,39 +173,26 @@ console.log('finalPrice>',finalPrice);
     setIsOpenNote(vale);
   };
   const handleAddRemove = async (item, quan) => {
-    const vcId = item?.varient_id ? item?.varient_id : null;
-    const vcName = item?.varient_name ? item?.varient_name : null;
-    const vcPrice = item?.varient_price ? item?.varient_price : null;
-    const addons =
-      item.addon_item && item.addon_item.length > 0 ? item.addon_item : null;
-    const iPrice = item?.finalprice;
-
-    // quantity: quan,
-    // sellingprice: sellAmount,
-    // addons: addons,
-    // subtotalprice: iPrice,
-    // finalprice: iPrice * quan,
-    // productname: title,
-    // veg_non_veg: veg_non_veg,
-    // productdescription: description,
-    // productid: prdId,
-    // product_id:prdId,
-    // itemsUID:prdId,
-    console.log('clicked>');
-    await setCart(
-      item,
-      quan,
-      vcId,
-      vcName,
-      vcPrice,
-      restaurant,
-      addons,
-      iPrice,
-    );
+    console.log('cartList--', cartList, item, quan);
+    let updatedCartList = cartList?.cart_items?.map(data => {
+      if (data?.food_item_id == item?._id) {
+        return {...data, quantity: quan};
+      }
+      return {
+        ...data,
+      };
+    });
+    // console.log(
+    //   'updatedCartList--',
+    //   updatedCartList,
+    //   appUser,
+    //   restaurant,
+    //   getCartList,
+    // );
+    await updateCart(updatedCartList, appUser, restaurant, cartList);
     setTimeout(() => {
-      getUserCart(); 
-    }, 800);
-   
+      getUserCart();
+    }, 500);
   };
 
   const onSucces = () => {
@@ -435,6 +208,7 @@ console.log('finalPrice>',finalPrice);
       return currencyFormat(0);
     }
   };
+
   const AddButton = () => {
     return (
       <View style={styles.buttonContainer}>
@@ -442,94 +216,42 @@ console.log('finalPrice>',finalPrice);
       </View>
     );
   };
-  const renderRecommendedOrderItem = ({item}) => (
+  const renderCartItem = ({item}) => {
+    // console.log('item---',item);
+    return(
     <View style={styles.itemContainer}>
-      <Image source={item.imageUrl} resizeMode="cover" style={styles.image} />
+      <Image source={item?.image?.length > 0 ? Url?.Image_Url +item?.image : appImages.foodIMage} resizeMode="cover" style={styles.image} />
 
       <Text numberOfLines={2} style={[styles.name, {fontSize: 14}]}>
-        {item.name}
+        {item?.name}
       </Text>
-      <View style={[styles.viewContainer, {justifyContent: 'space-between'}]}>
-        <Text style={styles.rating}>99</Text>
+      <View style={[styles.viewContainer]}>
+        <Text style={styles.rating}>{currencyFormat(item?.selling_price)}</Text>
         <AddButton />
       </View>
     </View>
-  );
-  const PlaceOrderBtn = ({appCart, userOrgDistance}) => {
+  )};
+
+
+  const PlaceOrderBtn = ({}) => {
     return (
-      <View
-        style={{
-          backgroundColor: 'white',
-          position: 'absolute',
-          bottom: 0,
-
-          alignItems: 'center',
-          borderTopEndRadius: 10,
-          borderTopLeftRadius: 10,
-
-          elevation: 8,
-          shadowColor: '#000',
-          shadowOpacity: 0.2,
-          shadowRadius: 8,
-          shadowOffset: {width: 0, height: 4},
-          justifyContent: 'center',
-
-          width: '100%',
-          padding: '5%',
-        }}>
-        {/* <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <SvgXml style={{marginEnd: 6}} xml={appImagesSvg.googlePay} />
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              fontSize: RFValue(14),
-              color: colors.black,
-            }}>
-            Google Pay
-          </Text>
-          <SvgXml
-            style={{
-              marginLeft: 6,
-            }}
-            xml={appImagesSvg.greenBottomArrow}
-          />
-        </View> */}
-
-        <TouchableOpacity
-          onPress={() => {
-            handleOrderCreate();
-          }}>
-          <Text
-            style={{
-              backgroundColor: '#28B056',
-              width: wp('90%'),
-              borderRadius: 20,
-              height: 45,
-              fontFamily: fonts.medium,
-              fonts: RFValue(20),
-              overflow: 'hidden',
-              color: colors.white,
-              textAlign: 'center',
-              textAlignVertical: 'center',
-            }}>
-            Place Order
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <PaymentBtn
+        onPressPay={() => {}}
+        payText={'Google Pay'}
+        onPressBuyNow={() => {
+          handleOrderCreate();
+        }}
+        buyNowText={'Buy Now'}
+      />
     );
   };
 
   const RecommendedOrderList = () => {
     return (
       <FlatList
-        data={recomendedOrdersList}
-        renderItem={renderRecommendedOrderItem}
-        keyExtractor={item => item.id}
+        data={appCart?.cartitems}
+        renderItem={renderCartItem}
+        keyExtractor={item => item?.id}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
@@ -560,267 +282,9 @@ console.log('finalPrice>',finalPrice);
     setIsEdit(true);
   };
 
-  const Delivery = () => {
-    return (
-      <View style={{margin: 20}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'flex-start',
-            backgroundColor: 'white',
-            padding: 10,
-            alignItems: 'center',
-
-            borderTopEndRadius: 10,
-            borderTopLeftRadius: 10,
-            borderWidth: 1,
-            borderColor: '#CACACA',
-            elevation: 4,
-            shadowColor: '#000',
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            shadowOffset: {width: 0, height: 4},
-          }}>
-          {/* <Image
-            style={{width: 12, height: 12, marginEnd: 10}}
-            source={appImages.retaurentNote}
-          /> */}
-          <SvgXml style={{marginEnd: 10}} xml={appImagesSvg.deliveryTime} />
-          <Text
-            style={{
-              fontFamily: fonts.medium,
-              fontSize: RFValue(12),
-              color: '#242424',
-            }}>
-            Delivery in 30 mins
-          </Text>
-        </View>
-
-        <View
-          style={{
-            width: wp('90%'),
-
-            alignSelf: 'flex-start',
-            justifyContent: 'space-between',
-            backgroundColor: 'white',
-            padding: 10,
-            marginTop: hp('-1%'),
-
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: '#CACACA',
-            elevation: 4,
-            shadowColor: '#000',
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            shadowOffset: {width: 0, height: 4},
-          }}>
-          <View
-            style={{
-              width: wp('84%'),
-              flexDirection: 'row',
-              alignSelf: 'flex-start',
-              justifyContent: 'space-between',
-
-              marginTop: 10,
-            }}>
-            <View
-              style={{
-                width: wp('70%'),
-                flexDirection: 'row',
-              }}>
-              {/* <Image
-                style={{width: 12, height: 12, marginEnd: 10}}
-                source={appImages.retaurentNote}
-              /> */}
-              <SvgXml style={{marginEnd: 10}} xml={appImagesSvg.markerColor} />
-              <View>
-                <Text
-                  style={{
-                    alignSelf: 'flex-start',
-                    fontFamily: fonts.medium,
-                    fontSize: RFValue(12),
-                    color: '#242424',
-                  }}>
-                  Delivery at Home
-                </Text>
-                <Text
-                  numberOfLines={2}
-                  style={{
-                    alignSelf: 'flex-start',
-                    fontFamily: fonts.medium,
-                    fontSize: RFValue(11),
-                    color: '#8A8A8A',
-                  }}>
-                  11, 1 Floor, Tower tdi, Narayana E Techno Sc...
-                </Text>
-                <AddInstruction />
-              </View>
-            </View>
-            <SvgXml xml={appImagesSvg.rightArrow} />
-          </View>
-
-          <DotedLine />
-
-          <View
-            style={{
-              width: wp('84%'),
-              flexDirection: 'row',
-              alignSelf: 'flex-start',
-              justifyContent: 'space-between',
-
-              marginTop: 10,
-            }}>
-            <View
-              style={{
-                width: wp('70%'),
-                flexDirection: 'row',
-              }}>
-              {/* <Image
-                style={{width: 12, height: 12, marginEnd: 10}}
-                source={appImages.retaurentNote}
-              /> */}
-              <SvgXml style={{marginEnd: 10}} xml={appImagesSvg.phone_} />
-              <View>
-                <Text
-                  style={{
-                    alignSelf: 'flex-start',
-                    fontFamily: fonts.medium,
-                    fontSize: RFValue(12),
-                    color: '#242424',
-                  }}>
-                  Rahul Garg, +91-9668236442
-                </Text>
-                <Text
-                  numberOfLines={2}
-                  style={{
-                    alignSelf: 'flex-start',
-                    fontFamily: fonts.medium,
-                    fontSize: RFValue(11),
-                    color: '#8A8A8A',
-                  }}>
-                  +91-9668236442
-                </Text>
-              </View>
-            </View>
-            <SvgXml xml={appImagesSvg.rightArrow} />
-          </View>
-
-          <DotedLine />
-
-          <View
-            style={{
-              width: wp('84%'),
-              flexDirection: 'row',
-              alignSelf: 'flex-start',
-              justifyContent: 'space-between',
-
-              marginTop: 10,
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                setIsBillDetail(!isBillDetail);
-              }}>
-              <View
-                style={{
-                  width: wp('70%'),
-                  flexDirection: 'row',
-                }}>
-                <SvgXml style={{marginEnd: 10}} xml={appImagesSvg.totalBill} />
-                <View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          alignSelf: 'flex-start',
-                          fontFamily: fonts.medium,
-                          fontSize: RFValue(12),
-                          color: '#242424',
-                        }}>
-                        Total Bill
-                      </Text>
-
-                      {/* Line in center */}
-                      <View
-                        style={{
-                          
-                          height: 1,
-                          backgroundColor: 'gray',
-                          marginHorizontal: 5, // Space between text and line
-                        }}
-                      />
-
-                      {/* cartTotal with gray color and underline */}
-                      <Text
-                        style={{
-                          color: 'gray',
-                          textDecorationLine: 'line-through', 
-                          fontFamily: fonts.medium,
-                          fontSize: RFValue(12),
-                        }}>
-                          
-                        {currencyFormat(cartBillG.cartTotal)}
-                      </Text>
-
-                      {/* After Discount Price */}
-                     
-                    </View>
-                    <Text
-                        style={{
-                          fontFamily: fonts.medium,
-                          fontSize: RFValue(12),
-                          color: '#242424',
-                          marginLeft:4,
-                        }}>
-                           
-                        {currencyFormat(cartBillG.topay)}
-                      </Text>
-                    <Text
-                      style={{
-                        alignSelf: 'flex-start',
-                        fontFamily: fonts.medium,
-                        fontSize: RFValue(10),
-                        color: '#28B056',
-                        borderRadius: 10,
-                        marginLeft: 10,
-                        paddingEnd: 6,
-                        paddingStart: 6,
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        backgroundColor: '#D6FFE4',
-                      }}>
-                      You saved ₹10
-                    </Text>
-                  </View>
-                  <Text
-                    numberOfLines={2}
-                    style={{
-                      alignSelf: 'flex-start',
-                      fontFamily: fonts.medium,
-                      fontSize: RFValue(11),
-                      color: '#8A8A8A',
-                    }}>
-                    Incl. taxes and charges
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-            <SvgXml xml={appImagesSvg.rightArrow} />
-          </View>
-        </View>
-      </View>
-    );
-  };
-
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={styles.container}>
       <Header
-        bgColor={'white'}
         title={'Cart'}
         backArrow={true}
         onPress={() => {
@@ -852,25 +316,9 @@ console.log('finalPrice>',finalPrice);
               saveInstructions(action, data, appCart?.org_id, onSucces);
             }}
           /> */}
-        <View
-          style={{
-            marginTop: '2%',
-            backgroundColor: 'white',
-            height: 220,
-
-            margin: 20,
-            borderRadius: 10,
-            elevation: 4,
-            shadowColor: '#000',
-            shadowOpacity: 0.2,
-            shadowRadius: 8,
-
-            shadowOffset: {width: 0, height: 6},
-          }}>
+        <View style={styles.completeMealWithView}>
           <Text style={styles.titleText}>Complete your meal with</Text>
-          <View style={{marginTop: 10}}>
-            <RecommendedOrderList />
-          </View>
+          <View style={styles.comMealListView}>{RecommendedOrderList()}</View>
         </View>
         {/* {offerCart?.length > 0 && ( */}
         <CartCoupanApply
@@ -880,14 +328,8 @@ console.log('finalPrice>',finalPrice);
           }}
           applyTitle={activeOffer?.coupon_code ? 'Remove' : 'Apply'}
           onMoreCoupan={() => {
-            // navigation.navigate('coupan', {
-            //   restaurantOffer: offerCart,
-            //   totalPrice: cartTotal,
-            // });
-
             navigation.navigate('couponsList', {
               restaurant: [],
-              // restaurant: isOtherCart?.orgdata,
             });
           }}
           btnTitle="View more coupons"
@@ -896,28 +338,33 @@ console.log('finalPrice>',finalPrice);
 
         {/* )} */}
 
-        <View
-          style={{
-            marginTop: '2%',
-            backgroundColor: 'white',
-            height: 220,
-
-            margin: 20,
-            borderRadius: 10,
-            elevation: 4,
-            shadowColor: '#000',
-            shadowOpacity: 0.2,
-            shadowRadius: 8,
-
-            shadowOffset: {width: 0, height: 6},
-          }}>
+        <View style={styles.addNowView}>
           <Text style={styles.titleText}>Missed something? Add now</Text>
-          <View style={{marginTop: 10}}>
-            <RecommendedOrderList />
-          </View>
+          <View style={styles.addNewListView}>{RecommendedOrderList()}</View>
         </View>
 
-        <Delivery />
+        <View>
+          <DeliveryCart
+            DeliveryInMint={'Delivery in 30 mins'}
+            address={'Delivery at Home'}
+            locationAddress={'11, 1 Floor, Tower tdi, Narayana E Techno Sc...'}
+            onAddInstruction={() => {
+              setIsInstruction(!isInstruction);
+            }}
+            isTxtInst={isTxtInst}
+            instuctions={instuctions}
+            isAudio={isAudio}
+            isPlaying={isPlaying}
+            audioInstuctions={'Audio Instuctions'}
+            nameWithNumber={'Rahul Garg, +91-9668236442'}
+            number={'+91-9668236442'}
+            onBillDetails={() => {
+              setIsBillDetail(!isBillDetail);
+            }}
+            totalBill={'Total Bill'}
+            cartBillG={cartBillG}
+          />
+        </View>
 
         {/* <CartBill
           appCart={appCart}
@@ -929,22 +376,11 @@ console.log('finalPrice>',finalPrice);
           activeOffer={activeOffer}
         /> */}
 
-        {/* <CancellationPolicy values={{}} /> */}
-        <View style={{margin: 20}}>
-          <Text
-            style={{
-              color: '#E95D5D',
-              fontFamily: fonts.regular,
-              fontSize: RFValue(10),
-            }}>
+        <View style={styles.cancelationPolicyView}>
+          <Text style={styles.cancellationPilocyText}>
             Cancellation Policy :
           </Text>
-          <Text
-            style={{
-              color: '#646464',
-              fontFamily: fonts.regular,
-              fontSize: RFValue(10),
-            }}>
+          <Text style={styles.aviodCancellationText}>
             Avoid Cancellation as it leads to food wastage. The amount paid is
             non- refundable after placing the order.
           </Text>
@@ -1029,15 +465,15 @@ console.log('finalPrice>',finalPrice);
         visible={isEdit}
         close={() => setIsEdit(false)}
         onUpdate={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
-          console.log(
-            'values:--',
-            quan,
-            sellAmount,
-            vcId,
-            vcName,
-            addons,
-            iPrice,
-          );
+          // console.log(
+          //   'values:--',
+          //   quan,
+          //   sellAmount,
+          //   vcId,
+          //   vcName,
+          //   addons,
+          //   iPrice,
+          // );
           setIsEdit(false);
           await updateCartItem(
             itemForEdit?.product,
@@ -1053,8 +489,6 @@ console.log('finalPrice>',finalPrice);
         }}
         cartItem={itemForEdit}
         product={itemForEdit?.addons}
-        // product={itemForEdit?.products}
-        // imageUrl={imageUrl}
       />
     </View>
   );
@@ -1062,7 +496,106 @@ console.log('finalPrice>',finalPrice);
 
 export default Cart;
 
-const backBtn = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 18 18" fill="none">
-<path d="M14.25 9H3.75" stroke="#595959" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M9 14.25L3.75 9L9 3.75" stroke="#595959" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.appBackground,
+  },
+  buttonContainer: {
+    paddingHorizontal: 15,
+    backgroundColor: colors.colorEC, // Filled color (green in this case)
+    borderWidth: 1,
+    borderColor: colors.main, // Border color (slightly darker green)
+    borderRadius: 20, // Rounded corners
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: hp('3%'),
+  },
+  buttonText: {
+    color: colors.main, // Text color
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  itemContainer: {
+    marginHorizontal: 10,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  name: {
+    marginTop: 8,
+    fontSize: RFValue(14),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
+    // textAlign: 'center',
+  },
+  viewContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: '6%',
+  },
+  rating: {
+    fontSize: RFValue(10),
+    fontFamily: fonts.medium,
+    color: colors.black,
+  },
+  listContainer: {
+    paddingVertical: 10,
+  },
+  titleText: {
+    fontSize: RFValue(16),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
+    marginTop: '2.5%',
+    marginStart: 10,
+  },
+  completeMealWithView: {
+    marginTop: '4%',
+    backgroundColor: colors.white,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: {width: 0, height: 6},
+  },
+  comMealListView: {
+    marginTop: '2%',
+    justifyContent: 'center',
+  },
+  addNowView: {
+    backgroundColor: colors.white,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+
+    shadowOffset: {width: 0, height: 6},
+  },
+  addNewListView: {
+    marginTop: '3%',
+    justifyContent: 'center',
+  },
+  cancelationPolicyView: {
+    marginHorizontal: 20,
+    marginTop: '5%',
+    justifyContent: 'center',
+  },
+  cancellationPilocyText: {
+    color: colors.red,
+    fontFamily: fonts.regular,
+    fontSize: RFValue(10),
+  },
+  aviodCancellationText: {
+    color: colors.color64,
+    fontFamily: fonts.regular,
+    fontSize: RFValue(10),
+    lineHeight: 18,
+  },
+});

@@ -21,6 +21,15 @@ export default  {
     updateOrderStatus:'orders/update-order-status',
 
     restaurentAll:'restaurant/all',
+    allDishCategory:'dish-category/all',
+    restaurantListaccordingCategory :'restaurant/restaurant-list-for-menu-group',
+    // restaurantUnderMenuGroup:'restaurant/menu-item-under-menu-group',
+    restaurantUnderMenuGroup:'food-item/of-menu-group-list',//
+    restaurantListForDishCategory:'restaurant/restaurant-list-for-dish-category',//
+    setCart:'cart',
+   updateCart :'cart/update',
+    getCart:'cart/get',
+    
 
 
    

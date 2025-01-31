@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
   paymentTitle: {
     marginLeft: '5%',
     fontSize: RFValue(13),
-    fontFamily: fonts.regular,
+    fontFamily: fonts.black,
     maxWidth: wp('24%'),
   },
   buyBtnView: {

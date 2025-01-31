@@ -5,10 +5,11 @@ import {useToast} from '../halpers/useToast';
 
 export default class FoodDashStore {
   restaurentList = [];
-  orderTrackingList = [];
+  allCategoryList=[]
+  categoryMenuList = []
+
 
   restaurentAll = async (geoLocation,selectedFilter, limit, handleLoading) => {
-  
    // let vegNonVeg='';
    let requestData;
     if(selectedFilter === 'veg' || 
@@ -22,7 +23,6 @@ export default class FoodDashStore {
          // limit: limit,
       };
     }
-
     else if(selectedFilter === 'price_low'  ){
        requestData = {
         near_by: {
@@ -57,11 +57,12 @@ export default class FoodDashStore {
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         // useToast(message, 0);
+        this.restaurentList = [];
         handleLoading(false);
         return [];
       }
     } catch (error) {
-      console.log('error parcelsOfUser:', error);
+      console.log('error restaurentAll:', error);
       handleLoading(false);
       const m = error?.data?.message
         ? error?.data?.message
@@ -71,134 +72,135 @@ export default class FoodDashStore {
     }
   };
 
-  // getOrderHistorybyFilters = async type => {
-  //   const orderHistroy = this.orderHistoryList;
+  allDishCategory = async (handleLoading) => {
+    
+     try {
+       const res = await agent.allDishCategory();
+       console.log('allDishCategory Res : ', res);
+       if (res?.statusCode == 200) {
+         // useToast(res?.message, 1);
+         this.allCategoryList = res?.data ?? [];
+         handleLoading(false);
+         return res?.data;
+       } else {
+        this.allCategoryList =[]
+         const message = res?.message ? res?.message : res?.data?.message;
+         // useToast(message, 0);
+         handleLoading(false);
+         return [];
+       }
+     } catch (error) {
+       console.log('error allDishCategory:', error);
+       handleLoading(false);
+       const m = error?.data?.message
+         ? error?.data?.message
+         : 'Something went wrong';
+       // useToast(m, 0);
+       return [];
+     }
+   };
 
-  //   if (type == 'All Orders') {
-  //     return this.orderHistoryList;
-  //   } else if (type == 'Food') {
-  //     const filterList = orderHistroy?.filter(element =>
-  //       element?.order_type?.includes('food'),
-  //     );
-  //     return filterList;
-  //   } else if (type == 'Ride') {
-  //     const filterList = orderHistroy?.filter(element =>
-  //       element?.order_type?.includes('ride'),
-  //     );
-  //     return filterList;
-  //   } else if (type == 'Parcel') {
-  //     const filterList = orderHistroy?.filter(element =>
-  //       element?.order_type?.includes('parcel'),
-  //     );
-  //     return filterList;
-  //   } else {
-  //     const filterList = orderHistroy?.filter(element =>
-  //       element?.order_type?.includes(type?.toLowerCase()),
-  //     );
-  //     return filterList;
-  //   }
-  // };
+   restaurantListAccordingCategory = async (menuId, handleLoading) => {
+    let requestData ={
+      menu_group_id:menuId
+    }
+    try {
+      const res = await agent.restaurantListAccordingCategory(requestData);
+      console.log('restaurant List According Category Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error restaurant List According Category:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+    
+  };
 
-  // ordersRecentOrder = async (type,handleLoading) => {
-  //   handleLoading(true);
-  //   let requestData = {
-  //     type:type,
-  //     sender:'customer'
-  //   };
+  restaurantUnderMenuGroup = async (restaurantId,handleLoading) => {
+    let requestData ={
+      restaurant_id:restaurantId
+    }
+    try {
+      const res = await agent.restaurantUnderMenuGroup(requestData);
+      console.log('restaurant Under Menu Group Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        handleLoading(false);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+     
+    } catch (error) {
+      console.log('error restaurant Under Menu Group:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+      return [];
+    }
+  };
 
-  //   console.log('orders Recent Order User', requestData,);
+  setCategoryMenuList=async(data)=>{
+    this.categoryMenuList = data
+  }
 
-  //   try {
-  //     const res = await agent.ordersRecentOrder(requestData);
-  //     console.log('orders Recent Order Res : ', res);
-  //     if (res?.statusCode == 200) {
-  //       // useToast(res?.message, 1);
-  //       handleLoading(false);
-  //       return res?.data;
-  //     } else {
-  //       const message = res?.message ? res?.message : res?.data?.message;
-  //       // useToast(message, 0);
-  //       handleLoading(false);
-  //       return [];
-  //     }
-  //   } catch (error) {
-  //     console.log('error orders Recent Order:', error);
-  //     handleLoading(false);
-  //     const m = error?.data?.message
-  //       ? error?.data?.message
-  //       : 'Something went wrong';
-  //     // useToast(m, 0);
-  //     return [];
-  //   }
 
-  // };
+  restaurantListForDishCategory = async (item,handleLoading) => {
+    handleLoading(true)
+    let requestData ={
+      dish_name:item?.name
+    }
+    try {
+      const res = await agent.restaurantListForDishCategory(requestData);
+      console.log('restaurant List For Dish Category Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        handleLoading(false);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+     
+    } catch (error) {
+      console.log('error restaurant List For Dish Category:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+      return [];
+    }
 
-  // ordersTrackOrder = async (handleLoading) => {
-  //   try {
-  //     const res = await agent.ordersTrackOrder();
-  //     console.log('orders Track Order Res : ', res);
-  //     if (res?.statusCode == 200) {
-  //       res?.data?.length > 0 ? this.orderTrackingList = res?.data :this.orderTrackingList =[]
-  //       handleLoading(false);
-  //       return res?.data;
-  //     } else {
-  //       this.orderTrackingList =[]
-  //       handleLoading(false);
-  //       return [];
-  //     }
-  //   } catch (error) {
-  //     console.log('error orders Track Order:', error);
-  //     handleLoading(false);
-  //     this.orderTrackingList =[]
-  //     return [];
-  //   }
-  // };
 
-  // getPendingForCustomer = async (type) => {
-  //   let requestData = {
-  //     type:type,
-  //     sender:'customer'
-  //   };
+  };
 
-  //   try {
-  //     const res = await agent.pendingForCustomer(requestData);
-  //     console.log('pending For Customer Res : ', res);
-  //     if (res?.statusCode == 200) {
-  //       return res?.data;
-  //     } else {
-  //       return [];
-  //     }
-  //   } catch (error) {
-  //     console.log('error orders Track Order:', error);
-  //     return [];
-  //   }
-  // };
 
-  // updateOrderStatus = async (parcelId,status,handleDeleteLoading ,onDeleteSuccess,isPopUp) => {
-  //   let requestData = {
-  //     parcel_id:parcelId,
-  //     status:status,
-  //   };
-  //   console.log('update Order Status request ', requestData,);
-  //   try {
-  //     const res = await agent.updateOrderStatus(requestData);
-  //     console.log('update Order Status Res : ', res);
-  //     if (res?.statusCode == 200) {
-  //      if(isPopUp){useToast(res?.message, 1)}
-  //       onDeleteSuccess()
-  //     } else {
-  //       const message = res?.message ? res?.message : res?.data?.message;
-  //       if(isPopUp){ useToast(message, 0)};
-  //     }
-  //     handleDeleteLoading(false);
-  //   } catch (error) {
-  //     console.log('error update Order Status:', error);
-  //     handleDeleteLoading(false);
-  //     const m = error?.data?.message
-  //       ? error?.data?.message
-  //       : 'Something went wrong';
-  //     if(isPopUp){ useToast(m, 0)};
-  //   }
 
-  // };
+
+
+
+  
+  
+  
 }

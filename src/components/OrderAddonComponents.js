@@ -81,39 +81,19 @@ export default function OrderAddonComponent({
           {addonData?.map((item, index) => {
             return (
               <View
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius:10,
-                  shadowOffset:true,
-                  shadowColor: '#000',  // Shadow color (black)
-                  shadowOffset: { width: 0, height: 2 },  // Horizontal and vertical offset
-                  shadowOpacity: 0.3,  // Opacity of the shadow
-                  shadowRadius: 5,  // Blur radius of the shadow
-                  elevation: 5,  // Android shadow (elevation must be set to display shadow on Android)
-                  
-                  shadowRadius:10,
-                  margin:wp('5%'),
-                  marginTop: '1.2%',
-                  paddingHorizontal: '5%',
-                }}>
+                style={styles.conatiner}>
                 <Text
-                  style={{
-                    fontSize: RFValue(13),
-                    fontFamily: fonts.medium,
-                    color: '#000000',
-                    marginTop: '4%',
-                  }}>
+                  style={styles.titleText}>
                   {item?.title}{' '}
                 </Text>
                
                 <Text style={styles.selectText}>{getSelectionLimit(item)}</Text>
                 <View
                 style={{
-                  flex:1,
                   height:2,
-                  marginBottom:10,
-                  marginTop:10,
-                  backgroundColor:colors.appBackground
+                  marginBottom:'2%',
+                  marginTop:'3%',
+                  backgroundColor:colors.colorD9
                 }}/>
                 <View style={styles.mainViewRender}>
                   {item?.addonprod?.map((value, i) => {
@@ -132,8 +112,8 @@ export default function OrderAddonComponent({
                               styles.addonName,
                               {
                                 color: checkAddonThere(addons, value.id)
-                                  ? '#28B056'
-                                  : '#646464',
+                                  ? colors.main
+                                  :colors.color64,
                               },
                             ]}>
                             {value?.name}
@@ -171,6 +151,27 @@ export default function OrderAddonComponent({
 }
 
 const styles = StyleSheet.create({
+  conatiner:{
+    backgroundColor: colors.white,
+    borderRadius:10,
+    shadowOffset:true,
+    shadowColor:colors.black,  // Shadow color (black)
+    shadowOffset: { width: 0, height: 2 },  // Horizontal and vertical offset
+    shadowOpacity: 0.3,  // Opacity of the shadow
+    shadowRadius: 5,  // Blur radius of the shadow
+    elevation: 5,  // Android shadow (elevation must be set to display shadow on Android)
+    shadowRadius:10,
+    marginHorizontal:'4%',
+    marginTop: '4%',
+    paddingHorizontal: '5%',
+    paddingBottom:'2%'
+  },
+  titleText:{
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    color:colors.black85,
+    marginTop: '4%',
+  },
   upperViewMain: {
     backgroundColor: colors.white,
     marginTop: hp('0.1%'),
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
   selectText: {
     fontSize: RFValue(12),
     fontFamily: fonts.regular,
-    color: colors.black,
+    color: colors.color64,
     marginTop: hp('0.5%'),
   },
 

@@ -4,19 +4,20 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { colors } from '../../../theme/colors';
 
 // import { View } from 'react-native-reanimated/lib/typescript/Animated';
 
 
 
-const DotedLine = () => {
+const DotedLine = ({marginTop}) => {
   return (
     <View
     style={{
       borderStyle: 'dashed',
       borderWidth: 0.5,
-      marginTop: 20,
-      borderColor: '#838282',
+      marginTop:marginTop?marginTop:'5%',
+      borderColor:colors.color83,
     }}></View>
   );
 };

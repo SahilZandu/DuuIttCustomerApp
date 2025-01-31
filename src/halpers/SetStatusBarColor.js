@@ -2,7 +2,7 @@ import {colors} from '../theme/colors';
 
 const primaryScreens = ['splash'];
 
-const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp','test',];
+const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test'];
 
 const DashbordScreens = [
   'home',
@@ -32,19 +32,27 @@ const DashbordScreens = [
   'vouchers',
   'vouchersDetails',
   'foodHome',
-  'rideHome'
-  
+  'rideHome',
+  'resturantProducts',
+  'restaurantDetail',
+  'orderPlaced',
+  'trackOrderPreparing',
+  'cart',
+  'couponsList',
+  'couponDetail',
+  'categoryViseFoodListing',
+  'myAddress',
 ];
 
 export function setBarColor(screen) {
   if (primaryScreens.includes(screen)) {
-    return  colors.main;;
+    return colors.main;
   } else if (authScreens?.includes(screen)) {
     return colors.appBackground;
   } else if (DashbordScreens?.includes(screen)) {
-    return  colors.appBackground;;
+    return colors.appBackground;
   } else {
-    return  colors.appBackground;;
+    return colors.appBackground;
   }
 }
 

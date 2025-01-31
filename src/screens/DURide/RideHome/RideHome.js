@@ -13,25 +13,17 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import TrackingOrderCard from '../../../components/TrackingOrderCard';
 import {homeCS, homeRideCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import MapRoute from '../../../components/MapRoute';
 import {setCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
-import moment from 'moment';
-import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
-import TrackingOrderComp from '../../../components/TrackingOrderComp';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
-import {getTabBarHeight} from '@react-navigation/bottom-tabs/lib/typescript/src/views/BottomTabBar';
 import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';

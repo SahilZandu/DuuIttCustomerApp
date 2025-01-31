@@ -1,17 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList, Image, Pressable, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
-import { colors} from '../theme/colors';
-
+import {colors} from '../theme/colors';
 import {SvgXml} from 'react-native-svg';
-
-// const resClosedIcon = require('../../../assets/closed.png');
-// const resOpenSoonIcon = require('../../../assets/opensoon.png');
 
 const OrgCard = ({
   org,
@@ -40,191 +42,95 @@ const OrgCard = ({
     }
   }
 
-  const Info = () => {
-    return (
-      <View
-        style={{flexDirection: 'row', alignItems: 'center', marginTop: '3%'}}>
-        <Pressable
-          onPress={onReviews}
-          style={{
-            backgroundColor: 'rgba(27, 149, 28, 0.08)',
-            borderRadius: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: hp('3.5%'),
-          }}>
-          <View
-            style={{
-              backgroundColor: '#1B951C',
-              height: hp('3.5%'),
-              borderRadius: 6,
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                fontFamily: fonts.medium,
-                fontSize: RFValue(9),
-              }}>
-              {'  '}
-              {org?.average_rating
-                ? Number(org?.average_rating).toFixed(1)
-                : '0.0'}{' '}
-            </Text>
-            <SvgXml xml={star} style={{marginRight: '3%', marginTop: '-2%'}} />
-          </View>
-
-          <Text style={styles.text}>
-            {'  '}
-            {org?.review_count} Review{' '}
-          </Text>
-        </Pressable>
-
-        <View
-          style={{
-            borderRadius: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: hp('3.5%'),
-            backgroundColor: 'rgba(249, 189, 0, 0.12)',
-            paddingHorizontal: '2%',
-            marginLeft: '2%',
-          }}>
-          <SvgXml xml={time} style={{marginRight: '3%'}} />
-          <Text style={styles.text}>
-            {calculateTime(org?.distance, 50)}
-            {'  '}
-          </Text>
-          <SvgXml xml={elcipe} style={{}} />
-          <Text style={styles.text}>
-            {'  '}
-            {parseFloat(org?.distance?.toFixed(1))} Km
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
-  const Address = () => {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          // alignItems: 'center',
-          marginTop: '4%',
-          paddingRight: '5%',
-        }}>
-        <SvgXml xml={marker} style={{marginRight: '2%', marginTop: '1%'}} />
-        <Text style={styles.text}>{org?.address}</Text>
-      </View>
-    );
-  };
-
   const OrgStatus = () => {
     return (
       <View
-        style={{
-          flexDirection: 'row', // This arranges the children in a horizontal row
-          flexWrap: 'nowrap',
-          width: '100%',
-          marginTop: 10,
-        }}>
-        <SvgXml xml={tick} style={{marginRight: '2%', marginTop: '1%'}} />
-
+        style={styles.openRestaurantView}>
+        <SvgXml xml={tick} style={styles.tickButton} />
         <Text
-          style={{
-            color: '#28B056',
-            fontSize: RFValue(14),
-            fontFamily: fonts.medium,
-          }}>
+          style={styles.openNowText}>
           Open Now
         </Text>
         <Text
-          style={{
-            fontSize: RFValue(14),
-            fontFamily: fonts.medium,
-            color: colors.black,
-            marginStart: 6,
-          }}>
-          | 12:30pm - 12am
+          style={styles.timeText}>
+          | 12:30 pm - 12:00 am
         </Text>
       </View>
     );
   };
 
-  const renderOfferCard = ({item, index}) => {
-    return (
-      <View
-        style={{
-          height: hp('6%'),
-          backgroundColor: '#ECF4FB',
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderRadius: 10,
-          marginLeft: 16,
-          paddingHorizontal: '5%',
-        }}>
-        <Text>{'  '}</Text>
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <SvgXml xml={offerIcon} fill={'#0D71CD'} />
-          <Text
-            style={{
-              color: 'white',
-              position: 'absolute',
-              fontSize: RFValue(10),
-              fontFamily: fonts.medium,
-            }}>
-            %
-          </Text>
-        </View>
-        <Text>{'  '}</Text>
-        <View style={{}}>
-          <Text
-            style={{
-              color: '#3D3D3D',
-              fontFamily: fonts.medium,
-              fontSize: RFValue(10),
-            }}>
-            Get up to ₹{item?.max_discount} Off
-          </Text>
-          <Text
-            style={{
-              color: '#808080',
-              fontFamily: fonts.medium,
-              fontSize: RFValue(8),
-            }}>
-            use code {item?.coupon_code}
-          </Text>
-        </View>
-        <Text>{'  '}</Text>
-      </View>
-    );
-  };
+  // const renderOfferCard = ({item, index}) => {
+  //   return (
+  //     <View
+  //       style={{
+  //         height: hp('6%'),
+  //         backgroundColor: colors.colorEC,
+  //         flexDirection: 'row',
+  //         alignItems: 'center',
+  //         borderRadius: 10,
+  //         marginLeft: 16,
+  //         paddingHorizontal: '5%',
+  //       }}>
+  //       <Text>{'  '}</Text>
+  //       <View style={{alignItems: 'center', justifyContent: 'center'}}>
+  //         <SvgXml xml={offerIcon} fill={'#0D71CD'} />
+  //         <Text
+  //           style={{
+  //             color: 'white',
+  //             position: 'absolute',
+  //             fontSize: RFValue(10),
+  //             fontFamily: fonts.medium,
+  //           }}>
+  //           %
+  //         </Text>
+  //       </View>
+  //       <Text>{'  '}</Text>
+  //       <View style={{}}>
+  //         <Text
+  //           style={{
+  //             color: colors.color3D,
+  //             fontFamily: fonts.medium,
+  //             fontSize: RFValue(10),
+  //           }}>
+  //           Get up to ₹{item?.max_discount} Off
+  //         </Text>
+  //         <Text
+  //           style={{
+  //             color: colors.color80,
+  //             fontFamily: fonts.medium,
+  //             fontSize: RFValue(8),
+  //           }}>
+  //           use code {item?.coupon_code}
+  //         </Text>
+  //       </View>
+  //       <Text>{'  '}</Text>
+  //     </View>
+  //   );
+  // };
 
-  const Coupnes = orgOffers => {
-    console.log('orgOffers  -----', orgOffers.orgOffers);
-    if (orgOffers && orgOffers?.orgOffers.length > 0) {
-      return (
-        <View style={{width: wp('100%'), marginLeft: -16}}>
-          <FlatList
-            horizontal
-            scrollEnabled={true}
-            contentContainerStyle={{
-              marginTop: '4%',
-              paddingRight: 16,
-            }}
-            showsHorizontalScrollIndicator={false}
-            data={orgOffers?.orgOffers}
-            renderItem={renderOfferCard}
-            keyExtractor={item => item?.id}
-          />
-        </View>
-      );
-    } else {
-      return null;
-    }
-  };
+  // const Coupnes = orgOffers => {
+  //   console.log('orgOffers  -----', orgOffers.orgOffers);
+  //   if (orgOffers && orgOffers?.orgOffers.length > 0) {
+  //     return (
+  //       <View style={{width: wp('100%'), marginLeft: -16}}>
+  //         <FlatList
+  //           horizontal
+  //           scrollEnabled={true}
+  //           contentContainerStyle={{
+  //             marginTop: '4%',
+  //             paddingRight: 16,
+  //           }}
+  //           showsHorizontalScrollIndicator={false}
+  //           data={orgOffers?.orgOffers}
+  //           renderItem={renderOfferCard}
+  //           keyExtractor={item => item?.id}
+  //         />
+  //       </View>
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   const Offline = () => {
     return (
@@ -260,23 +166,35 @@ const OrgCard = ({
 
   return (
     <TouchableOpacity
-    onPress={onReviews}>
+    activeOpacity={0.8}
+     onPress={onReviews}>
+      <View style={styles.container}>
+        {isResOpen == false && <Offline />}
+        <View style={{flexDirection: 'row'}}>
+          <Text numberOfLines={2} style={[styles.title, {flex: 1}]}>
+            {org?.name}
+          </Text>
+          <View
+            style={styles.ratingView}>
+            <SvgXml
+              width={12}
+              height={12}
+              xml={star}
+              style={styles.ratingImage}
+            />
+            <Text
+              style={styles.ratingText}>
+              {3.8}
+            </Text>
+          </View>
+        </View>
 
-    
-    <View style={{paddingHorizontal: 16, paddingVertical: 16}}>
-      {isResOpen == false && <Offline />}
+        <Text style={styles.des}>{org?.about}</Text>
+        <Text style={styles.addressText}>25-30 min 1km {org?.address}</Text>
+        <OrgStatus />
 
-      <Text style={styles.title}>{org?.name}</Text>
-
-      <Text style={styles.des}>{org?.description}</Text>
-      <Text style={styles.des}>25-30 min 1km Sector 61</Text>
-
-      {/* <Info /> */}
-      {/* <Address /> */}
-      <OrgStatus />
-
-      <Coupnes orgOffers={orgOffers} />
-    </View>
+        {/* <Coupnes orgOffers={orgOffers} /> */}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -284,43 +202,82 @@ const OrgCard = ({
 export default OrgCard;
 
 const styles = StyleSheet.create({
+  container:{
+    marginHorizontal: 20,
+     paddingVertical: 16,
+     justifyContent:'center'
+  },
   title: {
-    color: '#000000',
+    color: colors.black,
     fontFamily: fonts.medium,
     fontSize: RFValue(17),
     textTransform: 'capitalize',
   },
+  ratingView:{
+    flexDirection: 'row',
+    paddingHorizontal: '3%',
+    paddingVertical: 5,
+    backgroundColor: colors.colorFD,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  ratingImage:{
+    right: '10%',
+     top: '-2%'
+  },
+  ratingText:{
+    fontSize: RFValue(11),
+    fontFamily: fonts.semiBold,
+    color: colors.white,
+    left: '10%',
+  },
   des: {
-    color: '#646464',
+    color:colors.color64,
     fontFamily: fonts.medium,
-    fontSize: RFValue(10),
-    marginTop: '1%',
+    fontSize: RFValue(11),
+    marginTop: '1.5%',
+  },
+  addressText: {
+    color:colors.black,
+    fontFamily: fonts.regular,
+    fontSize: RFValue(11),
+    marginTop: '1.5%',
   },
   text: {
-    color: '#646464',
+    color: colors.color64,
     fontFamily: fonts.medium,
-    fontSize: RFValue(10),
+    fontSize: RFValue(11),
   },
+  openRestaurantView:{
+    flexDirection: 'row', // This arranges the children in a horizontal row
+    flexWrap: 'nowrap',
+    width: '100%',
+    marginTop:'3%',
+  },
+  tickButton:{
+    marginRight: '2%',
+     marginTop: '0.5%'
+  },
+  openNowText:{
+    color:colors.main,
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+  },
+  timeText:{
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
+    marginLeft:'2%',
+  }
+  
 });
 
 const star = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 8 8" fill="none">
 <path d="M4 0.5L5.29313 2.72016L7.80423 3.26393L6.09232 5.17984L6.35114 7.73607L4 6.7L1.64886 7.73607L1.90768 5.17984L0.195774 3.26393L2.70687 2.72016L4 0.5Z" fill="white"/>
 </svg>`;
-
-const time = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 12 13" fill="none">
-<path d="M4.5 2V1H7.5V2H4.5ZM5.5 7.5H6.5V4.5H5.5V7.5ZM6 11.5C5.38333 11.5 4.802 11.3813 4.256 11.144C3.71033 10.9063 3.23333 10.5833 2.825 10.175C2.41667 9.76667 2.09367 9.28967 1.856 8.744C1.61867 8.198 1.5 7.61667 1.5 7C1.5 6.38333 1.61867 5.802 1.856 5.256C2.09367 4.71033 2.41667 4.23333 2.825 3.825C3.23333 3.41667 3.71033 3.09383 4.256 2.8565C4.802 2.61883 5.38333 2.5 6 2.5C6.51667 2.5 7.0125 2.58333 7.4875 2.75C7.9625 2.91667 8.40833 3.15833 8.825 3.475L9.525 2.775L10.225 3.475L9.525 4.175C9.84167 4.59167 10.0833 5.0375 10.25 5.5125C10.4167 5.9875 10.5 6.48333 10.5 7C10.5 7.61667 10.3813 8.198 10.144 8.744C9.90633 9.28967 9.58333 9.76667 9.175 10.175C8.76667 10.5833 8.28967 10.9063 7.744 11.144C7.198 11.3813 6.61667 11.5 6 11.5ZM6 10.5C6.96667 10.5 7.79167 10.1583 8.475 9.475C9.15833 8.79167 9.5 7.96667 9.5 7C9.5 6.03333 9.15833 5.20833 8.475 4.525C7.79167 3.84167 6.96667 3.5 6 3.5C5.03333 3.5 4.20833 3.84167 3.525 4.525C2.84167 5.20833 2.5 6.03333 2.5 7C2.5 7.96667 2.84167 8.79167 3.525 9.475C4.20833 10.1583 5.03333 10.5 6 10.5Z" fill="#646464"/>
-</svg>`;
-
-const elcipe = `<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 3 3" fill="none">
-<circle cx="1.5" cy="1.5" r="1.5" fill="#646464"/>
-</svg>`;
-
-const marker = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 14 14" fill="none">
-<path d="M6.99992 7.58341C7.96642 7.58341 8.74992 6.79991 8.74992 5.83341C8.74992 4.86692 7.96642 4.08341 6.99992 4.08341C6.03342 4.08341 5.24992 4.86692 5.24992 5.83341C5.24992 6.79991 6.03342 7.58341 6.99992 7.58341Z" stroke="#1D721E" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M6.99992 12.8334C9.33325 10.5001 11.6666 8.41074 11.6666 5.83341C11.6666 3.25609 9.57725 1.16675 6.99992 1.16675C4.42259 1.16675 2.33325 3.25609 2.33325 5.83341C2.33325 8.41074 4.66659 10.5001 6.99992 12.8334Z" stroke="#1D721E" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
-
-const tick = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+const tick = `<svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="14" height="14" rx="7" fill="#1B951C"/>
 <path d="M10.3332 4.5L5.74984 9.08333L3.6665 7" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;

@@ -12,6 +12,8 @@ import OrderHistoryLoader from './OrderHistoryLoader';
 import RecentOrderLoader from './RecentOrderLoader';
 import TrackingOrderLoader from './TrackingOderLoader';
 import FoodHomeLoader from './FoodHomeLoader';
+import RestaurantCartLoader from './RestaurantCartLoader';
+import RestaurantItemLoader from './RestaurantItemLoader';
 
 const AnimatedLoader = ({type,absolute}) => {
   return (
@@ -24,6 +26,8 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'trackingOrderLoader' && <TrackingOrderLoader/>}
       {type == 'multipleRiderLoader' &&  <MultipleRiderLoader/>}
       {type == 'foodHomeLoader' &&  <FoodHomeLoader/>}
+      {type == 'restaurantCartLoader' &&  <RestaurantCartLoader/>}
+      {type == 'restaurantItemLoader' && <RestaurantItemLoader/>}
  
       
       

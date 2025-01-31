@@ -16,6 +16,7 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../theme/fonts/fonts';
 import {appImagesSvg} from '../../../commons/AppImages';
 import {currencyFormat} from '../../../halpers/currencyFormat';
+import { colors } from '../../../theme/colors';
 
 const CartCoupanApply = ({
   item,
@@ -78,13 +79,13 @@ export default CartCoupanApply;
 
 const styles = StyleSheet.create({
   mainView: {
-    marginTop: '2%',
+    marginTop: '4%',
     
-    backgroundColor: 'white',
+    backgroundColor:colors.white,
     margin: 20,
     borderRadius: 10,
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor:colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
     shadowOffset: {width: 0, height: 6},
@@ -100,24 +101,24 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: RFValue(16),
     fontFamily: fonts.bold,
-    color: '#000000',
+    color:colors.black,
     marginLeft: '3%',
   },
   applyText: {
     fontSize: RFValue(14),
     fontFamily: fonts.bold,
-    color: '#28B056',
+    color:colors.main,
   },
   offText: {
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
-    color: '#646464',
+    color:colors.color64,
     marginLeft: 10,
     marginTop: '1%',
   },
   moreBtnView: {
-    backgroundColor: '#D6FFE4',
-    borderColor: '#D6FFE4',
+    backgroundColor:colors.colorD6,
+    borderColor:colors.colorD6,
     height: hp('4.5%'),
     borderBottomEndRadius: 10,
     borderBottomStartRadius: 10,
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     marginTop: '4%',
   },
   moreBtnText: {
-    color: '#28B056',
+    color: colors.main,
     fontFamily: fonts.semiBold,
     fontSize: RFValue(11),
   },

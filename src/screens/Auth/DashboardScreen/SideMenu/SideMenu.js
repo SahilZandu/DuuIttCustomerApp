@@ -263,7 +263,7 @@ export default function SideMenu({navigation}) {
       />
       <Spacer space={'2%'} />
       <AppInputScroll
-        Pb={'53%'}
+        Pb={'57%'}
         padding={true}
         keyboardShouldPersistTaps={'handled'}>
         <ProfileCompleteIconTextComp

@@ -12,7 +12,7 @@ import OrderPlaced from '../screens/DUFood/Tracking/OrderPlaced';
 import TrackOrderPreparing from '../screens/DUFood/Tracking/TrackOrderPreparing';
 import Cart from '../screens/DUFood/Cart/Cart';
 import CouponsList from '../screens/DUFood/Cart/CouponsList';
-import CouponDetail from '../screens/DUFood/Components/CouponDetail';
+// import CouponDetail from '../screens/DUFood/Components/CouponDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,10 +34,8 @@ export default function FoodRoutes(props) {
        <Stack.Screen name="trackOrderPreparing" component={TrackOrderPreparing} />
        <Stack.Screen name="cart" component={Cart} />
        <Stack.Screen name="couponsList" component={CouponsList} />
-       <Stack.Screen name="couponDetail" component={CouponDetail} />
-       
+       {/* <Stack.Screen name="couponDetail" component={CouponDetail} /> */}
        <Stack.Screen name="categoryViseFoodListing" component={CategoryViseFoodListing} />
-
        <Stack.Screen name="myAddress" component={MyAddress} />
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
        

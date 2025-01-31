@@ -32,8 +32,14 @@ import {
 } from '@simform_solutions/react-native-audio-waveform';
 import {colors} from '../../../theme/colors';
 
-
-const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruction,txtInstuctions}) => {
+const DeliveryInstructions = ({
+  visible,
+  onClose,
+  menu,
+  onSelectMenu,
+  audioInstruction,
+  txtInstuctions,
+}) => {
   const ref = useRef(null);
   const stref = useRef(null);
   const [recodedFilePath, setRecodedFilePath] = useState('');
@@ -48,10 +54,9 @@ const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruc
   //     stopRecording();
   //   };
   // },);
-  useEffect(()=>{
-   requestPermission();
-  
-  },[]);
+  useEffect(() => {
+    requestPermission();
+  }, []);
 
   const items = [
     {id: '0', text: 'Avoid Calling', img: appImagesSvg.avoidCalling},
@@ -61,26 +66,23 @@ const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruc
     {id: '4', text: 'Pet at home', img: appImagesSvg.petHome},
   ];
 
-  const requestPermission=async () => {
+  const requestPermission = async () => {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
       ]);
     }
-  }
- 
- 
+  };
+
   const toggleSelection = item => {
     setSelectedItems(prevSelected => {
       if (prevSelected.includes(item.text)) {
         console.log('prevSelected>');
         return prevSelected.filter(itemm => itemm !== item.text); // Remove from selected
       } else {
-        console.log('new>',item.text);
+        console.log('new>', item.text);
         return [...prevSelected, item.text]; // Add to selected
       }
-     
-      
     });
   };
 
@@ -132,34 +134,34 @@ const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruc
       .catch(() => {});
   };
   // Render item for the FlatList
-  const renderItem = ({item}) => {
-    const isSelected = selectedItems.includes(item.text);
-    if(selectedItems.length>0){
-     setRecodedFilePath('');
-     txtInstuctions(selectedItems);
-    }else{
+  const renderItem = ({item, index}) => {
+    const isSelected = selectedItems?.includes(item.text);
+    if (selectedItems.length > 0) {
+      setRecodedFilePath('');
+      txtInstuctions(selectedItems);
+    } else {
       txtInstuctions(null);
     }
-   
-   
+
     return (
       <TouchableOpacity
-        style={[styles.item]}
+        activeOpacity={0.8}
+        style={[
+          styles.renderItemStyle,
+          {
+            borderBottomColor:
+              items?.length - 1 == index ? 'transparent' : colors.colorD9,
+          },
+        ]}
         onPress={() => {
-          toggleSelection(item)
-         console.log('ss',selectedItems);
-            txtInstuctions(selectedItems);
+          toggleSelection(item);
+          console.log('ss', selectedItems);
+          txtInstuctions(selectedItems);
         }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <SvgXml xml={item.img} />
-          <Text style={styles.itemText}>{item.text}</Text>
-        </View>
+        <SvgXml xml={item.img} />
+        <Text style={styles.itemText}>{item.text}</Text>
         <Image
+          resizeMode="contain"
           style={{width: 12, height: 12}}
           source={isSelected ? appImages.checked : appImages.unChecked}
         />
@@ -169,224 +171,145 @@ const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruc
 
   return (
     <Modal
+      // style={{justifyContent: 'flex-end', margin: 0}}
       animationType="fade"
       transparent={true}
       visible={visible}
       onRequestClose={() => {
         onClose();
       }}>
-      <>
-        <Pressable
-          onPress={() => onClose()}
-          style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.6)'}}></Pressable>
-      </>
-      <Pressable
-        onPress={() => onClose()}
-        style={{
-          alignItems: 'center',
-          position: 'absolute',
-          zIndex: 1,
-          alignSelf: 'center',
-          marginTop: Platform.OS == 'android' ? hp('45%') : hp('38%'),
-        }}>
-        <SvgXml xml={appImagesSvg.CROSS} />
-      </Pressable>
-      <View
-        style={{
-          // backgroundColor: '#F9BD00',
-          backgroundColor: 'white',
-          position: 'absolute',
-          bottom: Platform.OS == 'android' ? 0 : '6%',
+      <Pressable onPress={() => onClose()} style={styles.container}>
+        <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
+          <Image
+            resizeMode="contain"
+            style={{height: 45, width: 45}}
+            source={appImages.crossClose} // Your icon image
+          />
+        </Pressable>
+        <View style={styles.mainWhiteView}>
+          <ScrollView
+            nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: '5%',
+              justifyContent: 'center',
+            }}>
+            <View style={styles.scrollInnerView}>
+              <Text numberOfLines={1} style={styles.delivertText}>
+                Delivery Instructions
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  stopPlayer();
+                  if (isRecording) {
+                    console.log('onPress', isRecording);
+                    stopRecording();
+                  } else {
+                    console.log('onPress', isRecording);
+                    setRecodedFilePath('');
+                    setSelectedItems([]);
+                    setIsRecording(!isRecording);
+                    setTimeout(() => {
+                      startRecording();
+                    }, 200);
+                  }
+                }}
+                // onLongPress={()=>{
+                //   console.log('onLongPress');
+                //   startRecording();
+                // }}
 
-          width: wp('100%'),
-          height: hp('50%'),
-          borderTopEndRadius: 10,
-          borderTopStartRadius: 10,
-          borderColor: '#F9BD00',
-          paddingTop: '5%',
-        }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: '10%'}}>
-          <View>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: RFValue(15),
-                padding: 10,
-                color: '#000',
-              }}>
-              Delivery Instructions
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-               
-                stopPlayer();
-                if (isRecording) {
-                  console.log('onPress', isRecording);
-                  stopRecording();
-                } else {
-                  console.log('onPress', isRecording);
-                  setRecodedFilePath('');
-                  setSelectedItems([]);
-                  setIsRecording(!isRecording);
-                  setTimeout(() => {
-                    startRecording();
-                  }, 200);
-                }
-               }
-            }
-              // onLongPress={()=>{
-              //   console.log('onLongPress');
-              //   startRecording();
-              // }}
-
-              // onPressOut={()=>{
-              //   console.log('onPressOut');
-              //         stopRecording();
-              // }}
-              // onPress={() => {
-              //   setIsAudio(!isAudio);
-              // }}
-            >
-              <View
-                style={{
-                  paddingHorizontal: 16,
-                  marginTop: '4%',
-                  backgroundColor: 'white',
-
-                  borderRadius: 10,
-                  borderColor: '#F9BD00',
-                  padding: 20,
-                  margin: 10,
-
-                  elevation: 4,
-                  shadowColor: '#000',
-                  shadowOpacity: 0.2,
-                  shadowRadius: 5,
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-
-                    backgroundColor: 'white',
-                    alignItems: 'center',
-                  }}>
-                  <SvgXml
-                    xml={
-                      isRecording ? appImagesSvg.stopRed : appImagesSvg.mikeSvg
-                    }
-                  />
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontFamily: fonts.medium,
-                      fontSize: RFValue(12),
-
-                      marginLeft: 10,
-                      color: '#242424',
-                    }}>
-                    {isRecording
-                      ? ''
-                      : 'Tap and Hold to Start record instruction'}
-                  </Text>
-                  {isRecording && (
-                    <Waveform
-                      mode="live"
-                      ref={ref}
-                      scrubColor="#28B056"
-                      waveColor="#28B056"
-                      candleSpace={2}
-                      candleWidth={4}
-                      style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: colors.red,
-                      }}
-                      candleHeightScale={2}
-                      onRecorderStateChange={recorderState =>
-                        console.log('onRecorderStateChange>', recorderState)
+                // onPressOut={()=>{
+                //   console.log('onPressOut');
+                //         stopRecording();
+                // }}
+                // onPress={() => {
+                //   setIsAudio(!isAudio);
+                // }}
+              >
+                <View style={styles.recordingView}>
+                  <View style={styles.recodingInnerView}>
+                    <SvgXml
+                      xml={
+                        isRecording
+                          ? appImagesSvg.stopRed
+                          : appImagesSvg.mikeSvg
                       }
                     />
-                  )}
+                    <Text numberOfLines={1} style={styles.startRecoedingText}>
+                      {isRecording
+                        ? ''
+                        : 'Tap and Hold to Start record instruction'}
+                    </Text>
+                    {isRecording && (
+                      <Waveform
+                        mode="live"
+                        ref={ref}
+                        scrubColor={colors.main}
+                        waveColor={colors.main}
+                        candleSpace={2}
+                        candleWidth={4}
+                        style={styles.isRecoedingText}
+                        candleHeightScale={2}
+                        onRecorderStateChange={recorderState =>
+                          console.log('onRecorderStateChange>', recorderState)
+                        }
+                      />
+                    )}
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
 
-            {recodedFilePath !== '' && (
-              <View
-                style={{
-                  paddingHorizontal: 16,
-                  marginTop: '4%',
-                  flexDirection: 'row',
-
-                  backgroundColor: 'white',
-                  alignItems: 'center',
-
-                  borderRadius: 10,
-                  borderColor: '#F9BD00',
-                  padding: 20,
-                  margin: 10,
-
-                  elevation: 4,
-                  shadowColor: '#000',
-                  shadowOpacity: 0.2,
-                  shadowRadius: 5,
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    isPlaying ? stopPlayer() : startNewPlayer();
-                  }}>
-                  <SvgXml
-                    xml={
-                      isPlaying ? appImagesSvg.stopRed : appImagesSvg.playRed
-                    }
-                  />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    marginLeft: 10,
-                    width: '80%',
-                    justifyContent: 'center',
-                    height: 20,
-                    paddingEnd:20
-                    
-                  }}>
-                  <Waveform
-                    mode="static"
-                    ref={stref}
-                    path={recodedFilePath}
-                    candleSpace={2}
-                    candleWidth={4}
-                    scrubColor="#28B056"
-                    waveColor="gray"
-                    onPlayerStateChange={playerState => {
-                      console.log('playerState', playerState);
-                      if (playerState === 'stopped') {
-                        setIsPLayig(false);
+              {recodedFilePath !== '' && (
+                <View style={styles.recodingPathView}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      isPlaying ? stopPlayer() : startNewPlayer();
+                    }}>
+                    <SvgXml
+                      xml={
+                        isPlaying ? appImagesSvg.stopRed : appImagesSvg.playRed
                       }
-                    }}
-                    onPanStateChange={isMoving => console.log(isMoving)}
-                    onCurrentProgressChange={(
-                      currentProgress,
-                      songDuration,
-                    ) => {
-                      console.log(
-                        `currentProgress ${currentProgress}, songDuration ${songDuration}`,
-                      );
-                    }}
-                  />
+                    />
+                  </TouchableOpacity>
+                  <View style={styles.trackingPathView}>
+                    <Waveform
+                      mode="static"
+                      ref={stref}
+                      path={recodedFilePath}
+                      candleSpace={2}
+                      candleWidth={4}
+                      scrubColor={colors.main}
+                      waveColor={colors.black65}
+                      onPlayerStateChange={playerState => {
+                        console.log('playerState', playerState);
+                        if (playerState === 'stopped') {
+                          setIsPLayig(false);
+                        }
+                      }}
+                      onPanStateChange={isMoving => console.log(isMoving)}
+                      onCurrentProgressChange={(
+                        currentProgress,
+                        songDuration,
+                      ) => {
+                        console.log(
+                          `currentProgress ${currentProgress}, songDuration ${songDuration}`,
+                        );
+                      }}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      deleteRecoring();
+                    }}>
+                    <SvgXml xml={appImagesSvg.deleteRed} />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    deleteRecoring();
-                  }}>
-                  <SvgXml xml={appImagesSvg.deleteRed} />
-                </TouchableOpacity>
-              </View>
-            )}
-            {/* <RecordAudioPopUp
+              )}
+              {/* <RecordAudioPopUp
         visible={isAudio}
         onRecord={r => {
           const data = {
@@ -400,32 +323,21 @@ const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruc
         onClose={() => setIsAudio(false)}
       /> */}
 
-            <View
-              style={{
-                paddingHorizontal: 16,
-
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                borderRadius: 10,
-                borderColor: '#F9BD00',
-
-                margin: '2%',
-                alignItems: 'center',
-                elevation: 4,
-                shadowColor: '#000',
-                shadowOpacity: 0.2,
-                shadowRadius: 5,
-              }}>
-              <FlatList
-                data={items}
-                keyExtractor={item => item.text}
-                renderItem={renderItem}
-                extraData={selectedItems} // Make sure to re-render the list when selection changes
-              />
+              <View style={styles.flatListMainView}>
+                <FlatList
+                  scrollEnabled={false}
+                  nestedScrollEnabled={false}
+                  showsVerticalScrollIndicator={false}
+                  data={items}
+                  keyExtractor={item => item?.id}
+                  renderItem={renderItem}
+                  extraData={selectedItems} // Make sure to re-render the list when selection changes
+                />
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </View>
+          </ScrollView>
+        </View>
+      </Pressable>
     </Modal>
   );
 };
@@ -433,49 +345,116 @@ const DeliveryInstructions = ({visible, onClose, menu, onSelectMenu,audioInstruc
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
-    paddingHorizontal: 20,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  item: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+
+  backButtonTouch: {
     alignItems: 'center',
-    margin: 10,
+    zIndex: 1,
+    alignSelf: 'center',
+    marginBottom: '3%',
   },
-  selectedItem: {
-    backgroundColor: '#D3F8D3', // Light green for selected items
+  mainWhiteView: {
+    backgroundColor: colors.white,
+    height: hp('50%'),
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
+    borderColor: colors.colorF9,
+    paddingTop: '3%',
   },
-  itemText: {
-    fontSize: 18,
-    marginStart: 10,
+  scrollInnerView: {
+    marginHorizontal: 10,
+    justifyContent: 'center',
+  },
+  delivertText: {
+    fontFamily: fonts.bold,
+    fontSize: RFValue(15),
+    padding: 10,
+    color: colors.black,
+  },
+  recordingView: {
+    paddingHorizontal: 16,
+    marginTop: '2%',
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    borderColor: colors.colorF9,
+    width: wp('90%'),
+    height: hp('7%'),
+    alignSelf: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  recodingInnerView: {
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    alignItems: 'center',
+  },
+  startRecoedingText: {
     fontFamily: fonts.medium,
     fontSize: RFValue(12),
-    color: '#242424',
+    marginLeft: '3%',
+    color: colors.color24,
   },
-  selectedContainer: {
-    marginTop: 20,
-    padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
+  isRecoedingText: {
+    width: 10,
+    height: 10,
+    backgroundColor: colors.red,
   },
-  selectedHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  recodingPathView: {
+    paddingHorizontal: 16,
+    marginTop: '4%',
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    borderRadius: 10,
+    borderColor: colors.colorF9,
+    width: wp('90%'),
+    height: hp('8%'),
+    alignSelf: 'center',
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  trackingPathView: {
+    marginHorizontal: 5,
+    width: wp('68%'),
+    justifyContent: 'center',
+    height: hp('4%'),
+  },
+  flatListMainView: {
+    width: wp('90%'),
+    paddingHorizontal: 16,
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderColor: colors.colorF9,
+    alignItems: 'center',
+    alignSelf: 'center',
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    marginTop: '5%',
+  },
+  renderItemStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: '5%',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.colorD9,
+  },
+  itemText: {
+    flex: 1,
+    marginLeft: '3%',
+    fontFamily: fonts.medium,
+    fontSize: RFValue(12),
+    color: colors.color24,
   },
 });
 
 export default DeliveryInstructions;
-
-const close = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-<path d="M12 4L4 12" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M4 4L12 12" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;

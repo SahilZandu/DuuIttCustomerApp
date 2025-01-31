@@ -61,7 +61,7 @@ const BTN = ({
     </View>:
      <Text style={{
         color: labelColor ? labelColor : colors.white,
-      textTransform: textTransform ? textTransform: 'uppercase',
+      textTransform: textTransform ? textTransform:'uppercase',
       fontSize:fontSize ? fontSize :RFValue(12),
       fontFamily:fonts.bold,
       textAlign:'center'}}>

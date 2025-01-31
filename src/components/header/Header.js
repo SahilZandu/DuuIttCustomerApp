@@ -28,13 +28,14 @@ const Header = ({shareSVG,bgColor,onPress, title, backArrow, shareIcon, onPressS
         </TouchableOpacity>
       )}
       <Text
+      numberOfLines={1}
         style={{
           flex: 1,
           fontSize: RFValue(15),
           fontFamily: fonts.semiBold,
           color: colors.black,
           marginLeft: backArrow ? '3%' :'6%',
-          // textAlign: backArrow ?'left': 'center'
+          marginRight:'2%'
         }}>
         {title}
       </Text>

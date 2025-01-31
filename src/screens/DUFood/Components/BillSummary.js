@@ -1,5 +1,14 @@
 import React from 'react';
-import {View, Modal, Pressable, Text, ScrollView, Platform} from 'react-native';
+import {
+  View,
+  Modal,
+  Pressable,
+  Text,
+  ScrollView,
+  Platform,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,9 +18,63 @@ import {SvgXml} from 'react-native-svg';
 import {fonts} from '../../../theme/fonts/fonts';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import DotedLine from './DotedLine';
-import { currencyFormat } from '../../../halpers/currencyFormat';
+import {currencyFormat} from '../../../halpers/currencyFormat';
+import {colors} from '../../../theme/colors';
+import TextRender from '../../../components/TextRender';
 
-const BillSummary = ({visible,cartBillG, onClose, menu, onSelectMenu}) => {
+const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
+  const billDetails = [
+    {
+      id: '1',
+      name: 'Item Total',
+      price: 400,
+      coupanCode: '',
+      bottomLine: false,
+    },
+    {
+      id: '2',
+      name: 'Delivery Fee',
+      price: 40,
+      coupanCode: '',
+      bottomLine: false,
+    },
+    {
+      id: '3',
+      name: 'Platform fee',
+      price: 10,
+      coupanCode: '',
+      bottomLine: false,
+    },
+    {
+      id: '4',
+      name: 'GST and Restaurant Charges',
+      price: 20.86,
+      coupanCode: '',
+      bottomLine: true,
+    },
+    {
+      id: '5',
+      name: 'Grand Total',
+      price: 543.6,
+      coupanCode: '',
+      bottomLine: false,
+    },
+    {
+      id: '6',
+      name: 'Restaurant Coupon',
+      price: 100,
+      coupanCode: 'DUIT75',
+      bottomLine: false,
+    },
+    {
+      id: '1',
+      name: 'To Pay',
+      price: 395.18,
+      coupanCode: '',
+      bottomLine: false,
+    },
+  ];
+
   return (
     <Modal
       animationType="fade"
@@ -20,289 +83,136 @@ const BillSummary = ({visible,cartBillG, onClose, menu, onSelectMenu}) => {
       onRequestClose={() => {
         onClose();
       }}>
-      <>
-        <Pressable
-          onPress={() => onClose()}
-          style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.6)'}}></Pressable>
-      </>
       <Pressable
-        onPress={() => onClose()}
-        style={{
-          alignItems: 'center',
-          position: 'absolute',
-          zIndex: 1,
-          alignSelf: 'center',
-          marginTop: Platform.OS == 'android' ? hp('45%') : hp('38%'),
-        }}>
-        <SvgXml xml={appImagesSvg.CROSS} />
+        //  onPress={() => onClose()}
+        style={styles.container}>
+        <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
+          <Image
+            resizeMode="contain"
+            style={{height: 45, width: 45}}
+            source={appImages.crossClose} // Your icon image
+          />
+        </Pressable>
+        <View style={styles.mainWhiteView}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: '10%'}}>
+            <View style={styles.scrollInnerView}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: RFValue(15),
+                  // padding: 10,
+                  color: colors.black,
+                }}>
+                Bill Summary
+              </Text>
+
+              {billDetails?.map((item, i) => {
+                return (
+                  <View style={styles.billDetailRenderView}>
+                    <TextRender
+                      titleStyle={[
+                        styles.titleText,
+                        {
+                          color:
+                            item?.coupanCode?.length > 0
+                              ? colors.main
+                              : colors.color64,
+                        },
+                      ]}
+                      valueStyle={[
+                        styles.valueText,
+                        {
+                          color:
+                            item?.coupanCode?.length > 0
+                              ? colors.main
+                              : colors.color64,
+                        },
+                      ]}
+                      title={
+                        item?.coupanCode?.length > 0
+                          ? item?.name + '- (' + item?.coupanCode + ')'
+                          : item?.name
+                      }
+                      value={currencyFormat(Number(item?.price))}
+                      bottomLine={false}
+                    />
+                    {i == 3 && <DotedLine />}
+                  </View>
+                );
+              })}
+
+              <View style={styles.btnView}>
+                <SvgXml xml={appImagesSvg.party} />
+                <Text numberOfLines={1} style={styles.btnText}>
+                  You saved ₹10 on this order
+                </Text>
+              </View>
+            </View>
+          </ScrollView>
+        </View>
       </Pressable>
-      <View
-        style={{
-          // backgroundColor: '#F9BD00',
-          backgroundColor: 'white',
-          position: 'absolute',
-          bottom: Platform.OS == 'android' ? 0 : '6%',
-
-          width: wp('100%'),
-          height: hp('50%'),
-          borderTopEndRadius: 10,
-          borderTopStartRadius: 10,
-          borderColor: '#F9BD00',
-          paddingTop: '5%',
-        }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: '10%'}}>
-          <View>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: RFValue(15),
-                padding: 10,
-                color: '#000',
-              }}>
-              Bill Summary
-            </Text>
-
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#646464',
-                }}>
-                Item total
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#646464',
-                }}>
-               
-  
-                {currencyFormat(cartBillG.cartTotal)}
-              </Text>
-            </View>
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#646464',
-                }}>
-                Delivery Fee
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#646464',
-                }}>
-                    
-                {currencyFormat(cartBillG.deliveryFree)}
-              </Text>
-            </View>
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#646464',
-                }}>
-                Platform fee
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#646464',
-                }}>
-                  
-                {currencyFormat(cartBillG.platformFree)}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#646464',
-                }}>
-                GST and Restaurant Charges
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#646464',
-                }}>
-                   
-                {currencyFormat(cartBillG.gstRestorentCharges)}
-              </Text>
-            </View>
-            <View style={{paddingHorizontal: 16}}>
-              <DotedLine />
-            </View>
-
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#646464',
-                }}>
-                Grand Total
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#000',
-                }}>
-                  
-                {currencyFormat(cartBillG.grandTotal)}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#28B056',
-                }}>
-                Restaurant Coupon- (DUIT75)
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#28B056',
-                }}>
-                
-    {currencyFormat(cartBillG.couponDiscount)}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                paddingHorizontal: 16,
-                marginTop: '4%',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  maxWidth: wp('55%'),
-                  color: '#646464',
-                }}>
-                To Pay
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                  color: '#000',
-                }}>
-                    
-                {currencyFormat(cartBillG.topay)}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                paddingHorizontal: 16,
-                margin: '4%',
-                borderRadius: 20,
-                padding: 10,
-                backgroundColor: '#D6FFE4',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-              }}>
-              <SvgXml xml={appImagesSvg.party} />
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(13),
-                  marginLeft: 6,
-                  color: '#28B056',
-                }}>
-                You saved ₹10 on this order
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
     </Modal>
   );
 };
 
 export default BillSummary;
 
-const close = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-<path d="M12 4L4 12" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M4 4L12 12" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+
+  backButtonTouch: {
+    alignItems: 'center',
+    zIndex: 1,
+    alignSelf: 'center',
+    marginBottom: '3%',
+  },
+  mainWhiteView: {
+    backgroundColor: colors.white,
+    height: hp('50%'),
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
+    borderColor: colors.colorF9,
+    paddingTop: '3%',
+  },
+  scrollInnerView: {
+    marginHorizontal: 20,
+    justifyContent: 'center',
+  },
+  billDetailRenderView: {
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+  },
+  titleText: {
+    fontFamily: fonts.medium,
+    fontSize: RFValue(13),
+    color: colors.color64,
+  },
+  valueText: {
+    fontFamily: fonts.medium,
+    fontSize: RFValue(14),
+    color: colors.color64,
+  },
+  btnView: {
+    paddingHorizontal: 16,
+    marginTop: '5%',
+    borderRadius: 10,
+    height: hp('5.5%'),
+    backgroundColor: colors.colorD6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  btnText: {
+    fontFamily: fonts.medium,
+    fontSize: RFValue(13),
+    marginLeft: '3%',
+    color: colors.main,
+  },
+});

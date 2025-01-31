@@ -28,6 +28,7 @@ export const colors = {
     colorDo:'#D6FFE435',
     colorD6:'#D6FFE4',
     colorD45:'#D6FFE445',
+    colorD73:'#D6FFE473',
     color27:'#272525',
     colorD9:'#D9D9D9',
     colorA9:'#A9A9AA',
@@ -56,7 +57,19 @@ export const colors = {
     colorFB:'#FB8C00',
     colorFF:'#FFA726',
     colorBB:'#BBBBBB',
-    colorC5:'#C5C5C5'
+    colorC5:'#C5C5C5',
+    colorEC:'#ECFFF3',
+    colorF1:"#F1F2F6",
+    color3D:'#3D3D3D',
+    colorF4:"#F4F4F4",
+    colorCA:"#CACACA",
+    color8A:'#8A8A8A',
+    colorF9:'#F9BD00',
+    colorF910:'#F9BD0010',
+    colorF5:'#F5F5F5',
+    colorFD:'#FDB714',
+    color33:'#333333',
+    colorFE:'#FEF0F3'
    
     
    

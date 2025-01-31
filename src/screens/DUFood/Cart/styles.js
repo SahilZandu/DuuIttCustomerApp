@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContainer: {
-    paddingVertical: 10,
+    paddingBottom: '10%',
   },
   itemContainer: {
     // width: 150,

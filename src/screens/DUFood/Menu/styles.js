@@ -326,7 +326,7 @@ const restuarantStyles = StyleSheet.create({
   noDataText: {
     fontSize: RFValue(14),
     fontFamily: fonts.medium,
-    color: '#000000',
+    color:colors.black,
   },
 
   restaurantMenuSelector: {

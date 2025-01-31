@@ -21,10 +21,6 @@ import {fonts} from '../../../theme/fonts/fonts';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {colors} from '../../../theme/colors';
 import {Rating} from 'react-native-rating-element';
-
-// import Spacer from '../../Components/Spacer';
-// import {MenuItems} from './MenuItems';
-// import {PopularDishes} from './PopularDishes';
 import FastImage from 'react-native-fast-image';
 import {SvgXml} from 'react-native-svg';
 // import ImageTextComponent from '../../Components/ImageTextComponent';
@@ -36,7 +32,8 @@ import LinearGradient from 'react-native-linear-gradient';
 // import {rootStore} from '../../stores/rootStore';
 // import {APP_IMAGE_BASEURL} from '../../constant';
 import OrgReviewCard from '../Components/Cards/OrgReviewCard';
-import {ProgressBar} from 'react-native-paper';
+import AppInputScroll from '../../../halpers/AppInputScroll';
+import Ratings from '../../../halpers/Ratings';
 // import { appImages } from '../../../commons/AppImages';
 
 let asestsArray = [
@@ -52,20 +49,46 @@ let asestsArray = [
   {
     item: '',
   },
+  {
+    item: '',
+  },
+  {
+    item: '',
+  },
+  {
+    item: '',
+  },
 ];
 
-export default function RestaurantDetail(props) {
+export default function RestaurantDetail({navigation, route}) {
   const day = new Date();
   let today = day.getDay();
-  const {navigation} = props;
-  const {restaurant, isResOpen, isResOpenSoon} = props.route.params;
-  console.log('restaurant----', restaurant, props.route);
-
+  const {restaurantData} = route?.params;
+  // console.log('restaurant----',restaurantData);
   // const {getResturantReviews} = rootStore.resturantstore;
-
   const [fullImage, setFullImage] = useState(false);
   const [imageUriIndex, setImageUriIndex] = useState(0);
   const [orgReviews, setOrgReviews] = useState([]);
+  const [restaurant, setRestaurant] = useState(restaurantData ?? {});
+  console.log('restaurant----', restaurant, restaurantData);
+
+  const packageMoneyData = [
+    {
+      id: '0',
+      name: 'Taste',
+      rate: '3.0',
+    },
+    {
+      id: '1',
+      name: 'Packaging',
+      rate: '4.5',
+    },
+    {
+      id: '2',
+      name: 'Value for money',
+      rate: '3.5',
+    },
+  ];
 
   // useEffect(() => {
   //   asestsArray = [];
@@ -91,18 +114,18 @@ export default function RestaurantDetail(props) {
   }, []);
 
   const photoList = (item, i) => {
-    console.log('item', item);
+    // console.log('item', item);
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => {
           setFullImage(true), setImageUriIndex(i);
         }}
-        style={{marginRight: hp('1.2%')}}
+        style={styles.assetsImageTouch}
         key={i}>
         <Image
           resizeMode="cover"
-          style={{height: hp('18%'), width: wp('50%'), borderRadius: 10}}
+          style={styles.assetsImage}
           source={
             appImages.foodIMage
             // uri: Base_Image_Url?.Base_Image_Assets_Url + item?.file_name,
@@ -131,102 +154,6 @@ export default function RestaurantDetail(props) {
     });
     return dayData;
   };
-  const ProgressView = () => {
-    return (
-      <View
-        style={{
-          margin: 10,
-        }}>
-        <Text
-          style={{
-            fontFamily: fonts.regular,
-            color: colors.black,
-            fontSize: RFValue(14),
-          }}>
-          Taste
-        </Text>
-        <View
-          style={{
-            width: '90%',
-            height: 10,
-
-            borderRadius: 20,
-          }}>
-          <View
-            style={{
-              backgroundColor: '#D9D9D9',
-              borderRadius: 20,
-              width: '100%',
-              height: 10,
-            }}
-          />
-          <View
-            style={{
-              backgroundColor: '#43BA6B',
-              borderRadius: 20,
-              width: '70%',
-              height: 10,
-              position: 'absolute',
-              top: 0,
-            }}
-          />
-        </View>
-      </View>
-    );
-  };
-  const DisRating = dishes => {
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            borderRadius: 10,
-            elevation: 4,
-            shadowColor: '#000',
-            shadowOpacity: 0.2,
-            shadowRadius: 5,
-            padding: 20,
-
-            width: wp('40%'),
-            alignContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              fontFamily: fonts.bold,
-              color: colors.black,
-              fontSize: RFValue(40),
-            }}>
-            4.5
-          </Text>
-          <Text
-            style={{
-              fontFamily: fonts.regular,
-              color: colors.black,
-              fontSize: RFValue(12),
-            }}>
-            Very Good
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            {asestsArray.map((item, index) => (
-              <View key={index}>
-                <SvgXml xml={appImagesSvg.startM} />
-              </View>
-            ))}
-          </View>
-        </View>
-        <View
-          style={{
-            width: wp('55%'),
-            marginStart:wp('2%')
-          }}>
-          <ProgressView />
-          <ProgressView />
-          <ProgressView />
-        </View>
-      </View>
-    );
-  };
   const getProductList = (item, i) => {
     return (
       <>
@@ -242,24 +169,68 @@ export default function RestaurantDetail(props) {
     );
   };
 
+  const onRateWidth = rate => {
+    if (rate >= 0 && rate <= 1) {
+      return wp('10%');
+    } else if (rate > 1 && rate <= 3) {
+      return wp('20%');
+    } else if (rate > 3 && rate <= 4) {
+      return wp('30%');
+    } else if (rate > 4 && rate < 5) {
+      return wp('40%');
+    } else if (rate == 5) {
+      return wp('50%');
+    } else {
+      return wp('10%');
+    }
+  };
+
+  const ProgressView = ({item, index}) => {
+    return (
+      <View style={styles.progressView}>
+        <Text style={styles.progessName}>{item?.name}</Text>
+        <View style={styles.progressFillUnfillView}>
+          <View style={styles.unFillView} />
+          <View
+            style={[
+              styles.fillView,
+              {
+                width: onRateWidth(item?.rate),
+              },
+            ]}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const DisRating = dishes => {
+    return (
+      <View style={styles.ratingTextView}>
+        <View style={styles.ratingView}>
+          <Text style={styles.ratingValue}>3.5</Text>
+          <Text style={styles.ratingText}>Very Good</Text>
+          <Ratings
+            mainStyle={styles.starRatingImage}
+            rateFormat={Number(3.5)}
+            starHeight={20}
+          />
+        </View>
+        <View style={styles.progressMainView}>
+          {packageMoneyData?.map((item, index) => {
+            return <ProgressView item={item} index={index} />;
+          })}
+        </View>
+      </View>
+    );
+  };
+
   const OrgReviewsList = () => {
     return (
-      <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: '8%',
-          }}>
-          <Text
-            style={{
-              color: '#000000',
-              fontFamily: fonts.bold,
-              fontSize: RFValue(16),
-            }}>
-            Reviews
-          </Text>
-          {asestsArray?.length > 2 && (
+      <View style={styles.mainReviewsView}>
+        <View style={styles.reviewsView}>
+          <Text style={styles.reviewsText}>Reviews</Text>
+          {/* {asestsArray?.length > 2 && (
             <Pressable
               onPress={() =>
                 navigation.navigate('orgAllReviews', {
@@ -267,16 +238,16 @@ export default function RestaurantDetail(props) {
                   restaurant,
                 })
               }>
-              {/* <Text
+              <Text
                 style={{
                   color: '#E95D5D',
                   fontFamily: fonts.medium,
                   fontSize: RFValue(14),
                 }}>
-                See all({`${orgReviews.length}`})
-              </Text> */}
+                See all
+              </Text>
             </Pressable>
-          )}
+          )} */}
         </View>
         <View>
           {/* {orgReviews
@@ -286,7 +257,7 @@ export default function RestaurantDetail(props) {
                 <OrgReviewCard item={item} isDishRating={false} />
               </View>
             ))} */}
-          {asestsArray.map((item, index) => (
+          {asestsArray?.map((item, index) => (
             <View key={index}>
               <OrgReviewCard item={item} isDishRating={false} />
             </View>
@@ -297,253 +268,214 @@ export default function RestaurantDetail(props) {
   };
 
   return (
-    <View style={styles.restaurantConatiner}>
-       <Header 
-       bgColor={'white'}
-      title={'Surya Fastfood'}
-      shareSVG={appImagesSvg.share}
-      backArrow={true}
-      shareIcon={true}
-      onPress={() => {
-        navigation.goBack();
-      }}/>
-     
-    
-    <ScrollView
-          style={{flex: 0}}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: '10%'}}>
-    <View >
-      
-      <View
-    style={{justifyContent:'center',
-    alignItems:'flex-start',
-    position: 'relative',}} >
-        
-        <FastImage
-          style={styles.logoImage}
-          source={
-            // restaurant?.logo
-            //   ? {uri: Base_Image_Url?.Base_Image_Url + restaurant?.logo}
-            //   : AppImages.orgPlaceholder
-            appImages.mapImg
-          }
-          resizeMode={FastImage.resizeMode.stretch}
-        />
-     <Text
-     numberOfLines={2}
-        style={{
-          fontFamily:fonts.regular,
-          fontSize:RFValue(10),
-          width:wp('50%'),
-          color:'black',
-          marginStart:wp('3%'),
-        position:'absolute',
-        left: 0, 
-        transform: [{ translateY: -10 }],
-        }}>
-        Phase 5, Sector 59, Sahibzada Ajit Singh Nagar, Punjab 160059
-        </Text>
+    <View style={styles.conatiner}>
+      <Header
+        title={restaurant?.name}
+        shareSVG={appImagesSvg.share}
+        backArrow={true}
+        shareIcon={true}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
+      <AppInputScroll
+        Pb={'25%'}
+        padding={true}
+        keyboardShouldPersistTaps={'handled'}>
+        <View style={styles.mainInnerView}>
+          <View style={styles.backImageTextView}>
+            <FastImage
+              style={styles.logoImage}
+              source={
+                // restaurant?.logo
+                //   ? {uri: Base_Image_Url?.Base_Image_Url + restaurant?.logo}
+                //   : AppImages.orgPlaceholder
+                appImages?.mapImg
+              }
+              resizeMode={FastImage.resizeMode.cover}
+            />
+            <Text numberOfLines={3} style={styles.addressText}>
+              {restaurant?.address}
+            </Text>
+          </View>
 
-        
-      </View>
+          <View style={styles.innerView}>
+            {<DisRating />}
 
-      <View style={styles.upperSpaceView}>
-        {/* <Spacer space={hp('2%')} /> */}
-        
-          <View style={{
-            paddingBottom: '10%',marginHorizontal: 20}}>
-            <View style={styles.nameRatingView}>
-              <Text numberOfLines={1} style={styles.restaurantName}>
-                {restaurant?.name}
-              </Text>
-             
-            </View>
-            <DisRating />
-            {/* <CardView /> */}
-            {/* <View style={{flexDirection: 'row'}}>
-              {restaurant?.product
-                ?.slice(0, 3)
-                .map((item, i) => getProductList(item, i))}
-            </View> */}
-
-            <Text style={styles.restaurantAddress}>{restaurant?.address}</Text>
-
-         
-
-            {/* "Asseta image" */}
-            {asestsArray?.length > 0 ? (
-              <>
-                {/* <Spacer space={hp('3%')} /> */}
-                <Text style={styles.assestPhoto}>Photos</Text>
-                <View style={{flex: 1, marginTop: hp('1.5%')}}>
-                  <ScrollView
-                    style={{flex: 1}}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}>
-                    {asestsArray?.length > 0 ? (
-                      <>
-                        {/* {restaurant?.assets?.map((item, i) =>
+            <View style={styles.assestMainView}>
+              {asestsArray?.length > 0 ? (
+                <>
+                  <Text style={styles.assestPhoto}>Photos</Text>
+                  <View style={styles.assetInnerView}>
+                    <ScrollView
+                      style={styles.assetsScrollView}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}>
+                      {asestsArray?.length > 0 ? (
+                        <View style={styles.scrollViewInnnerView}>
+                          {/* {restaurant?.assets?.map((item, i) =>
                           photoList(item, i),
                         )} */}
 
-                        {asestsArray?.map((item, i) => photoList(item, i))}
-                      </>
-                    ) : (
-                      <>
-                        <View style={styles.noDataView}>
-                          <Text style={styles.noDataText}>No data Found</Text>
+                          {asestsArray?.map((item, i) => photoList(item, i))}
                         </View>
-                      </>
-                    )}
-                  </ScrollView>
-                </View>
-              </>
-            ) : null}
-            {/* reviews data */}
+                      ) : (
+                        <>
+                          <View style={styles.noDataView}>
+                            <Text style={styles.noDataText}>No data Found</Text>
+                          </View>
+                        </>
+                      )}
+                    </ScrollView>
+                  </View>
+                </>
+              ) : null}
+            </View>
 
             {asestsArray?.length > 0 && OrgReviewsList()}
-
-            
           </View>
-        
-      </View>
-      {/* <FullImageView
+
+     {/* <FullImageView
         uri={{}}
         visible={fullImage}
         onRequestClose={() => setFullImage(false)}
         multiImage={asestsArray}
         imageIndex={imageUriIndex}
       /> */}
-    </View>
-    </ScrollView>
+        </View>
+      </AppInputScroll>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: 300,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    padding: 20,
-    margin: 20,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  cardBody: {
-    marginTop: 10,
-  },
-  progressBar: {
-    height: 10,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 5,
-    marginBottom: 5,
-    overflow: 'hidden',
-  },
-  progressIndicator: {
-    height: '100%',
-    backgroundColor: 'green',
-    borderRadius: 5,
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'green',
-    textAlign: 'right',
-  },
-
-  restaurantConatiner: {
+  conatiner: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.appBackground,
   },
-  assestPhoto: {
-    color: colors.black,
-    fontSize: RFValue(16),
-    fontFamily: fonts.bold,
-    marginLeft: '0.5%',
+  mainInnerView: {
+    justifyContent: 'center',
+  },
+  backImageTextView: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    position: 'relative',
   },
   logoImage: {
     width: wp('100%'),
-    height: hp('14%'),
+    height: hp('12%'),
   },
-  gradientView: {
+  addressText: {
+    fontFamily: fonts.regular,
+    fontSize: RFValue(11),
+    width: wp('50%'),
+    color: colors.color5A,
+    marginStart: wp('3%'),
     position: 'absolute',
-    height: '25%',
-    width: '100%',
+    transform: [{translateY: -10}],
   },
-  headerView: {
-    position: 'absolute',
+  innerView: {
     marginHorizontal: 20,
-  },
-  upperSpaceView: {
-    flex: 1,
-    // borderRadius: 20,
-    marginTop: '-5%',
-    backgroundColor: 'white',
-  },
-  nameRatingView: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: '1%',
-    alignItems: 'center',
   },
-  restaurantName: {
-    flex: 1,
-    fontSize: RFValue(24),
-    fontFamily: fonts.medium,
-    color: colors.black,
+  ratingTextView: {
+    flexDirection: 'row',
+    marginTop: '7%',
+    alignItems: 'center',
   },
   ratingView: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    height: hp('17%'),
+    width: wp('36%'),
     alignItems: 'center',
-    width: wp('15%'),
+    justifyContent: 'center',
   },
-  restaurantAddress: {
-    fontSize: RFValue(12),
+  ratingValue: {
+    fontFamily: fonts.medium,
+    color: colors.black,
+    fontSize: RFValue(40),
+  },
+  ratingText: {
     fontFamily: fonts.regular,
     color: colors.black,
-    marginTop: '2%',
-  },
-  openTickView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: '2%',
-  },
-  openNowText: {
     fontSize: RFValue(12),
-    fontFamily: fonts.semiBold,
+  },
+  starRatingImage: {
+    borderRadius: 0,
+    borderColor: colors.white,
+    backgroundColor: colors.white,
+    marginTop: '3%',
+  },
+  progressMainView: {
+    flex: 1,
+    marginLeft: wp('1%'),
+    justifyContent: 'center',
+    marginTop: '-4%',
+  },
+  progressView: {
+    marginTop: '8%',
+    marginHorizontal: '5%',
+    justifyContent: 'center',
+  },
+  progessName: {
+    fontFamily: fonts.regular,
     color: colors.black,
-    marginLeft: '1%',
+    fontSize: RFValue(11),
   },
-  openTiming: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.semiBold,
+  progressFillUnfillView: {
+    borderRadius: 20,
+    justifyContent: 'center',
+    marginTop: '4%',
+  },
+  unFillView: {
+    backgroundColor: colors.colorD9,
+    borderRadius: 20,
+    width: wp('50%'),
+    height: hp('1.2%'),
+  },
+  fillView: {
+    backgroundColor: colors.color43,
+    borderRadius: 20,
+    width: wp('10%'),
+    height: hp('1.2%'),
+    position: 'absolute',
+  },
+  assestMainView: {
+    marginTop: '6%',
+    justifyContent: 'center',
+    marginHorizontal: -20,
+  },
+  assestPhoto: {
     color: colors.black,
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    marginLeft: '6%',
   },
-  closeTimingView: {
+  assetInnerView: {
+    flex: 1,
+    marginTop: hp('1.5%'),
+  },
+  assetsScrollView: {
+    flex: 1,
+  },
+  scrollViewInnnerView: {
+    marginLeft: 20,
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: '2%',
+    justifyContent: 'center',
   },
-  closeNowText: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.semiBold,
-    marginLeft: '1%',
+  assetsImageTouch: {
+    marginRight: hp('1.2%'),
+    justifyContent: 'center',
+  },
+  assetsImage: {
+    height: hp('11%'),
+    width: wp('26%'),
+    borderRadius: 10,
   },
   noDataView: {
     alignItems: 'center',
@@ -555,151 +487,17 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black,
   },
-  reviewView: {
+  mainReviewsView: {
+    justifyContent: 'center',
+  },
+  reviewsView: {
     flexDirection: 'row',
-    marginTop: '10%',
-    alignItems: 'center',
-    marginBottom: '2%',
+    justifyContent: 'space-between',
+    marginTop: '8%',
   },
   reviewsText: {
-    flex: 1,
-    fontSize: RFValue(16),
+    color: colors.black,
     fontFamily: fonts.medium,
-    color: colors.black,
-  },
-  leaveReviewText: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.medium,
-    color: '#E95D5D',
-  },
-  reviewsBox: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#1B951C20',
-  },
-  boxInnerText: {
-    paddingHorizontal: 10,
-    marginTop: '2%',
-    marginBottom: '2%',
-    fontSize: RFValue(12),
-    fontFamily: fonts.regular,
-    color: colors.black,
-  },
-  reviewerView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: '3%',
-    marginBottom: '3%',
-    marginHorizontal: 10,
-  },
-  reviewerTextDate: {
-    flexDirection: 'column',
-    marginLeft: '3%',
-    flex: 1,
-  },
-  reviewerText: {
-    fontSize: RFValue(14),
-    fontFamily: fonts.medium,
-    color: colors.black,
-  },
-  reviewerDate: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.regular,
-    color: '#8F8F8F',
-  },
-  reviwerRatingView: {
-    backgroundColor: 'green',
-    flexDirection: 'row',
-    width: wp('14%'),
-    height: hp('3%'),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  reviewerRating: {
-    fontSize: RFValue(14),
-    fontFamily: fonts.medium,
-    color: colors.white,
-  },
-  aboutRestaurantText: {
-    fontSize: RFValue(16),
-    fontFamily: fonts.medium,
-    color: colors.black,
-    marginBottom: '2%',
-  },
-  aboutRestaurantBox: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#F9BD00',
-  },
-  menuView: {
-    flexDirection: 'row',
-    marginHorizontal: 10,
-    marginTop: '4%',
-  },
-  renderMenuViewText: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: wp('76%'),
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginLeft: '3%',
-    marginTop: '0.3%',
-  },
-  renderMenuText: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.regular,
-    color: '#333333',
-    marginRight: '1%',
-  },
-  facilitiesView: {
-    marginHorizontal: 15,
-    marginTop: '4%',
-    marginBottom: '2%',
-  },
-  facilitiesText: {
-    fontSize: RFValue(16),
-    fontFamily: fonts.medium,
-    color: colors.black,
-  },
-  renderFacilities: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: wp('82%'),
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'space-between',
-  },
-  renderFacilitiesText: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.regular,
-    color: '#333333',
-    marginTop: '3%',
-  },
-  orderNowBtn: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: wp('90%'),
-    height: hp('5.5%'),
-    borderRadius: 10,
-    backgroundColor: 'rgba(27, 149, 28, 0.1)',
-    borderWidth: 1,
-    marginTop: '3%',
-    borderColor: '#1B951C',
-  },
-  orderNowText: {
-    marginLeft: '6%',
-    width: wp('72%'),
-    fontSize: RFValue(14),
-    fontFamily: fonts.bold,
-    color: '#1B951C',
-  },
-  restaurantProductText: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.regular,
-    color: colors.black,
-    marginLeft: '1%',
-    color: colors.black,
+    fontSize: RFValue(13),
   },
 });
