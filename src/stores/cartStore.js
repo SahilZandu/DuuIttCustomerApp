@@ -8,8 +8,8 @@ import {
   makeAutoObservable,
 } from 'mobx';
 import {useEffect, usestate} from 'react';
-import { agent } from '../api/agent';
-import { useToast } from '../halpers/useToast';
+import {agent} from '../api/agent';
+import {useToast} from '../halpers/useToast';
 
 export default class CartStore {
   constructor() {
@@ -225,7 +225,6 @@ export default class CartStore {
   //   }
   // };
 
-
   //  getIPrice =  updatedItem => {
   //   if (updatedItem?.addons && updatedItem?.addons.length > 0) {
   //     let addonsTotalPrice = updatedItem?.addons.reduce((total, item) => {
@@ -302,18 +301,23 @@ export default class CartStore {
   //   }
   // };
 
-/////
+  /////
 
-
-setCart=async(cartArray,appUser,restaurant)=>{
+  setCart = async (cartArray, appUser, restaurant) => {
     // handleLoading(true)
-    let requestData ={
-      restaurant_id:restaurant?._id,
-      user_id:appUser?._id,
-      cart_items:cartArray
-    }
-    console.log('requestData setCart1: ', requestData,cartArray,appUser,restaurant);
-  //  return
+    let requestData = {
+      restaurant_id: restaurant?._id,
+      user_id: appUser?._id,
+      cart_items: cartArray,
+    };
+    console.log(
+      'requestData setCart1: ',
+      requestData,
+      cartArray,
+      appUser,
+      restaurant,
+    );
+    //  return
     try {
       const res = await agent.setCart(requestData);
       console.log('setCart1 Res : ', res);
@@ -327,7 +331,6 @@ setCart=async(cartArray,appUser,restaurant)=>{
         // handleLoading(false);
         return [];
       }
-     
     } catch (error) {
       console.log('error setCart1:', error);
       // handleLoading(false);
@@ -337,65 +340,92 @@ setCart=async(cartArray,appUser,restaurant)=>{
       useToast(m, 0);
       return [];
     }
+  };
 
-}
+  updateCart = async (cartArray, appUser, restaurant, cart) => {
+    let filterData = cartArray?.filter(item => item?.quantity >= 1) || [];
 
-updateCart=async(cartArray,appUser,restaurant,cart)=>{
-  let requestData ={
-    restaurant_id:restaurant?._id,
-    user_id:appUser?._id,
-    cart_items:cartArray,
-    cart_id:cart?._id,
-  }
-  console.log('requestData updateCart: ', requestData,cartArray,appUser,restaurant,cart)
-   //  return
-  try {
-    const res = await agent.updateCart(requestData);
-    console.log('updateCart Res : ', res);
-    if (res?.statusCode == 200) {
-      // useToast(res?.message, 1);
-      return res?.data;
-    } else {
-      const message = res?.message ? res?.message : res?.data?.message;
-      useToast(message, 0);
+    console.log('filterData--', filterData);
+
+    let requestData = {
+      restaurant_id: restaurant?._id,
+      user_id: appUser?._id,
+      cart_items: filterData,
+      cart_id: cart?._id,
+    };
+    console.log(
+      'requestData updateCart: ',
+      requestData,
+      cartArray,
+      appUser,
+      restaurant,
+      cart,
+    );
+    //  return
+    try {
+      const res = await agent.updateCart(requestData);
+      console.log('updateCart Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        // handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error updateCart:', error);
       // handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
       return [];
     }
-   
-  } catch (error) {
-    console.log('error updateCart:', error);
-    // handleLoading(false);
-    const m = error?.data?.message
-      ? error?.data?.message
-      : 'Something went wrong';
-    useToast(m, 0);
-    return [];
-  }
+  };
 
-}
+  getCart = async () => {
+    let requestData = {};
 
-getCart=async(restaurant)=>{
-  // handleLoading(true)
-  let requestData ={
-    restaurant_id:restaurant?._id,
-  } 
-  console.log('requestData getCart: ', requestData,restaurant);
-  try {
-    const res = await agent.getCart(requestData);
-    console.log('getCart Res : ', res);
-    if (res?.statusCode == 200) {
-      return res?.data;
-    } else {
+    console.log('requestData getCart: ', requestData);
+    try {
+      const res = await agent.getCart(requestData);
+      console.log('getCart Res : ', res);
+      if (res?.statusCode == 200) {
+        return res?.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log('error getCart:', error);
       return [];
     }
-   
-  } catch (error) {
-    console.log('error getCart:', error);
-    return [];
-  }
+  };
 
-}
-
-
-
+  deleteCart = async cart => {
+    let requestData = {
+      cart_id: cart?._id,
+    };
+    console.log('requestData deleteCart: ', requestData);
+    try {
+      const res = await agent.deleteCart(requestData);
+      console.log('deleteCart Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        return [];
+      }
+    } catch (error) {
+      console.log('error deleteCart:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+  };
 }

@@ -215,9 +215,9 @@ const DashboardHeader2 = ({
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                onPress={() => {
-                  handleSearchButtonPress();
-                }}
+                // onPress={() => {
+                //   handleSearchButtonPress();
+                // }}
                 activeOpacity={0.8}
                 hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}>
                 <SvgXml

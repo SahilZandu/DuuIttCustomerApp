@@ -131,7 +131,7 @@ export default function MyAddress({navigation, route}) {
               <View style={styles.main}>
                 {myAddress?.length > 0 ? (
                   <FlatList
-                    contentContainerStyle={{paddingBottom: '20%'}}
+                    contentContainerStyle={{paddingBottom:'30%'}}
                     showsVerticalScrollIndicator={false}
                     data={myAddress}
                     renderItem={renderItem}

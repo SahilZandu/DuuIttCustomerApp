@@ -161,9 +161,9 @@ const GiftSliderFlatList = ({data, onSliderPress, onHandleImage}) => {
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
-        snapToAlignment={'center'}
+        snapToAlignment={'start'}
         decelerationRate="fast"
-        snapToInterval={wp('10%')} // Ensures only two items are fully visible
+        snapToInterval={10} // Ensures only two items are fully visible
         onViewableItemsChanged={onViewRef.current} // Updates pagination based on the visible item
         viewabilityConfig={viewConfigRef.current}
         keyExtractor={(item, index) => index?.toString()}

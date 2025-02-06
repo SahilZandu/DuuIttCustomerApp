@@ -70,6 +70,7 @@ export default function AddMyAddress({navigation, route}) {
     house: '',
     landmark: '',
   });
+  const [loadingAddress, setLoadingAddress] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -79,6 +80,8 @@ export default function AddMyAddress({navigation, route}) {
       }
     }, [type]),
   );
+
+
   const tabs = [
     {id: 0, text: 'Home', icon: appImages.homeLocation},
     {id: 1, text: 'Work', icon: appImages.workLocation},
@@ -107,6 +110,17 @@ export default function AddMyAddress({navigation, route}) {
       });
     }
   }, [data]);
+
+  useEffect(()=>{
+    if(address?.length>0){
+      setLoadingAddress(false)
+    }else{
+      setTimeout(()=>{
+        setLoadingAddress(false)
+      },2000)
+    }
+
+  },[address])
 
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
@@ -284,9 +298,14 @@ export default function AddMyAddress({navigation, route}) {
 
         <View style={styles.addressView}>
           {!address?.length > 0 ? (
+            <View>
+            {loadingAddress == true ? 
             <AnimatedLoader type={'addMyAddress'}  />
+            :
+            <Text style={styles.chooseText}>Please choose location...</Text>}
+            </View>
           ) : (
-            <View style={{paddingHorizontal: 30, marginTop: '3%'}}>
+            <View style={styles.addressContainView}>
               <LocationHistoryCard
                 bottomLine={true}
                 item={{

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   UIManager,
+  Alert,
 } from 'react-native';
 import {rootStore} from '../../../stores/rootStore';
 import OrgCard from '../../../components/OrgCard';
@@ -32,6 +33,7 @@ import {colors} from '../../../theme/colors';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import Url from '../../../api/Url';
+import PopUp from '../../../components/appPopUp/PopUp';
 
 let filterType = 'all';
 
@@ -39,7 +41,7 @@ let CustomizeItem = null;
 
 const ResturantProducts = memo(({navigation, route}) => {
   const {item} = route.params;
-  const {setCart, getCart, updateCart} = rootStore.cartStore;
+  const {setCart, getCart, updateCart, deleteCart} = rootStore.cartStore;
   const {restaurantUnderMenuGroup, setCategoryMenuList, categoryMenuList} =
     rootStore.foodDashboardStore;
   const {appUser} = rootStore.commonStore;
@@ -59,23 +61,20 @@ const ResturantProducts = memo(({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(false);
   const [isCart, setIsCart] = useState({});
-  const [isOtherCart, setIsOtherCart] = useState(null);
   const [itemModal, setItemModal] = useState(false);
-  const [itemDetails, setItemDetails] = useState([]);
   const [fullImage, setFullImage] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
   const [removeCart, setRemoveCart] = useState(false);
   const [isResOpen, setIsResOpen] = useState(true);
-  const [isResOpenSoon, setIsResOpenSoon] = useState(null);
   const [orgOffers, setOrgOffers] = useState([]);
-  const [orgReviews, setOrgReviews] = useState([]);
   const [selectedCartList, setSelectedCartList] = useState({});
+  const [isRemoveCart, setIsRemoveCart] = useState(false);
+  const [clickItem, setClickItem] = useState({});
 
   const scrollViewRef = useRef(null);
   const groupRefs = useRef([]);
 
-  console.log('item---item?.restaurant?._id', item, item?.restaurant);
+  // console.log('item---item?.restaurant?._id', item, item?.restaurant);
 
   useFocusEffect(
     useCallback(() => {
@@ -192,7 +191,7 @@ const ResturantProducts = memo(({navigation, route}) => {
         style={[
           styles.menuBtnTouch,
           {
-            bottom: isCart ? '10%' : isOtherCart ? '11%' : '3%',
+            bottom: isCart?.food_item?.length > 0 ? '10%' : '3%',
           },
         ]}>
         <View style={styles.menuBtnView}>
@@ -219,59 +218,68 @@ const ResturantProducts = memo(({navigation, route}) => {
       food_item_price: item?.selling_price,
     };
 
-    console.log('item,quan,handleAddRemove', item, quan, restaurant, newItem);
+    // console.log('item,quan,handleAddRemove', item, quan, restaurant, newItem);
 
     // const getCartList = await getCart(restaurant);
     const getCartList = {...selectedCartList};
     console.log('getCartList handleAddRemove:-', getCartList, item);
 
-    if (Array?.isArray(getCartList?.cart_items)) {
-      const checkAvailabilityById = getCartList?.cart_items?.find(
-        cartItem => cartItem?.food_item_id === item?._id,
-      );
-      // console.log('getCartList checkAvailability', checkAvailabilityById);
-
-      let updatedCartList = getCartList?.cart_items;
-
-      if (checkAvailabilityById) {
-        updatedCartList = getCartList?.cart_items?.map(data => {
-          if (data?.food_item_id == item?._id) {
-            return {...data, quantity: quan};
-          }
-          return {
-            ...data,
-          };
-        });
-        // console.log(
-        //   'updatedCartList--',
-        //   updatedCartList,
-        //   appUser,
-        //   restaurant,
-        //   getCartList,
-        // );
-        await updateCart(updatedCartList, appUser, restaurant, getCartList);
-      } else {
-        // console.log('updateCart--', updatedCartList, appUser, restaurant, [
-        //   newItem,
-        // ]);
-        await updateCart(
-          [...updatedCartList, ...[newItem]],
-          appUser,
-          restaurant,
-          getCartList,
+    if (getCartList?.cart_items?.length > 0) {
+      if (getCartList?.restaurant_id == item?.restaurant_id) {
+        const checkAvailabilityById = getCartList?.cart_items?.find(
+          cartItem => cartItem?.food_item_id === item?._id,
         );
+        // console.log('getCartList checkAvailability', checkAvailabilityById);
+
+        let updatedCartList = getCartList?.cart_items;
+
+        if (checkAvailabilityById) {
+          updatedCartList = getCartList?.cart_items?.map(data => {
+            if (data?.food_item_id == item?._id) {
+              return {...data, quantity: quan};
+            }
+            return {
+              ...data,
+            };
+          });
+          // console.log(
+          //   'updatedCartList--',
+          //   updatedCartList,
+          //   appUser,
+          //   restaurant,
+          //   getCartList,
+          // );
+          await updateCart(updatedCartList, appUser, restaurant, getCartList);
+        } else {
+          // console.log('updateCart--', updatedCartList, appUser, restaurant, [
+          //   newItem,
+          // ]);
+          await updateCart(
+            [...updatedCartList, ...[newItem]],
+            appUser,
+            restaurant,
+            getCartList,
+          );
+        }
+        setTimeout(() => {
+          getUserCart(groupProducts);
+        }, 500);
+      } else {
+        setClickItem(newItem);
+        setIsRemoveCart(true);
+        //  Alert.alert("yes..",'this is otehr restairant you cant not add the list os data')
       }
     } else {
       console.log('setCart--first', appUser, restaurant, [newItem]);
       await setCart([newItem], appUser, restaurant);
+      setTimeout(() => {
+        getUserCart(groupProducts);
+      }, 500);
     }
-    setTimeout(() => {
-      getUserCart(groupProducts);
-    }, 500);
   };
 
   const getUserCart = async groupProducts => {
-    let gettcart = await getCart(restaurant);
+    let gettcart = await getCart();
     console.log('getCart:-', gettcart, groupProducts);
     setSelectedCartList(gettcart ?? {});
     // onIDQuantity(gettcart, groupProducts);
@@ -279,62 +287,18 @@ const ResturantProducts = memo(({navigation, route}) => {
       let findingResturant = gettcart?.food_item?.every(
         item => item?.restaurant_id === restaurant?._id,
       );
-      console.log('findingResturant--', findingResturant);
+      // console.log('findingResturant--', findingResturant);
       if (findingResturant == true) {
         setIsCart(gettcart);
-      } else {
-        setIsOtherCart(gettcart);
       }
       onIDQuantity(gettcart, groupProducts);
     } else {
       setVisible(false);
       setIsCart({});
-      setIsOtherCart({});
       onIDQuantity(gettcart, groupProducts);
     }
     // setUpdate(!update);
   };
-
-  // const onIDQuantity = (cart, groupProducts) => {
-  //   let arr = [...groupProducts];
-  //   // console.log('arr---', arr);
-  //   if (arr?.length > 0 && cart?.length > 0) {
-  //     const updateMenuData = arr?.map(group => {
-  //       return {
-  //         ...group,
-  //         food_items: group?.food_items?.map(product => {
-  //           // Check if product exists in cart
-  //           const matchedItem = cart?.map((data)=>{
-  //            return data?.food_item?.find(data => data?.food_item_id === product?._id );
-  //           })
-  //           //
-  //                console.log("matchedItem---",matchedItem);
-  //           // If found, update quantity; otherwise, return the original product
-  //           return matchedItem
-  //             ? {...product, quantity: matchedItem?.quantity}
-  //             : {...product, quantity: 0};
-  //         }),
-  //       };
-  //     });
-  //     console.log('updateMenuData--', updateMenuData,arr);
-  //     onMenuCount(updateMenuData);
-  //     setGroupProducts([...updateMenuData]);
-  //     setCategoryMenuList(updateMenuData);
-  //   } else {
-  //     const updateData = arr?.map(group => {
-  //       return {
-  //         ...group,
-  //         food_items: group?.food_items?.map(product => {
-  //           // If found, update quantity; otherwise, return the original product
-  //           return {...product, quantity: 0};
-  //         }),
-  //       };
-  //     });
-  //     onMenuCount(updateData);
-  //     setGroupProducts([...updateData]);
-  //     setCategoryMenuList(updateData);
-  //   }
-  // };
 
   const onIDQuantity = (cart, groupProducts) => {
     let arr = [...groupProducts];
@@ -343,12 +307,10 @@ const ResturantProducts = memo(({navigation, route}) => {
       const updateMenuData = arr?.map(group => ({
         ...group,
         food_items: group?.food_items?.map(product => {
-          // Extract the exact item
           const exactItem = cart?.cart_items?.find(
             data => data?.food_item_id === product?._id,
           );
-          console.log('exactItem--', exactItem, product);
-          // Update quantity if found, otherwise set to 0
+          // console.log('exactItem--', exactItem, product);
           return exactItem
             ? {...product, quantity: exactItem?.quantity}
             : {...product, quantity: 0};
@@ -374,9 +336,20 @@ const ResturantProducts = memo(({navigation, route}) => {
     }
   };
 
+  const onDeleteCart = async () => {
+    const deleteCartData = await deleteCart(isCart);
+    console.log('deleteCartData--', deleteCartData);
+    setIsRemoveCart(false);
+    // console.log('setCart--new Rest data', appUser, restaurant, [clickItem]);
+    await setCart([clickItem], appUser, restaurant);
+    setTimeout(() => {
+      getUserCart(groupProducts);
+    }, 1000);
+  };
+
   const onRemoveCart = async orgId => {
-    await deleteCart(orgId);
-    await setCartEmpty();
+    // await deleteCart(orgId);
+    // await setCartEmpty();
     setRemoveCart(false);
     getUserCart(groupProducts);
   };
@@ -603,10 +576,12 @@ const ResturantProducts = memo(({navigation, route}) => {
 
       {!loading && orgMenu && orgMenu?.length > 0 && <BottomContent />}
 
-      {isCart?.cart_items?.length > 0 && !loading && (
+      {isCart?.food_item?.length > 0 && !loading && (
         <ViewCartBtn
           isCart={isCart}
-          viewCart={() => navigation.navigate('cart', {restaurant})}
+          viewCart={() => 
+            navigation.navigate('cart', {restaurant})
+          }
         />
       )}
 
@@ -656,7 +631,6 @@ const ResturantProducts = memo(({navigation, route}) => {
           );
           setItemModal(false);
 
-          // const getCartList = await getCart(restaurant);
           const getCartList = {...selectedCartList};
           console.log(
             'getCartList OrderCustomization:-',
@@ -710,6 +684,18 @@ const ResturantProducts = memo(({navigation, route}) => {
           setTimeout(() => {
             getUserCart(groupProducts);
           }, 500);
+        }}
+      />
+      <PopUp
+        visible={isRemoveCart}
+        type={'delete'}
+        onClose={() => setIsRemoveCart(false)}
+        title={'Confirm Cart Clearance'}
+        text={
+          'Other restaurant item is already in your cart. Please remove it.? This action cannot be undone.'
+        }
+        onDelete={() => {
+          onDeleteCart();
         }}
       />
     </View>

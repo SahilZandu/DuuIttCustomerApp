@@ -12,14 +12,27 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.appBackground,
   },
-  main:{
-    flex: 1
+  main: {
+    flex: 1,
+    backgroundColor: colors.white,
   },
-  addressView:{
-    backgroundColor: colors.appBackground,
+  addressView: {
+    backgroundColor: colors.white,
     borderRadius: 20,
     height: hp('12%'),
-    marginTop:hp('-1.6%'),
+    marginTop: hp('-2%'),
+  },
+  addressContainView: {
+    paddingHorizontal: 30,
+    paddingVertical:'1%',
+    // marginTop: '3%',
+    backgroundColor: colors.white,
+    borderRadius:20
+  },
+  chooseText:{
+    textAlign:'center',marginTop:hp('9%'),
+    fontSize:RFValue(15),
+    fontFamily:fonts.medium,
+    color:colors.black
   }
-  
 });

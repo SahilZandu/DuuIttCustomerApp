@@ -72,7 +72,10 @@ const ClaimGiftCard = ({navigation, route}) => {
       <View
         style={styles.botomBtnView}>
         <Spacer space={'5%'} />
-        <BTN title={'Back to Gift Cards'} width={wp('90%')} />
+        <BTN title={'Back to Gift Cards'} 
+        width={wp('90%')}
+        onPress={()=>{navigation.goBack()}}
+        />
       </View>
     </View>
   );

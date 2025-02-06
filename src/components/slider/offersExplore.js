@@ -1,4 +1,3 @@
-import {RFC_2822} from 'moment';
 import React, {useRef, useState} from 'react';
 import {
   View,
@@ -60,9 +59,9 @@ const OffersExploreFlatList = ({data, onPress}) => {
           decelerationRate="fast"
           snapToInterval={wp('55%')} // Ensures only two items are fully visible
           viewabilityConfig={viewConfigRef.current}
-          keyExtractor={(item, index) => index?.toString()}
+          keyExtractor={(index) => index?.toString()}
           contentContainerStyle={{
-            paddingRight: wp('3%'),
+            paddingRight: wp('10%'),
           }} 
         />
       </View>

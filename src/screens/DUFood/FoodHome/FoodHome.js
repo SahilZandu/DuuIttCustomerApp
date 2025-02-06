@@ -1,11 +1,6 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {
-  View,
-  FlatList,
-  DeviceEventEmitter,
-  Text,
-} from 'react-native';
-import {appImages,} from '../../../commons/AppImages';
+import {View, FlatList, DeviceEventEmitter, Text} from 'react-native';
+import {appImages} from '../../../commons/AppImages';
 import {styles} from './styles';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import {
@@ -33,7 +28,8 @@ import {
 import RepeatOrder from '../../../components/Cards/RepeatOrder';
 import RecommendedOrder from '../../../components/Cards/RecommendedOrder';
 import CategoryCard from '../../../components/Cards/CategoryCard';
-
+import FoodTrackingOrder from '../Components/FoodTrackingOrder';
+import PopUp from '../../../components/appPopUp/PopUp';
 
 let geoLocation = {
   lat: null,
@@ -44,9 +40,9 @@ let perPage = 20;
 
 export default function FoodHome({navigation}) {
   const {appUser} = rootStore.commonStore;
-  const {saveCartItem, deleteCart, loadCartList, getRestraurent} =
-    rootStore.cartStore;
-    const {restaurentList, restaurentAll,allDishCategory,allCategoryList} = rootStore.foodDashboardStore;
+  const {deleteCart, getCart} = rootStore.cartStore;
+  const {restaurentList, restaurentAll, allDishCategory, allCategoryList} =
+    rootStore.foodDashboardStore;
   let selectedFilter = '';
   const [loading, setLoading] = useState(
     restaurentList?.length > 0 ? false : true,
@@ -55,8 +51,7 @@ export default function FoodHome({navigation}) {
     allCategoryList?.length > 0 ? false : true,
   );
   const [categoryList, setCategoryList] = useState(allCategoryList ?? []);
-  const [restoInfo, setRestoInfo] = useState({});
-  const [cartItems, setcartItems] = useState([]);
+  const [cartItems, setcartItems] = useState({});
   const [orderList, setOrderList] = useState(restaurentList ?? []);
   const [loadingMore, setLoadingMore] = useState(false);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
@@ -65,7 +60,7 @@ export default function FoodHome({navigation}) {
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(silderArray);
-  const [isOtherCart, setIsOtherCart] = useState(false);
+
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -73,11 +68,10 @@ export default function FoodHome({navigation}) {
         : getCurrentLocation()?.longitude;
     return d ? d : '';
   };
-
-
+  const [isRemoveCart, setIsRemoveCart] = useState(false);
 
   const getOrderList = async () => {
-    console.log('getOrderList');
+    // console.log('getOrderList');
     const res = await restaurentAll(
       geoLocation,
       selectedFilter,
@@ -88,17 +82,15 @@ export default function FoodHome({navigation}) {
     setLoadingMore(false);
   };
 
-  const  getCategoryList = async () => {
-    console.log('getCategoryList');
-    const res = await allDishCategory(
-      handleLoadingCatagory,
-    );
-    console.log("res---",res);
+  const getCategoryList = async () => {
+    // console.log('getCategoryList');
+    const res = await allDishCategory(handleLoadingCatagory);
+    // console.log("res---",res);
     setCategoryList(res);
   };
-  const handleLoadingCatagory =(v)=>{
+  const handleLoadingCatagory = v => {
     setLoadingCategory(v);
-  }
+  };
 
   const repeatOrdersList = [
     {
@@ -150,34 +142,10 @@ export default function FoodHome({navigation}) {
     },
     // Add more restaurants as needed
   ];
-  const productsList = [
-    {
-      id: '1',
-      name: 'Pizza',
-      imageUrl: appImages.burgerImage,
-    },
-    {
-      id: '2',
-      name: 'Burger',
-      imageUrl: appImages.burgerImage,
-    },
-    {
-      id: '3',
-      name: 'Lassi',
-      imageUrl: appImages.burgerImage,
-    },
-    {
-      id: '4',
-      name: 'Noodles',
-      imageUrl: appImages.burgerImage,
-    },
-    // Add more restaurants as needed
-  ];
 
   const handleLoading = v => {
     setLoading(v);
   };
-  
 
   useFocusEffect(
     useCallback(() => {
@@ -187,15 +155,11 @@ export default function FoodHome({navigation}) {
       setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
-          // setIsRefersh(true);
-          // console.log('geoLocation>', geoLocation.lat + ' ' + geoLocation.lng);
           getOrderList();
           getCategoryList();
         }
       }, 300);
       onUpdateUserInfo();
-      console.log('appUserInfo._id>', appUserInfo._id);
-      onRestaurentInfo();
       getCartItemsCount();
     }, []),
   );
@@ -219,19 +183,6 @@ export default function FoodHome({navigation}) {
     const {appUser} = rootStore.commonStore;
     setAppUserInfo(appUser);
   };
-  const onRestaurentInfo = async () => {
-    const restInfoo = await getRestraurent();
-
-    console.log('restaurentInfo>', restInfoo);
-    if (restInfoo?.restaurentname != undefined) {
-      setRestoInfo(restInfoo);
-      setIsOtherCart(true);
-    } else {
-      setRestoInfo({});
-      setIsOtherCart(false);
-    }
-  };
-
   useEffect(() => {
     DeviceEventEmitter.addListener('tab1', event => {
       if (event != 'noInternet') {
@@ -264,7 +215,7 @@ export default function FoodHome({navigation}) {
   );
 
   const onSuccessResult = item => {
-    console.log('item=== onSuccessResult', item);
+    // console.log('item=== onSuccessResult', item);
     setSearchRes(item);
     setVisible(false);
   };
@@ -272,22 +223,23 @@ export default function FoodHome({navigation}) {
     setVisible(false);
   };
 
-  const getCartItemsCount = async c => {
-    // const totalQuantity = c.reduce(
-    //   (total, item) => total + Number(item.quantity),
-    //   0,
-    // );
+  const getCartItemsCount = async () => {
+    const cart = await getCart();
+    console.log('user cart', cart);
 
-    // return totalQuantity;
-    const cartItems = await loadCartList();
-    console.log('user cart', cartItems);
-
-    if (cartItems.length > 0) {
-      setcartItems(cartItems);
+    if (cart?.food_item?.length > 0) {
+      setcartItems(cart);
     } else {
-      setcartItems([]);
+      setcartItems({});
     }
   };
+
+  const onDeleteCart=async()=>{
+ const deleteCartData =  await deleteCart(cartItems);
+ console.log("deleteCartData--",deleteCartData);
+     setIsRemoveCart(false);
+     getCartItemsCount();
+  }
 
   return (
     <View style={[styles.container]}>
@@ -321,11 +273,14 @@ export default function FoodHome({navigation}) {
             }}
             // onRefershData={onRefershData}
           />
-          <ScrollView 
-          showsVerticalScrollIndicator={false}
-          style={styles.mainScreen}
-           stickyHeaderIndices={[4]}
-           contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.mainScreen}
+            stickyHeaderIndices={[4]}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingBottom: hp('10%'),
+            }}>
             <View style={styles.sliderMainView}>
               <View style={styles.sliderInnerView}>
                 <FoodSlider
@@ -345,9 +300,7 @@ export default function FoodHome({navigation}) {
             </View>
 
             <View style={styles.orderMainView}>
-              <CategoryCard data={categoryList
-                //  productsList
-              } navigation={navigation} />
+              <CategoryCard data={categoryList} navigation={navigation} />
             </View>
 
             <View style={styles.exploreView}>
@@ -355,7 +308,7 @@ export default function FoodHome({navigation}) {
               <View style={styles.filterView}>
                 <DashboardFilters
                   onChange={f => {
-                    console.log('f>', f);
+                    // console.log('f>', f);
                     selectedFilter = f;
                     getOrderList();
                     // getLocationCurrent();
@@ -368,7 +321,7 @@ export default function FoodHome({navigation}) {
               {orderList?.length > 0 ? (
                 <FlatList
                   scrollEnabled={false}
-                // nestedScrollEnabled={true}
+                  // nestedScrollEnabled={true}
                   data={orderList}
                   renderItem={topRestaurentItem}
                   keyExtractor={item => item.id}
@@ -376,7 +329,8 @@ export default function FoodHome({navigation}) {
                   onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
                   contentContainerStyle={{
                     justifyContent: 'center',
-                    paddingBottom: '30%',
+                    paddingBottom:
+                      cartItems?.food_item?.length > 0 ? hp('30%') : hp('20%'),
                   }}
                 />
               ) : (
@@ -388,49 +342,40 @@ export default function FoodHome({navigation}) {
               )}
             </View>
           </ScrollView>
-          {isOtherCart &&
-            restoInfo.restaurentname !== null &&
-            cartItems.length > 0 && (
-              //  !loading &&
-              <View
-                style={styles.bottomCartBtnView}>
-                {/* <DashboardTrackOrderBtn
-                bottom={hp('8.5%')}
-                isDash={true}
-                items={getCartItemsCount('')}
-                restaurantData={isOtherCart}
-                onViewCart={() =>
-                  navigation.navigate('orderPlaced', )
-
-                  // navigation.navigate('trackOrderPreparing')
+          {cartItems?.food_item?.length > 0 && (
+            <View style={styles.bottomCartBtnView}>
+              {/* pending FoodTrackingOrder functionality */}
+              {/* <FoodTrackingOrder
+                bottom={
+                  cartItems?.food_item?.length > 0 ? hp('18.5%') : hp('8%')
                 }
-                onDeletePress={async () => {
-                  
-                  setRemoveCart(true);
-                }}
+                navigation={navigation}
+                trackedArray={[
+                  {
+                    order_type: 'food',
+                    tracking_id: '678654bi5y',
+                  },
+                ]}
               /> */}
 
-                <DashboardCartBtn
-                  bottom={hp('8%')}
-                  isDash={true}
-                  items={cartItems?.length}
-                  restaurantData={restoInfo}
-                  onViewCart={() =>
-                    // navigation.navigate('orderPlaced', )
-
-                    navigation.navigate('cart', {
-                      restaurant: [],
-                      // restaurant: isOtherCart?.orgdata,
-                    })
-                  }
-                  onDeletePress={async () => {
-                    await deleteCart();
-                    // setRemoveCart(true);
-                    setIsOtherCart(false);
-                  }}
-                />
-              </View>
-            )}
+              <DashboardCartBtn
+                bottom={hp('8%')}
+                isDash={true}
+                cartData={cartItems}
+                onViewCart={() =>
+                  navigation.navigate('trackOrderPreparing')
+                  // navigation.navigate('cart', {
+                  //   restaurant: cartItems?.restaurant,
+                  // })
+                }
+                onDeletePress={async () => {
+                  // setRemoveCart(true);
+                  // setIsOtherCart(false);
+                  setIsRemoveCart(true);
+                }}
+              />
+            </View>
+          )}
         </>
       )}
       <MikePopUp
@@ -439,6 +384,18 @@ export default function FoodHome({navigation}) {
         text={'Try saying restaurant name or a dish.'}
         onCancelBtn={onCancel}
         onSuccessResult={onSuccessResult}
+      />
+      <PopUp
+        visible={isRemoveCart}
+        type={'delete'}
+        onClose={() => setIsRemoveCart(false)}
+        title={'Confirm Cart Clearance'}
+        text={
+          'Are you sure you want to remove all items from your cart? This action cannot be undone.'
+        }
+        onDelete={() => {
+          onDeleteCart()
+        }}
       />
     </View>
   );

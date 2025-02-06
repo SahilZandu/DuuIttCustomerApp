@@ -24,25 +24,14 @@ import {currencyFormat} from '../../../halpers/currencyFormat';
 import Header from '../../../components/header/Header';
 import {usePayment} from '../../../halpers/usePayment';
 import CartItems from './CartItems';
-import CartBill from './CartBill';
 import CartCoupanApply from './CartCoupanApply';
 import {useFocusEffect} from '@react-navigation/native';
 import CartItemUpdate from './CartItemUpdate';
-import DotedLine from '../Components/DotedLine';
 import {colors} from '../../../theme/colors';
 import BillSummary from '../Components/BillSummary';
 import AddNote from '../Components/AddNote';
 import DeliveryInstructions from '../Components/DeliveryInstructions';
-import {
-  Waveform,
-  IWaveformRef,
-  UpdateFrequency,
-  PlayerState,
-  FinishMode,
-} from '@simform_solutions/react-native-audio-waveform';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {Surface} from 'react-native-paper';
-import BTN from '../../../components/cta/BTN';
 import PaymentBtn from '../../../components/cta/PaymentBtn';
 import DeliveryCart from './DeliveryCart';
 import Url from '../../../api/Url';
@@ -76,8 +65,8 @@ const recomendedOrdersList = [
 
 const Cart = ({navigation, route}) => {
   const {restaurant} = route.params;
-  const {setCart, getCart, updateCart} =rootStore.cartStore;
-    const {appUser} = rootStore.commonStore;
+  const {setCart, getCart, updateCart} = rootStore.cartStore;
+  const {appUser} = rootStore.commonStore;
   const [isPlaying, setIsPLayig] = useState(false);
   const [appCart, setAppCart] = useState({
     cartitems: [],
@@ -145,8 +134,7 @@ const Cart = ({navigation, route}) => {
   };
 
   const getUserCart = async () => {
-    // const cart = await loadCartList();
-    const cart = await getCart(restaurant);
+    const cart = await getCart();
     console.log('getUserCart:-cart', cart);
     console.log('user cart', cart);
     setCartList(cart ?? {});
@@ -217,21 +205,31 @@ const Cart = ({navigation, route}) => {
     );
   };
   const renderCartItem = ({item}) => {
-    // console.log('item---',item);
-    return(
-    <View style={styles.itemContainer}>
-      <Image source={item?.image?.length > 0 ? Url?.Image_Url +item?.image : appImages.foodIMage} resizeMode="cover" style={styles.image} />
+    // console.log('item---renderCartItem', item);
+    return (
+      <View style={styles.itemContainer}>
+        <Image
+          source={
+            item?.image?.length > 0
+              ? {uri: Url?.Image_Url + item?.image}
+              : appImages.foodIMage
+          }
+          resizeMode="cover"
+          style={styles.image}
+        />
 
-      <Text numberOfLines={2} style={[styles.name, {fontSize: 14}]}>
-        {item?.name}
-      </Text>
-      <View style={[styles.viewContainer]}>
-        <Text style={styles.rating}>{currencyFormat(item?.selling_price)}</Text>
-        <AddButton />
+        <Text numberOfLines={2} style={[styles.name, {fontSize: 14}]}>
+          {item?.name}
+        </Text>
+        <View style={[styles.viewContainer]}>
+          <Text style={styles.rating}>
+            {currencyFormat(item?.selling_price)}
+          </Text>
+          <AddButton />
+        </View>
       </View>
-    </View>
-  )};
-
+    );
+  };
 
   const PlaceOrderBtn = ({}) => {
     return (

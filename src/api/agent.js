@@ -78,6 +78,8 @@ export const agent = {
   setCart: body => requests.post(Url.setCart, body),
   updateCart: body => requests.post(Url.updateCart, body),
   getCart: body => requests.post(Url.getCart, body),
+  deleteCart: body => requests.post(Url.deleteCart, body),
+  
 };
 
 const requests = {

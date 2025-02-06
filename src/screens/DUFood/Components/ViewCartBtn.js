@@ -69,14 +69,9 @@ const ViewCartBtn = ({viewCart, isCart, isDash}) => {
       <Text style={{...textProps, fontSize: RFValue(12)}}>
         Add items worth 100 more to get 150 off
       </Text>
-
-      {/* <SvgXml xml={righticon} /> */}
     </Pressable>
   );
 };
 
 export default ViewCartBtn;
 
-const righticon = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 16 16" fill="none">
-<path d="M6 12L10 8L6 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;

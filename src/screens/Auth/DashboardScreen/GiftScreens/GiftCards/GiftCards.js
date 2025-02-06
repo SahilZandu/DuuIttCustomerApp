@@ -276,6 +276,12 @@ const GiftCard = ({navigation}) => {
                     width={wp('42')}
                     title={'Claim'}
                     textTransform={'capitalize'}
+                    onPress={() => {
+                      setIsViewDetails(false);
+                      navigation.navigate('claimGiftCard', {
+                        item: claimGiftItem,
+                      });
+                    }}
                   />
                 </View>
               </View>

@@ -29,6 +29,7 @@ export default  {
     setCart:'cart',
    updateCart :'cart/update',
     getCart:'cart/get',
+    deleteCart:'cart/delete',
     
 
 
