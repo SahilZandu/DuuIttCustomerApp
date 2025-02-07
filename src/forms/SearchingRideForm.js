@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, {useEffect, useState, useRef, useCallback, useMemo} from 'react';
-=======
 import React, {useEffect, useState, useRef, useCallback} from 'react';
->>>>>>> aed1185 (some wokr)
 import {
   Text,
   View,
@@ -45,33 +41,12 @@ import {
   getCurrentLocation,
   setCurrentLocation,
 } from '../components/GetAppLocation';
-<<<<<<< HEAD
-import {useFocusEffect} from '@react-navigation/native';
-import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-} from 'react-native-gesture-handler';
-import {screenHeight, screenWidth} from '../halpers/matrics';
-import {
-  cancelParcel,
-  cancelParcelRide,
-  cancelRide,
-} from '../stores/DummyData/CancelData';
-import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
-import ImageNameRatingComp from '../components/ImageNameRatingComp';
-import { silderArray } from '../stores/DummyData/Home';
-=======
 import { useFocusEffect } from '@react-navigation/native';
->>>>>>> aed1185 (some wokr)
+import { screenHeight, screenWidth } from '../halpers/matrics';
 
 
-<<<<<<< HEAD
-const SearchingRideForm = ({navigation, route, screenName}) => {
-=======
 const SearchingRideForm = ({navigation, route}) => {
   const intervalId = useRef(null);
->>>>>>> aed1185 (some wokr)
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
   const {appUser} = rootStore.commonStore;
@@ -108,64 +83,6 @@ const SearchingRideForm = ({navigation, route}) => {
   console.log('paymentMethod--', paymentMethod, addParcelInfo);
 
   useEffect(() => {
-<<<<<<< HEAD
-    const subscription = DeviceEventEmitter.addListener('newOrder', data => {
-      console.log('new order data -- ', data);
-      setParcelInfo(data);
-      setSearchArrive('arrive');
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
-      console.log('cancel Order data -- ', data);
-      navigation.navigate(screenName, {screen: 'home'});
-      setSearchArrive('search');
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('picked', data => {
-      console.log('picked data -- ', data);
-      // navigation.navigate('parcel', {screen: 'home'});
-      setParcelInfo(data);
-      if (screenName == 'parcel') {
-        navigation.navigate('pickSuccessfully');
-        setSearchArrive('search');
-      } else {
-        setMinMaxHp(screenHeight(35));
-      }
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('dropped', data => {
-      console.log('dropped data -- ', data);
-      if (screenName == 'ride') {
-        navigation.navigate(screenName, {screen: 'home'});
-        setSearchArrive('search');
-      }
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    socketServices.initailizeSocket();
-    // ridePickupParcel()
-  }, []);
-=======
     if (Object?.keys(addParcelInfo)?.length > 0) {
       setGeoLocation(addParcelInfo?.sender_address?.geo_location);
       setDestination(addParcelInfo?.receiver_address?.geo_location);
@@ -176,7 +93,6 @@ const SearchingRideForm = ({navigation, route}) => {
       }, 1000);
     }
   }, [addParcelInfo]);
->>>>>>> aed1185 (some wokr)
 
   useEffect(() => {
     const {addParcelInfo} = rootStore.parcelStore;
@@ -236,89 +152,6 @@ const SearchingRideForm = ({navigation, route}) => {
     return () => {
       clearTimeout(timeoutId);
     };
-<<<<<<< HEAD
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
-        const intervalId = setInterval(() => {
-          setCurrentLocation();
-          setTimeout(() => {
-            getSocketLocation(socketServices);
-          }, 1500);
-        }, 10000);
-        return () => {
-          // This will run when the screen is unfocused
-          clearInterval(intervalId);
-        };
-      }
-    }, [parcelInfo]),
-  );
-
-  useEffect(() => {
-    if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
-      const findNearbyRiders = setInterval(() => {
-        // console.log('info--', parcelInfo);
-        let query = {
-          lat: getLocation('lat')?.toString(),
-          lng: getLocation('lng')?.toString(),
-          user_id: appUser?._id,
-          order_id: parcelInfo?._id,
-          refresh: '',
-        };
-        socketServices.emit('find-nearby-riders', query);
-      }, 10000);
-      return () => {
-        clearInterval(findNearbyRiders);
-      };
-    }
-  }, [parcelInfo, nearbyRider, searchingFind]);
-
-  useEffect(() => {
-    if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
-      const refershFindRiders = setTimeout(async () => {
-        setSearchingFind('refresh');
-        await updateOrderStatus(
-          parcelInfo?._id,
-          'pending',
-          handleDeleteLoading,
-          onDeleteSuccess,
-          false,
-        );
-      }, 60000);
-      return () => {
-        // This will run when the screen is unfocused
-        clearTimeout(refershFindRiders);
-      };
-    }
-  }, [parcelInfo, searchingFind]);
-
-  const handleDeleteLoading = v => {
-    console.log('vvvv--', v);
-  };
-  const onDeleteSuccess = () => {
-    console.log('onDeleteSuccess--');
-  };
-
-  const refershFindRidersData = () => {
-    setSearching(false);
-    if (
-      addParcelInfo?.status == 'accepted' ||
-      addParcelInfo?.status == 'picked'
-    ) {
-      setSearchArrive('arrive');
-    } else {
-      setSearchingFind('searching');
-      onGetNearByRider(addParcelInfo);
-    }
-  };
-
-  const backToHome = () => {
-    navigation.navigate(screenName, {screen: 'home'});
-    setSearchArrive('search');
-  };
-=======
   },[]);
 
   useFocusEffect(
@@ -335,7 +168,6 @@ const SearchingRideForm = ({navigation, route}) => {
        };
     }, [socketServices])
   )
->>>>>>> aed1185 (some wokr)
 
   const getSocketLocation = async socketServices => {
     const {appUser} = rootStore.commonStore;
@@ -441,8 +273,6 @@ const SearchingRideForm = ({navigation, route}) => {
     }, 200);
   };
 
-<<<<<<< HEAD
-=======
   const ridePickupParcel = () => {
     setTimeout(() => {
       setVisible(false);
@@ -458,7 +288,6 @@ const SearchingRideForm = ({navigation, route}) => {
     },32000);
   };
 
->>>>>>> aed1185 (some wokr)
   const onDotPress = () => {
     // refRBSheet.current.close();
     setTimeout(() => {
@@ -531,48 +360,6 @@ const SearchingRideForm = ({navigation, route}) => {
           )}
         </View>
         {searchArrive == 'search' ? (
-<<<<<<< HEAD
-          <View style={styles.containerSearchingView}>
-            {searchingFind == 'searching' ? (
-              <View style={styles.innerSearchingView}>
-                <View style={styles.textMainView}>
-                  <Text style={styles.searchingPartnerText}>
-                    {screenName == 'parcel'
-                      ? 'Searching Delivery Partner'
-                      : 'Searching Ride'}
-                  </Text>
-                  <Text style={styles.findNearbyText}>
-                    Finding drivers nearby
-                  </Text>
-                </View>
-                <View style={{marginTop: '4%'}}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.bikeImage}
-                    source={appImages.searchingRide}
-                  />
-                  <Progress.Bar
-                    indeterminate={searching}
-                    indeterminateAnimationDuration={1000}
-                    progress={0.2}
-                    width={screenWidth(84)}
-                    height={screenHeight(0.5)}
-                    color={colors.color43}
-                    borderColor={colors.color95}
-                    unfilledColor={colors.color95}
-                  />
-                </View>
-              </View>
-            ) : (
-              <RiderNotAvailableComp
-              onRefershFindRiders={()=>{refershFindRidersData()}}
-              onBackToHome={()=>{
-                backToHome();
-                }}
-               />
-            )}
-          </View>
-=======
           // <MapRouteMarker
           //   origin={geoLocation}
           //   markerArray={[]}
@@ -583,7 +370,6 @@ const SearchingRideForm = ({navigation, route}) => {
             destination={destination}
             mapContainerView={{height: hp('58%')}}
           />
->>>>>>> aed1185 (some wokr)
         ) : (
           <PanGestureHandler onGestureEvent={onGestureEvent}>
             <Animated.View

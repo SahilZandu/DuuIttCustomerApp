@@ -279,11 +279,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   // Update latitude and longitude based on origin
   useEffect(() => {
-<<<<<<< HEAD
-    if (origin && origin?.lat && origin?.lng) {
-=======
     if (Object?.keys(origin || {})?.length > 0) {
->>>>>>> aed1185 (some wokr)
       setLat(Number(origin?.lat));
       setLong(Number(origin?.lng));
     }
@@ -312,11 +308,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const fetchRoute = async (origin, destination) => {
     try {
       const response = await fetch(
-<<<<<<< HEAD
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`
-=======
         `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat},${origin?.lng}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`
->>>>>>> aed1185 (some wokr)
       );
       const json = await response.json();
 
@@ -359,16 +351,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         </Marker>
 
         {/* Destination Marker */}
-<<<<<<< HEAD
-        {(destinationLocation?.lat && destinationLocation?.lng) && (
-          <Marker
-            key={`destination-${destinationLocation?.lat}-${destinationLocation?.lng}`} // Add key prop to prevent flickering
-            coordinate={{ latitude: Number(destinationLocation?.lat), longitude: Number(destinationLocation?.lng) }}
-          >
-=======
         {destinationLocation?.lat && destinationLocation?.lng && (
           <Marker coordinate={{ latitude: Number(destinationLocation?.lat), longitude: Number(destinationLocation?.lng)}}>
->>>>>>> aed1185 (some wokr)
             <Image resizeMode="contain" source={appImages.markerImage} style={styles.markerImage} />
           </Marker>
         )}
