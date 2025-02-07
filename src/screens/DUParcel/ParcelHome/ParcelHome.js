@@ -54,9 +54,14 @@ export default function ParcelHome({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
+<<<<<<< HEAD
       checkInternet();
       handleAndroidBackButton(navigation);
       setCurrentLocation();
+=======
+      // setCurrentLocation();
+      handleAndroidBackButton();
+>>>>>>> aed1185 (some wokr)
       onUpdateUserInfo();
       getTrackingOrder();
       getIncompleteOrder();
@@ -195,6 +200,7 @@ export default function ParcelHome({navigation}) {
   const onPressInCompleteOrder = () => {
     console.log('home priceConfirmed --', incompletedArray[0]);
     setAddParcelInfo(incompletedArray[0]);
+<<<<<<< HEAD
     if (
       incompletedArray[0]?.status == 'accepted' ||
       incompletedArray[0]?.status == 'find-rider'
@@ -209,6 +215,25 @@ export default function ParcelHome({navigation}) {
         item: incompletedArray[0],
       });
     }
+=======
+    setTimeout(()=>{
+      if (
+        incompletedArray[0]?.status == 'accepted' ||
+        incompletedArray[0]?.status == 'find-rider'
+      ) {
+        navigation.navigate('searchingRide', {
+          paymentMethod:
+            incompletedArray[0]?.payment_mode == 'cash' ? 'Cash' : 'Online',
+        });
+      } else {
+        navigation.navigate('priceConfirmed', {
+          item: incompletedArray[0],
+        });
+      }
+
+    },2000)
+   
+>>>>>>> aed1185 (some wokr)
   };
 
   useEffect(() => {

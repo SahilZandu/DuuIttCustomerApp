@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, {useEffect, useState, useRef, useCallback, useMemo} from 'react';
+=======
+import React, {useEffect, useState, useRef, useCallback} from 'react';
+>>>>>>> aed1185 (some wokr)
 import {
   Text,
   View,
@@ -41,6 +45,7 @@ import {
   getCurrentLocation,
   setCurrentLocation,
 } from '../components/GetAppLocation';
+<<<<<<< HEAD
 import {useFocusEffect} from '@react-navigation/native';
 import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 import {
@@ -56,9 +61,17 @@ import {
 import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import { silderArray } from '../stores/DummyData/Home';
+=======
+import { useFocusEffect } from '@react-navigation/native';
+>>>>>>> aed1185 (some wokr)
 
 
+<<<<<<< HEAD
 const SearchingRideForm = ({navigation, route, screenName}) => {
+=======
+const SearchingRideForm = ({navigation, route}) => {
+  const intervalId = useRef(null);
+>>>>>>> aed1185 (some wokr)
   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
   const {appUser} = rootStore.commonStore;
@@ -95,6 +108,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   console.log('paymentMethod--', paymentMethod, addParcelInfo);
 
   useEffect(() => {
+<<<<<<< HEAD
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
       console.log('new order data -- ', data);
       setParcelInfo(data);
@@ -151,6 +165,18 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     socketServices.initailizeSocket();
     // ridePickupParcel()
   }, []);
+=======
+    if (Object?.keys(addParcelInfo)?.length > 0) {
+      setGeoLocation(addParcelInfo?.sender_address?.geo_location);
+      setDestination(addParcelInfo?.receiver_address?.geo_location);
+      setParcelInfo(addParcelInfo);
+      setTimeout(() => {
+        setSearching(false);
+        onGetNearByRider(addParcelInfo);
+      }, 1000);
+    }
+  }, [addParcelInfo]);
+>>>>>>> aed1185 (some wokr)
 
   useEffect(() => {
     const {addParcelInfo} = rootStore.parcelStore;
@@ -210,6 +236,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     return () => {
       clearTimeout(timeoutId);
     };
+<<<<<<< HEAD
   }, []);
 
   useFocusEffect(
@@ -291,6 +318,24 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     navigation.navigate(screenName, {screen: 'home'});
     setSearchArrive('search');
   };
+=======
+  },[]);
+
+  useFocusEffect(
+   useCallback(() => {
+    const intervalId = setInterval(() => {
+      setCurrentLocation();
+      setTimeout(() => {
+        getSocketLocation(socketServices);
+      }, 1000);
+    }, 10000);
+       return () => {
+          // This will run when the screen is unfocused
+          clearInterval(intervalId);
+       };
+    }, [socketServices])
+  )
+>>>>>>> aed1185 (some wokr)
 
   const getSocketLocation = async socketServices => {
     const {appUser} = rootStore.commonStore;
@@ -313,6 +358,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     console.log('Socket state:', socketServices?.socket?.connected, request);
     socketServices.emit('remaining-distance', request);
   };
+
 
   const onGetNearByRider = async info => {
     console.log('info--', info, parcelInfo);
@@ -395,6 +441,24 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     }, 200);
   };
 
+<<<<<<< HEAD
+=======
+  const ridePickupParcel = () => {
+    setTimeout(() => {
+      setVisible(false);
+      setCancelVisible(false);
+      setRideDetailsVisible(false);
+      socketServices.removeListener('update-location');
+      socketServices.removeListener('remaining-distance');
+      socketServices.disconnectSocket();
+      // refRBSheet.current.close();
+    },30000);
+    setTimeout(() => {
+      navigation.navigate('pickSuccessfully');
+    },32000);
+  };
+
+>>>>>>> aed1185 (some wokr)
   const onDotPress = () => {
     // refRBSheet.current.close();
     setTimeout(() => {
@@ -467,6 +531,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
           )}
         </View>
         {searchArrive == 'search' ? (
+<<<<<<< HEAD
           <View style={styles.containerSearchingView}>
             {searchingFind == 'searching' ? (
               <View style={styles.innerSearchingView}>
@@ -507,6 +572,18 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
                />
             )}
           </View>
+=======
+          // <MapRouteMarker
+          //   origin={geoLocation}
+          //   markerArray={[]}
+          //   mapContainerView={{height: hp('82%')}}
+          // />
+          <MapRoute
+            origin={geoLocation}
+            destination={destination}
+            mapContainerView={{height: hp('58%')}}
+          />
+>>>>>>> aed1185 (some wokr)
         ) : (
           <PanGestureHandler onGestureEvent={onGestureEvent}>
             <Animated.View

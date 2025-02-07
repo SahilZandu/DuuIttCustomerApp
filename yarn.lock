@@ -2257,6 +2257,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@expo/react-native-action-sheet@npm:4.0.1":
   version: 4.0.1
   resolution: "@expo/react-native-action-sheet@npm:4.0.1"
@@ -2269,6 +2270,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> aed1185 (some wokr)
 "@firebase/analytics-compat@npm:0.2.14":
   version: 0.2.14
   resolution: "@firebase/analytics-compat@npm:0.2.14"
@@ -4166,11 +4169,19 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0":
+<<<<<<< HEAD
   version: 22.8.2
   resolution: "@types/node@npm:22.8.2"
   dependencies:
     undici-types: ~6.19.8
   checksum: 8d57352fe563e8de78311c2f799e8c3805cbec3840dfa54d5168588c30112d1e87a7940ebdbdcebb1f0094e26b7e626dfadd9683f5c60d8a76e9082051fea14a
+=======
+  version: 22.8.1
+  resolution: "@types/node@npm:22.8.1"
+  dependencies:
+    undici-types: ~6.19.8
+  checksum: 2fc10ff364690f7962659d163cf9a9b71d46a2414f15ceeb5ea9fb6a1e81d2b04f550d0dfd9156576b192d76e886b24d13932d8eb5447075d455481c70fd2ad1
+>>>>>>> aed1185 (some wokr)
   languageName: node
   linkType: hard
 
@@ -8888,6 +8899,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "lodash._reinterpolate@npm:^3.0.0":
   version: 3.0.0
   resolution: "lodash._reinterpolate@npm:3.0.0"
@@ -8895,6 +8907,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> aed1185 (some wokr)
 "lodash.camelcase@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
@@ -12304,7 +12318,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "supports-color@npm:^5.3.0, supports-color@npm:^5.5.0":
+=======
+"supports-color@npm:^5.3.0":
+>>>>>>> aed1185 (some wokr)
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
   dependencies:

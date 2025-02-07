@@ -21,12 +21,17 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+<<<<<<< HEAD
 import messaging from '@react-native-firebase/messaging';
 import {useNotifications} from '../../../../halpers/useNotifications';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
 import {setCurrentLocation} from '../../../../components/GetAppLocation';
+=======
+import { setCurrentLocation } from '../../../../components/GetAppLocation';
+
+>>>>>>> aed1185 (some wokr)
 
 
 export default function Home({navigation}) {
@@ -38,8 +43,13 @@ export default function Home({navigation}) {
     useCallback(() => {
       requestNotificationPermission();
       handleAndroidBackButton();
+<<<<<<< HEAD
       checkInternet();
       setCurrentLocation();
+=======
+      setCurrentLocation()
+      onUpdateUserInfo();
+>>>>>>> aed1185 (some wokr)
     }, []),
   );
 
