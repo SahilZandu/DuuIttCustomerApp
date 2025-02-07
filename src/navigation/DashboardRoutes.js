@@ -10,6 +10,7 @@ import ClaimGiftQRCode from '../screens/Auth/DashboardScreen/GiftScreens/ClaimGi
 import PaymentMethod from '../screens/Auth/DashboardScreen/PaymentMethod/PaymentMethod';
 import Vouchers from '../screens/Auth/DashboardScreen/VouchersScreen/Vouchers/Vouchers';
 import VouchersDetails from '../screens/Auth/DashboardScreen/VouchersScreen/VouchersDetails/VouchersDetails';
+import Rewards from '../screens/Auth/DashboardScreen/RewardsScreen/Rewards/Rewards';
 
 
 const Stack = createNativeStackNavigator();
@@ -34,6 +35,8 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="paymentMethod" component={PaymentMethod} />
        <Stack.Screen name="vouchers" component={Vouchers} />
        <Stack.Screen name="vouchersDetails" component={VouchersDetails} />
+       <Stack.Screen name="rewards" component={Rewards} />
+       
        
        
        

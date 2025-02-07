@@ -39,7 +39,7 @@ export const offerExplore = [
     image: appImages.rewards,
     title: 'Rewards',
     discount: 'Up to 60% OFF',
-    route: '',
+    route: 'rewards',
   },
   {
     id: 2,
@@ -53,7 +53,7 @@ export const offerExplore = [
     image: appImages.vouchers,
     title: 'Vouchers',
     discount: 'Up to 60% OFF',
-    route: '',
+    route: 'vouchers',
   },
   {
     id: 4,

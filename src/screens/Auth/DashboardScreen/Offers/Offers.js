@@ -57,9 +57,13 @@ export default function Offers({navigation}) {
 
   const onPressExplore =(item)=>{
     console.log("item--",item);
-    if( item?.title == 'Gift Cards'){
-    navigation.navigate("giftCard")
-    }else if( item?.title == 'Vouchers'){
+    if( item?.title == 'Rewards'){
+    navigation.navigate("rewards")
+    }
+    else if( item?.title == 'Gift Cards'){
+      navigation.navigate("giftCard");
+    }
+    else if( item?.title == 'Vouchers'){
       navigation.navigate("vouchers");
     }else{
       alert("under processing...")

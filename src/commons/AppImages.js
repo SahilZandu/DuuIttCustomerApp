@@ -832,4 +832,7 @@ export const appImages = {
   likeIcon:require('../assets/like_icon.png'),
   downArrow:require('../assets/down_arrow.png'),
   mapImg:require('../assets/map_img.png'),
+  scratchImage:require('../assets/scratchImage.png'),
+  srImg1:require('../assets/srImg1.png'),
+  srImg2:require('../assets/srImg2.png'),
 };
