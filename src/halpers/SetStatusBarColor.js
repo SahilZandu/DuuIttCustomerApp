@@ -42,6 +42,10 @@ const DashbordScreens = [
   'couponDetail',
   'categoryViseFoodListing',
   'myAddress',
+  'rewards',
+  'rewardQRCode',
+  'claimRewardCard',
+  'favoriteRestaurant',
 ];
 
 export function setBarColor(screen) {

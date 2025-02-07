@@ -196,11 +196,70 @@ export default class FoodDashStore {
   };
 
 
+  restaurantCustomerLikeDislike= async (item) => {
+    let requestData ={
+      restaurant_id:item?.id,
+      is_like:item?.like
+    }
+    console.log('requestData--restaurantCustomerLikeDislike',requestData);
+    try {
+      const res = await agent.restaurantCustomerLikeDislike(requestData);
+      console.log('restaurant  CustomerLikeDislike Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        return res;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        return {};
+      }
+     
+    } catch (error) {
+      console.log('error restaurant CustomerLikeDislike:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return {};
+    }
+
+
+  };
+
+
+  restaurantLikedByCustomer= async (handleLoading) => {
+    handleLoading(true)
+    let requestData ={
+    }
+    try {
+      const res = await agent.restaurantLikedByCustomer(requestData);
+      console.log('restaurant LikedByCustomer Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+     
+    } catch (error) {
+      console.log('error restaurant LikedByCustomer:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+
+
+  };
 
 
 
-
-  
   
   
 }

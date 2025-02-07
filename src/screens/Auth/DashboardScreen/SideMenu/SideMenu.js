@@ -34,7 +34,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'My Favorite',
       onPress: () => {
-        console.log('My Favorite');
+        navigation.navigate('favoriteRestaurant')
       },
       icon: appImagesSvg.myFavorate,
       show: true,

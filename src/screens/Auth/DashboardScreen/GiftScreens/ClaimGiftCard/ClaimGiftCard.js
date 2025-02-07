@@ -1,24 +1,29 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text, Platform, Image, TouchableOpacity} from 'react-native';
+import {View, Text} from 'react-native';
 import {styles} from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
 import Header from '../../../../../components/header/Header';
 import AppInputScroll from '../../../../../halpers/AppInputScroll';
 import GiftCardHappiness from '../../../../../components/GiftCardHappiness';
 import DotTextComp from '../../../../../components/DotTextComp';
 import Spacer from '../../../../../halpers/Spacer';
 import BTN from '../../../../../components/cta/BTN';
-import { colors } from '../../../../../theme/colors';
-import { fonts } from '../../../../../theme/fonts/fonts';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
 
 
 const ClaimGiftCard = ({navigation, route}) => {
   const {item} = route.params;
   const [clainGift, setClaimGift] = useState(item);
+
+  useFocusEffect(
+    useCallback(()=>{
+      handleAndroidBackButton(navigation)
+    },[])
+  )
 
   useEffect(() => {
     setClaimGift(item);

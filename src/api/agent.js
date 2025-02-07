@@ -74,6 +74,10 @@ export const agent = {
   restaurantListAccordingCategory: body => requests.post(Url.restaurantListaccordingCategory, body),
   restaurantUnderMenuGroup: body => requests.post(Url.restaurantUnderMenuGroup, body),
   restaurantListForDishCategory: body => requests.post(Url.restaurantListForDishCategory, body),
+  
+  restaurantCustomerLikeDislike: body => requests.post(Url.restaurantCustomerLikeDislike, body),
+  restaurantLikedByCustomer: body => requests.get(Url.restaurantLikedByCustomer),
+
   // cart
   setCart: body => requests.post(Url.setCart, body),
   updateCart: body => requests.post(Url.updateCart, body),

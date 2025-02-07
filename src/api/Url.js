@@ -26,6 +26,8 @@ export default  {
     // restaurantUnderMenuGroup:'restaurant/menu-item-under-menu-group',
     restaurantUnderMenuGroup:'food-item/of-menu-group-list',//
     restaurantListForDishCategory:'restaurant/restaurant-list-for-dish-category',//
+    restaurantCustomerLikeDislike:'restaurant/customer-like-dislike',
+    restaurantLikedByCustomer:'restaurant/liked-by-customer',
     setCart:'cart',
    updateCart :'cart/update',
     getCart:'cart/get',

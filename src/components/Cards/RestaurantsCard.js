@@ -43,34 +43,28 @@ function calculateTime(distance, speed) {
 const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
   const distnace = item?.distance && item?.distance?.toFixed(1) + ' ' + 'KM';
   console.log('item>>', item);
-  const [like, setLike] = useState(false
-    // item?.restaurant?.islike == 1 ? true : false
-    );
-    
-  const [isResOpen, setIsResOpen] = useState( true
+  const [like, setLike] = useState(
+    item?.likedRestaurant == true ? true : false,
+  );
+
+  const [isResOpen, setIsResOpen] = useState(
+    true,
     // item?.restaurant?.is_online ? true : false
-    );
+  );
 
   useEffect(() => {
-    setLike(item?.islike == 1 ? true : false);
-  }, [item?.islike]);
+    setLike(item?.likedRestaurant == true ? true : false);
+  }, [item?.likedRestaurant]);
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-      //  disabled={!item?.is_online}
+        disabled={!item?.is_online}
         activeOpacity={0.8}
-        onPress={
-          () =>
-            // alert('under progress')
-             navigation.navigate('resturantProducts', {
-              item: item,
-            })
-          // item?.is_online
-          //   ? navigation.navigate('resturantProducts', {
-          //       item: item,
-          //     })
-          //   : ''
+        onPress={() =>
+          navigation.navigate('resturantProducts', {
+            item: item,
+          })
         }
         style={[
           styles.logoImageView,
@@ -183,15 +177,28 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
                 maxWidth: isHorizontal ? wp('60%') : wp('72%'),
               },
             ]}>
-            {item?.restaurant?.name}
+            {item?.name}
           </Text>
-          <TouchableOpacity activeOpacity={0.5} style={styles.likeTouchView}>
-            <SvgXml xml={like == true ?  appImagesSvg.likeRedIcon :appImagesSvg.unLikeIcon}/>
+          <TouchableOpacity
+            onPress={() => {
+              onLike(item);
+            }}
+            activeOpacity={0.5}
+            style={styles.likeTouchView}>
+            <SvgXml
+              xml={
+                like == true
+                  ? appImagesSvg.likeRedIcon
+                  : appImagesSvg.unLikeIcon
+              }
+            />
           </TouchableOpacity>
         </View>
 
         <View style={styles.aboutView}>
-          <Text numberOfLines={2} style={styles.aboutText}>{item?.restaurant?.about}</Text>
+          <Text numberOfLines={2} style={styles.aboutText}>
+            {item?.about}
+          </Text>
         </View>
 
         {!isResOpen && (
@@ -218,7 +225,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
                 color: isResOpen ? colors.redBold : colors.black75,
               },
             ]}>
-             Flat 125 OFF above 319
+            Flat 125 OFF above 319
           </Text>
         </View>
       </View>
@@ -244,7 +251,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.colorD9,
     shadowOffset: {width: -1, height: 6},
     shadowOpacity: 0.2,
-    shadowRadius: 5
+    shadowRadius: 5,
   },
   cover: {
     borderTopLeftRadius: 10,
@@ -258,7 +265,7 @@ const styles = StyleSheet.create({
     marginTop: '-6%',
     borderRadius: 20,
     marginLeft: wp('4%'),
-    height:hp('4.5%'),
+    height: hp('4.5%'),
     width: wp('56%'),
     elevation: 2,
     shadowOffset: {width: -1, height: 6},
@@ -270,7 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.main,
     borderBottomStartRadius: 20,
     borderTopStartRadius: 20,
-    height:hp('4.5%'),
+    height: hp('4.5%'),
     width: wp('16%'),
   },
   ratingText: {
@@ -283,7 +290,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.colorF1,
-    height:hp('4.5%'),
+    height: hp('4.5%'),
     width: wp('24%'),
   },
   mintText: {
@@ -298,7 +305,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderBottomEndRadius: 20,
     borderTopEndRadius: 20,
-    height:hp('4.5%'),
+    height: hp('4.5%'),
     width: wp('16%'),
   },
   kmText: {
@@ -367,7 +374,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.color64,
     marginTop: '-2.5%',
-    lineHeight:18
+    lineHeight: 18,
   },
   currentlyText: {
     paddingHorizontal: 16,
@@ -379,17 +386,17 @@ const styles = StyleSheet.create({
   },
   flatOffView: {
     opacity: 1,
-    backgroundColor:colors.colorFE,
+    backgroundColor: colors.colorFE,
     height: hp('5.5%'),
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 90,
     width: wp('60%'),
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop:'2%',
+    paddingTop: '2%',
     zIndex: 1, // Lower zIndex than logoImageView
     elevation: 1, // Android shadow
-    marginTop:'-2%'
+    marginTop: '-2%',
   },
   flatOffInnerView: {
     alignSelf: 'flex-start',
@@ -400,8 +407,8 @@ const styles = StyleSheet.create({
   flatOffText: {
     color: colors.redBold,
     fontFamily: fonts.medium,
-    marginStart:10,
-    fontSize:RFValue(11)
+    marginStart: 10,
+    fontSize: RFValue(11),
   },
 });
 
@@ -431,4 +438,3 @@ const likebgbtn = `<svg xmlns="http://www.w3.org/2000/svg" width="90" height="80
 const pureVeg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" >
 <path d="M3.0733 5.64216C3.9883 8.15618 4.77893 10.6791 4.68121 13.4374C4.50354 13.3841 4.3614 13.353 4.23259 13.2997C2.72684 12.6512 1.82517 11.4875 1.35879 9.95065C1.10561 9.1156 1.12782 8.2539 1.15002 7.39664C1.17667 6.49497 1.21665 5.5933 1.22553 4.69162C1.23442 3.91876 1.11449 3.17255 0.679199 2.47964C0.892403 2.55959 1.11005 2.63954 1.31881 2.72393C2.7224 3.3058 4.0416 4.0298 5.16092 5.07361C6.14698 5.99305 6.87099 7.06795 7.13305 8.41824C7.35958 9.58642 7.16414 10.6969 6.63557 11.754C6.34686 12.3314 5.9782 12.8555 5.53402 13.3264C5.48072 13.3841 5.41854 13.4596 5.4141 13.5307C5.37856 14.2058 5.35191 14.8854 5.32082 15.6094C5.71613 15.4362 6.08924 15.2852 6.45346 15.1119C7.97254 14.3791 9.40722 13.5129 10.6598 12.3758C11.5259 11.5941 12.2721 10.7013 12.9606 9.76409C13.6491 8.83133 14.2754 7.8497 14.9239 6.89029C14.9727 6.81478 15.0083 6.73038 15.0305 6.63711C12.9917 9.35545 10.8419 11.9539 7.87482 13.7172C7.84373 13.7084 7.81264 13.6995 7.78599 13.695C7.71936 13.282 7.61276 12.8733 7.59055 12.4602C7.50171 10.799 8.03917 9.33769 9.05188 8.03181C9.65152 7.25895 10.4199 6.68596 11.2417 6.17961C12.4187 5.4556 13.6136 4.75381 14.7817 4.01648C15.4391 3.59895 16.0432 3.10592 16.4563 2.42633C16.5718 2.23978 16.665 2.0399 16.7894 1.80005C16.856 2.13318 16.9226 2.43078 16.9804 2.73281C17.2513 4.17638 17.389 5.63327 17.2869 7.10349C17.1669 8.84465 16.7627 10.4925 15.7278 11.9361C14.5552 13.5707 12.9384 14.4501 10.9485 14.6589C10.1046 14.7477 9.26509 14.7122 8.43004 14.5478C8.35009 14.5301 8.24793 14.5789 8.16798 14.6234C7.25742 15.1297 6.34686 15.6361 5.4363 16.1469C5.2764 16.2357 5.15203 16.2091 5.01434 16.098C4.8722 15.9825 4.84999 15.8582 4.88109 15.6894C5.12094 14.3657 5.20089 13.0332 5.08097 11.6918C4.99213 10.6969 4.73451 9.74188 4.39249 8.80912C4.03271 7.81861 3.61075 6.85919 3.21099 5.88645C3.17546 5.80206 3.12216 5.72211 3.0733 5.64216Z" />
 </svg>`;
-

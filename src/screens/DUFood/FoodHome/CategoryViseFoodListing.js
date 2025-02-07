@@ -34,7 +34,8 @@ export default function CategoryViseFoodListing({navigation, route}) {
   const {appUser} = rootStore.commonStore;
   const {saveCartItem, deleteCart, loadCartList, getRestraurent} =
     rootStore.cartStore;
-  const {restaurantListForDishCategory} = rootStore.foodDashboardStore;
+  const {restaurantListForDishCategory, restaurantCustomerLikeDislike} =
+    rootStore.foodDashboardStore;
   const [restoInfo, setRestoInfo] = useState({});
   const [cartItems, setcartItems] = useState([]);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
@@ -77,7 +78,7 @@ export default function CategoryViseFoodListing({navigation, route}) {
       console.log('category', category);
       checkInternet();
       handleAndroidBackButton(navigation);
-   
+
       setCurrentLocation();
       onUpdateUserInfo();
       onRestaurentInfo();
@@ -85,15 +86,15 @@ export default function CategoryViseFoodListing({navigation, route}) {
     }, []),
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     getRelatedRestaurantList();
-  },[category])
+  }, [category]);
 
   const getRelatedRestaurantList = async () => {
     const res = await restaurantListForDishCategory(category, handleLoading);
     console.log('res---getRelatedRestaurantList', res);
-    setRelatedRestaurant(res)
-    setRelatedRestFilter(res)
+    setRelatedRestaurant(res);
+    setRelatedRestFilter(res);
   };
 
   const handleLoading = v => {
@@ -132,14 +133,46 @@ export default function CategoryViseFoodListing({navigation, route}) {
     });
   };
 
+  const handleLikeUnlike = async item => {
+    const likeUnLikeArray = await relatedRestaurant?.map((data, i) => {
+      if (data?.restaurant?._id == item?._id) {
+        return {
+          ...data,
+          restaurant: {
+            ...data.restaurant,
+            likedRestaurant: data?.restaurant?.likedRestaurant ? false : true,
+          },
+        };
+      } else {
+        return { ...data };
+      }
+    });
+
+    const request = {
+      id: item?._id,
+      like: item?.likedRestaurant == true ? false : true,
+    };
+    setRelatedRestaurant([...likeUnLikeArray]);
+    console.log('item--handleLikeUnlike', likeUnLikeArray, item);
+    const resLikeUnLike = await restaurantCustomerLikeDislike(request);
+    // console.log("resLikeUnLike---",resLikeUnLike);
+    if (resLikeUnLike?.statusCode == 200) {
+      setRelatedRestaurant([...likeUnLikeArray]);
+      setRelatedRestFilter([...likeUnLikeArray]);
+    } else {
+      setRelatedRestaurant([...relatedRestaurant]);
+      setRelatedRestFilter([...relatedRestFilter]);
+    }
+  };
+
   function topRestaurentItem({item, index}) {
     return (
       <View key={index}>
         <RestaurantsCard
-          item={item}
+          item={item?.restaurant}
           navigation={navigation}
-          onLike={like => {
-            // handleLikeUnlike(like, item)
+          onLike={item => {
+            handleLikeUnlike(item);
           }}
         />
       </View>
@@ -182,7 +215,7 @@ export default function CategoryViseFoodListing({navigation, route}) {
           {loading ? (
             <AnimatedLoader type={'restaurantCartLoader'} />
           ) : (
-            <View style={{flex:1,justifyContent:'center'}}>
+            <View style={{flex: 1, justifyContent: 'center'}}>
               <View style={styles.innerView}>
                 <View style={styles.filterView}>
                   <DashboardFilters

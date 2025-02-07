@@ -11,6 +11,9 @@ import PaymentMethod from '../screens/Auth/DashboardScreen/PaymentMethod/Payment
 import Vouchers from '../screens/Auth/DashboardScreen/VouchersScreen/Vouchers/Vouchers';
 import VouchersDetails from '../screens/Auth/DashboardScreen/VouchersScreen/VouchersDetails/VouchersDetails';
 import Rewards from '../screens/Auth/DashboardScreen/RewardsScreen/Rewards/Rewards';
+import RewardQRCode from '../screens/Auth/DashboardScreen/RewardsScreen/RewardQRCode/RewardQRCode';
+import ClaimRewardCard from '../screens/Auth/DashboardScreen/RewardsScreen/ClaimRewardCard/ClaimRewardCard';
+import FavoriteRestaurant from '../screens/Auth/DashboardScreen/FavoriteRestaurant/FavoriteRestuarant';
 
 
 const Stack = createNativeStackNavigator();
@@ -36,6 +39,12 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="vouchers" component={Vouchers} />
        <Stack.Screen name="vouchersDetails" component={VouchersDetails} />
        <Stack.Screen name="rewards" component={Rewards} />
+       <Stack.Screen name="rewardQRCode" component={RewardQRCode} />
+       <Stack.Screen name="claimRewardCard" component={ClaimRewardCard} />
+       <Stack.Screen name="favoriteRestaurant" component={FavoriteRestaurant} />
+       
+       
+    
        
        
        

@@ -7,33 +7,52 @@ import {appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import TrackingOrderCard from './TrackingOrderCard';
 import {currencyFormat} from '../halpers/currencyFormat';
+import moment from 'moment';
 
-const DotTextComp = ({title, index, data, amount}) => {
+const DotTextExpireComp = ({item, index, data}) => {
+    console.log('item--',item);
+const tillFormateDate =(myDate)=>{
+    // const myDate = new Date();
+   const formattedDate = `Valid till ${moment(myDate).format('Do MMM.')}`;
+   return formattedDate
+}
+const expireFormateDate=(myDate)=>{
+// const myDate = new Date(); // Example: Current date
+const formateDate = moment(myDate).format('MMMM D, YYYY');
+return formateDate
+}
+
   return (
     <View key={index} style={[styles.main(index, data)]}>
       <View style={styles.dotView} />
-      {Number(amount) > 0 ? (
-        <Text
-        numberOfLines={2}
-         style={styles.text}>
-          {title}{' '}
-          <Text
+      {item?.expireDate > 0 ? <>
+        <Text style={styles.text}>{item?.title}{' '}{expireFormateDate(item?.expireDate)}</Text>
+      </>:
+      <>
+      {Number(item?.wallet) > 0 ? (
+        <Text style={styles.text}>
+             <Text
+           numberOfLines={2}
             style={{
               color: colors.black,
             }}>
-            {currencyFormat(Number(amount))}
+            {currencyFormat(Number(item?.wallet))}
           </Text>
+          {' '} {item?.title}
+         
         </Text>
       ) : (
         <Text 
         numberOfLines={2}
-        style={styles.text}>{title}</Text>
+        style={styles.text}> {item?.coupanCount +' '+ item?.title}{' '}({tillFormateDate(item?.validTill)})</Text>
       )}
+      </>
+     }
     </View>
   );
 };
 
-export default DotTextComp;
+export default DotTextExpireComp;
 
 const styles = StyleSheet.create({
   main: (index, data) => ({

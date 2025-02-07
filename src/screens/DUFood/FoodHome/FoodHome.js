@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, FlatList, DeviceEventEmitter, Text} from 'react-native';
+import {View, FlatList, DeviceEventEmitter, Text, Alert} from 'react-native';
 import {appImages} from '../../../commons/AppImages';
 import {styles} from './styles';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
@@ -41,8 +41,13 @@ let perPage = 20;
 export default function FoodHome({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {deleteCart, getCart} = rootStore.cartStore;
-  const {restaurentList, restaurentAll, allDishCategory, allCategoryList} =
-    rootStore.foodDashboardStore;
+  const {
+    restaurentList,
+    restaurentAll,
+    allDishCategory,
+    allCategoryList,
+    restaurantCustomerLikeDislike,
+  } = rootStore.foodDashboardStore;
   let selectedFilter = '';
   const [loading, setLoading] = useState(
     restaurentList?.length > 0 ? false : true,
@@ -52,7 +57,7 @@ export default function FoodHome({navigation}) {
   );
   const [categoryList, setCategoryList] = useState(allCategoryList ?? []);
   const [cartItems, setcartItems] = useState({});
-  const [orderList, setOrderList] = useState(restaurentList ?? []);
+  const [restaurantList, setRestaurantList] = useState(restaurentList ?? []);
   const [loadingMore, setLoadingMore] = useState(false);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [internet, setInternet] = useState(true);
@@ -70,15 +75,14 @@ export default function FoodHome({navigation}) {
   };
   const [isRemoveCart, setIsRemoveCart] = useState(false);
 
-  const getOrderList = async () => {
-    // console.log('getOrderList');
+  const getRestaurantList = async () => {
     const res = await restaurentAll(
       geoLocation,
       selectedFilter,
       perPage,
       handleLoading,
     );
-    setOrderList(res);
+    setRestaurantList(res);
     setLoadingMore(false);
   };
 
@@ -155,7 +159,7 @@ export default function FoodHome({navigation}) {
       setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
-          getOrderList();
+          getRestaurantList();
           getCategoryList();
         }
       }, 300);
@@ -173,10 +177,10 @@ export default function FoodHome({navigation}) {
 
   const loadMoredata = () => {
     console.log('load more');
-    if (!loadingMore && orderList?.length >= perPage) {
+    if (!loadingMore && restaurantList?.length >= perPage) {
       perPage = perPage + 20;
       setLoadingMore(true);
-      getOrderList();
+      getRestaurantList();
     }
   };
   const onUpdateUserInfo = () => {
@@ -202,17 +206,44 @@ export default function FoodHome({navigation}) {
     console.log('get res:--', s);
   };
 
-  const topRestaurentItem = ({item}) => (
-    // <View key={index}>
-    <RestaurantsCard
-      item={item}
-      navigation={navigation}
-      onLike={like => {
-        // handleLikeUnlike(like, item)
-      }}
-    />
-    // </View>
-  );
+  const handleLikeUnlike = async item => {
+    const likeUnLikeArray = await restaurantList?.map((data, i) => {
+      if (data?._id == item?._id) {
+        return {
+          ...data,
+          likedRestaurant: data?.likedRestaurant == true ? false : true,
+        };
+      } else {
+        return {...data};
+      }
+    });
+
+    const request = {
+      id: item?._id,
+      like: item?.likedRestaurant == true ? false : true,
+    };
+    setRestaurantList([...likeUnLikeArray]);
+    // console.log('item--handleLikeUnlike', likeUnLikeArray, item);
+    const resLikeUnLike = await restaurantCustomerLikeDislike(request);
+    // console.log("resLikeUnLike---",resLikeUnLike);
+    if (resLikeUnLike?.statusCode == 200) {
+      setRestaurantList([...likeUnLikeArray]);
+    } else {
+      setRestaurantList([...restaurantList]);
+    }
+  };
+
+  const topRestaurentItem = ({item}) => {
+    return (
+      <RestaurantsCard
+        item={item}
+        navigation={navigation}
+        onLike={item => {
+          handleLikeUnlike(item);
+        }}
+      />
+    );
+  };
 
   const onSuccessResult = item => {
     // console.log('item=== onSuccessResult', item);
@@ -234,12 +265,12 @@ export default function FoodHome({navigation}) {
     }
   };
 
-  const onDeleteCart=async()=>{
- const deleteCartData =  await deleteCart(cartItems);
- console.log("deleteCartData--",deleteCartData);
-     setIsRemoveCart(false);
-     getCartItemsCount();
-  }
+  const onDeleteCart = async () => {
+    const deleteCartData = await deleteCart(cartItems);
+    console.log('deleteCartData--', deleteCartData);
+    setIsRemoveCart(false);
+    getCartItemsCount();
+  };
 
   return (
     <View style={[styles.container]}>
@@ -310,7 +341,7 @@ export default function FoodHome({navigation}) {
                   onChange={f => {
                     // console.log('f>', f);
                     selectedFilter = f;
-                    getOrderList();
+                    getRestaurantList();
                     // getLocationCurrent();
                   }}
                 />
@@ -318,11 +349,11 @@ export default function FoodHome({navigation}) {
             </View>
 
             <View style={styles.restaurantMainView}>
-              {orderList?.length > 0 ? (
+              {restaurantList?.length > 0 ? (
                 <FlatList
                   scrollEnabled={false}
                   // nestedScrollEnabled={true}
-                  data={orderList}
+                  data={restaurantList}
                   renderItem={topRestaurentItem}
                   keyExtractor={item => item.id}
                   onEndReached={loadMoredata}
@@ -362,8 +393,8 @@ export default function FoodHome({navigation}) {
                 bottom={hp('8%')}
                 isDash={true}
                 cartData={cartItems}
-                onViewCart={() =>
-                  navigation.navigate('trackOrderPreparing')
+                onViewCart={
+                  () => navigation.navigate('trackOrderPreparing')
                   // navigation.navigate('cart', {
                   //   restaurant: cartItems?.restaurant,
                   // })
@@ -394,7 +425,7 @@ export default function FoodHome({navigation}) {
           'Are you sure you want to remove all items from your cart? This action cannot be undone.'
         }
         onDelete={() => {
-          onDeleteCart()
+          onDeleteCart();
         }}
       />
     </View>

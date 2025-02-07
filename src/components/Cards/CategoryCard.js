@@ -40,7 +40,7 @@ const CategoryCard = ({data, onPress, navigation}) => {
         />
         <Text
           numberOfLines={2}
-          style={[styles.name, {textAlign: 'center', marginTop: '-2%'}]}>
+          style={[styles.name, {textAlign: 'center', marginTop: '5%'}]}>
           {item.name}
         </Text>
       </View>

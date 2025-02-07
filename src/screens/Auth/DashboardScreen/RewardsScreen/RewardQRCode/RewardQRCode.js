@@ -11,11 +11,12 @@ import QRCode from 'react-native-qrcode-svg';
 import Share from 'react-native-share';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
+import DotTextExpireComp from '../../../../../components/DotTextExpireComp';
 
-const ClaimGiftQRCode = ({navigation, route}) => {
+const RewardQRCode = ({navigation, route}) => {
   const {item} = route.params;
   const qrCodeRef = useRef();
-  const [clainGift, setClaimGift] = useState(item);
+  const [clainReward, setClainReward] = useState(item);
   const [base64Image, setBase64Image] = useState(null);
 
   useFocusEffect(
@@ -24,32 +25,15 @@ const ClaimGiftQRCode = ({navigation, route}) => {
     },[])
   )
 
+
   useEffect(() => {
     setTimeout(()=>{
-        setClaimGift(item);
+        setClainReward(item);
         generateBarcode();
     },200)
     
   }, [item]);
 
-  let claimDetails = [
-    {
-      id: 1,
-      title: 'Have a great day full of happiness!',
-      amount: 0,
-    },
-    {
-      id: 2,
-      title: 'Gift card amount',
-      amount: 2000,
-    },
-
-    {
-      id: 3,
-      title: 'This amount is directly enter in your wallet',
-      amount: 0,
-    },
-  ];
 
   const generateBarcode = () => {
     // Generate base64 string from the QRCode component
@@ -81,7 +65,7 @@ const ClaimGiftQRCode = ({navigation, route}) => {
     <View style={styles.main}>
       <Header
         backArrow={true}
-        title={'Claim Gift Card'}
+        title={'Claim Reward QR Code'}
         onPress={() => {
           navigation.goBack();
         }}
@@ -108,15 +92,25 @@ const ClaimGiftQRCode = ({navigation, route}) => {
             style={styles.detailsText}>
             Details
           </Text>
-          {claimDetails?.map((item, i) => {
+          {clainReward?.data?.map((item, i) => {
             return (
               <View style={{marginHorizontal: -10}}>
-                <DotTextComp
-                  title={item?.title}
-                  index={i}
-                  data={claimDetails}
-                  amount={item?.amount}
-                />
+                 {(item?.wallet ?? 0) > 0 ||
+                      (item?.coupanCount ?? 0) > 0 ||
+                      (item?.expireDate ?? 0) > 0 ? (
+                        <DotTextExpireComp
+                          item={item}
+                          index={i}
+                          data={clainReward?.data}
+                        />
+                      ) : (
+                        <DotTextComp
+                          title={item?.title}
+                          index={i}
+                          data={clainReward?.data}
+                          amount={item?.amount}
+                        />
+                      )}
               </View>
             );
           })}
@@ -126,4 +120,4 @@ const ClaimGiftQRCode = ({navigation, route}) => {
   );
 };
 
-export default ClaimGiftQRCode;
+export default RewardQRCode;

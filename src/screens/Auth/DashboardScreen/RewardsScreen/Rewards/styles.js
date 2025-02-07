@@ -4,86 +4,20 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { colors } from '../../../../../theme/colors';
-import { fonts } from '../../../../../theme/fonts/fonts';
-
+import {colors} from '../../../../../theme/colors';
+import {fonts} from '../../../../../theme/fonts/fonts';
 
 export const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     justifyContent: 'center',
   },
-  addMoneyShadow: {
-    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
-    backgroundColor: colors.white,
-    alignSelf: 'center',
-    borderRadius: 10,
-    width: wp('90%'),
-    height: hp('17%'),
-    marginTop: '5%',
-    borderWidth: 1,
-    borderColor: colors.colorD9,
-  },
-  addMoneyInnerView: {
-    // marginHorizontal: 24,
-    marginTop: '6%',
-  },
-  addMoneyText: {
-    fontSize: RFValue(17),
-    fontFamily: fonts.semiBold,
-    color: colors.black,
-  },
-  inputTextView: {
-    height: hp('5.6%'),
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: colors.colorB6,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  rateText: {
-    marginLeft: '4%',
-    fontSize: RFValue(13),
-    fontFamily: fonts.medium,
-    color: colors.black,
-  },
-  inputText: {
-    padding: 5,
-    borderRadius: 50,
-    height: hp('5.6%'),
-    width: wp('74%'),
-    fontSize: RFValue(13),
-    fontFamily: fonts.medium,
+  flatListView: {
+    flex: 1,
+    justifyContent: 'center',
   },
   innerView: {
     // marginTop: '1%',
-    justifyContent:'center'
-  },
-  giftAmountView: {
-    flexDirection: 'row',
-  },
-  giftCardAmount: {
-    flex: 1,
-    fontSize: RFValue(12),
-    fontFamily: fonts.medium,
-    color: colors.black,
-  },
-  giftAmount: {
-    fontSize: RFValue(12),
-    fontFamily: fonts.medium,
-    color: colors.black,
-  },
-  claimContainerView: {
-    marginTop: hp('3%'),
-    justifyContent: 'center',
-  },
-  claimText: {
-    fontSize: RFValue(13),
-    fontFamily: fonts.medium,
-    color: colors.medium,
-  },
-  mapRenderView: {
-    marginTop: '2%',
     justifyContent: 'center',
   },
   noDataView: {
@@ -98,20 +32,44 @@ export const styles = StyleSheet.create({
   },
   modalMainView: {
     justifyContent: 'center',
-    height: hp('32%'),
+
+    // height: hp('80%'),
   },
   modalImage: {
+    position: 'absolute',
     width: wp('75%'),
-    height: hp('24%'),
+    height: hp('38%'),
     alignSelf: 'center',
     borderRadius: 20,
-    marginTop: hp('-30%'),
+    // marginTop: hp('-30%'),
+  },
+  modalImagesrct: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+    overflow: 'hidden',
+    width: wp('72%'),
+    height: hp('30%'),
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('-3%'),
+  },
+  modalMainInnerView: {
+    backgroundColor: colors.white,
+    marginTop: hp('6%'),
+    borderRadius: 20,
   },
   modalInnerView: {
     backgroundColor: colors.white,
-    height: hp('32%'),
-    marginTop: hp('6%'),
+    // height: hp('32%'),
+    // marginTop: hp('6%'),
+    marginBottom: '6%',
     borderRadius: 20,
+  },
+  mainScrtView: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textView: {
     marginHorizontal: 20,

@@ -56,7 +56,7 @@ const ResturantProducts = memo(({navigation, route}) => {
     // {name: 'Biryani', count: 9},
   ]);
   const [showFilters, setShowFilters] = useState(true);
-  const [restaurant, setRestaurant] = useState(item?.restaurant ?? {});
+  const [restaurant, setRestaurant] = useState(item ?? {});
   const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(false);
@@ -74,7 +74,7 @@ const ResturantProducts = memo(({navigation, route}) => {
   const scrollViewRef = useRef(null);
   const groupRefs = useRef([]);
 
-  // console.log('item---item?.restaurant?._id', item, item?.restaurant);
+  // console.log('item---item?._id', item, item);
 
   useFocusEffect(
     useCallback(() => {
@@ -90,7 +90,7 @@ const ResturantProducts = memo(({navigation, route}) => {
   useEffect(() => {
     if (item) {
       getRestCategoryList();
-      setRestaurant(item?.restaurant ?? {});
+      setRestaurant(item ?? {});
     }
   }, [item]);
 
@@ -99,7 +99,7 @@ const ResturantProducts = memo(({navigation, route}) => {
   const getRestCategoryList = async () => {
     try {
       const res = await restaurantUnderMenuGroup(
-        item?.restaurant?._id,
+        item?._id,
         handleLoading,
       );
       console.log('API Response:', res);
@@ -225,7 +225,7 @@ const ResturantProducts = memo(({navigation, route}) => {
     console.log('getCartList handleAddRemove:-', getCartList, item);
 
     if (getCartList?.cart_items?.length > 0) {
-      if (getCartList?.restaurant_id == item?.restaurant_id) {
+      if (getCartList?.restaurant_id == item?._id) {
         const checkAvailabilityById = getCartList?.cart_items?.find(
           cartItem => cartItem?.food_item_id === item?._id,
         );
