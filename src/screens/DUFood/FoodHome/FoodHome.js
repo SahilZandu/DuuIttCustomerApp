@@ -1,22 +1,22 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {View, FlatList, DeviceEventEmitter, Text, Alert} from 'react-native';
-import {appImages} from '../../../commons/AppImages';
-import {styles} from './styles';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, FlatList, DeviceEventEmitter, Text, Alert } from 'react-native';
+import { appImages } from '../../../commons/AppImages';
+import { styles } from './styles';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import {silderArray} from '../../../stores/DummyData/Home';
-import {rootStore} from '../../../stores/rootStore';
-import {fetch} from '@react-native-community/netinfo';
+import { filters, silderArray } from '../../../stores/DummyData/Home';
+import { rootStore } from '../../../stores/rootStore';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import MikePopUp from '../../../components/MikePopUp';
 import FoodSlider from '../../../components/slider/foodSlider';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import DashboardFilters from './DashboardFilters';
 import RestaurantsCard from '../../../components/Cards/RestaurantsCard';
 import DashboardCartBtn from '../Components/DashboardCartBtn';
@@ -38,15 +38,20 @@ let geoLocation = {
 
 let perPage = 20;
 
-export default function FoodHome({navigation}) {
-  const {appUser} = rootStore.commonStore;
-  const {deleteCart, getCart} = rootStore.cartStore;
+export default function FoodHome({ navigation }) {
+  const { appUser } = rootStore.commonStore;
+  const { deleteCart, getCart, setCart, updateCart } = rootStore.cartStore;
   const {
     restaurentList,
     restaurentAll,
     allDishCategory,
     allCategoryList,
     restaurantCustomerLikeDislike,
+    getRepeatedOrderList,
+    repeatedOrderList,
+    recommendedOrderList,
+    getRecomendedItems
+
   } = rootStore.foodDashboardStore;
   let selectedFilter = '';
   const [loading, setLoading] = useState(
@@ -65,6 +70,10 @@ export default function FoodHome({navigation}) {
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(silderArray);
+  const [repeatOrdersList, setRepeatOrdersList] = useState(repeatedOrderList ?? [])
+  const [recomendedList, setRecomendedList] = useState(recommendedOrderList ?? [])
+  const [clickItem, setClickItem] = useState({});
+
 
   const getLocation = type => {
     let d =
@@ -74,6 +83,7 @@ export default function FoodHome({navigation}) {
     return d ? d : '';
   };
   const [isRemoveCart, setIsRemoveCart] = useState(false);
+  const [isRemoveCartOtherRes, setIsRemoveCartOtherRes] = useState(false);
 
   const getRestaurantList = async () => {
     const res = await restaurentAll(
@@ -84,6 +94,18 @@ export default function FoodHome({navigation}) {
     );
     setRestaurantList(res);
     setLoadingMore(false);
+  };
+  const getRepeatedOrderListData = async () => {
+    const res = await getRepeatedOrderList(
+      handleLoading,
+    );
+    // console.log("res getRepeatedOrderListData",res)
+    setRepeatOrdersList(res)
+  };
+  const getRecomendedItemsData = async () => {
+    const res = await getRecomendedItems(handleLoading);
+    // console.log("res getRecomendedItemsData",res)
+    setRecomendedList(res)
   };
 
   const getCategoryList = async () => {
@@ -96,56 +118,57 @@ export default function FoodHome({navigation}) {
     setLoadingCategory(v);
   };
 
-  const repeatOrdersList = [
-    {
-      id: '1',
-      name: 'Surya FastFood',
-      imageUrl: appImages.foodIMage,
-      like: 1,
-    },
-    {
-      id: '2',
-      name: 'Restaurant Two',
-      imageUrl: appImages.foodIMage,
-      like: 0,
-    },
-    {
-      id: '3',
-      name: 'Surya FastFood',
-      imageUrl: appImages.foodIMage,
-      like: 1,
-    },
-    {
-      id: '4',
-      name: 'Surya FastFood',
-      imageUrl: appImages.foodIMage,
-      like: 0,
-    },
-    // Add more restaurants as needed
-  ];
-  const recomendedOrdersList = [
-    {
-      id: '1',
-      name: 'Pav Bhaji',
-      imageUrl: appImages.foodIMage,
-    },
-    {
-      id: '2',
-      name: 'Kdi Paneer',
-      imageUrl: appImages.foodIMage,
-    },
-    {
-      id: '3',
-      name: 'Samosa (2 Pieces)',
-      imageUrl: appImages.foodIMage,
-    },
-    {
-      id: '4',
-      name: 'Pav Bhaji',
-      imageUrl: appImages.foodIMage,
-    },
-    // Add more restaurants as needed
-  ];
+  // const repeatOrdersList = [
+  //   {
+  //     id: '1',
+  //     name: 'Surya FastFood',
+  //     imageUrl: appImages.foodIMage,
+  //     like: 1,
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Restaurant Two',
+  //     imageUrl: appImages.foodIMage,
+  //     like: 0,
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'Surya FastFood',
+  //     imageUrl: appImages.foodIMage,
+  //     like: 1,
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'Surya FastFood',
+  //     imageUrl: appImages.foodIMage,
+  //     like: 0,
+  //   },
+  //   // Add more restaurants as needed
+  // ];
+
+  // const recomendedOrdersList = [
+  //   {
+  //     id: '1',
+  //     name: 'Pav Bhaji',
+  //     imageUrl: appImages.foodIMage,
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Kdi Paneer',
+  //     imageUrl: appImages.foodIMage,
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'Samosa (2 Pieces)',
+  //     imageUrl: appImages.foodIMage,
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'Pav Bhaji',
+  //     imageUrl: appImages.foodIMage,
+  //   },
+  //   // Add more restaurants as needed
+  // ];
 
   const handleLoading = v => {
     setLoading(v);
@@ -165,6 +188,8 @@ export default function FoodHome({navigation}) {
       }, 300);
       onUpdateUserInfo();
       getCartItemsCount();
+      getRepeatedOrderListData();
+      getRecomendedItemsData();
     }, []),
   );
 
@@ -184,7 +209,7 @@ export default function FoodHome({navigation}) {
     }
   };
   const onUpdateUserInfo = () => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     setAppUserInfo(appUser);
   };
   useEffect(() => {
@@ -214,7 +239,7 @@ export default function FoodHome({navigation}) {
           likedRestaurant: data?.likedRestaurant == true ? false : true,
         };
       } else {
-        return {...data};
+        return { ...data };
       }
     });
 
@@ -233,7 +258,7 @@ export default function FoodHome({navigation}) {
     }
   };
 
-  const topRestaurentItem = ({item}) => {
+  const topRestaurentItem = ({ item }) => {
     return (
       <RestaurantsCard
         item={item}
@@ -257,19 +282,204 @@ export default function FoodHome({navigation}) {
   const getCartItemsCount = async () => {
     const cart = await getCart();
     console.log('user cart', cart);
-
     if (cart?.food_item?.length > 0) {
       setcartItems(cart);
+      setTimeout(() => {
+        onCheckRecommededItem(cart?.food_item)
+      }, 500)
+
     } else {
+      onCheckRecommededItem([])
       setcartItems({});
     }
   };
 
-  const onDeleteCart = async () => {
-    const deleteCartData = await deleteCart(cartItems);
+  const onCheckRecommededItem = (foodItemArray) => {
+    console.log("foodItemArray--", foodItemArray);
+
+    let recommendedListData = (recomendedList ?? []).map((item) => {
+      const exactItem = foodItemArray?.find(data => data?._id === item?._id);
+
+      return exactItem
+        ? {
+          ...item,
+          item: {
+            ...item.item, // Keep existing properties
+            quantity: exactItem?.quantity, // ✅ Update quantity inside `item.item`
+          },
+        }
+        : { ...item };
+    });
+
+    console.log("recommendedListData--", recommendedListData);
+
+    // Ensure a state update with a new reference
+    setRecomendedList(recommendedListData);
+  };
+
+
+
+  const onDeleteCart = async (showPopUp) => {
+    const deleteCartData = await deleteCart(cartItems, showPopUp);
+    // console.log('deleteCartData--', deleteCartData);
+    if (deleteCartData?.restaurant_id?.length > 0) {
+      setIsRemoveCart(false);
+      getCartItemsCount();
+    } else {
+      setIsRemoveCart(false);
+    }
+  };
+
+
+  const setCartData = async (item) => {
+    const resCart = await setCart(item?.cart_items, appUser, item?.restaurant);
+    // console.log("resCart---++++",resCart);
+    if (resCart?.restaurant_id?.length > 0) {
+      navigation.navigate('cart', {
+        restaurant: item?.restaurant,
+      })
+    }
+
+  }
+
+  const onPressRepeatOrder = async (item) => {
+    // console.log('item--++++++', item);
+    if (cartItems?.food_item?.length > 0) {
+      const deleteCartData = await deleteCart(cartItems, false);
+      // console.log('deleteCartData---++++',deleteCartData);
+      if (deleteCartData?.restaurant_id?.length > 0) {
+        setCartData(item)
+      }
+    } else {
+      setCartData(item)
+    }
+  }
+
+  const handleLikeDislikeRepeated = async (item) => {
+    console.log("handleLikeDislikeRepeated----", item);
+
+    // return
+    const likeUnLikeArray = await repeatOrdersList?.map((data, i) => {
+      // if (data?._id == item?._id) {
+      if (data?.restaurant?._id == item?.restaurant?._id) {
+        return {
+          ...data,
+          restaurant: {
+            ...data.restaurant,
+            likedRestaurant: data?.restaurant?.likedRestaurant == true ? false : true,
+          },
+        };
+      } else {
+        return { ...data };
+      }
+    });
+    const request = {
+      id: item?.restaurant?._id,
+      like: item?.restaurant?.likedRestaurant == true ? false : true,
+    };
+    setRepeatOrdersList([...likeUnLikeArray]);
+    console.log('item--handleLikeUnlike', likeUnLikeArray, item);
+    const resLikeUnLike = await restaurantCustomerLikeDislike(request);
+    console.log("resLikeUnLike---", resLikeUnLike);
+    if (resLikeUnLike?.statusCode == 200) {
+      setRepeatOrdersList([...likeUnLikeArray]);
+    } else {
+      setRepeatOrdersList([...repeatOrdersList]);
+    }
+  };
+
+
+  const onDeleteCartUpdateRest = async (showPopUp) => {
+    const deleteCartData = await deleteCart(cartItems, showPopUp);
     console.log('deleteCartData--', deleteCartData);
-    setIsRemoveCart(false);
-    getCartItemsCount();
+    let restaurant = {
+      _id: clickItem?.item?.restaurant_id
+    }
+    if (deleteCartData?.restaurant_id?.length > 0) {
+      setIsRemoveCartOtherRes(false);
+      const resSetCart = await setCart([clickItem], appUser, restaurant);
+      if (resSetCart?.restaurant_id?.length > 0) {
+        getCartItemsCount();
+      }
+    } else {
+      setIsRemoveCartOtherRes(false);
+    }
+  };
+
+  const handleAddDecRecommended = async (item, quan) => {
+    console.log("item ,quantity---", item, quan, item?.restaurant_id || item?.item?.restaurant_id);
+    // return
+    let restaurant = {
+      _id: item?.restaurant_id || item?.item?.restaurant_id
+    }
+    let newItem = {
+      ...item,
+      ...item.item,
+      quantity: quan,
+      food_item_id: item?._id,
+      food_item_price: item?.item?.selling_price,
+    };
+
+    // console.log('item,quan,handleAddRemove', item, quan,newItem,item?.restaurant_id || item?.item?.restaurant_id, item?.item?.restaurant_id);
+    const getCartList = { ...cartItems };
+
+    // console.log('getCartList handleAddRemove:-', getCartList, item, restaurant,item?.restaurant_id || item?.item?.restaurant_id,item?.item?.restaurant_id);
+
+    if (getCartList?.cart_items?.length > 0) {
+      if (getCartList?.restaurant_id == item?.item?.restaurant_id) {
+        const checkAvailabilityById = getCartList?.cart_items?.find(
+          cartItem => cartItem?.food_item_id === item?._id,
+        );
+        console.log('getCartList checkAvailability', checkAvailabilityById);
+
+        let updatedCartList = getCartList?.cart_items;
+
+        if (checkAvailabilityById) {
+          updatedCartList = getCartList?.cart_items?.map(data => {
+            if (data?.food_item_id == item?._id) {
+              return { ...data, quantity: quan };
+            }
+            return {
+              ...data,
+            };
+          });
+          console.log(
+            'updatedCartList--',
+            updatedCartList,
+            appUser,
+            restaurant,
+            getCartList,
+          );
+          const resUpdateCart = await updateCart(updatedCartList, appUser, restaurant, getCartList);
+          if (resUpdateCart?.statusCode == 200) {
+            getCartItemsCount();
+          }
+        } else {
+          console.log('updateCart--', updatedCartList, appUser, restaurant, [
+            newItem,
+          ]);
+          const resUpdateCart = await updateCart(
+            [...updatedCartList, ...[newItem]],
+            appUser,
+            restaurant,
+            getCartList,
+          );
+
+          if (resUpdateCart?.statusCode == 200) {
+            getCartItemsCount();
+          }
+        }
+      } else {
+        setClickItem(newItem);
+        setIsRemoveCartOtherRes(true);
+      }
+    } else {
+      console.log('setCart--first', [newItem], appUser, restaurant,);
+      const resSetCart = await setCart([newItem], appUser, restaurant);
+      if (resSetCart?.restaurant_id?.length > 0) {
+        getCartItemsCount();
+      }
+    }
   };
 
   return (
@@ -302,7 +512,7 @@ export default function FoodHome({navigation}) {
             onCancelPress={() => {
               setSearchRes('');
             }}
-            // onRefershData={onRefershData}
+          // onRefershData={onRefershData}
           />
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -323,11 +533,14 @@ export default function FoodHome({navigation}) {
             </View>
 
             <View style={styles.orderMainView}>
-              <RepeatOrder data={repeatOrdersList} />
+              <RepeatOrder data={repeatOrdersList}
+                onPress={(item) => { onPressRepeatOrder(item) }}
+                onPressLikeDislike={(item) => { handleLikeDislikeRepeated(item) }}
+              />
             </View>
 
             <View style={styles.orderMainView}>
-              <RecommendedOrder data={recomendedOrdersList} />
+              <RecommendedOrder data={recomendedList} onAddDec={handleAddDecRecommended} />
             </View>
 
             <View style={styles.orderMainView}>
@@ -338,6 +551,7 @@ export default function FoodHome({navigation}) {
               <Text style={styles.titleText}>Top Restaurants to explore</Text>
               <View style={styles.filterView}>
                 <DashboardFilters
+                  data={filters}
                   onChange={f => {
                     // console.log('f>', f);
                     selectedFilter = f;
@@ -394,10 +608,12 @@ export default function FoodHome({navigation}) {
                 isDash={true}
                 cartData={cartItems}
                 onViewCart={
-                  () => navigation.navigate('trackOrderPreparing')
-                  // navigation.navigate('cart', {
-                  //   restaurant: cartItems?.restaurant,
-                  // })
+                  () => {
+                    //   navigation.navigate('trackOrderPreparing')
+                    navigation.navigate('cart', {
+                      restaurant: cartItems?.restaurant,
+                    })
+                  }
                 }
                 onDeletePress={async () => {
                   // setRemoveCart(true);
@@ -425,7 +641,19 @@ export default function FoodHome({navigation}) {
           'Are you sure you want to remove all items from your cart? This action cannot be undone.'
         }
         onDelete={() => {
-          onDeleteCart();
+          onDeleteCart(true);
+        }}
+      />
+      <PopUp
+        visible={isRemoveCartOtherRes}
+        type={'delete'}
+        onClose={() => setIsRemoveCartOtherRes(false)}
+        title={'Confirm Cart Clearance'}
+        text={
+          'Other restaurant item is already in your cart. Please remove it.? This action cannot be undone.'
+        }
+        onDelete={() => {
+          onDeleteCartUpdateRest(false);
         }}
       />
     </View>

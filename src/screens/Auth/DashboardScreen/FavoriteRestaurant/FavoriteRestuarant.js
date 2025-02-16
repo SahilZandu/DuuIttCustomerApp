@@ -1,28 +1,29 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {FlatList, Text, View, Image} from 'react-native';
-import {styles} from './styles';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { FlatList, Text, View, Image } from 'react-native';
+import { styles } from './styles';
 import Header from '../../../../components/header/Header';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {useFocusEffect} from '@react-navigation/native';
-import {rootStore} from '../../../../stores/rootStore';
-import {appImages, appImagesSvg} from '../../../../commons/AppImages';
-import {SvgXml} from 'react-native-svg';
+import { useFocusEffect } from '@react-navigation/native';
+import { rootStore } from '../../../../stores/rootStore';
+import { appImages, appImagesSvg } from '../../../../commons/AppImages';
+import { SvgXml } from 'react-native-svg';
 import DotedLine from '../../../DUFood/Components/DotedLine';
 import FastImage from 'react-native-fast-image';
 import Url from '../../../../api/Url';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../../theme/fonts/fonts';
-import {colors} from '../../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../../theme/fonts/fonts';
+import { colors } from '../../../../theme/colors';
 import Spacer from '../../../../halpers/Spacer';
+import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 
-export default function FavoriteRestaurant({navigation}) {
-  const {restaurantLikedByCustomer} = rootStore.foodDashboardStore;
-  const [loading, setLoading] = useState(false);
-  const [likeRestaurant, setLikeRestaurant] = useState([]);
+export default function FavoriteRestaurant({ navigation }) {
+  const { restaurantLikedByCustomer,favoriteRestaurantList } = rootStore.foodDashboardStore;
+  const [loading, setLoading] = useState(favoriteRestaurantList?.length > 0 ? false :true);
+  const [likeRestaurant, setLikeRestaurant] = useState(favoriteRestaurantList  ?? []);
 
   useFocusEffect(
     useCallback(() => {
@@ -44,41 +45,27 @@ export default function FavoriteRestaurant({navigation}) {
     setLoading(v);
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <View
-        style={{
-          justifyContent: 'center',
-          marginHorizontal: 25,
-          marginTop: '4%',
-        }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        style={styles.mainRenderView}>
+        <View style={styles.imageTextMainView}>
           <FastImage
-            style={[
-              styles.cover,
-              {
-                width: wp('25%'),
-                height: hp('11%'),
-                borderRadius: 10,
-              },
-            ]}
+            style={
+              styles.restImage
+            }
             source={
               item?.restaurant?.logo
-                ? {uri: Url?.Image_Url + item?.restaurant?.logo}
+                ? { uri: Url?.Image_Url + item?.restaurant?.logo }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
           />
-          <View style={{flex: 1, flexDirection: 'column', marginLeft: '3%'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={styles.innerMainView}>
+            <View style={styles.restLikeIconView}>
               <Text
                 numberOfLines={2}
-                style={{
-                  flex: 1,
-                  fontSize: RFValue(15),
-                  fontFamily: fonts.medium,
-                  color: colors.black,
-                }}>
+                style={styles.restName}>
                 {item?.restaurant?.name}
               </Text>
               <SvgXml
@@ -90,51 +77,28 @@ export default function FavoriteRestaurant({navigation}) {
               />
             </View>
             <View
-              style={{
-                flexDirection: 'row',
-                marginTop: '4%',
-                alignItems: 'center',
-              }}>
+              style={styles.ratingView}>
               <SvgXml width={15} height={15} xml={appImagesSvg.yellowStar} />
               <Text
-                style={{
-                  marginLeft: '2%',
-                  fontSize: RFValue(13),
-                  fontFamily: fonts.medium,
-                  color: colors.black,
-                }}>
+                style={styles.ratingText}>
                 {'3.9'}
               </Text>
             </View>
 
             <View
-              style={{
-                flexDirection: 'row',
-                marginTop: '4%',
-                alignItems: 'center',
-              }}>
+              style={styles.kmMinView}>
               <SvgXml xml={appImagesSvg.yellowLocation} />
               <Text
-                style={{
-                  marginLeft: '2%',
-                  fontSize: RFValue(13),
-                  fontFamily: fonts.medium,
-                  color: colors.color83,
-                }}>
+                style={styles.kmText}>
                 {'5 KM'}
               </Text>
 
               <SvgXml
-                style={{marginLeft: '3%'}}
+                style={{ marginLeft: '3%' }}
                 xml={appImagesSvg.yellowTimer}
               />
               <Text
-                style={{
-                  marginLeft: '2%',
-                  fontSize: RFValue(13),
-                  fontFamily: fonts.medium,
-                  color: colors.color83,
-                }}>
+                style={styles.minText}>
                 {'33 min'}
               </Text>
             </View>
@@ -155,20 +119,21 @@ export default function FavoriteRestaurant({navigation}) {
         title={'Favourites'}
         backArrow={true}
       />
-
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        {likeRestaurant?.length > 0 ? (
-          <FlatList
-            data={likeRestaurant}
-            renderItem={renderItem}
-            keyExtractor={item => item._id}
-          />
-        ) : (
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Text>No Data Found</Text>
-          </View>
-        )}
-      </View>
+      {(loading == true && likeRestaurant?.length == 0) ?
+        <AnimatedLoader type={'favoriteRestaurantLoader'} /> :
+        <View style={styles.flatListView}>
+          {likeRestaurant?.length > 0 ? (
+            <FlatList
+              data={likeRestaurant}
+              renderItem={renderItem}
+              keyExtractor={item => item._id}
+            />
+          ) : (
+            <View style={styles.noDataView}>
+              <Text style={styles.noDataText}>No Data Found</Text>
+            </View>
+          )}
+        </View>}
     </View>
   );
 }

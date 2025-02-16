@@ -271,26 +271,26 @@ export default function SideMenu({navigation}) {
           appUser={appUser}
         />
         <ReusableSurfaceComp title={'Food'}>
-          <TouchTextRightIconComp data={foodOptions} />
+          <TouchTextRightIconComp  firstIcon={true} data={foodOptions} />
         </ReusableSurfaceComp>
 
         <ReusableSurfaceComp title={'Ride'}>
-          <TouchTextRightIconComp data={rideOptions} />
+          <TouchTextRightIconComp firstIcon={true} data={rideOptions} />
         </ReusableSurfaceComp>
 
         <ReusableSurfaceComp title={'Parcel'}>
-          <TouchTextRightIconComp data={parcelOptions} />
+          <TouchTextRightIconComp firstIcon={true} data={parcelOptions} />
         </ReusableSurfaceComp>
 
         <ReusableSurfaceComp title={'Money'}>
-          <TouchTextRightIconComp data={moneyOptions} />
+          <TouchTextRightIconComp firstIcon={true} data={moneyOptions} />
         </ReusableSurfaceComp>
         <ReusableSurfaceComp title={'Coupons'}>
-          <TouchTextRightIconComp data={coupanOptions} />
+          <TouchTextRightIconComp  firstIcon={true} data={coupanOptions} />
         </ReusableSurfaceComp>
 
         <ReusableSurfaceComp title={'More'}>
-          <TouchTextRightIconComp data={moreOptions} />
+          <TouchTextRightIconComp firstIcon={true} data={moreOptions} />
         </ReusableSurfaceComp>
       </AppInputScroll>
       </>}

@@ -65,6 +65,9 @@ export default function Offers({navigation}) {
     }
     else if( item?.title == 'Vouchers'){
       navigation.navigate("vouchers");
+    }
+    else if( item?.title == 'Wallet'){
+      navigation.navigate("wallet");
     }else{
       alert("under processing...")
     }

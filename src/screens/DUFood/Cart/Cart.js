@@ -1,25 +1,20 @@
-import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react';
+import React, {useEffect,useState, useCallback} from 'react';
 import {
   View,
   Text,
-  Pressable,
   Image,
   ScrollView,
   FlatList,
-  TouchableOpacity,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import {rootStore} from '../../../stores/rootStore';
-import {SvgXml} from 'react-native-svg';
-// import {styles} from './styles';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../theme/fonts/fonts';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import {appImages,} from '../../../commons/AppImages';
 import {currencyFormat} from '../../../halpers/currencyFormat';
 import Header from '../../../components/header/Header';
 import {usePayment} from '../../../halpers/usePayment';
@@ -39,34 +34,11 @@ let itemForEdit = null;
 
 let idForUpdate = null;
 
-const recomendedOrdersList = [
-  {
-    id: '1',
-    name: 'Pav Bhaji',
-    imageUrl: appImages.foodIMage,
-  },
-  {
-    id: '2',
-    name: 'Kdi Paneer',
-    imageUrl: appImages.foodIMage,
-  },
-  {
-    id: '3',
-    name: 'Samosa (2 Pieces)',
-    imageUrl: appImages.foodIMage,
-  },
-  {
-    id: '4',
-    name: 'Pav Bhaji',
-    imageUrl: appImages.foodIMage,
-  },
-  // Add more restaurants as needed
-];
-
 const Cart = ({navigation, route}) => {
   const {restaurant} = route.params;
-  const {setCart, getCart, updateCart} = rootStore.cartStore;
+  const {setCart, getCart, updateCart,} = rootStore.cartStore;
   const {appUser} = rootStore.commonStore;
+  const {foodOrder}=rootStore.foodDashboardStore;
   const [isPlaying, setIsPLayig] = useState(false);
   const [appCart, setAppCart] = useState({
     cartitems: [],
@@ -116,13 +88,55 @@ const Cart = ({navigation, route}) => {
     setLoading(v);
   };
 
-  const onSuccess = data => {
+  const setFoodOrderData =async(paymentId)=>{
+    let payload ={
+      invoice_no: "INV123456",
+      customer_id: appUser?._id, 
+      status: "waiting_for_confirmation",
+      item_sub_total_amount: 100.50,
+      after_discount_sub_amt: 90.00,
+      total_amount: cartBillG?.topay,
+      coupon_code: "DISCOUNT20",
+      tax_amount: 10.00,
+      coupon_amount: 5.00,
+      packing_fee: 5.00,
+      payment_method_id: "credit_card",
+      amount_recived: 100.00,
+      transaction_id:paymentId,
+      order_id: "ORD98765",
+      restaurant_id:cartList?.restaurant_id,
+      otp: "123456",
+      reason_of_cancellation: "Customer changed mind",
+      delivery_time: "2025-02-15T14:30:00Z",
+      notified: 0,
+      distance_from_customer: "5.2",
+      dilevery_time: "2025-02-15T14:30:00Z",
+      cooking_time: "45 minutes",
+      verification_code: "VER12345",
+      refund_amt: 0.00,
+      refund_status: "norefund",
+      review_skipped: 0,
+      remaining_balance_amt: 0.00,
+      org_pay_amt: 95.00,
+      admin_pay_amt: 90.00,
+      cart_items:cartList?.cart_items,
+      cart_id:cartList?._id,
+    }
+
+    await foodOrder(payload,handleLoading,navigation);
+    
+  }
+
+  const onSuccess = (data) => {
+    console.log("onSuccess---",data);
     let paymentId = data?.razorpay_payment_id;
-    // createOrder(appCart, cartBillG, handleSuccess, handleLoading, paymentId);
-    navigation.navigate('orderPlaced', {
-      restaurant: [],
-      // restaurant: isOtherCart?.orgdata,
-    });
+
+    setFoodOrderData(data?.razorpay_payment_id)
+
+    // navigation.navigate('orderPlaced', {
+    //   restaurant: [],
+    //   // restaurant: isOtherCart?.orgdata,
+    // });
   };
 
   const onError = () => {
@@ -130,6 +144,8 @@ const Cart = ({navigation, route}) => {
   };
 
   const handleOrderCreate = async () => {
+    console.log('cartBillG---',cartBillG);
+    
     usePayment(cartBillG, onSuccess, onError);
   };
 
@@ -177,10 +193,13 @@ const Cart = ({navigation, route}) => {
     //   restaurant,
     //   getCartList,
     // );
-    await updateCart(updatedCartList, appUser, restaurant, cartList);
-    setTimeout(() => {
+   const resUpdateCart = await updateCart(updatedCartList, appUser, restaurant, cartList);
+    if (resUpdateCart?.statusCode == 200) {
       getUserCart();
-    }, 500);
+    }
+    // setTimeout(() => {
+      // getUserCart();
+    // }, 500);
   };
 
   const onSucces = () => {
@@ -234,7 +253,7 @@ const Cart = ({navigation, route}) => {
   const PlaceOrderBtn = ({}) => {
     return (
       <PaymentBtn
-        onPressPay={() => {}}
+        onPressPay={() => {navigation.navigate('trackingFoodOrderList')}}
         payText={'Google Pay'}
         onPressBuyNow={() => {
           handleOrderCreate();
@@ -473,7 +492,7 @@ const Cart = ({navigation, route}) => {
           //   iPrice,
           // );
           setIsEdit(false);
-          await updateCartItem(
+         const resUpdateCart = await updateCartItem(
             itemForEdit?.product,
             quan,
             vcId,
@@ -483,7 +502,10 @@ const Cart = ({navigation, route}) => {
             iPrice,
             idForUpdate,
           );
-          getUserCart();
+          if (resUpdateCart?.statusCode == 200) {
+            getUserCart();
+          }
+          
         }}
         cartItem={itemForEdit}
         product={itemForEdit?.addons}

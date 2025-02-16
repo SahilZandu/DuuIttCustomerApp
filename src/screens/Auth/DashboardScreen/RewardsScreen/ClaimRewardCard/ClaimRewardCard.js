@@ -1,22 +1,21 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text, Image} from 'react-native';
-import {styles} from './styles';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, Image } from 'react-native';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Header from '../../../../../components/header/Header';
 import AppInputScroll from '../../../../../halpers/AppInputScroll';
-import GiftCardHappiness from '../../../../../components/GiftCardHappiness';
 import DotTextComp from '../../../../../components/DotTextComp';
 import Spacer from '../../../../../halpers/Spacer';
 import BTN from '../../../../../components/cta/BTN';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
 import DotTextExpireComp from '../../../../../components/DotTextExpireComp';
 
-const ClaimRewardCard = ({navigation, route}) => {
-  const {item} = route.params;
+const ClaimRewardCard = ({ navigation, route }) => {
+  const { item } = route.params;
   const [clainReward, setClainReward] = useState(item);
 
   useFocusEffect(
@@ -30,7 +29,7 @@ const ClaimRewardCard = ({navigation, route}) => {
   }, [item]);
 
   return (
-    <View style={styles.main}>
+    <View style={styles.container}>
       <Header
         backArrow={true}
         title={'Claim Reward Card'}
@@ -39,24 +38,26 @@ const ClaimRewardCard = ({navigation, route}) => {
         }}
       />
       <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
-        <View style={{flex:1,justifyContent:'center'}}>
+        <View style={styles.imageView}>
           <Image
             resizeMode='cover'
-            style={{width:wp('100%'), height:hp('40%')}}
+            style={styles.restImage}
             source={clainReward?.image}
           />
+          {/* logoImg */}
+          <Image resizeMode='cover'
+            style={styles.logoImage}
+            source={clainReward?.logoImg} />
         </View>
-        <View style={styles.upperMainView}>
-          {/* <GiftCardHappiness item={clainGift} /> */}
-        </View>
+        <Text style={styles.restNameText}>{item?.name}</Text>
         <View style={styles.detailsView}>
           <Text style={styles.detailsText}>Details</Text>
           {item?.data?.map((item, i) => {
             return (
-              <View style={{marginHorizontal: -10}}>
+              <View style={{ marginHorizontal: -10 }}>
                 {(item?.wallet ?? 0) > 0 ||
-                (item?.coupanCount ?? 0) > 0 ||
-                (item?.expireDate ?? 0) > 0 ? (
+                  (item?.coupanCount ?? 0) > 0 ||
+                  (item?.expireDate ?? 0) > 0 ? (
                   <DotTextExpireComp
                     item={item}
                     index={i}

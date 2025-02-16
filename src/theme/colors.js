@@ -69,10 +69,11 @@ export const colors = {
     colorF5:'#F5F5F5',
     colorFD:'#FDB714',
     color33:'#333333',
-    colorFE:'#FEF0F3'
-   
+    colorFE:'#FEF0F3',
+    colorC9:'#C9FFDB',
+    grey:'#7D7D7D'
     
    
-   
+  
    
   };

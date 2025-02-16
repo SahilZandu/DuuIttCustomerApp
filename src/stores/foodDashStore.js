@@ -6,7 +6,10 @@ import {useToast} from '../halpers/useToast';
 export default class FoodDashStore {
   restaurentList = [];
   allCategoryList=[]
-  categoryMenuList = []
+  categoryMenuList = [];
+  favoriteRestaurantList =[];
+  repeatedOrderList = [];
+  recommendedOrderList = [];
 
 
   restaurentAll = async (geoLocation,selectedFilter, limit, handleLoading) => {
@@ -228,20 +231,22 @@ export default class FoodDashStore {
 
 
   restaurantLikedByCustomer= async (handleLoading) => {
-    handleLoading(true)
+    // handleLoading(true)
     let requestData ={
     }
     try {
       const res = await agent.restaurantLikedByCustomer(requestData);
       console.log('restaurant LikedByCustomer Res : ', res);
       if (res?.statusCode == 200) {
-        useToast(res?.message, 1);
+        // useToast(res?.message, 1);
+        this.favoriteRestaurantList = res?.data ?? [];
         handleLoading(false);
         return res?.data;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        useToast(message, 0);
+        // useToast(message, 0);
         handleLoading(false);
+        this.favoriteRestaurantList=[]
         return [];
       }
      
@@ -252,12 +257,129 @@ export default class FoodDashStore {
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
+      this.favoriteRestaurantList=[]
       return [];
     }
 
 
   };
 
+
+  foodOrder= async (payload, handleLoading,navigation) => {
+    handleLoading(true)
+    let requestData ={
+      ...payload
+    }
+
+    console.log('requestData----foodOrder',requestData,payload);
+    
+    try {
+      const res = await agent.foodOrder(requestData);
+      console.log('foodOrder Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        navigation.navigate('orderPlaced', {
+          restaurant: [],
+        });
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+      }
+     
+    } catch (error) {
+      console.log('error foodOrder:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
+
+    getRepeatedOrderList= async (handleLoading) => {
+      try {
+        const res = await agent.getRepeatedOrderList();
+        console.log('restaurant getRepeatedOrderList Res : ', res);
+        if (res?.statusCode == 200) {
+          this.repeatedOrderList = res?.data?.orders ?? [];
+          handleLoading(false);
+          return res?.data?.orders;
+        } else {
+          this.repeatedOrderList =[];
+          handleLoading(false);
+          return []
+        }
+       
+      } catch (error) {
+        console.log('error restaurant getRepeatedOrderList:', error);
+        this.repeatedOrderList =[];
+        handleLoading(false);
+        const m = error?.data?.message
+          ? error?.data?.message
+          : 'Something went wrong';
+        useToast(m, 0);
+        return []
+      }
+    };
+
+    getRecomendedItems= async (handleLoading) => {
+      try {
+        const res = await agent.getRecomendedItems();
+        console.log('restaurant getRecomendedItems Res : ', res);
+        if (res?.statusCode == 200) {
+          this.recommendedOrderList = res?.data ?? [];
+          handleLoading(false);
+          return res?.data;
+        } else {
+          this.recommendedOrderList =[];
+          handleLoading(false);
+          return []
+        }
+       
+      } catch (error) {
+        console.log('error restaurant getRecomendedItems:', error);
+        this.recommendedOrderList =[];
+        handleLoading(false);
+        const m = error?.data?.message
+          ? error?.data?.message
+          : 'Something went wrong';
+        useToast(m, 0);
+        return []
+      }
+    };
+
+    getFoodOrderTracking= async (appUser, handleLoading) => {
+      handleLoading(true)
+      let requestData ={
+        user_id:appUser?._id
+      }
+      console.log('requestData----getFoodOrderTracking',requestData);
+      
+      try {
+        const res = await agent.getFoodOrderTracking(requestData);
+        console.log('getFoodOrderTracking Res : ', res);
+        if (res?.statusCode == 200) {
+          // useToast(res?.message, 1);
+          handleLoading(false);
+        } else {
+          const message = res?.message ? res?.message : res?.data?.message;
+          // useToast(message, 0);
+          handleLoading(false);
+        }
+       
+      } catch (error) {
+        console.log('error getFoodOrderTracking:', error);
+        handleLoading(false);
+        const m = error?.data?.message
+          ? error?.data?.message
+          : 'Something went wrong';
+        useToast(m, 0);
+      }
+    };
+    
 
 
   

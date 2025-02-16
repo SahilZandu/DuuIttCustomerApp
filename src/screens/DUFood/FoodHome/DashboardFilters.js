@@ -7,10 +7,9 @@ import {
 import {RFValue} from 'react-native-responsive-fontsize';
 import {SvgXml} from 'react-native-svg';
 import { fonts } from '../../../theme/fonts/fonts';
-import { filters } from '../../../stores/DummyData/Home';
 import { colors } from '../../../theme/colors';
 
-const DashboardFilters = ({onChange}) => {
+const DashboardFilters = ({onChange,data}) => {
 
   const [selected, setSelected] = useState('');
   const [update, setupdate] = useState(true);
@@ -31,7 +30,7 @@ const DashboardFilters = ({onChange}) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{paddingRight: '40%'}}>
-        {filters?.map((item, key) => (
+        {data?.map((item, key) => (
           <Pressable
             key={key}
             onPress={() => handleSelect(item)}

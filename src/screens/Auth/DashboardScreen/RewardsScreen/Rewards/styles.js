@@ -1,16 +1,16 @@
-import {Platform, StyleSheet} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { Platform, StyleSheet } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../../../../theme/colors';
-import {fonts} from '../../../../../theme/fonts/fonts';
+import { colors } from '../../../../../theme/colors';
+import { fonts } from '../../../../../theme/fonts/fonts';
 
 export const styles = StyleSheet.create({
+
   container: {
-    marginHorizontal: 20,
-    justifyContent: 'center',
+    flex: 1, backgroundColor: colors.appBackground
   },
   flatListView: {
     flex: 1,
@@ -19,6 +19,38 @@ export const styles = StyleSheet.create({
   innerView: {
     // marginTop: '1%',
     justifyContent: 'center',
+  },
+
+  renderView: {
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    borderRadius: 10,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  showImageView: {
+    justifyContent: 'flex-start', alignItems: 'flex-start'
+  },
+  showImage: {
+    height: hp('8.5%'), borderTopRightRadius: 10, borderTopLeftRadius: 10
+  },
+  logoImage: {
+    width: 45, height: 45, borderRadius: 100, marginTop: hp('-3%'), marginLeft: wp('4%')
+  },
+  restCashView: {
+    marginHorizontal: 10, justifyContent: 'center'
+  },
+  restText: {
+    fontSize: RFValue(12), fontFamily: fonts.medium, color: colors.black, marginTop: hp('0.3%')
+  },
+  flatListContainerView: {
+    paddingBottom: '10%', justifyContent: 'center'
+  },
+  caskBackText: {
+    fontSize: RFValue(8), fontFamily: fonts.regular, color: colors.black85, marginTop: '4%'
   },
   noDataView: {
     justifyContent: 'center',
@@ -37,22 +69,20 @@ export const styles = StyleSheet.create({
   },
   modalImage: {
     position: 'absolute',
-    width: wp('75%'),
-    height: hp('38%'),
+    width: wp('80%'),
+    height: hp('30%'),
     alignSelf: 'center',
     borderRadius: 20,
-    // marginTop: hp('-30%'),
   },
   modalImagesrct: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 20,
     overflow: 'hidden',
-    width: wp('72%'),
+    width: wp('80%'),
     height: hp('30%'),
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: hp('-3%'),
   },
   modalMainInnerView: {
     backgroundColor: colors.white,

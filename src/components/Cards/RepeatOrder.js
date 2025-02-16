@@ -1,4 +1,4 @@
-import React, {useState, useEffect, memo} from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   View,
   Image,
@@ -11,25 +11,41 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {fonts} from '../../theme/fonts/fonts';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {colors} from '../../theme/colors';
+import { SvgXml } from 'react-native-svg';
+import { fonts } from '../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { colors } from '../../theme/colors';
+import Url from '../../api/Url';
+import { appImages, appImagesSvg } from '../../commons/AppImages';
 
-const RepeatOrder = ({data, onPress}) => {
-  const renderRepeatOrderItem = ({item, index}) => {
+const RepeatOrder = ({ data, onPress ,onPressLikeDislike}) => {
+  const renderRepeatOrderItem = ({ item, index }) => {
+    console.log('item, index--RepeatOrder', item, index);
+
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={1}>
+      <TouchableOpacity onPress={() => {onPress(item) }} activeOpacity={1}>
         <View style={styles.itemContainer(index)}>
-          <SvgXml style={styles.star} xml={item?.like == 1 ? like : unlike} />
+          <TouchableOpacity 
+          hitSlop={{top:10,bottom:10,left:10,right:10}}
+          onPress={()=>{onPressLikeDislike(item)}}
+          activeOpacity={0.8}
+         style={styles.likeTouch}>
+          <SvgXml xml={
+            item?.restaurant?.likedRestaurant == true
+            ? like
+            : unlike
+          } />
+          </TouchableOpacity>
           <Image
-            source={item.imageUrl}
+            source={item?.restaurant?.banner?.length > 0 ?
+              { uri: Url?.Image_Url + item?.restaurant?.banner }
+              : appImages.foodIMage}
             resizeMode="cover"
             style={styles.image}
           />
 
-          <Text numberOfLines={1} style={styles.name}>
-            {item.name}
+          <Text numberOfLines={2} style={styles.name}>
+            {item.restaurant?.name}
           </Text>
           <View style={styles.viewContainer}>
             <SvgXml xml={star} />
@@ -48,31 +64,34 @@ const RepeatOrder = ({data, onPress}) => {
   return (
     <View>
       <Text style={styles.titleText}>Repeat order</Text>
-      <View style={styles.flatlistView}>
+      {data?.length > 0 ? <View style={styles.flatlistView}>
         <FlatList
           data={data}
           renderItem={renderRepeatOrderItem}
-          keyExtractor={item => item?.id}
+          keyExtractor={item => item?._id}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.listContainer}
         />
-      </View>
+      </View> :
+        <View style={styles.noDataView}>
+          <Text style={styles.noDataText}>No Data Found</Text>
+        </View>}
     </View>
   );
 };
 export default RepeatOrder;
 
 const styles = StyleSheet.create({
-    titleText: {
-        fontSize: RFValue(13),
-        fontFamily: fonts.semiBold,
-        color: colors.black,
-        marginTop: '2.5%',
-      },
-    flatlistView:{
-        marginTop: '4%', justifyContent: 'center'
-    },
+  titleText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
+    marginTop: '2.5%',
+  },
+  flatlistView: {
+    marginTop: '4%', justifyContent: 'center'
+  },
   listContainer: {
     paddingRight: '10%',
     justifyContent: 'center',
@@ -113,12 +132,18 @@ const styles = StyleSheet.create({
     marginLeft: '3%',
     width: wp('23%'),
   },
-  star: {
+  likeTouch:{
     position: 'absolute',
-    top: 5, // Adjust the distance from the top
-    right: 5, // Adjust the distance from the right
-    zIndex: 1, // Ensure the star is above the image
+    top: 6,
+    right: 6, 
+    zIndex: 1, 
   },
+  noDataView: {
+    justifyContent: 'center', marginTop: '3%', marginLeft: '5%'
+  },
+  noDataText: {
+    fontSize: RFValue(11), fontFamily: fonts.medium, color: colors.black
+  }
 });
 const unlike = `<svg width="19" height="19" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.99726 1.83832C4.19752 0.920871 2.8639 0.674081 1.86188 1.51419C0.859858 2.35429 0.718787 3.7589 1.50568 4.7525C2.15993 5.57861 4.13991 7.32093 4.78884 7.88485C4.86144 7.94795 4.89774 7.97949 4.94009 7.99189C4.97704 8.0027 5.01748 8.0027 5.05444 7.99189C5.09678 7.97949 5.13308 7.94795 5.20568 7.88485C5.85461 7.32093 7.83459 5.57861 8.48884 4.7525C9.27573 3.7589 9.15189 2.34545 8.13264 1.51419C7.1134 0.682918 5.797 0.920871 4.99726 1.83832Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>

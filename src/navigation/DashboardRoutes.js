@@ -14,6 +14,11 @@ import Rewards from '../screens/Auth/DashboardScreen/RewardsScreen/Rewards/Rewar
 import RewardQRCode from '../screens/Auth/DashboardScreen/RewardsScreen/RewardQRCode/RewardQRCode';
 import ClaimRewardCard from '../screens/Auth/DashboardScreen/RewardsScreen/ClaimRewardCard/ClaimRewardCard';
 import FavoriteRestaurant from '../screens/Auth/DashboardScreen/FavoriteRestaurant/FavoriteRestuarant';
+import Wallet from '../screens/Auth/DashboardScreen/WalletScreen/Wallet/Wallet';
+import DuuIttCredit from '../screens/Auth/DashboardScreen/WalletScreen/DuuIttCredit/DuuIttCredit';
+import ClaimGiftCardList from '../screens/Auth/DashboardScreen/WalletScreen/ClaimGiftCardList/ClaimGiftCardList';
+import GiftCardPurcahseList from '../screens/Auth/DashboardScreen/WalletScreen/GiftCardPurchaseList/GiftCardPurchaseList';
+import RewardsStars from '../screens/Auth/DashboardScreen/WalletScreen/RewardsStars/RewardsStars';
 
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +47,14 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="rewardQRCode" component={RewardQRCode} />
        <Stack.Screen name="claimRewardCard" component={ClaimRewardCard} />
        <Stack.Screen name="favoriteRestaurant" component={FavoriteRestaurant} />
+       <Stack.Screen name="wallet" component={Wallet} />
+       <Stack.Screen name="duuIttCredit" component={DuuIttCredit} />
+       <Stack.Screen name="claimGiftCardList" component={ClaimGiftCardList} />
+       <Stack.Screen name="giftCardPurcahseList" component={GiftCardPurcahseList} />
+       <Stack.Screen name="rewardsStars" component={RewardsStars} />
+       
+       
+       
        
        
     
