@@ -20,7 +20,10 @@ import {
 
 const ClaimGiftCards = ({item, index, onViewPress}) => {
   return (
-    <View index={index} style={styles.container}>
+    <TouchableOpacity
+    onPress={()=>{onViewPress(item)}}
+    activeOpacity={0.8}
+     index={index} style={styles.container}>
       <Surface elevation={3} style={styles.surfaceView}>
         <View style={styles.innerMainView}>
           <Image resizeMode="cover" style={styles.image} source={item?.image} />
@@ -42,7 +45,7 @@ const ClaimGiftCards = ({item, index, onViewPress}) => {
           </View>
         </View>
       </Surface>
-    </View>
+    </TouchableOpacity>
   );
 };
 

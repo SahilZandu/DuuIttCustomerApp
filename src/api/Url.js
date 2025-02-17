@@ -29,9 +29,13 @@ export default  {
     restaurantCustomerLikeDislike:'restaurant/customer-like-dislike',
     restaurantLikedByCustomer:'restaurant/liked-by-customer',
     setCart:'cart',
-   updateCart :'cart/update',
+    updateCart :'cart/update',
     getCart:'cart/get',
     deleteCart:'cart/delete',
+    foodOrder:'food-order',
+    repeatedOrderList:'food-order/repeated-order-list',
+    recomendedItems:'food-order/recomended-items',
+    getFoodOrderTracking:'food-order/get-tracking-order'
     
 
 

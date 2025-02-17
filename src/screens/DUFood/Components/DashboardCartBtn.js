@@ -143,7 +143,7 @@ const DashboardCartBtn = ({
   bottom,
 }) => {
   return (
-    <View style={styles.main}>
+    <View style={styles.main(bottom)}>
       <Surface elevation={3} style={styles.upperSurfaceView}></Surface>
       <TouchableOpacity
         onPress={() => {
@@ -197,11 +197,11 @@ const DashboardCartBtn = ({
 export default DashboardCartBtn;
 
 const styles = StyleSheet.create({
-  main: {
+  main:(bottom)=>( {
     position: 'absolute',
     alignSelf: 'center',
-    bottom: hp('8%'),
-  },
+    bottom:bottom?bottom: hp('8%'),
+  }),
   upperSurfaceView: {
     width: wp('88%'),
     height: hp('3%'),
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignSelf: 'center',
     borderRadius: 10,
-    top: '12%',
+    top:hp('1.8%'),
   },
   viewDetailsSurfaceView: {
     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,

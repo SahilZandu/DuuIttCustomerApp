@@ -19,7 +19,7 @@ import {appImages} from '../../commons/AppImages';
 import Url from '../../api/Url';
 
 const CategoryCard = ({data, onPress, navigation}) => {
-  console.log('data-- CategoryCard,', data);
+  // console.log('data-- CategoryCard,', data);
 
   const renderProductItem = ({item, index}) => (
     <TouchableOpacity
@@ -55,7 +55,7 @@ const CategoryCard = ({data, onPress, navigation}) => {
           nestedScrollEnabled={true}
           data={data}
           renderItem={renderProductItem}
-          keyExtractor={item => item?.id}
+          keyExtractor={item => item?._id}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.listContainer}

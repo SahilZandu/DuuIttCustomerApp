@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Image,
@@ -7,7 +7,7 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
-import {appImages} from '../../../commons/AppImages';
+import { appImages } from '../../../commons/AppImages';
 import Header from '../../../components/header/Header';
 import {
   heightPercentageToDP as hp,
@@ -15,35 +15,36 @@ import {
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
-import {setCurrentLocation} from '../../../components/GetAppLocation';
-import {rootStore} from '../../../stores/rootStore';
-import {fetch} from '@react-native-community/netinfo';
+import { useFocusEffect } from '@react-navigation/native';
+import { setCurrentLocation } from '../../../components/GetAppLocation';
+import { rootStore } from '../../../stores/rootStore';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import DashboardFilters from './DashboardFilters';
 import RestaurantsCard from '../../../components/Cards/RestaurantsCard';
 import DashboardCartBtn from '../Components/DashboardCartBtn';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
+import { colors } from '../../../theme/colors';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import PopUp from '../../../components/appPopUp/PopUp';
 
-export default function CategoryViseFoodListing({navigation, route}) {
-  const {category} = route.params;
+export default function CategoryViseFoodListing({ navigation, route }) {
+  const { category } = route.params;
 
-  const {appUser} = rootStore.commonStore;
-  const {saveCartItem, deleteCart, loadCartList, getRestraurent} =
+  const { appUser } = rootStore.commonStore;
+  const { deleteCart, getCart, getRestraurent } =
     rootStore.cartStore;
-  const {restaurantListForDishCategory, restaurantCustomerLikeDislike} =
+  const { restaurantListForDishCategory, restaurantCustomerLikeDislike } =
     rootStore.foodDashboardStore;
   const [restoInfo, setRestoInfo] = useState({});
-  const [cartItems, setcartItems] = useState([]);
+  const [cartItems, setcartItems] = useState({});
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [internet, setInternet] = useState(true);
-  const [isOtherCart, setIsOtherCart] = useState(false);
   const [relatedRestaurant, setRelatedRestaurant] = useState([]);
   const [relatedRestFilter, setRelatedRestFilter] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isRemoveCart, setIsRemoveCart] = useState(false);
 
   const topRestaurentsList = [
     {
@@ -102,7 +103,7 @@ export default function CategoryViseFoodListing({navigation, route}) {
   };
 
   const onUpdateUserInfo = () => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     setAppUserInfo(appUser);
   };
   const onRestaurentInfo = async () => {
@@ -111,10 +112,8 @@ export default function CategoryViseFoodListing({navigation, route}) {
     console.log('restaurentInfo>', restInfoo);
     if (restInfoo?.restaurentname != undefined) {
       setRestoInfo(restInfoo);
-      setIsOtherCart(true);
     } else {
       setRestoInfo({});
-      setIsOtherCart(false);
     }
   };
 
@@ -131,6 +130,18 @@ export default function CategoryViseFoodListing({navigation, route}) {
     fetch().then(state => {
       setInternet(state.isInternetReachable);
     });
+  };
+
+
+  const onDeleteCart = async (showPopUp) => {
+    const deleteCartData = await deleteCart(cartItems, showPopUp);
+    console.log('deleteCartData--', deleteCartData);
+    if (deleteCartData?.restaurant_id?.length > 0) {
+      setIsRemoveCart(false);
+      getCartItemsCount();
+    } else {
+      setIsRemoveCart(false);
+    }
   };
 
   const handleLikeUnlike = async item => {
@@ -165,7 +176,7 @@ export default function CategoryViseFoodListing({navigation, route}) {
     }
   };
 
-  function topRestaurentItem({item, index}) {
+  function topRestaurentItem({ item, index }) {
     return (
       <View key={index}>
         <RestaurantsCard
@@ -180,13 +191,13 @@ export default function CategoryViseFoodListing({navigation, route}) {
   }
 
   const getCartItemsCount = async c => {
-    const cartItems = await loadCartList();
-    console.log('user cart', cartItems);
+    const cart = await getCart();
+    console.log('user cart', cart);
 
-    if (cartItems.length > 0) {
-      setcartItems(cartItems);
+    if (cart?.food_item?.length > 0) {
+      setcartItems(cart);
     } else {
-      setcartItems([]);
+      setcartItems({});
     }
   };
 
@@ -215,7 +226,7 @@ export default function CategoryViseFoodListing({navigation, route}) {
           {loading ? (
             <AnimatedLoader type={'restaurantCartLoader'} />
           ) : (
-            <View style={{flex: 1, justifyContent: 'center'}}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
               <View style={styles.innerView}>
                 <View style={styles.filterView}>
                   <DashboardFilters
@@ -245,37 +256,56 @@ export default function CategoryViseFoodListing({navigation, route}) {
                   )}
                 </View>
               </View>
-              {isOtherCart &&
-                restoInfo?.restaurentname !== null &&
-                cartItems?.length > 0 && (
-                  //  !loading &&
 
-                  <View>
-                    <DashboardCartBtn
-                      bottom={'6%'}
-                      isDash={true}
-                      items={cartItems.length}
-                      restaurantData={restoInfo}
-                      onViewCart={() =>
-                        // navigation.navigate('orderPlaced')
+              {cartItems?.food_item?.length > 0 && (
+                <View style={styles.bottomCartBtnView}>
+                  {/* pending FoodTrackingOrder functionality */}
+                  {/* <FoodTrackingOrder
+                bottom={
+                  cartItems?.food_item?.length > 0 ? hp('18.5%') : hp('8%')
+                }
+                navigation={navigation}
+                trackedArray={[
+                  {
+                    order_type: 'food',
+                    tracking_id: '678654bi5y',
+                  },
+                ]}
+              /> */}
 
+                  <DashboardCartBtn
+                    bottom={hp('1%')}
+                    isDash={true}
+                    cartData={cartItems}
+                    onViewCart={
+                      () => {
                         navigation.navigate('cart', {
-                          restaurant: [],
-                          // restaurant: isOtherCart?.orgdata,
+                          restaurant: cartItems?.restaurant,
                         })
                       }
-                      onDeletePress={async () => {
-                        await deleteCart();
-                        // setRemoveCart(true);
-                        setIsOtherCart(false);
-                      }}
-                    />
-                  </View>
-                )}
+                    }
+                    onDeletePress={async () => {
+                      setIsRemoveCart(true);
+                    }}
+                  />
+                </View>
+              )}
             </View>
           )}
         </>
       )}
+      <PopUp
+        visible={isRemoveCart}
+        type={'delete'}
+        onClose={() => setIsRemoveCart(false)}
+        title={'Confirm Cart Clearance'}
+        text={
+          'Are you sure you want to remove all items from your cart? This action cannot be undone.'
+        }
+        onDelete={() => {
+          onDeleteCart(true);
+        }}
+      />
     </View>
   );
 }
@@ -314,4 +344,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black,
   },
+  bottomCartBtnView: {
+    justifyContent: 'center', alignItems: 'center'
+  }
 });

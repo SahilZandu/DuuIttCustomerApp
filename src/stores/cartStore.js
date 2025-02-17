@@ -367,7 +367,7 @@ export default class CartStore {
       console.log('updateCart Res : ', res);
       if (res?.statusCode == 200) {
         // useToast(res?.message, 1);
-        return res?.data;
+        return res;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
@@ -403,7 +403,7 @@ export default class CartStore {
     }
   };
 
-  deleteCart = async cart => {
+  deleteCart = async (cart,showPopUp) => {
     let requestData = {
       cart_id: cart?._id,
     };
@@ -412,7 +412,8 @@ export default class CartStore {
       const res = await agent.deleteCart(requestData);
       console.log('deleteCart Res : ', res);
       if (res?.statusCode == 200) {
-        useToast(res?.message, 1);
+
+       if(showPopUp){ useToast(res?.message, 1)};
         return res?.data;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
@@ -428,4 +429,30 @@ export default class CartStore {
       return [];
     }
   };
+
+  deleteCartWithoutPopUp = async cart => {
+    let requestData = {
+      cart_id: cart?._id,
+    };
+    console.log('requestData deleteCart: ', requestData);
+    try {
+      const res = await agent.deleteCart(requestData);
+      console.log('deleteCart Res : ', res);
+      if (res?.statusCode == 200) {
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        return [];
+      }
+    } catch (error) {
+      console.log('error deleteCart:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+  };
+
 }

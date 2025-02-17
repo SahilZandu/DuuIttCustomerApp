@@ -46,6 +46,12 @@ const DashbordScreens = [
   'rewardQRCode',
   'claimRewardCard',
   'favoriteRestaurant',
+  'wallet',
+  'duuIttCredit',
+  'claimGiftCardList',
+  'rewardsStars',
+  'trackingFoodOrderList',
+
 ];
 
 export function setBarColor(screen) {

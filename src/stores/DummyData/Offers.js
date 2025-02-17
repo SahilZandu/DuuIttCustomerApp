@@ -107,6 +107,10 @@ export const giftCardsArray = [
     title: 'Birthday Card',
     message: 'Have a great day full....',
     msgDay: 'Have a great day full of happiness!',
+    date:new Date(),
+    orderId:"N8881765",
+    status:'Purchased',
+    price:245
   },
   {
     id: 2,
@@ -114,6 +118,10 @@ export const giftCardsArray = [
     title: 'Anniversary Card',
     message: 'Have a great day full....',
     msgDay: 'Have a great day full of happiness!',
+    date:new Date(),
+     orderId:"N8881765",
+    status:'Failed',
+    price:240
   },
   {
     id: 3,
@@ -121,6 +129,10 @@ export const giftCardsArray = [
     title: 'Birthday Card',
     message: 'Have a great day full....',
     msgDay: 'Have a great day full of happiness!',
+    date:new Date(),
+     orderId:"N8881765",
+    status:'Purchased',
+    price:205
   },
   {
     id: 4,
@@ -128,6 +140,10 @@ export const giftCardsArray = [
     title: 'Anniversary Card',
     message: 'Have a great day full....',
     msgDay: 'Have a great day full of happiness!',
+    date:new Date(),
+     orderId:"N8881765",
+    status:'Failed',
+    price:215
   },
   {
     id: 5,
@@ -135,6 +151,10 @@ export const giftCardsArray = [
     title: 'Birthday Card',
     message: 'Have a great day full....',
     msgDay: 'Have a great day full of happiness!',
+    date:new Date(),
+     orderId:"N8881765",
+    status:'Purchased',
+    price:225
   },
   {
     id: 6,
@@ -142,6 +162,10 @@ export const giftCardsArray = [
     title: 'Anniversary Card',
     message: 'Have a great day full....',
     msgDay: 'Have a great day full of happiness!',
+    date:new Date(),
+     orderId:"N8881765",
+    status:'Failed',
+    price:235
   },
 ];
 

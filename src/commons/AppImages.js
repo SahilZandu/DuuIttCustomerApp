@@ -620,7 +620,11 @@ filter : `<svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="htt
 <path d="M5 9.25C4.17158 9.25 3.5 8.57845 3.5 7.75C3.5 6.92155 4.17158 6.25 5 6.25C5.82845 6.25 6.5 6.92155 6.5 7.75C6.5 8.57845 5.82845 9.25 5 9.25Z" stroke="#646464" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M7 3.75C7.82845 3.75 8.5 3.07843 8.5 2.25C8.5 1.42158 7.82845 0.75 7 0.75C6.17155 0.75 5.5 1.42158 5.5 2.25C5.5 3.07843 6.17155 3.75 7 3.75Z" stroke="#646464" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`,
+
 };
+
+
+
 
 export const bottomTabIcons = {
   // Home
@@ -857,4 +861,6 @@ export const appImages = {
   kataniRestImg:require('../assets/kataniRestImg.png'),
   mdImg:require('../assets/mdImg.png'),
   mdLogo:require('../assets/mdLogo.png'),
+  ruppeYellowIcon:require('../assets/ruppeYellow.png'),
+  ruppeGreyIcon:require('../assets/ruppeGrey.png'),
 };

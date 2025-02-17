@@ -274,12 +274,12 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const mapRef = useRef(null);
   const [lat, setLat] = useState(30.7076);
   const [long, setLong] = useState(76.715126);
-  const [destinationLocation, setDestinationLocation] = useState({});
+  const [destinationLocation, setDestinationLocation] = useState({lat:30.7076,lng:76.715126});
   const [coords, setCoords] = useState([]);
 
   // Update latitude and longitude based on origin
   useEffect(() => {
-    if (origin && origin?.lat && origin?.lng) {
+    if (Object?.keys(origin || {})?.length > 0) {
       setLat(Number(origin?.lat));
       setLong(Number(origin?.lng));
     }
@@ -308,7 +308,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const fetchRoute = async (origin, destination) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat},${origin?.lng}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`
       );
       const json = await response.json();
 
@@ -351,11 +351,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         </Marker>
 
         {/* Destination Marker */}
-        {(destinationLocation?.lat && destinationLocation?.lng) && (
-          <Marker
-            key={`destination-${destinationLocation?.lat}-${destinationLocation?.lng}`} // Add key prop to prevent flickering
-            coordinate={{ latitude: Number(destinationLocation?.lat), longitude: Number(destinationLocation?.lng) }}
-          >
+        {destinationLocation?.lat && destinationLocation?.lng && (
+          <Marker coordinate={{ latitude: Number(destinationLocation?.lat), longitude: Number(destinationLocation?.lng)}}>
             <Image resizeMode="contain" source={appImages.markerImage} style={styles.markerImage} />
           </Marker>
         )}

@@ -3573,7 +3573,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/app@npm:^21.2.0":
+"@react-native-firebase/app@npm:21.2.0":
   version: 21.2.0
   resolution: "@react-native-firebase/app@npm:21.2.0"
   dependencies:
@@ -3590,7 +3590,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/messaging@npm:^21.2.0":
+"@react-native-firebase/messaging@npm:21.2.0":
   version: 21.2.0
   resolution: "@react-native-firebase/messaging@npm:21.2.0"
   peerDependencies:
@@ -4166,11 +4166,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0":
-  version: 22.8.2
-  resolution: "@types/node@npm:22.8.2"
+  version: 22.13.4
+  resolution: "@types/node@npm:22.13.4"
   dependencies:
-    undici-types: ~6.19.8
-  checksum: 8d57352fe563e8de78311c2f799e8c3805cbec3840dfa54d5168588c30112d1e87a7940ebdbdcebb1f0094e26b7e626dfadd9683f5c60d8a76e9082051fea14a
+    undici-types: ~6.20.0
+  checksum: 39ecbd84fc2c6268c57f0479bc095cd304d2e97fee0b4ed7e6a77508aaadb28dc21be0ec91bf866ab2be822bf6c9749945795dbd6ba60e0851b50a967fd784b5
   languageName: node
   linkType: hard
 
@@ -4462,8 +4462,8 @@ __metadata:
     "@notifee/react-native": ^9.1.2
     "@react-native-async-storage/async-storage": ^1.24.0
     "@react-native-community/netinfo": ^11.3.2
-    "@react-native-firebase/app": ^21.2.0
-    "@react-native-firebase/messaging": ^21.2.0
+    "@react-native-firebase/app": 21.2.0
+    "@react-native-firebase/messaging": 21.2.0
     "@react-native-masked-view/masked-view": ^0.3.1
     "@react-native-voice/voice": ^3.2.4
     "@react-native/babel-preset": 0.74.85
@@ -7463,9 +7463,9 @@ __metadata:
   linkType: hard
 
 "http-parser-js@npm:>=0.5.1":
-  version: 0.5.8
-  resolution: "http-parser-js@npm:0.5.8"
-  checksum: 6bbdf2429858e8cf13c62375b0bfb6dc3955ca0f32e58237488bc86cd2378f31d31785fd3ac4ce93f1c74e0189cf8823c91f5cb061696214fd368d2452dc871d
+  version: 0.5.9
+  resolution: "http-parser-js@npm:0.5.9"
+  checksum: 5696ba51e87f423333454cdf316484b64a89d6fc4916821e8a773f9a80c050627dad240f7fde3a4da8b634b465c7d844de2b1602e808b68b392a3dd324886745
   languageName: node
   linkType: hard
 
@@ -9008,9 +9008,9 @@ __metadata:
   linkType: hard
 
 "long@npm:^5.0.0":
-  version: 5.2.3
-  resolution: "long@npm:5.2.3"
-  checksum: 885ede7c3de4facccbd2cacc6168bae3a02c3e836159ea4252c87b6e34d40af819824b2d4edce330bfb5c4d6e8ce3ec5864bdcf9473fa1f53a4f8225860e5897
+  version: 5.3.0
+  resolution: "long@npm:5.3.0"
+  checksum: a05c01f0a4e135c9ea2b969c14377dafb7060df04e6269a06e8842509bfd5a13490c377f63b15efd0f8d04358c452017f9fc384c747b6a64da2c1c7617f53894
   languageName: node
   linkType: hard
 
@@ -12513,9 +12513,9 @@ __metadata:
   linkType: hard
 
 "tslib@npm:^2.1.0":
-  version: 2.8.0
-  resolution: "tslib@npm:2.8.0"
-  checksum: de852ecd81adfdb4870927e250763345f07dc13fe7f395ce261424966bb122a0992ad844c3ec875c9e63e72afe2220a150712984e44dfd1a8a7e538a064e3d46
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 
@@ -12693,10 +12693,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.8":
-  version: 6.19.8
-  resolution: "undici-types@npm:6.19.8"
-  checksum: de51f1b447d22571cf155dfe14ff6d12c5bdaec237c765085b439c38ca8518fc360e88c70f99469162bf2e14188a7b0bcb06e1ed2dc031042b984b0bb9544017
+"undici-types@npm:~6.20.0":
+  version: 6.20.0
+  resolution: "undici-types@npm:6.20.0"
+  checksum: b7bc50f012dc6afbcce56c9fd62d7e86b20a62ff21f12b7b5cbf1973b9578d90f22a9c7fe50e638e96905d33893bf2f9f16d98929c4673c2480de05c6c96ea8b
   languageName: node
   linkType: hard
 

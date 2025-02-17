@@ -65,14 +65,14 @@ export default function Tabs({tabs, tabPress, isRating, isCount,showImage,imageH
         onPress={() => {
           onPress(index, text);
         }}>
-                  {imageHide !== false && <>
+        {imageHide == false && <>
         {(index != 0 || showImage) && <Image 
          resizeMode='contain'
         style={{
             width:20,height:20 
             ,tintColor:isSelected ?colors.main :colors.black85}} 
             source ={onSetImage(index)}/>}
-             </>}
+          </>}
         <Text
           style={[
             styles.tabtext,
@@ -105,7 +105,7 @@ export default function Tabs({tabs, tabPress, isRating, isCount,showImage,imageH
         ref={scrollViewRef}
         style={{alignSelf: 'center',height:screenHeight(6)}}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{minWidth:screenWidth(90)}}
+        contentContainerStyle={{paddingRight:wp('50%')}}
         horizontal >
         {tabs?.map((tab, idx) => (
           <TabButton
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     borderWidth: 1,
     borderColor:colors.colorD9,
-    paddingHorizontal:'2.5%',
+    paddingHorizontal:'6%',
   },
 
   selectedButton: {

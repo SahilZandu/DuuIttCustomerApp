@@ -6,7 +6,7 @@ import {appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const TouchTextRightIconComp = ({data}) => {
+const TouchTextRightIconComp = ({data,firstIcon}) => {
   return (
     <View style={styles.container}>
       {data?.map(
@@ -17,9 +17,8 @@ const TouchTextRightIconComp = ({data}) => {
                 activeOpacity={0.8}
                 disabled={item?.disable}
                 onPress={item?.onPress}
-                style={styles.textIconView(index)}>
-                <SvgXml height={22} width={22} xml={item?.icon} />
-
+                style={styles.textIconView(index,firstIcon)}>
+              {firstIcon == true && <SvgXml height={22} width={22} xml={item?.icon} />}
                 <Text style={styles.titleText}>{item?.title}</Text>
 
                 {item?.title != 'Logout' && (
@@ -50,9 +49,9 @@ const styles = StyleSheet.create({
   renderView: {
     justifyContent: 'center',
   },
-  textIconView: index => ({
+  textIconView:(index,firstIcon) => ({
     flexDirection: 'row',
-    marginTop: index == 0 ? '4%' : '6%',
+    marginTop:firstIcon == true ?  index == 0 ? '4%' : '6%' :'6%',
   }),
   titleText: {
     fontSize: RFValue(14),

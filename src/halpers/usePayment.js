@@ -5,9 +5,7 @@ import {rootStore} from '../stores/rootStore';
 export function usePayment(data, onSuccess, onError) {
   const {appUser} = rootStore.commonStore;
 
-  const total = data.cartTotal + data.tax + data.pfree - data.discount;
-
-  let totalPrice = total * 100;
+  const totalPrice = (data?.topay * 100);
 
   console.log('app user:-', appUser);
   console.log('Payment data:-', data);

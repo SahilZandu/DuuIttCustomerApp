@@ -88,8 +88,8 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
               },
             ]}
             source={
-              item?.logo
-                ? {uri: Url?.Image_Url + item?.logo}
+              item?.banner?.length > 0
+                ? {uri: Url?.Image_Url + item?.banner}
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
