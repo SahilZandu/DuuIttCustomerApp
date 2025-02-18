@@ -74,7 +74,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
   const scrollViewRef = useRef(null);
   const groupRefs = useRef([]);
 
-  // console.log('item---item?._id', item, item);
+  console.log('item---item?._id', item, item?.id);
 
   useFocusEffect(
     useCallback(() => {

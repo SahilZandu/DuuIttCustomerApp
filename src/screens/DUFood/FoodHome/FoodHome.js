@@ -296,10 +296,9 @@ export default function FoodHome({ navigation }) {
 
   const onCheckRecommededItem = (foodItemArray) => {
     console.log("foodItemArray--", foodItemArray);
-
+    if(foodItemArray?.length > 0){
     let recommendedListData = (recomendedList ?? []).map((item) => {
       const exactItem = foodItemArray?.find(data => data?._id === item?._id);
-
       return exactItem
         ? {
           ...item,
@@ -310,23 +309,25 @@ export default function FoodHome({ navigation }) {
         }
         : { ...item };
     });
-
     console.log("recommendedListData--", recommendedListData);
-
     // Ensure a state update with a new reference
     setRecomendedList(recommendedListData);
+     }else{
+    getRecomendedItemsData();
+    }
   };
 
 
 
   const onDeleteCart = async (showPopUp) => {
     const deleteCartData = await deleteCart(cartItems, showPopUp);
-    // console.log('deleteCartData--', deleteCartData);
+    console.log('deleteCartData--', deleteCartData);
     if (deleteCartData?.restaurant_id?.length > 0) {
       setIsRemoveCart(false);
       getCartItemsCount();
     } else {
       setIsRemoveCart(false);
+      getCartItemsCount();
     }
   };
 

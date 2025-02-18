@@ -11,6 +11,7 @@ import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 import moment from 'moment';
+import Url from '../api/Url';
 
 const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
   const setTrackImage = status => {
@@ -21,13 +22,15 @@ const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
         return appImages.order2;
       case 'ride':
         return appImages.order3;
+      default:
+        return appImages.order1;
     }
   };
   const dateFormate = () => {
-              const formattedDate = moment().format('MMM D, YYYY - hh:mm A');
-              // console.log(formattedDate);
-              return formattedDate
-          }
+    const formattedDate = moment().format('MMM D, YYYY - hh:mm A');
+    // console.log(formattedDate);
+    return formattedDate;
+  };
 
   const onViewDetail = (status, index) => {
     onViewDetails(status, index);
@@ -45,14 +48,18 @@ const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
             <Image
               resizeMode="contain"
               style={styles.image}
-              source={setTrackImage(item?.order_type)}
+              source={
+                item?.restaurant?.banner?.length > 0
+                  ? {uri: Url?.Image_Url +  item?.restaurant?.banner}
+                  : setTrackImage(item?.order_type)
+              }
             />
             <View style={styles.trackIdView}>
               <Text numberOfLines={1} style={styles.trackName}>
-              {item?.name}
+                {item?.restaurant?.name}
               </Text>
               <Text numberOfLines={1} style={styles.dateText}>
-                {dateFormate(item?.date)}
+                {dateFormate(item?.updatedAt)}
               </Text>
             </View>
           </View>

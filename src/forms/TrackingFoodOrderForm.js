@@ -51,64 +51,26 @@ const trackArray = [
   {
     id: 2,
     name: 'Arrived to destination',
-    status: 'pending',
+    status: 'waiting_for_confirmation',
   },
   {
     id: 3,
     name: 'Delivered',
-    status: 'pending',
+    status: 'waiting_for_confirmation',
   },
 ];
 
-const FoodTrackOrder=[
-    {
-        name:'Suraya Fast Food',
-        date:new Date(),
-        status:'pending',
-        image:appImages.foodImage,
-        order_type:'food',
-        total_amount:250,
-        tracking_id:'gdhgss'
-    },
-    {
-        name:'Suraya Fast Food',
-        date:new Date(),
-        status:'pending',
-        image:appImages.foodImage,
-        order_type:'food',
-        total_amount:250,
-        tracking_id:'gdhgss'
-    },
-    {
-        name:'Suraya Fast Food',
-        date:new Date(),
-        status:'pending',
-        image:appImages.foodImage,
-        order_type:'food',
-        total_amount:250,
-        tracking_id:'gdhgss'
-    },
-    {
-        name:'Suraya Fast Food',
-        date:new Date(),
-        status:'pending',
-        image:appImages.foodImage,
-        order_type:'food',
-        total_amount:250,
-        tracking_id:'gdhgss'
-    }
-]
-
 const TrackingFoodOrderForm = ({navigation}) => {
-  const {ordersTrackOrder, orderTrackingList} = rootStore.orderStore;
+  const {getFoodOrderTracking, foodOrderTrackingList} =
+    rootStore.foodDashboardStore;
   const {appUser} = rootStore.commonStore;
-  const [loading, setLoading] = useState(false
-    // orderTrackingList?.length?.length > 0 ? false : true,
+  const [loading, setLoading] = useState(
+    foodOrderTrackingList?.length?.length > 0 ? false : true,
   );
   const [isSelected, setIsSelected] = useState(0);
-  const [trackedArray, setTrackedArray] = useState( FoodTrackOrder
-    // orderTrackingList
-);
+  const [trackedArray, setTrackedArray] = useState(
+    foodOrderTrackingList
+  );
   const [trackingArray, setTrackingArray] = useState(trackArray);
   const [isModalTrack, setIsModalTrack] = useState(false);
   const [trackItem, setTrackItem] = useState({});
@@ -126,57 +88,56 @@ const TrackingFoodOrderForm = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-    //   getTrackingOrder();
-      socketServices.initailizeSocket();
+        getTrackingOrder();
+      // socketServices.initailizeSocket();
     }, []),
   );
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      let query = {
-        lat: getLocation('lat')?.toString(),
-        lng: getLocation('lng')?.toString(),
-        user_id: appUser?._id,
-        user_type: 'customer',
-        fcm_token: appUser?.fcm_token,
-      };
-      socketServices.emit('update-location', query);
-      socketServices.on('getremainingdistance', data => {
-        console.log(
-          'Remaining distance data-- tracking:',
-          data,
-          data?.location,
-        );
-        if (data && data?.location) {
-          setOrigin(data?.location);
-        }
-      });
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     let query = {
+  //       lat: getLocation('lat')?.toString(),
+  //       lng: getLocation('lng')?.toString(),
+  //       user_id: appUser?._id,
+  //       user_type: 'customer',
+  //       fcm_token: appUser?.fcm_token,
+  //     };
+  //     socketServices.emit('update-location', query);
+  //     socketServices.on('getremainingdistance', data => {
+  //       console.log(
+  //         'Remaining distance data-- tracking:',
+  //         data,
+  //         data?.location,
+  //       );
+  //       if (data && data?.location) {
+  //         setOrigin(data?.location);
+  //       }
+  //     });
+  //     // socketServices.on('testevent', data => {
+  //     //   console.log('test event tracking', data);
+  //     // });
+  //   }, 2000);
+  //   return () => {
+  //     clearTimeout(timeoutId);
+  //   };
+  // }, []);
 
-      // socketServices.on('testevent', data => {
-      //   console.log('test event tracking', data);
-      // });
-    }, 2000);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      if(trackedArray?.length > 0){
-      const intervalId = setInterval(() => {
-        setCurrentLocation();
-        setTimeout(() => {
-          getSocketLocation(socketServices, trackItem);
-        }, 1500);
-      }, 10000);
-      return () => {
-        // This will run when the screen is unfocused
-        clearInterval(intervalId);
-      };
-    }
-    }, [trackItem,trackedArray]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (trackedArray?.length > 0) {
+  //       const intervalId = setInterval(() => {
+  //         setCurrentLocation();
+  //         setTimeout(() => {
+  //           getSocketLocation(socketServices, trackItem);
+  //         }, 1500);
+  //       }, 10000);
+  //       return () => {
+  //         // This will run when the screen is unfocused
+  //         clearInterval(intervalId);
+  //       };
+  //     }
+  //   }, [trackItem, trackedArray]),
+  // );
 
   const getSocketLocation = async (socketServices, trackItem) => {
     console.log('trackItem---', trackItem);
@@ -205,19 +166,19 @@ const TrackingFoodOrderForm = ({navigation}) => {
     socketServices.emit('remaining-distance', request);
   };
 
-  useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('dropped', data => {
-      console.log('dropped data -- ', data);
-    //   getTrackingOrder();
-      setIsModalTrack(false);
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const subscription = DeviceEventEmitter.addListener('dropped', data => {
+  //     console.log('dropped data -- ', data);
+  //     getTrackingOrder();
+  //     setIsModalTrack(false);
+  //   });
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   const getTrackingOrder = async () => {
-    const res = await ordersTrackOrder(handleLoading);
+    const res = await getFoodOrderTracking(handleLoading);
     setTrackedArray(res);
     setTrackItem(res?.length > 0 ? res[0] : {});
     setOrigin(res?.length > 0 ? res[0]?.sender_address?.geo_location : {});
@@ -240,7 +201,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
 
   const setTrackStatus = status => {
     switch (status) {
-      case 'arrive_to_pick':
+      case 'waiting_for_confirmation':
         return 0;
       case 'picked':
         return 1;
@@ -261,7 +222,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
       if (i <= res) {
         return {...item, status: 'completed'};
       } else {
-        return {...item, status: 'pending'};
+        return {...item, status: 'waiting_for_confirmation'};
       }
     });
 
@@ -276,6 +237,8 @@ const TrackingFoodOrderForm = ({navigation}) => {
         return appImages.order2;
       case 'ride':
         return appImages.order3;
+        default:
+        return appImages.order1;
     }
   };
 
@@ -283,39 +246,38 @@ const TrackingFoodOrderForm = ({navigation}) => {
     console.log('item--', item, index);
     if (index == 0) {
       setTrackItem(item);
-    //   setOrigin(item?.sender_address?.geo_location);
+      //   setOrigin(item?.sender_address?.geo_location);
     }
 
     return (
       <View style={{marginHorizontal: 20}}>
-        <TrackingFoodDetailsComp 
-         onViewDetails={onViewDetails}
-         item={item}
-         xml={
-           isSelected === index
-             ? appImagesSvg.upGreenIcon
-             : appImagesSvg.downGreenIcon
-         }
-         index={index}
-         />
+        <TrackingFoodDetailsComp
+          onViewDetails={onViewDetails}
+          item={item}
+          xml={
+            isSelected === index
+              ? appImagesSvg.upGreenIcon
+              : appImagesSvg.downGreenIcon
+          }
+          index={index}
+        />
         {isSelected === index && (
           <Surface
             elevation={3}
             style={[
               styles.trackingSurfaceView,
-              {height:item?.secure ? hp('62%') : hp('54.5%')},
+              {height: item?.rider?._id?.length > 0 ? hp('53%') : hp('46%')},
             ]}>
             <View style={styles.innerTrackingView}>
+             {item?.rider?._id?.length > 0 && <>
               <DriverTrackingProfileComp
                 item={{
                   image:
                     item?.rider?.profile_pic?.length > 0
                       ? item?.rider?.profile_pic
-                      : setTrackImage(item?.order_type),
+                      : setTrackImage(item?.rider?.order_type),
 
-                  name: item?.rider?.name
-                    ? item?.rider?.name
-                    : 'DuuItt Rider',
+                  name: item?.rider?.name ? item?.rider?.name : 'DuuItt Rider',
                   rating: '4.5',
                 }}
                 onMessage={() => {
@@ -326,6 +288,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
                 }}
               />
               <View style={styles.lineView} />
+              </>}
               <DriverTrackingComp
                 data={trackingArray}
                 image={appImages.routeFood}
@@ -349,8 +312,9 @@ const TrackingFoodOrderForm = ({navigation}) => {
               <View style={styles.lineView} />
               <TouchableOpacity
                 onPress={() => {
+                    navigation.navigate("trackOrderPreparing",{item:item})
                   setTrackItem(item);
-                  setIsModalTrack(true);
+                  // setIsModalTrack(true);
                 }}
                 activeOpacity={0.8}
                 style={styles.tarckTouch}>
@@ -427,7 +391,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black50,
     backgroundColor: colors.white,
     borderRadius: 10,
-    height: hp('62%'),
+    height: hp('53%'),
     marginTop: '3%',
     // justifyContent: 'flex-start',
   },

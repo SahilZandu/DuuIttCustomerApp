@@ -87,7 +87,7 @@ export const agent = {
   foodOrder: body => requests.post(Url.foodOrder, body),
   getRepeatedOrderList: body => requests.get(Url.repeatedOrderList, body),
   getRecomendedItems: body => requests.get(Url.recomendedItems, body),
-  getFoodOrderTracking: body => requests.post(Url.getFoodOrderTracking, body),
+  getFoodOrderTracking:() => requests.get(Url.getFoodOrderTracking),
   
   
 };

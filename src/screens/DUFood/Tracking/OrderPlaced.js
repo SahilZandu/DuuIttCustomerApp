@@ -44,7 +44,12 @@ export default function OrderPlaced({navigation}) {
               way to you
             </Text>
             <Spacer space={'10%'} />
-            <BTN title={'Track Your Order'} />
+            <BTN
+              title={'Track Your Order'}
+              onPress={() => {
+                navigation.navigate('trackingFoodOrderList');
+              }}
+            />
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('food', {screen: 'home'});
@@ -54,15 +59,9 @@ export default function OrderPlaced({navigation}) {
             </TouchableOpacity>
           </View>
           <View
-            style={{
-              marginTop: hp('8%'),
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={styles.bottomSliderView}>
             <View
-              style={{
-                alignContent: 'center',
-              }}>
+              style={styles.bottomMainSlider}>
               <FoodSlider
                 data={sliderItems}
                 oneCard={true}
@@ -117,4 +116,12 @@ const styles = StyleSheet.create({
     color: colors.black85,
     textDecorationLine: 'underline',
   },
+  bottomSliderView:{
+    marginTop: hp('8%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomMainSlider:{
+    alignContent: 'center',
+  }
 });
