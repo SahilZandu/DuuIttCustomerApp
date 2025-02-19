@@ -620,9 +620,14 @@ filter : `<svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="htt
 <path d="M5 9.25C4.17158 9.25 3.5 8.57845 3.5 7.75C3.5 6.92155 4.17158 6.25 5 6.25C5.82845 6.25 6.5 6.92155 6.5 7.75C6.5 8.57845 5.82845 9.25 5 9.25Z" stroke="#646464" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M7 3.75C7.82845 3.75 8.5 3.07843 8.5 2.25C8.5 1.42158 7.82845 0.75 7 0.75C6.17155 0.75 5.5 1.42158 5.5 2.25C5.5 3.07843 6.17155 3.75 7 3.75Z" stroke="#646464" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`,
+yellowStarUnactive:`<svg xmlns="http://www.w3.org/2000/svg" width="33" height="30" viewBox="0 0 33 30" fill="none">
+<path d="M16.5 0.993445L21.4021 9.40982L21.513 9.60021L21.7283 9.64684L31.2476 11.7082L24.758 18.9712L24.6112 19.1355L24.6334 19.3547L25.6145 29.0451L16.7016 25.1175L16.5 25.0286L16.2984 25.1175L7.38547 29.0451L8.36662 19.3547L8.38881 19.1355L8.24201 18.9712L1.75239 11.7082L11.2717 9.64684L11.487 9.60021L11.5979 9.40982L16.5 0.993445Z" stroke="#FAA61A"/>
+</svg>`,
+yellowStarActive:`<svg xmlns="http://www.w3.org/2000/svg" width="33" height="30" viewBox="0 0 33 30" fill="none">
+<path d="M16.5 0L21.8342 9.15817L32.1924 11.4012L25.1308 19.3043L26.1985 29.8488L16.5 25.575L6.80154 29.8488L7.86916 19.3043L0.807568 11.4012L11.1658 9.15817L16.5 0Z" fill="#FAA61A"/>
+</svg>`,
 
 };
-
 
 
 

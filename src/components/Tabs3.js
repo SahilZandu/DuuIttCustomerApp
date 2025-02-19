@@ -38,11 +38,23 @@ export default function Tabs3({
     setSelectedIndex(index);
     if (tabPress) tabPress(text);
   };
+
   useEffect(() => {
-    if (type == 'All Orders') {
+    // if (type == 'All Orders') {
+    //   setSelectedIndex(0);
+    // }
+    if (type == 'Food') {
+      setSelectedIndex(1);
+    } else if (type == 'Ride') {
+      setSelectedIndex(2);
+    } else if (type == 'Parcel') {
+      setSelectedIndex(3);
+    } else {
       setSelectedIndex(0);
     }
   }, [type]);
+
+  // console.log('type--selectedIndex', type, selectedIndex);
 
   const onSetImage = index => {
     switch (index) {
@@ -109,7 +121,8 @@ export default function Tabs3({
   };
 
   return (
-    <View style={{backgroundColor:colors.appBackground,justifyContent:'center'}}>
+    <View
+      style={{backgroundColor: colors.appBackground, justifyContent: 'center'}}>
       <ScrollView
         bounces={false}
         ref={scrollViewRef}

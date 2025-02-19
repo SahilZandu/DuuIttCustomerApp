@@ -36,6 +36,7 @@ import {
   setCurrentLocation,
 } from '../components/GetAppLocation';
 import TrackingFoodDetailsComp from '../components/TrackingFoodDetailsComp';
+import ReviewsRatingComp from '../components/ReviewsRatingComp';
 
 const trackArray = [
   {
@@ -68,13 +69,12 @@ const TrackingFoodOrderForm = ({navigation}) => {
     foodOrderTrackingList?.length?.length > 0 ? false : true,
   );
   const [isSelected, setIsSelected] = useState(0);
-  const [trackedArray, setTrackedArray] = useState(
-    foodOrderTrackingList
-  );
+  const [trackedArray, setTrackedArray] = useState(foodOrderTrackingList);
   const [trackingArray, setTrackingArray] = useState(trackArray);
   const [isModalTrack, setIsModalTrack] = useState(false);
   const [trackItem, setTrackItem] = useState({});
   const [origin, setOrigin] = useState({});
+
 
   const getLocation = type => {
     let d =
@@ -88,7 +88,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-        getTrackingOrder();
+      getTrackingOrder();
       // socketServices.initailizeSocket();
     }, []),
   );
@@ -237,7 +237,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
         return appImages.order2;
       case 'ride':
         return appImages.order3;
-        default:
+      default:
         return appImages.order1;
     }
   };
@@ -269,26 +269,30 @@ const TrackingFoodOrderForm = ({navigation}) => {
               {height: item?.rider?._id?.length > 0 ? hp('53%') : hp('46%')},
             ]}>
             <View style={styles.innerTrackingView}>
-             {item?.rider?._id?.length > 0 && <>
-              <DriverTrackingProfileComp
-                item={{
-                  image:
-                    item?.rider?.profile_pic?.length > 0
-                      ? item?.rider?.profile_pic
-                      : setTrackImage(item?.rider?.order_type),
+              {item?.rider?._id?.length > 0 && (
+                <>
+                  <DriverTrackingProfileComp
+                    item={{
+                      image:
+                        item?.rider?.profile_pic?.length > 0
+                          ? item?.rider?.profile_pic
+                          : setTrackImage(item?.rider?.order_type),
 
-                  name: item?.rider?.name ? item?.rider?.name : 'DuuItt Rider',
-                  rating: '4.5',
-                }}
-                onMessage={() => {
-                  hanldeLinking('email');
-                }}
-                onCall={() => {
-                  hanldeLinking('call');
-                }}
-              />
-              <View style={styles.lineView} />
-              </>}
+                      name: item?.rider?.name
+                        ? item?.rider?.name
+                        : 'DuuItt Rider',
+                      rating: '4.5',
+                    }}
+                    onMessage={() => {
+                      hanldeLinking('email');
+                    }}
+                    onCall={() => {
+                      hanldeLinking('call');
+                    }}
+                  />
+                  <View style={styles.lineView} />
+                </>
+              )}
               <DriverTrackingComp
                 data={trackingArray}
                 image={appImages.routeFood}
@@ -312,7 +316,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
               <View style={styles.lineView} />
               <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("trackOrderPreparing",{item:item})
+                  navigation.navigate('trackOrderPreparing', {item: item});
                   setTrackItem(item);
                   // setIsModalTrack(true);
                 }}

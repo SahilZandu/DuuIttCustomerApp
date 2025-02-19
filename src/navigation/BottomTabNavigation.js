@@ -138,7 +138,14 @@ export function DashboardBottomNavigator() {
         name="tab3"
         component={Orders}
         // options={{tabBarLabel: 'Orders'}}
-        listeners={{tabPress: handleAnimation}}
+        // listeners={{tabPress: handleAnimation}}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            handleAnimation();
+            navigation.navigate('tab3', { tabText: 'All Orders' }); // Force re-render with new params
+          },
+          })}
+        initialParams={{tabText:'All Orders'}} // Pass initial params
       />
       <Tab.Screen
         name="tab4"

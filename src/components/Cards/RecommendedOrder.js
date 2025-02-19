@@ -19,54 +19,7 @@ import { appImages } from '../../commons/AppImages';
 import Url from '../../api/Url';
 
 const RecommendedOrder = ({ data, onPress,onAddDec }) => {
-  const AddButton = ({item}) => {
-    console.log("item---AddButton",item,item?.item, item?.item?.quantity + 1);
-    return (
-      <>
-      {item?.item?.quantity > 1 ? 
-      <View
-        activeOpacity={0.8}
-        onPress={onPress} style={{flexDirection:'row',
-           paddingVertical: 3,
-          width: wp('15%'),
-          backgroundColor: colors.main, // Filled color (green in this case)
-          borderWidth: 2,
-          borderColor: colors.main, // Border color (slightly darker green)
-          borderRadius: 20, // Rounded corners
-          alignItems: 'center',
-          justifyContent:'space-evenly',}}>
-          <TouchableOpacity
-          onPress={()=>{onAddDec(item , 
-            Number(item?.item?.quantity) - 1
-            )
-            }}
-          activeOpacity={0.8} 
-          hitSlop={styles.hitSlot}>
-        <Text style={styles.addDecBtnText}>-</Text>
-        </TouchableOpacity>
-        <Text style={styles.addDecText}>0</Text>
-        <TouchableOpacity
-         onPress={()=>{onAddDec(item ,
-           Number(item?.item?.quantity) + 1
-        )}}
-        activeOpacity={0.8} 
-         hitSlop={styles.hitSlot}>
-        <Text style={styles.addDecBtnText}>+</Text>
-        </TouchableOpacity>
-      </View>
-      :
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={()=>{onAddDec(item ,
-          Number(item?.item?.quantity) + 1
-        )}}
-         style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>ADD</Text>
-      </TouchableOpacity>}
-      </>
-    );
-  };
-
+  
   const renderRecommendedOrderItem = ({ item, index }) => {
     console.log('renderRecommendedOrderItem--', item, index);
 
@@ -86,8 +39,7 @@ const RecommendedOrder = ({ data, onPress,onAddDec }) => {
           <>
       {item?.item?.quantity > 0 ? 
       <View
-        activeOpacity={0.8}
-        onPress={onPress} style={{flexDirection:'row',
+        style={{flexDirection:'row',
            paddingVertical: 3,
           width: wp('15%'),
           backgroundColor: colors.main, // Filled color (green in this case)

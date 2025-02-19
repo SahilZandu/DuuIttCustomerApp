@@ -48,13 +48,10 @@ export default class FoodDashStore {
       const res = await agent.restaurentAll(requestData);
       console.log('restaurentAll Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         this.restaurentList = res?.data;
         handleLoading(false);
         return res?.data;
       } else {
-        const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         this.restaurentList = [];
         handleLoading(false);
         return [];
@@ -62,10 +59,6 @@ export default class FoodDashStore {
     } catch (error) {
       console.log('error restaurentAll:', error);
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      // useToast(m, 0);
       return [];
     }
   };
@@ -75,24 +68,17 @@ export default class FoodDashStore {
       const res = await agent.allDishCategory();
       console.log('allDishCategory Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         this.allCategoryList = res?.data ?? [];
         handleLoading(false);
         return res?.data;
       } else {
         this.allCategoryList = [];
-        const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
     } catch (error) {
       console.log('error allDishCategory:', error);
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      // useToast(m, 0);
       return [];
     }
   };
@@ -133,22 +119,15 @@ export default class FoodDashStore {
       const res = await agent.restaurantUnderMenuGroup(requestData);
       console.log('restaurant Under Menu Group Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         handleLoading(false);
         return res?.data;
       } else {
-        const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
     } catch (error) {
       console.log('error restaurant Under Menu Group:', error);
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      // useToast(m, 0);
       return [];
     }
   };
@@ -166,22 +145,15 @@ export default class FoodDashStore {
       const res = await agent.restaurantListForDishCategory(requestData);
       console.log('restaurant List For Dish Category Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         handleLoading(false);
         return res?.data;
       } else {
-        const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
     } catch (error) {
       console.log('error restaurant List For Dish Category:', error);
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      // useToast(m, 0);
       return [];
     }
   };
@@ -196,7 +168,6 @@ export default class FoodDashStore {
       const res = await agent.restaurantCustomerLikeDislike(requestData);
       console.log('restaurant  CustomerLikeDislike Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         return res;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
@@ -214,19 +185,15 @@ export default class FoodDashStore {
   };
 
   restaurantLikedByCustomer = async handleLoading => {
-    // handleLoading(true)
     let requestData = {};
     try {
       const res = await agent.restaurantLikedByCustomer(requestData);
       console.log('restaurant LikedByCustomer Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         this.favoriteRestaurantList = res?.data ?? [];
         handleLoading(false);
         return res?.data;
       } else {
-        const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         handleLoading(false);
         this.favoriteRestaurantList = [];
         return [];
@@ -292,10 +259,10 @@ export default class FoodDashStore {
       console.log('error restaurant getRepeatedOrderList:', error);
       this.repeatedOrderList = [];
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      useToast(m, 0);
+      // const m = error?.data?.message
+      //   ? error?.data?.message
+      //   : 'Something went wrong';
+      // useToast(m, 0);
       return [];
     }
   };
@@ -317,27 +284,23 @@ export default class FoodDashStore {
       console.log('error restaurant getRecomendedItems:', error);
       this.recommendedOrderList = [];
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      useToast(m, 0);
+      // const m = error?.data?.message
+      //   ? error?.data?.message
+      //   : 'Something went wrong';
+      // useToast(m, 0);
       return [];
     }
   };
 
-  getFoodOrderTracking = async (handleLoading) => { 
-    // handleLoading(true);
+  getFoodOrderTracking = async handleLoading => {
     try {
       const res = await agent.getFoodOrderTracking();
       console.log('getFoodOrderTracking Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
         this.foodOrderTrackingList = res?.data ?? [];
         handleLoading(false);
         return res?.data;
       } else {
-        const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         this.foodOrderTrackingList = [];
         handleLoading(false);
         return [];
@@ -345,12 +308,11 @@ export default class FoodDashStore {
     } catch (error) {
       console.log('error getFoodOrderTracking:', error);
       handleLoading(false);
-      const m = error?.data?.message
-        ? error?.data?.message
-        : 'Something went wrong';
-      useToast(m, 0);
+      // const m = error?.data?.message
+      //   ? error?.data?.message
+      //   : 'Something went wrong';
+      // useToast(m, 0);
       return [];
     }
   };
-
 }

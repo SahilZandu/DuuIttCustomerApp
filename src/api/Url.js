@@ -35,7 +35,8 @@ export default  {
     foodOrder:'food-order',
     repeatedOrderList:'food-order/repeated-order-list',
     recomendedItems:'food-order/recomended-items',
-    getFoodOrderTracking:'food-order/get-tracking-order'
+    getFoodOrderTracking:'food-order/get-tracking-order',
+    addReviews:'reviews'
     
 
 

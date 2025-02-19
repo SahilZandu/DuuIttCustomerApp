@@ -11,11 +11,11 @@ export default class ParcelStore {
     handleLoading(true);
     let requestData = {
       weight: Number(value?.weight),
-      order_type:value?.order_type,
+      order_type: value?.order_type,
       sender_address: value?.sender_address,
       receiver_address: value?.receiver_address,
       billing_detail: value?.billing_detail,
-      secure:value?.isSecure
+      secure: value?.isSecure,
     };
 
     console.log('requestData:-', requestData);
@@ -53,11 +53,11 @@ export default class ParcelStore {
     let requestData = {
       order_id: value?.orderId,
       user_type: 'customer',
-      order_cancel_by:"customer",
+      order_cancel_by: 'customer',
       order_type: 'parcel',
-      user_id:value?.customerId,
+      user_id: value?.customerId,
       reason_of_cancellation: value?.reason,
-      status:"cancelled"
+      status: 'cancelled',
     };
     console.log('requestData:-', requestData);
     try {
@@ -88,7 +88,7 @@ export default class ParcelStore {
       parcel_id: value?.parcel_id,
       geo_location: value?.geo_location,
       payment_mode: value?.paymentMode,
-      total_amount: value?.total_amount
+      total_amount: value?.total_amount,
     };
 
     console.log('requestData:-', requestData);
@@ -96,25 +96,17 @@ export default class ParcelStore {
       const res = await agent.parcels_find_rider(requestData);
       console.log('parcels Find Rider API Res:', res);
       if (res?.statusCode == 200) {
-        // useToast(res.message, 1);
         handleLoading(false);
         this.addParcelInfo = res?.data?.order;
         return res?.data?.riders;
       } else {
-        // const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
         handleLoading(false);
         return [];
       }
     } catch (error) {
       console.log('error parcels Find Rider -:', error);
       handleLoading(false);
-      // const m = error?.data?.message
-      //   ? error?.data?.message
-      //   : 'Something went wrong';
-      // useToast(m, 0);
       return [];
     }
   };
-  
 }

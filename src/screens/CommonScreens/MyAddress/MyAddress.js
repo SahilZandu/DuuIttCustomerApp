@@ -115,7 +115,7 @@ export default function MyAddress({navigation, route}) {
     <View style={styles.container}>
       <Header
         title={'My Address'}
-        // backArrow={true}
+        backArrow={screenName == 'home' ? true : false}
         onPress={() => {
           navigation.goBack();
         }}
@@ -131,7 +131,7 @@ export default function MyAddress({navigation, route}) {
               <View style={styles.main}>
                 {myAddress?.length > 0 ? (
                   <FlatList
-                    contentContainerStyle={{paddingBottom:'30%'}}
+                    contentContainerStyle={{paddingBottom: '30%'}}
                     showsVerticalScrollIndicator={false}
                     data={myAddress}
                     renderItem={renderItem}
@@ -143,7 +143,11 @@ export default function MyAddress({navigation, route}) {
                   </View>
                 )}
               </View>
-              <View style={styles.btnView}>
+              <View
+                style={[
+                  styles.btnView,
+                  {bottom: screenName == 'home' ? hp('1.5%') : hp('8%')},
+                ]}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('addMyAddress', {

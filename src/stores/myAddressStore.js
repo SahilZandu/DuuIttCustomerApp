@@ -71,10 +71,6 @@ export default class MyAddressStore {
       }
     } catch (error) {
       console.log('error:', error);
-      //   const m = error?.data?.message
-      //   ? error?.data?.message
-      //   : 'Something went wrong';
-      // useToast(m, 0);
       return [];
     }
   };

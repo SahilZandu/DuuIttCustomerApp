@@ -20,6 +20,7 @@ import {rootStore} from '../../../../stores/rootStore';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
+import {colors} from '../../../../theme/colors';
 
 const tabs = [
   {text: 'All Orders'},
@@ -31,7 +32,8 @@ const tabs = [
 let defaultType = 'All Orders';
 let perPage = 20;
 
-export default function Orders({navigation}) {
+export default function Orders({navigation, route}) {
+  const {tabText} = route.params;
   const {parcelsOfUser, getOrderHistorybyFilters, orderHistoryList} =
     rootStore.orderStore;
   const {appUser} = rootStore.commonStore;
@@ -43,17 +45,30 @@ export default function Orders({navigation}) {
   );
   const [internet, setInternet] = useState(true);
 
+  // console.log('tabText--', tabText,defaultType);
+
   useFocusEffect(
     useCallback(() => {
       checkInternet();
       handleAndroidBackButton(navigation);
-      defaultType = 'All Orders';
-      setType('All Orders');
+      if (tabText == 'Food') {
+        defaultType = 'Food';
+        setType('Food');
+      } else if (tabText == 'Ride') {
+        defaultType = 'Ride';
+        setType('Ride');
+      } else if (tabText == 'Parcel') {
+        defaultType = 'Parcel';
+        setType('Parcel');
+      } else {
+        defaultType = 'All Orders';
+        setType('All Orders');
+      }
       getOrderList();
       setTimeout(() => {
         setLoading(false);
       }, 5000);
-    }, []),
+    }, [tabText]),
   );
 
   useEffect(() => {
@@ -73,8 +88,16 @@ export default function Orders({navigation}) {
 
   const getOrderList = async () => {
     const res = await parcelsOfUser(defaultType, perPage, handleLoading);
-    setOrderList(res);
-    setLoadingMore(false);
+    console.log('res---parcelsOfUser', res);
+    if (res?.length > 0) {
+      setOrderList(res);
+      setLoadingMore(false);
+      handleTabPress(defaultType);
+    } else {
+      handleTabPress(defaultType);
+      setOrderList([]);
+      setLoadingMore(false);
+    }
   };
 
   const handleLoading = v => {
@@ -93,7 +116,7 @@ export default function Orders({navigation}) {
   const renderFooter = () => {
     return loadingMore ? (
       <View style={{paddingVertical: 20}}>
-        <ActivityIndicator size="large" color="#28B056" />
+        <ActivityIndicator size="large" color={colors.main} />
       </View>
     ) : null;
   };
@@ -126,7 +149,7 @@ export default function Orders({navigation}) {
               isRating={true}
               tabs={tabs}
               tabPress={handleTabPress}
-              type={type}
+              type={defaultType}
             />
             {/* <View style={styles.offerTextView}>
               <Text style={styles.offerText}>Offers You Can’t Miss</Text>

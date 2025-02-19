@@ -5,6 +5,7 @@ import {useToast} from '../halpers/useToast';
 import {getUniqueId} from 'react-native-device-info';
 
 export default class DashboardStore {
+
   updateProfile = async (values, handleLoading, onSuccess) => {
     handleLoading(true);
     var request = new FormData();
@@ -79,4 +80,38 @@ export default class DashboardStore {
       console.log('error test Message:', error);
     }
   };
+
+
+  addReviews = async (payload, handleLoading) => {
+    handleLoading(true);
+    let requestData = {
+      ...payload,
+    };
+    console.log('requestData----addReviews', requestData, payload);
+    try {
+      const res = await agent.addReviews(requestData);
+      console.log('addReviews Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        return res
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return []
+      }
+    } catch (error) {
+      console.log('error addReviews:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return []
+    }
+  };
+
+
+  
 }

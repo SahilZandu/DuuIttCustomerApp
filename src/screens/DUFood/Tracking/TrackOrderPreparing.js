@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
@@ -14,11 +14,16 @@ import FastImage from 'react-native-fast-image';
 import {SvgXml} from 'react-native-svg';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import MapRoute from '../../../components/MapRoute';
+import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
-export default function TrackOrderPreparing({navigation}) {
+export default function TrackOrderPreparing({navigation,route}) {
+  const {item}=route.params
   const [sliderItems, setSliderItems] = useState(silderArrayOrder);
   const [orderStep, setOrderStep] = useState(0);
   const [origin, setOrigin] = useState({});
+  const [isReviewRider, setIsReviewRider] = useState(false);
+  const [isReviewStar, setIsReviewStar] = useState(false);
+  const [loadingRating, setLoadingRating] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,10 +31,22 @@ export default function TrackOrderPreparing({navigation}) {
       setOrderStep(1);
       setTimeout(() => {
         console.log('setOrderStep prepared 30 second.');
+        setTimeout(()=>{
+          setIsReviewRider(true)
+        },5000)
         setOrderStep(2);
       }, 10000);
     }, 10000);
   }, []);
+
+  // useEffect(() => {
+  //   if (!isReviewRider) {
+  //     setTimeout(() => {
+  //       setIsReviewStar(true);
+  //       alert("yes")
+  //     },500);
+  //   }
+  // }, [isReviewRider]); 
 
   return (
     <View style={styles.container}>
@@ -154,6 +171,32 @@ export default function TrackOrderPreparing({navigation}) {
           </TouchableOpacity>
         </View>
       </AppInputScroll>
+      <ReviewsRatingComp
+       data={item}
+      type={'RIDE'}
+      title={'How was your delivery experience?'}
+      isVisible={isReviewRider}
+      onClose={()=>{
+        setIsReviewRider(false),
+        setTimeout(() => {
+          setIsReviewStar(true);
+          // alert("yes")
+        },500);
+      }}
+      loading={loadingRating}
+      onHandleLoading={(v)=>{
+        setLoadingRating(v)
+      }}
+      />
+      <ReviewsRatingComp
+       data={item}
+       type={'FOOD'}
+      title={'Did you enjoy your meal?'}
+      isVisible={isReviewStar}
+      onClose={()=>{setIsReviewStar(false)}}
+      loading={loadingRating}
+      onHandleLoading={(v)=>{setLoadingRating(v)}}
+      />
     </View>
   );
 }

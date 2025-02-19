@@ -3,9 +3,11 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Modal from 'react-native-modal';
 import {appImages} from '../commons/AppImages';
 
-const ModalPopUpTouch = ({isVisible, onClose, children,crossImage,onOuterClose}) => {
+const ModalPopUpTouch = ({isVisible, onClose, children,crossImage,onOuterClose,avoidKeyboard,propagateSwipe}) => {
   return (
     <Modal
+    propagateSwipe={propagateSwipe?propagateSwipe:false}
+    avoidKeyboard={avoidKeyboard?avoidKeyboard:false}
       animationType="slide"
       isVisible={isVisible}
       animationIn="fadeIn"

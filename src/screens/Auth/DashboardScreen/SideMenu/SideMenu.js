@@ -25,7 +25,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Your Order',
       onPress: () => {
-        console.log('Order Histroy');
+        // console.log('Order Histroy');
+        navigation.navigate('tab3',{tabText:'Food'})
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -45,7 +46,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Your Order',
       onPress: () => {
-        console.log('Order Histroy');
+        // console.log('Order Histroy');
+        navigation.navigate('tab3',{tabText:'Ride'})
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -56,7 +58,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Your Order',
       onPress: () => {
-        console.log('Order Histroy');
+        // console.log('Order Histroy');
+        navigation.navigate('tab3',{tabText:'Parcel'})
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -68,7 +71,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Wallet',
       onPress: () => {
-        console.log('Wallet');
+        navigation.navigate('wallet')
+        // console.log('Wallet');
       },
       icon: appImagesSvg.walletSvg,
       show: true,
@@ -77,7 +81,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Buy  Gift Card',
       onPress: () => {
-        console.log('Buy  Gift Card');
+        // console.log('Buy  Gift Card');
+        navigation.navigate('giftCard')
       },
       icon: appImagesSvg.giftCardSvg,
       show: true,
@@ -86,7 +91,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Claim Gift Card',
       onPress: () => {
-        console.log('Claim Gift Card');
+        // console.log('Claim Gift Card');
+        navigation.navigate('claimGiftCardList')
       },
       icon: appImagesSvg.myFavorate,
       show: true,
@@ -95,7 +101,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Reward Coins',
       onPress: () => {
-        console.log('Reward Coins');
+        navigation.navigate('rewardsStars') 
+        // console.log('Reward Coins');
       },
       icon: appImagesSvg.currencySvg,
       show: true,
@@ -104,7 +111,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Duuitt Credits',
       onPress: () => {
-        console.log('Duuitt Credits');
+        navigation.navigate('duuIttCredit')
+        // console.log('Duuitt Credits');
       },
       icon: appImagesSvg.duuIttCoin,
       show: true,
@@ -137,7 +145,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'My Address',
       onPress: () => {
-        console.log('My Address');
+        navigation.navigate('myAddress',{screenName:'home'})
+        // console.log('My Address');
       },
       icon: appImagesSvg.myAddressSvg,
       show: true,

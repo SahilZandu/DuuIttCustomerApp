@@ -14,7 +14,6 @@ export const loginValidations = type => {
     [type == 'Mobile' ? 'mobile' : '']: Yup.string('Enter your mobile number')
       .trim()
       .required('Enter your mobile number')
-      .min(10 ,"Mobile number should be 10 digits")
       .matches(
         /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
         'Number not valid',

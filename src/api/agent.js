@@ -1,6 +1,6 @@
 import Url from './Url';
 import axios from 'axios';
-import { rootStore } from '../stores/rootStore';
+import {rootStore} from '../stores/rootStore';
 import RNRestart from 'react-native-restart';
 
 const Base_Url = Url.Base_Url;
@@ -11,7 +11,7 @@ axios.interceptors.request.use(
   config => {
     config.timeout = 10000;
     const token = rootStore.commonStore.token;
-    console.log("token----",token)
+    console.log('token----', token);
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
@@ -66,17 +66,22 @@ export const agent = {
   restaurentAll: body => requests.post(Url.restaurentAll, body),
   ordersRecentOrder: body => requests.post(Url.ordersRecentOrder, body),
   ordersTrackOrder: () => requests.get(Url.ordersTrackOrder),
-  pendingForCustomer: (body) => requests.post(Url.pendingForCustomer,body),
+  pendingForCustomer: body => requests.post(Url.pendingForCustomer, body),
   customersFcmToken: body => requests.post(Url.customersFcmToken, body),
   testMessage: body => requests.post(Url.testMessage, body),
   updateOrderStatus: body => requests.post(Url.updateOrderStatus, body),
-  allDishCategory:() => requests.get(Url.allDishCategory),
-  restaurantListAccordingCategory: body => requests.post(Url.restaurantListaccordingCategory, body),
-  restaurantUnderMenuGroup: body => requests.post(Url.restaurantUnderMenuGroup, body),
-  restaurantListForDishCategory: body => requests.post(Url.restaurantListForDishCategory, body),
-  
-  restaurantCustomerLikeDislike: body => requests.post(Url.restaurantCustomerLikeDislike, body),
-  restaurantLikedByCustomer: body => requests.get(Url.restaurantLikedByCustomer),
+  allDishCategory: () => requests.get(Url.allDishCategory),
+  restaurantListAccordingCategory: body =>
+    requests.post(Url.restaurantListaccordingCategory, body),
+  restaurantUnderMenuGroup: body =>
+    requests.post(Url.restaurantUnderMenuGroup, body),
+  restaurantListForDishCategory: body =>
+    requests.post(Url.restaurantListForDishCategory, body),
+
+  restaurantCustomerLikeDislike: body =>
+    requests.post(Url.restaurantCustomerLikeDislike, body),
+  restaurantLikedByCustomer: body =>
+    requests.get(Url.restaurantLikedByCustomer),
 
   // cart
   setCart: body => requests.post(Url.setCart, body),
@@ -87,9 +92,9 @@ export const agent = {
   foodOrder: body => requests.post(Url.foodOrder, body),
   getRepeatedOrderList: body => requests.get(Url.repeatedOrderList, body),
   getRecomendedItems: body => requests.get(Url.recomendedItems, body),
-  getFoodOrderTracking:() => requests.get(Url.getFoodOrderTracking),
-  
-  
+  getFoodOrderTracking: () => requests.get(Url.getFoodOrderTracking),
+
+  addReviews: body => requests.post(Url.addReviews, body),
 };
 
 const requests = {
@@ -105,5 +110,3 @@ const requests = {
       .then(responseBody);
   },
 };
-
-

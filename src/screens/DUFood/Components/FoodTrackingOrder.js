@@ -6,12 +6,11 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { appImages } from '../../../commons/AppImages';
-import { colors } from '../../../theme/colors';
-import { fonts } from '../../../theme/fonts/fonts';
+import {appImages} from '../../../commons/AppImages';
+import {colors} from '../../../theme/colors';
+import {fonts} from '../../../theme/fonts/fonts';
 
-
-const FoodTrackingOrder = ({navigation, trackedArray,bottom}) => {
+const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
   const setOrderImage = status => {
     switch (status) {
       case 'food':
@@ -20,6 +19,8 @@ const FoodTrackingOrder = ({navigation, trackedArray,bottom}) => {
         return appImages.order2;
       case 'ride':
         return appImages.order3;
+      default:
+        return appImages.order1;
     }
   };
 
@@ -29,9 +30,9 @@ const FoodTrackingOrder = ({navigation, trackedArray,bottom}) => {
 
       <TouchableOpacity
         onPress={() => {
-          // navigation.navigate('trackingOrder');
+          navigation.navigate('trackingFoodOrderList');
         }}
-        activeOpacity={0.8}>
+        activeOpacity={1}>
         <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
           <View style={styles.innerView}>
             <Image
@@ -44,7 +45,7 @@ const FoodTrackingOrder = ({navigation, trackedArray,bottom}) => {
                 Rider is on the way
               </Text>
               <Text numberOfLines={1} style={styles.trackId}>
-                Tracking ID:{trackedArray[0]?.tracking_id}
+                Tracking ID:{trackedArray[0]?.order_id}
               </Text>
             </View>
             <View style={styles.tarckOrderView}>
@@ -55,9 +56,9 @@ const FoodTrackingOrder = ({navigation, trackedArray,bottom}) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          // navigation.navigate('trackingOrder');
+          navigation.navigate('trackingFoodOrderList');
         }}
-        activeOpacity={0.8}
+        activeOpacity={1}
         style={styles.moreView}>
         <Surface elevation={2} style={styles.moreSurface}>
           <Text style={styles.moreText}> +{trackedArray?.length} more</Text>
@@ -70,10 +71,10 @@ const FoodTrackingOrder = ({navigation, trackedArray,bottom}) => {
 export default FoodTrackingOrder;
 
 const styles = StyleSheet.create({
-  main:(bottom)=>({
+  main: bottom => ({
     position: 'absolute',
     alignSelf: 'center',
-    bottom:bottom ? bottom :hp('8%'),
+    bottom: bottom ? bottom : hp('8%'),
   }),
   upperSurfaceView: {
     width: wp('88%'),
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignSelf: 'center',
     borderRadius: 10,
-    top: '12%',
+    top: '14%',
   },
   viewDetailsSurfaceView: {
     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   },
   moreView: {
     position: 'absolute',
-    top: '13%',
+    top: hp('1.9%'),
     alignSelf: 'center',
   },
   moreSurface: {
@@ -143,8 +144,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    height: hp('3.5%'),
-    padding: '3%',
+    height: hp('3%'),
+    padding: '2.5%',
     borderRadius: 50,
   },
   moreText: {

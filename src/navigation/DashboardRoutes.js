@@ -19,6 +19,8 @@ import DuuIttCredit from '../screens/Auth/DashboardScreen/WalletScreen/DuuIttCre
 import ClaimGiftCardList from '../screens/Auth/DashboardScreen/WalletScreen/ClaimGiftCardList/ClaimGiftCardList';
 import GiftCardPurcahseList from '../screens/Auth/DashboardScreen/WalletScreen/GiftCardPurchaseList/GiftCardPurchaseList';
 import RewardsStars from '../screens/Auth/DashboardScreen/WalletScreen/RewardsStars/RewardsStars';
+import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
+import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
 
 
 const Stack = createNativeStackNavigator();
@@ -52,6 +54,9 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="claimGiftCardList" component={ClaimGiftCardList} />
        <Stack.Screen name="giftCardPurcahseList" component={GiftCardPurcahseList} />
        <Stack.Screen name="rewardsStars" component={RewardsStars} />
+       <Stack.Screen name="myAddress" component={MyAddress} />
+       <Stack.Screen name="addMyAddress" component={AddMyAddress} />
+       
        
        
        

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('10%'),
-    marginTop: '6%',
+    marginTop: '4%',
     justifyContent: 'center',
   },
   innerView: {

@@ -1,22 +1,22 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, DeviceEventEmitter, Text, Alert } from 'react-native';
-import { appImages } from '../../../commons/AppImages';
-import { styles } from './styles';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, FlatList, DeviceEventEmitter, Text, Alert} from 'react-native';
+import {appImages} from '../../../commons/AppImages';
+import {styles} from './styles';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import { filters, silderArray } from '../../../stores/DummyData/Home';
-import { rootStore } from '../../../stores/rootStore';
-import { fetch } from '@react-native-community/netinfo';
+import {filters, silderArray} from '../../../stores/DummyData/Home';
+import {rootStore} from '../../../stores/rootStore';
+import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import MikePopUp from '../../../components/MikePopUp';
 import FoodSlider from '../../../components/slider/foodSlider';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import DashboardFilters from './DashboardFilters';
 import RestaurantsCard from '../../../components/Cards/RestaurantsCard';
 import DashboardCartBtn from '../Components/DashboardCartBtn';
@@ -30,6 +30,9 @@ import RecommendedOrder from '../../../components/Cards/RecommendedOrder';
 import CategoryCard from '../../../components/Cards/CategoryCard';
 import FoodTrackingOrder from '../Components/FoodTrackingOrder';
 import PopUp from '../../../components/appPopUp/PopUp';
+import ModalPopUpTouch from '../../../components/ModalPopUpTouch';
+import { colors } from '../../../theme/colors';
+import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
 let geoLocation = {
   lat: null,
@@ -38,9 +41,9 @@ let geoLocation = {
 
 let perPage = 20;
 
-export default function FoodHome({ navigation }) {
-  const { appUser } = rootStore.commonStore;
-  const { deleteCart, getCart, setCart, updateCart } = rootStore.cartStore;
+export default function FoodHome({navigation}) {
+  const {appUser} = rootStore.commonStore;
+  const {deleteCart, getCart, setCart, updateCart} = rootStore.cartStore;
   const {
     restaurentList,
     restaurentAll,
@@ -50,9 +53,11 @@ export default function FoodHome({ navigation }) {
     getRepeatedOrderList,
     repeatedOrderList,
     recommendedOrderList,
-    getRecomendedItems
-
+    getRecomendedItems,
+    getFoodOrderTracking,
+    foodOrderTrackingList,
   } = rootStore.foodDashboardStore;
+
   let selectedFilter = '';
   const [loading, setLoading] = useState(
     restaurentList?.length > 0 ? false : true,
@@ -70,9 +75,16 @@ export default function FoodHome({ navigation }) {
   const [searchRes, setSearchRes] = useState('');
   const [visible, setVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(silderArray);
-  const [repeatOrdersList, setRepeatOrdersList] = useState(repeatedOrderList ?? [])
-  const [recomendedList, setRecomendedList] = useState(recommendedOrderList ?? [])
+  const [repeatOrdersList, setRepeatOrdersList] = useState(
+    repeatedOrderList ?? [],
+  );
+  const [recomendedList, setRecomendedList] = useState(
+    recommendedOrderList ?? [],
+  );
   const [clickItem, setClickItem] = useState({});
+  const [trackedArray, setTrackedArray] = useState(foodOrderTrackingList ?? []);
+  const [isReviewStar, setIsReviewStar] = useState(true);
+  const [loadingRating, setLoadingRating] = useState(false);
 
 
   const getLocation = type => {
@@ -96,16 +108,14 @@ export default function FoodHome({ navigation }) {
     setLoadingMore(false);
   };
   const getRepeatedOrderListData = async () => {
-    const res = await getRepeatedOrderList(
-      handleLoading,
-    );
+    const res = await getRepeatedOrderList(handleLoading);
     // console.log("res getRepeatedOrderListData",res)
-    setRepeatOrdersList(res)
+    setRepeatOrdersList(res);
   };
   const getRecomendedItemsData = async () => {
     const res = await getRecomendedItems(handleLoading);
     // console.log("res getRecomendedItemsData",res)
-    setRecomendedList(res)
+    setRecomendedList(res);
   };
 
   const getCategoryList = async () => {
@@ -174,11 +184,21 @@ export default function FoodHome({ navigation }) {
     setLoading(v);
   };
 
+  const getTrackingOrder = async () => {
+    const res = await getFoodOrderTracking(handleTrackingLoading);
+    setTrackedArray(res);
+  };
+
+  const handleTrackingLoading = v => {
+    setLoading(v);
+  };
+
   useFocusEffect(
     useCallback(() => {
       checkInternet();
       handleAndroidBackButton(navigation);
       setCurrentLocation();
+      getTrackingOrder();
       setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
@@ -209,7 +229,7 @@ export default function FoodHome({ navigation }) {
     }
   };
   const onUpdateUserInfo = () => {
-    const { appUser } = rootStore.commonStore;
+    const {appUser} = rootStore.commonStore;
     setAppUserInfo(appUser);
   };
   useEffect(() => {
@@ -239,7 +259,7 @@ export default function FoodHome({ navigation }) {
           likedRestaurant: data?.likedRestaurant == true ? false : true,
         };
       } else {
-        return { ...data };
+        return {...data};
       }
     });
 
@@ -258,7 +278,7 @@ export default function FoodHome({ navigation }) {
     }
   };
 
-  const topRestaurentItem = ({ item }) => {
+  const topRestaurentItem = ({item}) => {
     return (
       <RestaurantsCard
         item={item}
@@ -285,41 +305,38 @@ export default function FoodHome({ navigation }) {
     if (cart?.food_item?.length > 0) {
       setcartItems(cart);
       setTimeout(() => {
-        onCheckRecommededItem(cart?.food_item)
-      }, 500)
-
+        onCheckRecommededItem(cart?.food_item);
+      }, 500);
     } else {
-      onCheckRecommededItem([])
+      onCheckRecommededItem([]);
       setcartItems({});
     }
   };
 
-  const onCheckRecommededItem = (foodItemArray) => {
-    console.log("foodItemArray--", foodItemArray);
-    if(foodItemArray?.length > 0){
-    let recommendedListData = (recomendedList ?? []).map((item) => {
-      const exactItem = foodItemArray?.find(data => data?._id === item?._id);
-      return exactItem
-        ? {
-          ...item,
-          item: {
-            ...item.item, // Keep existing properties
-            quantity: exactItem?.quantity, // ✅ Update quantity inside `item.item`
-          },
-        }
-        : { ...item };
-    });
-    console.log("recommendedListData--", recommendedListData);
-    // Ensure a state update with a new reference
-    setRecomendedList(recommendedListData);
-     }else{
-    getRecomendedItemsData();
+  const onCheckRecommededItem = foodItemArray => {
+    console.log('foodItemArray--', foodItemArray);
+    if (foodItemArray?.length > 0) {
+      let recommendedListData = (recomendedList ?? []).map(item => {
+        const exactItem = foodItemArray?.find(data => data?._id === item?._id);
+        return exactItem
+          ? {
+              ...item,
+              item: {
+                ...item.item, // Keep existing properties
+                quantity: exactItem?.quantity, // ✅ Update quantity inside `item.item`
+              },
+            }
+          : {...item};
+      });
+      console.log('recommendedListData--', recommendedListData);
+      // Ensure a state update with a new reference
+      setRecomendedList(recommendedListData);
+    } else {
+      getRecomendedItemsData();
     }
   };
 
-
-
-  const onDeleteCart = async (showPopUp) => {
+  const onDeleteCart = async showPopUp => {
     const deleteCartData = await deleteCart(cartItems, showPopUp);
     console.log('deleteCartData--', deleteCartData);
     if (deleteCartData?.restaurant_id?.length > 0) {
@@ -331,34 +348,31 @@ export default function FoodHome({ navigation }) {
     }
   };
 
-
-  const setCartData = async (item) => {
+  const setCartData = async item => {
     const resCart = await setCart(item?.cart_items, appUser, item?.restaurant);
     // console.log("resCart---++++",resCart);
     if (resCart?.restaurant_id?.length > 0) {
       navigation.navigate('cart', {
         restaurant: item?.restaurant,
-      })
+      });
     }
+  };
 
-  }
-
-  const onPressRepeatOrder = async (item) => {
+  const onPressRepeatOrder = async item => {
     // console.log('item--++++++', item);
     if (cartItems?.food_item?.length > 0) {
       const deleteCartData = await deleteCart(cartItems, false);
       // console.log('deleteCartData---++++',deleteCartData);
       if (deleteCartData?.restaurant_id?.length > 0) {
-        setCartData(item)
+        setCartData(item);
       }
     } else {
-      setCartData(item)
+      setCartData(item);
     }
-  }
+  };
 
-  const handleLikeDislikeRepeated = async (item) => {
-    console.log("handleLikeDislikeRepeated----", item);
-
+  const handleLikeDislikeRepeated = async item => {
+    // console.log('handleLikeDislikeRepeated----', item);
     // return
     const likeUnLikeArray = await repeatOrdersList?.map((data, i) => {
       // if (data?._id == item?._id) {
@@ -367,11 +381,12 @@ export default function FoodHome({ navigation }) {
           ...data,
           restaurant: {
             ...data.restaurant,
-            likedRestaurant: data?.restaurant?.likedRestaurant == true ? false : true,
+            likedRestaurant:
+              data?.restaurant?.likedRestaurant == true ? false : true,
           },
         };
       } else {
-        return { ...data };
+        return {...data};
       }
     });
     const request = {
@@ -379,9 +394,9 @@ export default function FoodHome({ navigation }) {
       like: item?.restaurant?.likedRestaurant == true ? false : true,
     };
     setRepeatOrdersList([...likeUnLikeArray]);
-    console.log('item--handleLikeUnlike', likeUnLikeArray, item);
+    // console.log('item--handleLikeUnlike', likeUnLikeArray, item);
     const resLikeUnLike = await restaurantCustomerLikeDislike(request);
-    console.log("resLikeUnLike---", resLikeUnLike);
+    // console.log('resLikeUnLike---', resLikeUnLike);
     if (resLikeUnLike?.statusCode == 200) {
       setRepeatOrdersList([...likeUnLikeArray]);
     } else {
@@ -389,13 +404,12 @@ export default function FoodHome({ navigation }) {
     }
   };
 
-
-  const onDeleteCartUpdateRest = async (showPopUp) => {
+  const onDeleteCartUpdateRest = async showPopUp => {
     const deleteCartData = await deleteCart(cartItems, showPopUp);
     console.log('deleteCartData--', deleteCartData);
     let restaurant = {
-      _id: clickItem?.item?.restaurant_id
-    }
+      _id: clickItem?.item?.restaurant_id,
+    };
     if (deleteCartData?.restaurant_id?.length > 0) {
       setIsRemoveCartOtherRes(false);
       const resSetCart = await setCart([clickItem], appUser, restaurant);
@@ -408,11 +422,16 @@ export default function FoodHome({ navigation }) {
   };
 
   const handleAddDecRecommended = async (item, quan) => {
-    console.log("item ,quantity---", item, quan, item?.restaurant_id || item?.item?.restaurant_id);
+    console.log(
+      'item ,quantity---',
+      item,
+      quan,
+      item?.restaurant_id || item?.item?.restaurant_id,
+    );
     // return
     let restaurant = {
-      _id: item?.restaurant_id || item?.item?.restaurant_id
-    }
+      _id: item?.restaurant_id || item?.item?.restaurant_id,
+    };
     let newItem = {
       ...item,
       ...item.item,
@@ -422,7 +441,7 @@ export default function FoodHome({ navigation }) {
     };
 
     // console.log('item,quan,handleAddRemove', item, quan,newItem,item?.restaurant_id || item?.item?.restaurant_id, item?.item?.restaurant_id);
-    const getCartList = { ...cartItems };
+    const getCartList = {...cartItems};
 
     // console.log('getCartList handleAddRemove:-', getCartList, item, restaurant,item?.restaurant_id || item?.item?.restaurant_id,item?.item?.restaurant_id);
 
@@ -438,7 +457,7 @@ export default function FoodHome({ navigation }) {
         if (checkAvailabilityById) {
           updatedCartList = getCartList?.cart_items?.map(data => {
             if (data?.food_item_id == item?._id) {
-              return { ...data, quantity: quan };
+              return {...data, quantity: quan};
             }
             return {
               ...data,
@@ -451,7 +470,12 @@ export default function FoodHome({ navigation }) {
             restaurant,
             getCartList,
           );
-          const resUpdateCart = await updateCart(updatedCartList, appUser, restaurant, getCartList);
+          const resUpdateCart = await updateCart(
+            updatedCartList,
+            appUser,
+            restaurant,
+            getCartList,
+          );
           if (resUpdateCart?.statusCode == 200) {
             getCartItemsCount();
           }
@@ -475,10 +499,13 @@ export default function FoodHome({ navigation }) {
         setIsRemoveCartOtherRes(true);
       }
     } else {
-      console.log('setCart--first', [newItem], appUser, restaurant,);
+      console.log('setCart--first', [newItem], appUser, restaurant);
       const resSetCart = await setCart([newItem], appUser, restaurant);
       if (resSetCart?.restaurant_id?.length > 0) {
-        getCartItemsCount();
+        // getCartItemsCount();
+        navigation.navigate('resturantProducts', {
+          item: item?.restaurant,
+        });
       }
     }
   };
@@ -513,7 +540,7 @@ export default function FoodHome({ navigation }) {
             onCancelPress={() => {
               setSearchRes('');
             }}
-          // onRefershData={onRefershData}
+            // onRefershData={onRefershData}
           />
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -534,14 +561,22 @@ export default function FoodHome({ navigation }) {
             </View>
 
             <View style={styles.orderMainView}>
-              <RepeatOrder data={repeatOrdersList}
-                onPress={(item) => { onPressRepeatOrder(item) }}
-                onPressLikeDislike={(item) => { handleLikeDislikeRepeated(item) }}
+              <RepeatOrder
+                data={repeatOrdersList}
+                onPress={item => {
+                  onPressRepeatOrder(item);
+                }}
+                onPressLikeDislike={item => {
+                  handleLikeDislikeRepeated(item);
+                }}
               />
             </View>
 
             <View style={styles.orderMainView}>
-              <RecommendedOrder data={recomendedList} onAddDec={handleAddDecRecommended} />
+              <RecommendedOrder
+                data={recomendedList}
+                onAddDec={handleAddDecRecommended}
+              />
             </View>
 
             <View style={styles.orderMainView}>
@@ -588,42 +623,36 @@ export default function FoodHome({ navigation }) {
               )}
             </View>
           </ScrollView>
-          {cartItems?.food_item?.length > 0 && (
-            <View style={styles.bottomCartBtnView}>
-              {/* pending FoodTrackingOrder functionality */}
-              {/* <FoodTrackingOrder
+
+          <View style={styles.bottomCartBtnView}>
+            {trackedArray?.length > 0 && (
+              <FoodTrackingOrder
                 bottom={
                   cartItems?.food_item?.length > 0 ? hp('18.5%') : hp('8%')
                 }
                 navigation={navigation}
-                trackedArray={[
-                  {
-                    order_type: 'food',
-                    tracking_id: '678654bi5y',
-                  },
-                ]}
-              /> */}
-
+                trackedArray={trackedArray}
+              />
+            )}
+            {cartItems?.food_item?.length > 0 && (
               <DashboardCartBtn
                 bottom={hp('8%')}
                 isDash={true}
                 cartData={cartItems}
-                onViewCart={
-                  () => {
-                    //   navigation.navigate('trackOrderPreparing')
-                    navigation.navigate('cart', {
-                      restaurant: cartItems?.restaurant,
-                    })
-                  }
-                }
+                onViewCart={() => {
+                  //   navigation.navigate('trackOrderPreparing')
+                  navigation.navigate('cart', {
+                    restaurant: cartItems?.restaurant,
+                  });
+                }}
                 onDeletePress={async () => {
                   // setRemoveCart(true);
                   // setIsOtherCart(false);
                   setIsRemoveCart(true);
                 }}
               />
-            </View>
-          )}
+            )}
+          </View>
         </>
       )}
       <MikePopUp
@@ -657,6 +686,15 @@ export default function FoodHome({ navigation }) {
           onDeleteCartUpdateRest(false);
         }}
       />
+      {/* <ReviewsRatingComp 
+       type={'FOOD'}
+      title={'Did you enjoy your meal?'}
+      isVisible={isReviewStar}
+      onClose={()=>{setIsReviewStar(false)}}
+      loading={loadingRating}
+      onHandleLoading={(v)=>{setLoadingRating(v)}}
+      /> */}
+      
     </View>
   );
 }

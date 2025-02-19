@@ -25,8 +25,7 @@ const CategoryCard = ({data, onPress, navigation}) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() =>
-        navigation.navigate('categoryViseFoodListing',
-         {category: item})
+        navigation.navigate('categoryViseFoodListing', {category: item})
       }>
       <View style={[styles.itemContainer(index)]}>
         <Image
@@ -82,13 +81,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   itemContainer: index => ({
-    marginLeft: index == 0 ? 0 : 15,
+    marginLeft: index == 0 ? 0 : 3,
     alignItems: 'center',
   }),
   image: {
     width: wp('26%'),
     height: hp('12%'),
     borderRadius: 10,
+    borderWidth: 0.2,
+    borderColor: colors.main,
     // backgroundColor:'red'
   },
   name: {

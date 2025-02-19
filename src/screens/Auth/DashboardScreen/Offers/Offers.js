@@ -69,7 +69,8 @@ export default function Offers({navigation}) {
     else if( item?.title == 'Wallet'){
       navigation.navigate("wallet");
     }else{
-      alert("under processing...")
+      navigation.navigate('rewardsStars') 
+      // alert("under processing...")
     }
   }
 

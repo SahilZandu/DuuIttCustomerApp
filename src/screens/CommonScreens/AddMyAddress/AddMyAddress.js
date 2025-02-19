@@ -166,8 +166,14 @@ export default function AddMyAddress({navigation, route}) {
 
   const onSuccess = () => {
     setVisible(false);
+
     setTimeout(() => {
-      navigation.navigate(screenName,{screen: 'home'});
+      if(screenName == "home"){
+        navigation.goBack();
+      }else{
+        navigation.navigate(screenName,{screen: 'home'});
+      }
+ 
     }, 300);
   };
 
