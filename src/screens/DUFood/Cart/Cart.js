@@ -6,7 +6,6 @@ import {
   ScrollView,
   FlatList,
   StyleSheet,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import {rootStore} from '../../../stores/rootStore';
