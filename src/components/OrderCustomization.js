@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -62,7 +62,7 @@ export default function OrderCustomization(props) {
     isResOpen,
   } = props;
   const inputRef = useRef(null);
-  console.log('detail item:--', item);
+  console.log('OrderCustomization item:--', item);
   const [quan, setQuan] = useState(item?.quantity >= 1 ? item?.quantity : 1);
   const [sellAmount, setSellAmount] = useState(item?.selling_price);
   const [vcId, setVcId] = useState(null);
@@ -94,13 +94,11 @@ export default function OrderCustomization(props) {
   };
 
   const getIsVarient = () => {
-    return item?.combination && item?.combination.length > 0 ? true : false;
+    return item?.combinations && item?.combinations.length > 0 ? true : false;
   };
 
   const getIsAddons = () => {
-    return item?.product_addon_groups && item?.product_addon_groups.length > 0
-      ? true
-      : false;
+    return item?.addon && item?.addon.length > 0 ? true : false;
   };
 
   const refreshItem = () => {
@@ -109,14 +107,14 @@ export default function OrderCustomization(props) {
     setVcId(null);
     setVcName(null);
     setAddons(null);
-    if (item?.combination && item?.combination.length > 0) {
-      setVcId(item?.combination[0]?.id);
-      setSellAmount(item?.combination[0]?.price);
-      let vName = item?.combination[0]?.second_gp?.name
-        ? item?.combination[0]?.first_gp?.name +
+    if (item?.combinations && item?.combinations.length > 0) {
+      setVcId(item?.combinations[0]?.price);
+      setSellAmount(item?.combinations[0]?.price);
+      let vName = item?.combinations[0]?.second_gp
+        ? item?.combinations[0]?.first_gp +
           ' - ' +
-          item?.combination[0]?.second_gp?.name
-        : item?.combination[0]?.first_gp?.name;
+          item?.combinations[0]?.second_gp
+        : item?.combinations[0]?.first_gp;
 
       setVcName(vName);
     }
@@ -124,9 +122,9 @@ export default function OrderCustomization(props) {
   };
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       refreshItem();
-    }, [visible == true]),
+    }, [visible]),
   );
 
   const calculateIcon = icon => {
@@ -165,7 +163,6 @@ export default function OrderCustomization(props) {
     } else {
       return currencyFormat(sellAmount * quan);
     }
-
     // return currencyFormat(sellAmount * quan);
   };
 
@@ -180,7 +177,7 @@ export default function OrderCustomization(props) {
 
   const generateUID = (id, vcId, addons) => {
     let isVcID = vcId ? true : false;
-    let isAddons = addons && addons.length > 0 ? true : false;
+    let isAddons = addons && addons?.length > 0 ? true : false;
     let getaddonId = isAddons
       ? addons.reduce((total, item) => {
           return total + item.addon_prod_id;
@@ -188,7 +185,13 @@ export default function OrderCustomization(props) {
       : null;
     let addonId = getaddonId && getaddonId > 0 ? getaddonId : null;
 
-    console.log('is varient and is addons', isVcID, isAddons);
+    console.log(
+      'is varient and is addons',
+      isVcID,
+      isAddons,
+      getaddonId,
+      addonId,
+    );
 
     if (isVcID && isAddons) {
       return `${id}${vcId}${addonId}`;
@@ -207,7 +210,9 @@ export default function OrderCustomization(props) {
       transparent={true}
       visible={visible}
       onRequestClose={close}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        bounces={false}>
         <View style={styles.orderConatiner}>
           <TouchableOpacity onPress={close} style={styles.crossConatiner}>
             <Image
@@ -286,15 +291,15 @@ export default function OrderCustomization(props) {
                     setSellAmount(price);
                     setVcName(name);
                   }}
-                  combination={item?.combination}
-                  varientGroup={item?.product_varient_group}
+                  combination={item?.combinations}
+                  varientGroup={item?.variants}
                 />
               )}
 
               {getIsAddons() && (
                 <OrderAddonComponent
                   isResOpen={isResOpen}
-                  addonData={item?.product_addon_groups}
+                  addonData={item?.addon}
                   appCart={appCart}
                   onSelect={data => {
                     console.log('data>', data);
@@ -334,10 +339,6 @@ export default function OrderCustomization(props) {
                   onChangeText={text => {
                     onInputText(text);
                   }}
-                  // onChangeText={(text) => {
-                  //   // textInput=text;
-                  //   ssdsd(text);
-                  //   }}
                   style={styles.inputText}></TextInput>
                 <Text style={styles.inputTextLength}>
                   {textInputt?.length}/100
@@ -347,27 +348,6 @@ export default function OrderCustomization(props) {
           </View>
 
           <View style={styles.bottomBtnMainView}>
-            {/* <Snackbar
-              wrapperStyle={{alignSelf: 'center'}}
-              style={{
-                backgroundColor: 'black',
-                width: wp('75%'),
-                alignSelf: 'center',
-                marginTop: '-35%',
-              }}
-              visible={visibleSnack}
-              onDismiss={onDismissSnackBar}
-              duration={2000}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: fonts.semiBold,
-                  fontSize: RFValue(12),
-                  textAlign: 'center',
-                }}>
-                {snackMessage}
-              </Text>
-            </Snackbar> */}
             <View style={styles.bottomBtnInnerView}>
               <View
                 pointerEvents={isResOpen ? 'auto' : 'none'}
@@ -395,24 +375,17 @@ export default function OrderCustomization(props) {
                 <Action
                   disabled={isResOpen ? (quan > 0 ? false : true) : true}
                   onPress={() => {
-                    // addToCart(
-                    //   22,
-                    //   200,
-                    //   vcId,
-                    //   vcName,
-                    //   addons,
-                    //   300,
-                    // );
                     let iPrice = getIPrice();
                     if (
                       appCart &&
-                      checkUID(appCart, generateUID(item.id, vcId, addons))
+                      checkUID(appCart, generateUID(item?._id, vcId, addons))
                     ) {
-                      let q = appCart.cartitems.filter(
-                        i => i.itemsUID === generateUID(item.id, vcId, addons),
+                      let q = appCart?.cartitems.filter(
+                        i =>
+                          i.itemsUID === generateUID(item?._id, vcId, addons),
                       );
 
-                      let qua = q[0].quantity;
+                      let qua = q[0]?.quantity;
 
                       addToCart(
                         quan + qua,
@@ -579,11 +552,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     textAlign: 'left', // Aligns the text horizontally to the left
     textAlignVertical: Platform.OS === 'android' ? 'top' : 'center', // Vertically align to the top for Android, center for iOS
-    shadowColor: colors.black, // Shadow color (black)
-    shadowOffset: {width: 0, height: 2}, // Horizontal and vertical offset
-    shadowOpacity: 0.3, // Opacity of the shadow
-    shadowRadius: 5, // Blur radius of the shadow
-    elevation: 5, // Android shadow (elevation must be set to display shadow on Android)
+    // shadowColor: colors.black, // Shadow color (black)
+    // shadowOffset: {width: 0, height: 2}, // Horizontal and vertical offset
+    // shadowOpacity: 0.3, // Opacity of the shadow
+    // shadowRadius: 5, // Blur radius of the shadow
+    // elevation: 5, // Android shadow (elevation must be set to display shadow on Android)
     marginBottom: '2%',
     marginTop: '2%',
     height: hp('24%'),

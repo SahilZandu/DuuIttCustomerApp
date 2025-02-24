@@ -219,7 +219,6 @@ const DeliveryInstructions = ({
                 //   console.log('onLongPress');
                 //   startRecording();
                 // }}
-
                 // onPressOut={()=>{
                 //   console.log('onPressOut');
                 //         stopRecording();

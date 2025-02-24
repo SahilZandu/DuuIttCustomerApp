@@ -80,7 +80,6 @@ export default CartCoupanApply;
 const styles = StyleSheet.create({
   mainView: {
     marginTop: '4%',
-    
     backgroundColor:colors.white,
     margin: 20,
     borderRadius: 10,

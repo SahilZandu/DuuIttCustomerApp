@@ -29,7 +29,6 @@ const ProductCard = ({
   index,
   onDetail,
   onMoreDes,
-  editVarient,
   onAdd,
   update,
   restaurant,
@@ -39,9 +38,7 @@ const ProductCard = ({
   // console.log('item--ProductCard',item, restaurant);
 
   // const {getCart} = rootStore.cartStore;
-
   const [isExpanded, setIsExpanded] = useState(false);
-  // const [quantity, setQuantity] = useState(item?.quantity ? Number(item?.quantity):0);
   const [anotherCart, setAnotherCart] = useState(false);
   const [addRemoveCart, setAddRemoveCart] = useState(false);
   const [isCart, setIsCart] = useState(null);
@@ -79,11 +76,11 @@ const ProductCard = ({
   // );
 
   const getIsVarient = () => {
-    return item?.combination && item?.combination?.length > 0 ? true : false;
+    return item?.combinations && item?.combinations?.length > 0 ? true : false;
   };
 
   const getIsAddons = () => {
-    return item?.product_addon_groups && item?.product_addon_groups?.length > 0
+    return item?.addon && item?.addon?.length > 0
       ? true
       : false;
   };
@@ -94,16 +91,16 @@ const ProductCard = ({
   // }, [update]);
 
   const calculateIcon = icon => {
-      switch (icon) {
-        case 'veg':
-          return appImagesSvg?.vegSvg;
-        case 'egg':
-          return appImagesSvg?.eggSvg;
-        case 'non-veg':
-          return appImagesSvg?.nonVeg;
-        default:
-          return appImagesSvg?.vegSvg;
-      }
+    switch (icon) {
+      case 'veg':
+        return appImagesSvg?.vegSvg;
+      case 'egg':
+        return appImagesSvg?.eggSvg;
+      case 'non-veg':
+        return appImagesSvg?.nonVeg;
+      default:
+        return appImagesSvg?.vegSvg;
+    }
   };
 
   const Type = () => {
@@ -119,36 +116,13 @@ const ProductCard = ({
   const PriceView = () => {
     return (
       <View style={styles.priceView}>
-        <Text style={styles.priceText}>{currencyFormat(Number(item?.selling_price))}</Text>
-      </View>
-    );
-  };
-  const RatingView = () => {
-    return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Rating
-          rated={Number(item?.item_review_avg_item_rating)}
-          totalCount={5}
-          ratingColor={colors.white}
-          ratingBackgroundColor={colors.colorF9}
-          size={size / 50}
-          readonly
-          icon="ios-star"
-          direction="row"
-        />
-        <Text
-          style={{
-            color: colors.color64,
-            marginTop: '1%',
-            fontFamily: fonts.medium,
-            fontSize: RFValue(10),
-          }}>
-          {'  '}
-          {item?.item_review_count} Reviews
+        <Text style={styles.priceText}>
+          {currencyFormat(Number(item?.selling_price))}
         </Text>
       </View>
     );
   };
+
 
   const Description = () => {
     const text = item?.description;
@@ -178,30 +152,30 @@ const ProductCard = ({
     return (
       <View style={styles.btnMainView}>
         {item?.in_stock == true ? (
-        (  item?.quantity && item?.quantity != 0) ? (
+          item?.quantity && item?.quantity != 0 ? (
             <View style={styles.addItemAminView}>
               <Pressable
                 disabled={!isResOpen}
                 onPress={() => {
                   if (getIsVarient() || getIsAddons()) {
-                    editVarient();
+                    // onDetail();
+                    onAdd('d', item?.quantity - 1);
                   } else {
-                    // setQuantity(quantity - 1);
                     onAdd('d', item?.quantity - 1);
                   }
                 }}
                 style={styles.decreaseView}>
                 <Text style={styles.decreaseText}>-</Text>
               </Pressable>
-              <Text style={styles.qualityText}>{item?.quantity ? item?.quantity :0}</Text>
+              <Text style={styles.qualityText}>
+                {item?.quantity ? item?.quantity : 0}
+              </Text>
               <Pressable
                 onPress={() => {
                   if (getIsVarient() || getIsAddons()) {
-                    editVarient();
+                    onDetail();
                   } else {
-                    // setQuantity( item?.quantity + 1);
-                    onAdd('i',item?.quantity + 1);
-                    // onDetail();
+                    onAdd('i', item?.quantity + 1);
                   }
                 }}
                 style={styles.increaseView}>
@@ -216,16 +190,10 @@ const ProductCard = ({
                   if (getIsVarient() || getIsAddons()) {
                     onDetail();
                   } else {
-                    // setQuantity(quantity + 1);
                     onAdd('i', item?.quantity + 1);
-                    // onDetail();
                   }
                 } else {
                   setAddRemoveCart(true);
-                  // useToast(
-                  //   'e',
-                  //   'Other restaurant item is already in your cart. Please remove it.',
-                  // );
                 }
               }}
               style={[
@@ -233,7 +201,7 @@ const ProductCard = ({
                 {
                   backgroundColor: !isResOpen
                     ? colors.colorD9
-                    : (item?.quantity && item?.quantity != 0)
+                    : item?.quantity && item?.quantity != 0
                     ? colors.main
                     : colors.colorEC,
                 },
@@ -271,9 +239,15 @@ const ProductCard = ({
 
         <View style={styles.mainInnerView}>
           <View style={styles.typeTagsView}>
-            <SvgXml width={17} height={17} xml={calculateIcon(item?.veg_nonveg) } />
+            <SvgXml
+              width={17}
+              height={17}
+              xml={calculateIcon(item?.veg_nonveg)}
+            />
             <View style={styles.tagsTextView}>
-              <Text style={styles.tagsText}>{item?.tag ? item?.tag :"Best Seller"}</Text>
+              <Text style={styles.tagsText}>
+                {item?.tag ? item?.tag : 'Best Seller'}
+              </Text>
             </View>
           </View>
           {Type()}
@@ -294,8 +268,7 @@ const ProductCard = ({
                 ? {
                     uri: Url?.Image_Url + item?.image,
                   }
-                 : appImages.foodIMage
-              
+                : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
           />

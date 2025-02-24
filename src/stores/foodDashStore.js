@@ -11,6 +11,7 @@ export default class FoodDashStore {
   repeatedOrderList = [];
   recommendedOrderList = [];
   foodOrderTrackingList = [];
+  mealOrderList = [];
 
   restaurentAll = async (geoLocation, selectedFilter, limit, handleLoading) => {
     // let vegNonVeg='';
@@ -308,10 +309,30 @@ export default class FoodDashStore {
     } catch (error) {
       console.log('error getFoodOrderTracking:', error);
       handleLoading(false);
-      // const m = error?.data?.message
-      //   ? error?.data?.message
-      //   : 'Something went wrong';
-      // useToast(m, 0);
+      return [];
+    }
+  };
+
+  getCompleteMealItems = async (restaurant, handleLoading) => {
+    let requestData = {
+      restaurant_id: restaurant?._id,
+    };
+    console.log('requestData---getCompleteMealItems',requestData);
+    try {
+      const res = await agent.completeMealItems(requestData);
+      console.log('getCompleteMealItems Res : ', res);
+      if (res?.statusCode == 200) {
+        this.mealOrderList = res?.data ?? [];
+        handleLoading(false);
+        return res?.data;
+      } else {
+        this.mealOrderList = [];
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error getCompleteMealItems:', error);
+      handleLoading(false);
       return [];
     }
   };

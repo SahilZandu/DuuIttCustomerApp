@@ -22,18 +22,20 @@ export default function OrderAddonComponent({
   isResOpen
 }) {
   const [addons, setaddons] = useState(
-    isAddons && isAddons.length > 0 ? isAddons : [],
+    addonData && addonData?.addon ?   addonData?.addon :[]
+    // isAddons && isAddons.length > 0 ? isAddons : [],
   );
 
   let addonId = 0;
 
   const checkAddonThere = (arr, id) => {
-    return arr.find(item => item.addon_prod_id === id);
+    console.log("arr, id",arr, id);
+    return arr?.find(item => (item?._id || item?.addon_prod_id )== id);
   };
 
   const getGroupLength = (a, gid) => {
-    let f = a.filter(item => item.addon_group_id === gid);
-    return f.length;
+    let f = a?.filter(item => item?.addon_group_id === gid);
+    return f?.length;
   };
 
   const onPressVC = (item, value) => {
@@ -41,17 +43,17 @@ export default function OrderAddonComponent({
     
     console.log("item:--",item)
  
-    let limit = item.max_selection ? item.max_selection : item.addonprod.length
+    let limit = item?.max_selection ? item?.max_selection : item?.addon?.length
 
     const obj = {
-      addon_prod_id: value.id,
+      addon_prod_id: value._id,
       addon_name: value.name,
       addon_price: value.price,
-      addon_group_id: value?.group_id,
+      addon_group_id: item?._id,
     };
 
-    if (checkAddonThere(arr, value.id)) {
-      let filter = arr.filter(item => item.addon_prod_id !== value.id);
+    if (checkAddonThere(arr, value?._id)) {
+      let filter = arr?.filter(item => (item?._id ||  item?.addon_prod_id) !== value?._id);
       setaddons(filter);
        onSelect(filter);
     } else {
@@ -69,7 +71,7 @@ export default function OrderAddonComponent({
   const getSelectionLimit = item => {
     let limit = item?.max_selection
       ? item?.max_selection
-      : item?.addonprod?.length;
+      : item?.addon?.length;
 
     return `Select up to ${limit} option` + `${limit > 1 ? 's' : ''}`;
   };
@@ -84,7 +86,7 @@ export default function OrderAddonComponent({
                 style={styles.conatiner}>
                 <Text
                   style={styles.titleText}>
-                  {item?.title}{' '}
+                  {item?.group}{' '}
                 </Text>
                
                 <Text style={styles.selectText}>{getSelectionLimit(item)}</Text>
@@ -96,7 +98,7 @@ export default function OrderAddonComponent({
                   backgroundColor:colors.colorD9
                 }}/>
                 <View style={styles.mainViewRender}>
-                  {item?.addonprod?.map((value, i) => {
+                  {item?.addon?.map((value, i) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
@@ -111,27 +113,27 @@ export default function OrderAddonComponent({
                             style={[
                               styles.addonName,
                               {
-                                color: checkAddonThere(addons, value.id)
+                                color: checkAddonThere(addons, value?._id)
                                   ? colors.main
-                                  :colors.color64,
+                                  :colors.black,
                               },
                             ]}>
                             {value?.name}
                           </Text>
                         </View>
-                        {/* <Text
+                        <Text
                           style={[
                             styles.priceText,
                             {
-                              color: checkAddonThere(addons, value.id)
-                                ? colors.black
-                                : colors.appBackground,
+                              color: checkAddonThere(addons, value?._id)
+                                ? colors.main
+                                : colors.black,
                             },
                           ]}>
                           {currencyFormat(value?.price)}
-                        </Text> */}
-                        {addons.length > 0 &&
-                        checkAddonThere(addons, value.id) ? (
+                        </Text>
+                        {addons?.length > 0 &&
+                        checkAddonThere(addons, value?._id) ? (
                           <SvgXml xml={check} />
                         ) : (
                           <SvgXml xml={uncheck} />

@@ -175,7 +175,7 @@ export default ReviewsRatingComp;
 const styles = StyleSheet.create({
   main: {
     backgroundColor: colors.appBackground,
-    height: hp('48%'),
+    height: hp('46%'),
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
   },

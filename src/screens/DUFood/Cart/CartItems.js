@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {
   Text,
   View,
@@ -16,12 +16,10 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import DotedLine from '../Components/DotedLine';
-// import Base_Image_Url from '../api/Url';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {colors} from '../../../theme/colors';
 import Url from '../../../api/Url';
 
-// const imageUrl = Base_Image_Url?.Base_Image_UrlProduct;
 const isOpenNote = false;
 
 const CartItems = ({
@@ -48,12 +46,12 @@ const CartItems = ({
   };
 
   const getIsVarient = item => {
-    return item?.varient_id ? true : false;
+    return item?.variants?.length > 0 ? true : false;
   };
 
   const getIsAddons = item => {
     // return item.addon_item && item.addon_item.length > 0 ? true : false;
-    return item?.addons && item?.addons?.length > 0 ? true : false;
+    return item?.addon && item?.addon?.length > 0 ? true : false;
   };
 
   const EditBtn = ({item}) => {
@@ -106,7 +104,9 @@ const CartItems = ({
                       style={styles.decreaseTouch}>
                       <Text style={styles.decreaseText}>-</Text>
                     </Pressable>
-                    <Text style={styles.qunitityText}>{item?.quantity ?? 0}</Text>
+                    <Text style={styles.qunitityText}>
+                      {item?.quantity ?? 0}
+                    </Text>
                     <Pressable
                       onPress={() =>
                         handleAddRemove(item, Number(item?.quantity ?? 0) + 1)
@@ -127,25 +127,50 @@ const CartItems = ({
               </View>
             </View>
 
-            {item?.varient_name && (
+            {/* {item?.variants?.length > 0 && (
               <View style={styles.varientView}>
-                <Text style={styles.varientText}>{item?.varient_name}</Text>
+                <Text style={styles.varientText}>{item?.variants[0]?.group}</Text>
               </View>
-            )}
+            )} */}
 
-            <View>
-              {/* {item?.addon_item && item?.addon_item.length > 0 && ( */}
-              {item?.addons && item?.addons?.length > 0 && (
+            {/* <View>
+              {item?.addon && item?.addon?.length > 0 && (
                 <View style={styles.addonsView}>
-                  {/* {item.addon_item.map((i, key) => ( */}
-
-                  {item?.addons?.map((i, key) => (
-                    <Text style={styles.addonsText} key={key}>
-                      {i?.addon_name}
-                      {key == item?.addons?.length - 1 ? '' : ', '}
-                    </Text>
+                  {item?.addon?.map((items, i) => (
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {items?.addon?.map((data, key) => (
+                        <Text style={styles.addonsText} key={key}>
+                          {data?.name}
+                          {key == items?.addon?.length - 1 ? '' : ', '}
+                        </Text>
+                      ))}
+                    </View>
                   ))}
+                  <Text style={{flex: 0}} />
                   <EditBtn item={item} />
+                </View>
+              )}
+            </View> */}
+            <View>
+              {item?.addon && item?.addon.length > 0 && (
+                <View style={styles.addonsView}>
+                  <View
+                    style={styles.addonInnerView}>
+                    {item?.addon?.map((items, i) => (
+                      <Fragment key={i}>
+                        {items?.addon?.map((data, key) => (
+                          <Text style={styles.addonsText} key={`${i}-${key}`}>
+                            {data?.name}
+                            {' , '}
+                            {/* {key === items?.addon.length - 1 ? '' : ', '} */}
+                          </Text>
+                        ))}
+                        {i === item?.addon.length - 1 && (
+                          <EditBtn item={item} />
+                        )}
+                      </Fragment>
+                    ))}
+                  </View>
                 </View>
               )}
             </View>
@@ -279,18 +304,21 @@ const styles = StyleSheet.create({
     fontSize: RFValue(10),
   },
   addonsView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginEnd: wp('5.5%'),
+    justifyContent: 'center',
     marginTop: '2%',
-    marginLeft: wp('5.5%'),
+  },
+  addonInnerView:{
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
   addonsText: {
     color: colors.color64,
     fontFamily: fonts.medium,
     fontSize: RFValue(11),
   },
+
   addNoteView: {
     flexDirection: 'row',
     alignSelf: 'flex-start',
@@ -319,8 +347,8 @@ const styles = StyleSheet.create({
     marginLeft: '2%',
   },
   editBtnView: {
-    marginLeft: wp('5.5%'),
-    marginTop: '1%',
+    marginLeft: wp('1.5%'),
+    marginTop: '1.5%',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -332,5 +360,5 @@ const styles = StyleSheet.create({
 });
 
 const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">
-<path d="M5.99999 10.0001H10.5M1.5 10.0001H2.33727C2.58186 10.0001 2.70416 10.0001 2.81925 9.97248C2.92128 9.94799 3.01883 9.90758 3.1083 9.85275C3.20921 9.79091 3.29569 9.70444 3.46864 9.53148L9.75001 3.25011C10.1642 2.8359 10.1642 2.16433 9.75001 1.75011C9.3358 1.3359 8.66423 1.3359 8.25001 1.75011L1.96863 8.03148C1.79568 8.20444 1.7092 8.29091 1.64736 8.39183C1.59253 8.4813 1.55213 8.57885 1.52763 8.68088C1.5 8.79597 1.5 8.91826 1.5 9.16286V10.0001Z" stroke="#1D721E" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5.99999 10.0001H10.5M1.5 10.0001H2.33727C2.58186 10.0001 2.70416 10.0001 2.81925 9.97248C2.92128 9.94799 3.01883 9.90758 3.1083 9.85275C3.20921 9.79091 3.29569 9.70444 3.46864 9.53148L9.75001 3.25011C10.1642 2.8359 10.1642 2.16433 9.75001 1.75011C9.3358 1.3359 8.66423 1.3359 8.25001 1.75011L1.96863 8.03148C1.79568 8.20444 1.7092 8.29091 1.64736 8.39183C1.59253 8.4813 1.55213 8.57885 1.52763 8.68088C1.5 8.79597 1.5 8.91826 1.5 9.16286V10.0001Z" stroke="#28B056" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;

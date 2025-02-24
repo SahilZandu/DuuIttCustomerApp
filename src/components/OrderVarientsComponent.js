@@ -1,16 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
-
 import {fonts} from '../theme/fonts/fonts';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {SvgXml} from 'react-native-svg';
-// import Spacer from './Spacer';
 import {currencyFormat} from '../halpers/currencyFormat';
 
 export default function OrderVarientsComponent({
@@ -23,8 +20,8 @@ export default function OrderVarientsComponent({
   const getVName = () => {
     if (varientGroup && varientGroup.length > 0) {
       return varientGroup.length == 1
-        ? varientGroup[0].name
-        : varientGroup[1].name;
+        ? varientGroup[0].group
+        :  varientGroup[0].group +' '+ varientGroup[1].group;
     } else {
       return '';
     }
@@ -52,26 +49,26 @@ export default function OrderVarientsComponent({
               <TouchableOpacity
                 key={i}
                 onPress={() => {
-                  let vName = value?.second_gp?.name
-                    ? value?.first_gp?.name + ' - ' + value?.second_gp?.name
-                    : value?.first_gp?.name;
+                  let vName = value?.second_gp
+                    ? value?.first_gp + ' - ' + value?.second_gp
+                    : value?.first_gp;
 
-                  onSelectId(value?.id, value?.price, vName);
+                  onSelectId(value?.price, value?.price, vName);
                 }}
                 hitSlop={styles.hitSlotTouch}
                 activeOpacity={0.8}
                 style={styles.touchView}>
                 <View style={styles.varientNameView}>
                   <Text numberOfLines={1} style={styles.varientName(id, value)}>
-                    {value?.second_gp?.name
-                      ? `${value?.first_gp?.name} - ${value?.second_gp?.name}`
-                      : `${value?.first_gp?.name}`}
+                    {value?.second_gp
+                      ? `${value?.first_gp} - ${value?.second_gp}`
+                      : `${value?.first_gp}`}
                   </Text>
                 </View>
-                {/* <Text style={styles.priceText(id, value)}>
+                <Text style={styles.priceText(id, value)}>
                   {currencyFormat(value?.price)}
-                </Text> */}
-                {id == value?.id ? (
+                </Text>
+                {id == value?.price? (
                   <SvgXml xml={check} />
                 ) : (
                   <SvgXml xml={uncheck} />
@@ -147,15 +144,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   varientName: (vCId, value) => ({
-    fontFamily: vCId == value?.id ? fonts.medium : fonts.regular,
+    fontFamily: vCId == value?.price ? fonts.medium : fonts.regular,
     fontSize: RFValue(13),
-    color: vCId == value?.id ? colors.main : colors.color64,
+    color: vCId == value?.price ? colors.main : colors.black,
     width: wp('70%'),
   }),
   priceText: (vCId, value) => ({
-    fontFamily: vCId == value?.id ? fonts.medium : fonts.regular,
+    fontFamily: vCId == value?.price ? fonts.medium : fonts.regular,
     fontSize: RFValue(13),
-    color: vCId == value?.id ? colors.black : colors.appBackground,
+    color: vCId == value?.price ? colors.main : colors.black,
     right: 10,
   }),
   bottomLineView: {

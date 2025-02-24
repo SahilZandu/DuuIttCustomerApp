@@ -868,4 +868,5 @@ export const appImages = {
   mdLogo:require('../assets/mdLogo.png'),
   ruppeYellowIcon:require('../assets/ruppeYellow.png'),
   ruppeGreyIcon:require('../assets/ruppeGrey.png'),
+  countCoinIcon:require('../assets/countCoin.png'),
 };

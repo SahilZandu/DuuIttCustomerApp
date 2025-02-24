@@ -95,6 +95,8 @@ export const agent = {
   getFoodOrderTracking: () => requests.get(Url.getFoodOrderTracking),
 
   addReviews: body => requests.post(Url.addReviews, body),
+  completeMealItems: body => requests.post(Url.completeMealItems, body),
+  
 };
 
 const requests = {

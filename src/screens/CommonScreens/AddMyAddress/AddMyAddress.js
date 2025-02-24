@@ -40,7 +40,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 
 export default function AddMyAddress({navigation, route}) {
-  const {type, data,screenName} = route.params;
+  const {type, data, screenName} = route.params;
 
   const {myAddress} = rootStore.myAddressStore;
 
@@ -75,12 +75,11 @@ export default function AddMyAddress({navigation, route}) {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
-      if(type == 'add'){
-      getCurrentAddress();
+      if (type == 'add') {
+        getCurrentAddress();
       }
     }, [type]),
   );
-
 
   const tabs = [
     {id: 0, text: 'Home', icon: appImages.homeLocation},
@@ -111,16 +110,15 @@ export default function AddMyAddress({navigation, route}) {
     }
   }, [data]);
 
-  useEffect(()=>{
-    if(address?.length>0){
-      setLoadingAddress(false)
-    }else{
-      setTimeout(()=>{
-        setLoadingAddress(false)
-      },2000)
+  useEffect(() => {
+    if (address?.length > 0) {
+      setLoadingAddress(false);
+    } else {
+      setTimeout(() => {
+        setLoadingAddress(false);
+      }, 2000);
     }
-
-  },[address])
+  }, [address]);
 
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
@@ -130,7 +128,7 @@ export default function AddMyAddress({navigation, route}) {
     setName(nameData[0]);
     setAddress(addressData?.address);
     setLocationId(addressData?.place_Id);
-    setGeoLocation(addressData?.geo_location)
+    setGeoLocation(addressData?.geo_location);
   };
 
   const FormButton = ({loading, onPress}) => {
@@ -166,14 +164,12 @@ export default function AddMyAddress({navigation, route}) {
 
   const onSuccess = () => {
     setVisible(false);
-
     setTimeout(() => {
-      if(screenName == "home"){
+      if (screenName == 'home' || screenName == 'cart') {
         navigation.goBack();
-      }else{
-        navigation.navigate(screenName,{screen: 'home'});
+      } else {
+        navigation.navigate(screenName, {screen: 'home'});
       }
- 
     }, 300);
   };
 
@@ -199,7 +195,7 @@ export default function AddMyAddress({navigation, route}) {
       <Formik
         initialValues={initialValues}
         validationSchema={addMyAddressValidations()}>
-        <View style={{marginTop: '2%',justifyContent:'center'}}>
+        <View style={{marginTop: '2%', justifyContent: 'center'}}>
           <Text
             style={{
               fontSize: RFValue(17),
@@ -297,18 +293,24 @@ export default function AddMyAddress({navigation, route}) {
       />
       <View style={styles.main}>
         <MapRouteMarker
-          mapContainerView={{height: Platform.OS == 'ios'?  hp('66%'): hp('74%')}}
+          mapContainerView={{
+            height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
+          }}
           origin={geoLocation}
         />
-        <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />
+        <AutoCompleteGooglePlaceHolder
+          onPressAddress={onPressAddress}
+          address={address}
+        />
 
         <View style={styles.addressView}>
           {!address?.length > 0 ? (
             <View>
-            {loadingAddress == true ? 
-            <AnimatedLoader type={'addMyAddress'}  />
-            :
-            <Text style={styles.chooseText}>Please choose location...</Text>}
+              {loadingAddress == true ? (
+                <AnimatedLoader type={'addMyAddress'} />
+              ) : (
+                <Text style={styles.chooseText}>Please choose location...</Text>
+              )}
             </View>
           ) : (
             <View style={styles.addressContainView}>
@@ -362,7 +364,7 @@ export default function AddMyAddress({navigation, route}) {
             }}>
             <View
               style={{
-                backgroundColor:colors.appBackground,
+                backgroundColor: colors.appBackground,
                 width: '100%',
                 borderTopLeftRadius: 10,
                 borderTopRightRadius: 10,
@@ -373,8 +375,7 @@ export default function AddMyAddress({navigation, route}) {
               <KeyboardAvoidingView
                 style={{flex: 1}}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust if needed
-                behavior={Platform.OS === 'ios' ? 'padding' :null}
-                >
+                behavior={Platform.OS === 'ios' ? 'padding' : null}>
                 <AppInputScroll
                   padding={true}
                   keyboardShouldPersistTaps={'handled'}
@@ -389,3 +390,66 @@ export default function AddMyAddress({navigation, route}) {
     </View>
   );
 }
+
+// import React, { useState } from 'react';
+// import { View, Text, TouchableOpacity } from 'react-native';
+// import Popover, { PopoverPlacement } from 'react-native-popover-view';
+
+// function AddMyAddress() {
+//   const [showPopover, setShowPopover] = useState(false);
+
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       {/* Button to open Popover */}
+//       <TouchableOpacity onPress={() => setShowPopover(true)} style={styles.button}>
+//         <Text style={styles.buttonText}>Open Popover</Text>
+//       </TouchableOpacity>
+
+//       {/* Popover Component */}
+//       <Popover
+//         placement={PopoverPlacement.BOTTOM}
+//         isVisible={showPopover}
+//         onRequestClose={() => setShowPopover(false)} // Close on tap outside
+//         from={(
+//           <TouchableOpacity onPress={() => setShowPopover(true)}>
+//             <Text>Press here to open popover!</Text>
+//           </TouchableOpacity>
+//         )}
+//       >
+//         <View style={{ padding: 20 }}>
+//           <Text style={{ marginBottom: 10 }}>Choose an Option</Text>
+
+//           {/* First Button */}
+//           <TouchableOpacity style={styles.popoverButton} onPress={() => setShowPopover(false)}>
+//             <Text style={styles.buttonText}>Button 1</Text>
+//           </TouchableOpacity>
+
+//           {/* Second Button */}
+//           <TouchableOpacity style={styles.popoverButton} onPress={() => setShowPopover(false)}>
+//             <Text style={styles.buttonText}>Button 2</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </Popover>
+//     </View>
+//   );
+// }
+
+// const styles = {
+//   button: {
+//     backgroundColor: '#007bff',
+//     padding: 10,
+//     borderRadius: 5,
+//   },
+//   buttonText: {
+//     color: 'white',
+//     textAlign: 'center',
+//   },
+//   popoverButton: {
+//     backgroundColor: '#28a745',
+//     padding: 10,
+//     marginTop: 10,
+//     borderRadius: 5,
+//   },
+// };
+
+// export default AddMyAddress;

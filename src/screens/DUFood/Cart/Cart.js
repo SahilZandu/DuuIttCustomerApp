@@ -1,4 +1,4 @@
-import React, {useEffect,useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   ScrollView,
   FlatList,
   StyleSheet,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {rootStore} from '../../../stores/rootStore';
 import {
@@ -14,7 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../theme/fonts/fonts';
-import {appImages,} from '../../../commons/AppImages';
+import {appImages} from '../../../commons/AppImages';
 import {currencyFormat} from '../../../halpers/currencyFormat';
 import Header from '../../../components/header/Header';
 import {usePayment} from '../../../halpers/usePayment';
@@ -30,15 +32,18 @@ import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import PaymentBtn from '../../../components/cta/PaymentBtn';
 import DeliveryCart from './DeliveryCart';
 import Url from '../../../api/Url';
-let itemForEdit = null;
+import OrderCustomization from '../../../components/OrderCustomization';
+import CompleteMealComp from '../../../components/CompleteMealComp';
 
+let itemForEdit = null;
 let idForUpdate = null;
 
 const Cart = ({navigation, route}) => {
   const {restaurant} = route.params;
-  const {setCart, getCart, updateCart,} = rootStore.cartStore;
+  const {setCart, getCart, updateCart, selectedAddress} = rootStore.cartStore;
   const {appUser} = rootStore.commonStore;
-  const {foodOrder}=rootStore.foodDashboardStore;
+  const {foodOrder, getCompleteMealItems, mealOrderList} =
+    rootStore.foodDashboardStore;
   const [isPlaying, setIsPLayig] = useState(false);
   const [appCart, setAppCart] = useState({
     cartitems: [],
@@ -58,6 +63,11 @@ const Cart = ({navigation, route}) => {
   const [isBillDetail, setIsBillDetail] = useState(false);
   const [isOpenNote, setIsOpenNote] = useState(false);
   const [isInstruction, setIsInstruction] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState(
+    selectedAddress?.address?.length > 0
+      ? selectedAddress
+      : appUser?.addresses[0] ?? {},
+  );
 
   // const [cartBillG, setCartBillG] = useState(null);
   const [cartBillG, setCartBillG] = useState({
@@ -71,13 +81,54 @@ const Cart = ({navigation, route}) => {
   });
   const [userOrgDistance, setUserOrgDistance] = useState(null);
   const [cartList, setCartList] = useState({});
+  const [completeMealAllList, setCompleteMealAllList] = useState(
+    mealOrderList ?? [],
+  );
+  const [completeMealList, setCompleteMealList] = useState(mealOrderList ?? []);
+  const [missedSomeList, setMissedSomeList] = useState(mealOrderList ?? []);
+  const [mealLoading, setMealLoading] = useState(
+    mealOrderList?.length > 0 ? false : true,
+  );
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
       getUserCart();
-    }, []),
+      if (restaurant) {
+        getCompMealList();
+      }
+      setDeliveryAddress(
+        selectedAddress?.address?.length > 0
+          ? selectedAddress
+          : appUser?.addresses[0] ?? {},
+      );
+    }, [restaurant, selectedAddress]),
   );
+
+  const getCompMealList = async () => {
+    const res = await getCompleteMealItems(restaurant, handleMealLoading);
+    console.log('res---getCompMealList', res);
+    setCompleteMealAllList(res);
+    if (res?.length > 3) {
+      const mealList = res || [];
+      const middleIndex = Math.ceil(mealList.length / 2);
+      // Splitting into two parts
+      const firstHalf = mealList.slice(0, middleIndex);
+      const secondHalf = mealList.slice(middleIndex);
+      // console.log('firstHalf,secondHalf', firstHalf, secondHalf);
+      setCompleteMealList(firstHalf);
+      setMissedSomeList(secondHalf);
+    } else {
+      setCompleteMealList(res);
+    }
+
+    // setCompleteMealList(firstHalf);
+    // setMissedSomeList(secondHalf);
+  };
+
+  const handleMealLoading = v => {
+    setMealLoading(v);
+  };
 
   const handleSuccess = data => {
     setCartEmpty();
@@ -88,50 +139,50 @@ const Cart = ({navigation, route}) => {
     setLoading(v);
   };
 
-  const setFoodOrderData =async(paymentId)=>{
-    let payload ={
-      invoice_no: "INV123456",
-      customer_id: appUser?._id, 
-      status: "waiting_for_confirmation",
-      item_sub_total_amount: 100.50,
-      after_discount_sub_amt: 90.00,
+  const setFoodOrderData = async paymentId => {
+    let payload = {
+      invoice_no: 'INV123456',
+      customer_id: appUser?._id,
+      status: 'waiting_for_confirmation',
+      item_sub_total_amount: 100.5,
+      after_discount_sub_amt: 90.0,
       total_amount: cartBillG?.topay,
-      coupon_code: "DISCOUNT20",
-      tax_amount: 10.00,
-      coupon_amount: 5.00,
-      packing_fee: 5.00,
-      payment_method_id: "credit_card",
-      amount_recived: 100.00,
-      transaction_id:paymentId,
-      order_id: "ORD98765",
-      restaurant_id:cartList?.restaurant_id,
-      otp: "123456",
-      reason_of_cancellation: "Customer changed mind",
-      delivery_time: "2025-02-15T14:30:00Z",
+      coupon_code: 'DISCOUNT20',
+      tax_amount: 10.0,
+      coupon_amount: 5.0,
+      packing_fee: 5.0,
+      payment_method_id: 'credit_card',
+      amount_recived: 100.0,
+      transaction_id: paymentId,
+      order_id: 'ORD98765',
+      restaurant_id: cartList?.restaurant_id,
+      otp: '123456',
+      reason_of_cancellation: 'Customer changed mind',
+      delivery_time: '2025-02-15T14:30:00Z',
       notified: 0,
-      distance_from_customer: "5.2",
-      dilevery_time: "2025-02-15T14:30:00Z",
-      cooking_time: "45 minutes",
-      verification_code: "VER12345",
-      refund_amt: 0.00,
-      refund_status: "norefund",
+      distance_from_customer: '5.2',
+      dilevery_time: '2025-02-15T14:30:00Z',
+      cooking_time: '45 minutes',
+      verification_code: 'VER12345',
+      refund_amt: 0.0,
+      refund_status: 'norefund',
       review_skipped: 0,
-      remaining_balance_amt: 0.00,
-      org_pay_amt: 95.00,
-      admin_pay_amt: 90.00,
-      cart_items:cartList?.cart_items,
-      cart_id:cartList?._id,
-    }
+      remaining_balance_amt: 0.0,
+      org_pay_amt: 95.0,
+      admin_pay_amt: 90.0,
+      cart_items: cartList?.cart_items,
+      cart_id: cartList?._id,
+      deliveryAddress:deliveryAddress
+    };
 
-    await foodOrder(payload,handleLoading,navigation);
-    
-  }
+    await foodOrder(payload, handleLoading, navigation);
+  };
 
-  const onSuccess = (data) => {
-    console.log("onSuccess---",data);
+  const onSuccess = data => {
+    console.log('onSuccess---', data);
     let paymentId = data?.razorpay_payment_id;
 
-    setFoodOrderData(data?.razorpay_payment_id)
+    setFoodOrderData(data?.razorpay_payment_id);
 
     // navigation.navigate('orderPlaced', {
     //   restaurant: [],
@@ -144,8 +195,8 @@ const Cart = ({navigation, route}) => {
   };
 
   const handleOrderCreate = async () => {
-    console.log('cartBillG---',cartBillG);
-    
+    console.log('cartBillG---', cartBillG);
+
     usePayment(cartBillG, onSuccess, onError);
   };
 
@@ -158,6 +209,9 @@ const Cart = ({navigation, route}) => {
       setAppCart({
         cartitems: cart?.food_item,
       });
+      setTimeout(() => {
+        onCheckMealItem(cart?.food_item);
+      }, 500);
       setCartBillG({
         cartTotal: cart?.grand_total,
         platformFree: 5,
@@ -169,6 +223,7 @@ const Cart = ({navigation, route}) => {
       });
       // getUserOrgDistance(cart?.org_id);
     } else {
+      onCheckMealItem([]);
       navigation.goBack();
     }
   };
@@ -193,13 +248,15 @@ const Cart = ({navigation, route}) => {
     //   restaurant,
     //   getCartList,
     // );
-   const resUpdateCart = await updateCart(updatedCartList, appUser, restaurant, cartList);
+    const resUpdateCart = await updateCart(
+      updatedCartList,
+      appUser,
+      restaurant,
+      cartList,
+    );
     if (resUpdateCart?.statusCode == 200) {
       getUserCart();
     }
-    // setTimeout(() => {
-      // getUserCart();
-    // }, 500);
   };
 
   const onSucces = () => {
@@ -216,44 +273,143 @@ const Cart = ({navigation, route}) => {
     }
   };
 
-  const AddButton = () => {
-    return (
-      <View style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>ADD</Text>
-      </View>
-    );
+  const onCheckMealItem = foodItemArray => {
+    console.log('foodItemArray--', foodItemArray);
+    if (foodItemArray?.length > 0 && completeMealAllList?.length > 0) {
+      let mealListData = (completeMealAllList ?? []).map(item => {
+        const exactItem = foodItemArray?.find(
+          data => data?._id === item?.food_items?._id,
+        );
+        return exactItem
+          ? {
+              ...item,
+              food_items: {
+                ...item.food_items, // Keep existing properties
+                quantity: exactItem?.quantity, // ✅ Update quantity inside `item.food_items`
+              },
+            }
+          : {
+              ...item,
+              food_items: {
+                ...item.food_items, // Keep existing properties
+                quantity: 0, // ✅ Update quantity inside `item.food_items`
+              },
+            };
+      });
+      console.log('mealListData--', mealListData);
+      // Ensure a state update with a new reference
+      if (mealListData?.length > 3) {
+        const mealList = mealListData || [];
+        const middleIndex = Math.ceil(mealList.length / 2);
+        // Splitting into two parts
+        const firstHalf = mealList.slice(0, middleIndex);
+        const secondHalf = mealList.slice(middleIndex);
+        // console.log('firstHalf,secondHalf', firstHalf, secondHalf);
+        setCompleteMealList(firstHalf);
+        setMissedSomeList(secondHalf);
+        setCompleteMealAllList(mealListData);
+      } else {
+        setCompleteMealList(mealListData);
+        setCompleteMealAllList(mealListData);
+      }
+    } else {
+      getCompMealList();
+    }
   };
-  const renderCartItem = ({item}) => {
+
+  const handleAddDecMeal = async (item, quan) => {
+    console.log('item ,quan---', item, quan, item?.food_items?.restaurant_id);
+    // return
+    let restaurant = {
+      _id: item?.food_items?.restaurant_id,
+    };
+    let newItem = {
+      ...item,
+      ...item.food_items,
+      quantity: quan,
+      food_item_id: item?.food_items?._id,
+      food_item_price: item?.food_items?.selling_price,
+    };
+
+    // console.log('item,quan,handleAddRemove', item, quan,newItem,item?.restaurant_id || item?.item?.restaurant_id, item?.item?.restaurant_id);
+    const getCartList = {...cartList};
+
+    // console.log('getCartList handleAddRemove:-', getCartList, item, restaurant,item?.restaurant_id || item?.item?.restaurant_id,item?.item?.restaurant_id);
+
+    if (getCartList?.cart_items?.length > 0) {
+      const checkAvailabilityById = getCartList?.cart_items?.find(
+        cartItem => cartItem?.food_item_id === item?.food_items?._id,
+      );
+      console.log('getCartList checkAvailability', checkAvailabilityById);
+
+      let updatedCartList = getCartList?.cart_items;
+
+      if (checkAvailabilityById) {
+        updatedCartList = getCartList?.cart_items?.map(data => {
+          if (data?.food_item_id == item?.food_items?._id) {
+            return {...data, quantity: quan};
+          }
+          return {
+            ...data,
+          };
+        });
+        console.log(
+          'updatedCartList--',
+          updatedCartList,
+          appUser,
+          restaurant,
+          getCartList,
+        );
+        const resUpdateCart = await updateCart(
+          updatedCartList,
+          appUser,
+          restaurant,
+          getCartList,
+        );
+        if (resUpdateCart?.statusCode == 200) {
+          getUserCart();
+        }
+      } else {
+        console.log('updateCart--', updatedCartList, appUser, restaurant, [
+          newItem,
+        ]);
+        const resUpdateCart = await updateCart(
+          [...updatedCartList, ...[newItem]],
+          appUser,
+          restaurant,
+          getCartList,
+        );
+
+        if (resUpdateCart?.statusCode == 200) {
+          getUserCart();
+        }
+      }
+    } else {
+      console.log('setCart--first', [newItem], appUser, restaurant);
+      const resSetCart = await setCart([newItem], appUser, restaurant);
+      if (resSetCart?.restaurant_id?.length > 0) {
+        getUserCart();
+      }
+    }
+  };
+
+  const renderCartItem = ({item, index}) => {
     // console.log('item---renderCartItem', item);
     return (
-      <View style={styles.itemContainer}>
-        <Image
-          source={
-            item?.image?.length > 0
-              ? {uri: Url?.Image_Url + item?.image}
-              : appImages.foodIMage
-          }
-          resizeMode="cover"
-          style={styles.image}
-        />
-
-        <Text numberOfLines={2} style={[styles.name, {fontSize: 14}]}>
-          {item?.name}
-        </Text>
-        <View style={[styles.viewContainer]}>
-          <Text style={styles.rating}>
-            {currencyFormat(item?.selling_price)}
-          </Text>
-          <AddButton />
-        </View>
-      </View>
+      <CompleteMealComp
+        item={item}
+        index={index}
+        handleAddDecMeal={handleAddDecMeal}
+      />
     );
   };
 
   const PlaceOrderBtn = ({}) => {
     return (
       <PaymentBtn
-        onPressPay={() => {navigation.navigate('trackingFoodOrderList')}}
+        // onPressPay={() => {
+        //   navigation.navigate('trackingFoodOrderList');
+        // }}
         payText={'Google Pay'}
         onPressBuyNow={() => {
           handleOrderCreate();
@@ -263,18 +419,32 @@ const Cart = ({navigation, route}) => {
     );
   };
 
-  const RecommendedOrderList = () => {
+  const CompletedMealOrderList = () => {
     return (
       <FlatList
-        data={appCart?.cartitems}
+        data={completeMealList}
         renderItem={renderCartItem}
-        keyExtractor={item => item?.id}
+        keyExtractor={item => item?._id}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
       />
     );
   };
+
+  const MissedSomeThingsList = () => {
+    return (
+      <FlatList
+        data={missedSomeList}
+        renderItem={renderCartItem}
+        keyExtractor={item => item?._id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.listContainer}
+      />
+    );
+  };
+
   const onApplyOffer = async (item, activeCode) => {
     if (activeCode?.length > 0) {
       setLoadingOffer(true);
@@ -297,6 +467,11 @@ const Cart = ({navigation, route}) => {
     itemForEdit = item;
     console.log('handleEdit>', item);
     setIsEdit(true);
+  };
+
+  const onPressLocation = () => {
+    console.log('onPressLocation---');
+    navigation.navigate('myAddress', {screenName: 'cart'});
   };
 
   return (
@@ -333,10 +508,15 @@ const Cart = ({navigation, route}) => {
               saveInstructions(action, data, appCart?.org_id, onSucces);
             }}
           /> */}
-        <View style={styles.completeMealWithView}>
-          <Text style={styles.titleText}>Complete your meal with</Text>
-          <View style={styles.comMealListView}>{RecommendedOrderList()}</View>
-        </View>
+        {completeMealList?.length > 0 && (
+          <View style={styles.completeMealWithView}>
+            <Text style={styles.titleText}>Complete your meal with</Text>
+            <View style={styles.comMealListView}>
+              {CompletedMealOrderList()}
+            </View>
+          </View>
+        )}
+
         {/* {offerCart?.length > 0 && ( */}
         <CartCoupanApply
           item={activeOffer?.coupon_code ? activeOffer : offerCart[0]}
@@ -352,19 +532,19 @@ const Cart = ({navigation, route}) => {
           btnTitle="View more coupons"
           getCartTotal={cartTotal}
         />
-
         {/* )} */}
-
-        <View style={styles.addNowView}>
-          <Text style={styles.titleText}>Missed something? Add now</Text>
-          <View style={styles.addNewListView}>{RecommendedOrderList()}</View>
-        </View>
+        {missedSomeList?.length > 0 && (
+          <View style={styles.addNowView}>
+            <Text style={styles.titleText}>Missed something? Add now</Text>
+            <View style={styles.addNewListView}>{MissedSomeThingsList()}</View>
+          </View>
+        )}
 
         <View>
           <DeliveryCart
             DeliveryInMint={'Delivery in 30 mins'}
-            address={'Delivery at Home'}
-            locationAddress={'11, 1 Floor, Tower tdi, Narayana E Techno Sc...'}
+            address={deliveryAddress?.title?.length > 0 ? `Delivery at ${deliveryAddress?.title}`:'Add loaction'}
+            locationAddress={deliveryAddress?.address?.length > 0?deliveryAddress?.address: "Please add delivert loacation first"}
             onAddInstruction={() => {
               setIsInstruction(!isInstruction);
             }}
@@ -373,13 +553,14 @@ const Cart = ({navigation, route}) => {
             isAudio={isAudio}
             isPlaying={isPlaying}
             audioInstuctions={'Audio Instuctions'}
-            nameWithNumber={'Rahul Garg, +91-9668236442'}
-            number={'+91-9668236442'}
+            nameWithNumber={`${appUser?.name}, +91-${appUser?.phone}`}
+            number={`+91-${deliveryAddress?.phone}`}
             onBillDetails={() => {
               setIsBillDetail(!isBillDetail);
             }}
             totalBill={'Total Bill'}
             cartBillG={cartBillG}
+            onPressLocation={onPressLocation}
           />
         </View>
 
@@ -478,7 +659,7 @@ const Cart = ({navigation, route}) => {
         }}
       /> */}
 
-      <CartItemUpdate
+      {/* <CartItemUpdate
         visible={isEdit}
         close={() => setIsEdit(false)}
         onUpdate={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
@@ -492,7 +673,7 @@ const Cart = ({navigation, route}) => {
           //   iPrice,
           // );
           setIsEdit(false);
-         const resUpdateCart = await updateCartItem(
+          const resUpdateCart = await updateCartItem(
             itemForEdit?.product,
             quan,
             vcId,
@@ -505,10 +686,113 @@ const Cart = ({navigation, route}) => {
           if (resUpdateCart?.statusCode == 200) {
             getUserCart();
           }
-          
         }}
         cartItem={itemForEdit}
-        product={itemForEdit?.addons}
+        product={itemForEdit?.addon}
+      /> */}
+
+      <OrderCustomization
+        isResOpen={isEdit}
+        appCart={cartList}
+        // setFullImage={setFullImage}
+        visible={isEdit}
+        close={() => setIsEdit(false)}
+        item={itemForEdit}
+        // imageUrl={imageUrl}
+        addToCart={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
+          console.log(
+            'modal ckilc data',
+            quan,
+            sellAmount,
+            vcId,
+            vcName,
+            addons,
+            iPrice,
+            itemForEdit,
+          );
+          // setItemModal(false);
+          setIsEdit(false);
+
+          const getCartList = {...cartList};
+          console.log(
+            'getCartList OrderCustomization:-',
+            getCartList,
+            itemForEdit,
+          );
+
+          let updatedCustomizeItem = {
+            ...itemForEdit,
+            selling_price: iPrice ? iPrice : sellAmount,
+            quantity: quan,
+            food_item_id: itemForEdit?._id,
+            food_item_price: iPrice ? iPrice : sellAmount,
+          };
+
+          if (Array?.isArray(getCartList?.cart_items)) {
+            const checkAvailabilityById = getCartList?.cart_items?.find(
+              cartItem => cartItem?.food_item_id === updatedCustomizeItem?._id,
+            );
+            // console.log('getCartList checkAvailability', checkAvailabilityById);
+            // if (getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id) {
+            let updatedCartList = getCartList?.cart_items;
+            if (checkAvailabilityById) {
+              updatedCartList = getCartList?.cart_items?.map(data => {
+                if (data?.food_item_id == updatedCustomizeItem?._id) {
+                  return {...data, quantity: quan};
+                }
+                return {
+                  ...data,
+                };
+              });
+              // console.log(
+              //   'updatedCartList--',
+              //   updatedCartList,
+              //   appUser,
+              //   restaurant,
+              //   getCartList,
+              // );
+              const resUpdateCart = await updateCart(
+                updatedCartList,
+                appUser,
+                restaurant,
+                getCartList,
+              );
+              if (resUpdateCart?.statusCode == 200) {
+                getUserCart();
+              }
+            } else {
+              // console.log('updateCart--', updatedCartList, appUser, restaurant, [
+              //   newItem,
+              // ]);
+              const resUpdateCart = await updateCart(
+                [...updatedCartList, ...[updatedCustomizeItem]],
+                appUser,
+                restaurant,
+                getCartList,
+              );
+              if (resUpdateCart?.statusCode == 200) {
+                getUserCart();
+              }
+            }
+            //  }
+            //  else{
+            //   setClickItem(updatedCustomizeItem);
+            //   setIsRemoveCart(true);
+            // }
+          } else {
+            console.log('setCart--first', appUser, restaurant, [
+              updatedCustomizeItem,
+            ]);
+            const resSetCart = await setCart(
+              [updatedCustomizeItem],
+              appUser,
+              restaurant,
+            );
+            if (resSetCart?.restaurant_id?.length > 0) {
+              getUserCart();
+            }
+          }
+        }}
       />
     </View>
   );
@@ -521,52 +805,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.appBackground,
   },
-  buttonContainer: {
-    paddingHorizontal: 15,
-    backgroundColor: colors.colorEC, // Filled color (green in this case)
-    borderWidth: 1,
-    borderColor: colors.main, // Border color (slightly darker green)
-    borderRadius: 20, // Rounded corners
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: hp('3%'),
-  },
-  buttonText: {
-    color: colors.main, // Text color
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  itemContainer: {
-    marginHorizontal: 10,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-  },
-  name: {
-    marginTop: 8,
-    fontSize: RFValue(14),
-    fontFamily: fonts.semiBold,
-    color: colors.black,
-    // textAlign: 'center',
-  },
-  viewContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: '6%',
-  },
-  rating: {
-    fontSize: RFValue(10),
-    fontFamily: fonts.medium,
-    color: colors.black,
-  },
   listContainer: {
     paddingVertical: 10,
+    paddingRight: '15%',
   },
   titleText: {
-    fontSize: RFValue(16),
+    fontSize: RFValue(14),
     fontFamily: fonts.semiBold,
     color: colors.black,
     marginTop: '2.5%',

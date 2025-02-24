@@ -21,6 +21,7 @@ import {appImages} from '../../../commons/AppImages';
 import {colors} from '../../../theme/colors';
 import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
   const [textInputt, setTextInput] = useState('');
@@ -36,55 +37,58 @@ const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
       onRequestClose={() => {
         onClose();
       }}>
-      <Pressable
-        //  onPress={() => onClose()}
-        style={styles.container}>
-        <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
-          <Image
-            resizeMode="contain"
-            style={{height: 45, width: 45}}
-            source={appImages.crossClose} // Your icon image
-          />
-        </Pressable>
-        <View style={styles.mainWhiteView}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: '5%'}}>
-            <View style={styles.scrollInnerView}>
-              <Text numberOfLines={1} style={styles.titleText}>
-                Add a note for the restaurant
-              </Text>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        bounces={false}>
+        <View style={styles.container}>
+          <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
+            <Image
+              resizeMode="contain"
+              style={{height: 45, width: 45}}
+              source={appImages.crossClose} // Your icon image
+            />
+          </Pressable>
 
-              <View style={styles.mainInnerView}>
-                <View style={styles.inputAndTextView}>
-                  <TextInput
-                    // ref={inputRef}
-                    underlineColor="transparent"
-                    underlineColorAndroid={'transparent'}
-                    placeholder="e.g. Don’t make it too spicy"
-                    maxLength={100}
-                    numberOfLines={5}
-                    multiline
-                    value={textInputt} // Bind the input value to state
-                    onChangeText={onChangeText}
-                    style={styles.inputTextView}></TextInput>
-                  <Text style={styles.textLength}>
-                    {textInputt?.length}/100
-                  </Text>
-                </View>
-
-                <Text style={styles.restaurantTryText}>
-                  {
-                    'The restaurant will try its best To follow your requests. However, no cancellation or refund will be possible if you request is not met. Please note that once added, request cannot be removed after the order is placed.'
-                  }
+          <View style={styles.mainWhiteView}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{paddingBottom: '5%'}}>
+              <View style={styles.scrollInnerView}>
+                <Text numberOfLines={1} style={styles.titleText}>
+                  Add a note for the restaurant
                 </Text>
-                <Spacer space={'8%'} />
-                <BTN title={'Save'} />
+
+                <View style={styles.mainInnerView}>
+                  <View style={styles.inputAndTextView}>
+                    <TextInput
+                      // ref={inputRef}
+                      underlineColor="transparent"
+                      underlineColorAndroid={'transparent'}
+                      placeholder="e.g. Don’t make it too spicy"
+                      maxLength={100}
+                      numberOfLines={5}
+                      multiline
+                      value={textInputt} // Bind the input value to state
+                      onChangeText={onChangeText}
+                      style={styles.inputTextView}></TextInput>
+                    <Text style={styles.textLength}>
+                      {textInputt?.length}/100
+                    </Text>
+                  </View>
+
+                  <Text style={styles.restaurantTryText}>
+                    {
+                      'The restaurant will try its best To follow your requests. However, no cancellation or refund will be possible if you request is not met. Please note that once added, request cannot be removed after the order is placed.'
+                    }
+                  </Text>
+                  <Spacer space={'8%'} />
+                  <BTN title={'Save'} />
+                </View>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         </View>
-      </Pressable>
+      </KeyboardAwareScrollView>
     </Modal>
   );
 };
@@ -93,7 +97,11 @@ export default AddNote;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    // justifyContent: 'flex-end',
+    // backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    width: wp('100%'),
+    height: hp('100%'),
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
@@ -137,11 +145,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'left',
     textAlignVertical: Platform.OS === 'android' ? 'top' : 'auto',
-    shadowColor: colors.black,
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
+    // shadowColor: colors.black,
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.3,
+    // shadowRadius: 5,
+    // elevation: 5,
     marginBottom: 10,
     marginTop: '3%',
     height: hp('24%'),

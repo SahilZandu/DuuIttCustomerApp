@@ -12,6 +12,7 @@ import {agent} from '../api/agent';
 import {useToast} from '../halpers/useToast';
 
 export default class CartStore {
+  selectedAddress = {};
   constructor() {
     // this.setTokenFromStorage();
     // this.setAppUserFromStorage();
@@ -454,5 +455,9 @@ export default class CartStore {
       return [];
     }
   };
+
+setSelectedAddress =async(data)=>{
+ this.selectedAddress = data
+}
 
 }

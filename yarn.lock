@@ -4511,6 +4511,7 @@ __metadata:
     react-native-otp-entry: ^1.7.0
     react-native-paper: ^5.12.3
     react-native-permissions: ^4.1.5
+    react-native-popover-view: ^6.1.0
     react-native-progress: ^5.0.1
     react-native-qrcode-svg: 6.3.2
     react-native-rating-element: ^5.4.0
@@ -10866,6 +10867,16 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: dc4b366a0f561a47f032c027eb703a2be45e801788b915ed583e38f617eea23656eb63a77b17fb3a663fe3199b2ec25788f799e751421634e35a64f5258feed9
+  languageName: node
+  linkType: hard
+
+"react-native-popover-view@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "react-native-popover-view@npm:6.1.0"
+  dependencies:
+    deprecated-react-native-prop-types: ^2.3.0
+    prop-types: ^15.8.1
+  checksum: acf988e2ad4600c8ad17683909e245f55a600950ad744537218e69da289aa25634be71f26c159e84c735ba54cd384e7b17570707cbdeb213db797fd0e1c6650d
   languageName: node
   linkType: hard
 

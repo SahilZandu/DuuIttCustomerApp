@@ -172,7 +172,7 @@ export default function Chat({navigation}) {
               {...props}
               containerStyle={{
                 borderTopWidth: 0,
-                backgroundColor: '#F5F5F5',
+                backgroundColor: colors.colorF5,
                 borderRadius: 10,
                 marginHorizontal: 16,
                 bottom:Platform.OS == 'ios'? '0%':'2%'
@@ -181,11 +181,10 @@ export default function Chat({navigation}) {
               renderComposer={composerProps => (
                 <View
                   style={{
+                    flex: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    // backgroundColor: colors.white,
                     borderRadius: 10,
-                    flex: 1,
                   }}>
                   <Composer
                     {...composerProps}
@@ -205,7 +204,6 @@ export default function Chat({navigation}) {
                   <TouchableOpacity
                     style={{
                       marginRight: 2,
-                      // backgroundColor: colors.main,
                       borderRadius: 100,
                       height: hp('4.5%'),
                       width: hp('4.5%'),
@@ -225,14 +223,12 @@ export default function Chat({navigation}) {
                       height: hp('3%'),
                       width: wp('0.3'),
                       backgroundColor: colors.colorA9,
-                      // marginTop: '-1%',
                       alignSelf: 'center',
                     }}
                   />
                   <TouchableOpacity
                     style={{
                       marginRight: 5,
-                      // backgroundColor: colors.main,
                       borderRadius: 20,
                       borderRadius: 100,
                       height: hp('4.5%'),

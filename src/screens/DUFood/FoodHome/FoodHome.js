@@ -326,7 +326,11 @@ export default function FoodHome({navigation}) {
                 quantity: exactItem?.quantity, // ✅ Update quantity inside `item.item`
               },
             }
-          : {...item};
+          : {...item,
+            item: {
+              ...item.item, // Keep existing properties
+              quantity:0, // ✅ Update quantity inside `item.item`
+            },};
       });
       console.log('recommendedListData--', recommendedListData);
       // Ensure a state update with a new reference
@@ -628,7 +632,7 @@ export default function FoodHome({navigation}) {
             {trackedArray?.length > 0 && (
               <FoodTrackingOrder
                 bottom={
-                  cartItems?.food_item?.length > 0 ? hp('18.5%') : hp('8%')
+                  cartItems?.food_item?.length > 0 ? hp('18%') : hp('8%')
                 }
                 navigation={navigation}
                 trackedArray={trackedArray}

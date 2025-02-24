@@ -23,53 +23,60 @@ import {colors} from '../../../theme/colors';
 import TextRender from '../../../components/TextRender';
 
 const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
+  // cartTotal: cart?.grand_total,
+  // platformFree: 5,
+  // deliveryFree: 10,
+  // gstRestorentCharges: 20,
+  // grandTotal: cart?.grand_total + 5 + 10 + 20,
+  // couponDiscount: 100,
+  // topay: cart?.grand_total + 5 + 10 + 20 - 10,
   const billDetails = [
     {
       id: '1',
       name: 'Item Total',
-      price: 400,
+      price: cartBillG?.cartTotal,
       coupanCode: '',
       bottomLine: false,
     },
     {
       id: '2',
       name: 'Delivery Fee',
-      price: 40,
+      price: cartBillG?.deliveryFree,
       coupanCode: '',
       bottomLine: false,
     },
     {
       id: '3',
       name: 'Platform fee',
-      price: 10,
+      price: cartBillG?.platformFree,
       coupanCode: '',
       bottomLine: false,
     },
     {
       id: '4',
       name: 'GST and Restaurant Charges',
-      price: 20.86,
+      price: cartBillG?.gstRestorentCharges,
       coupanCode: '',
       bottomLine: true,
     },
     {
       id: '5',
       name: 'Grand Total',
-      price: 543.6,
+      price: cartBillG?.grandTotal,
       coupanCode: '',
       bottomLine: false,
     },
     {
       id: '6',
       name: 'Restaurant Coupon',
-      price: 100,
+      price: cartBillG?.couponDiscount,
       coupanCode: 'DUIT75',
       bottomLine: false,
     },
     {
-      id: '1',
+      id: '7',
       name: 'To Pay',
-      price: 395.18,
+      price: cartBillG?.topay,
       coupanCode: '',
       bottomLine: false,
     },
@@ -103,7 +110,6 @@ const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
                 style={{
                   fontFamily: fonts.bold,
                   fontSize: RFValue(15),
-                  // padding: 10,
                   color: colors.black,
                 }}>
                 Bill Summary
@@ -147,7 +153,9 @@ const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
               <View style={styles.btnView}>
                 <SvgXml xml={appImagesSvg.party} />
                 <Text numberOfLines={1} style={styles.btnText}>
-                  You saved ₹10 on this order
+                  {`You saved ${currencyFormat(
+                    Number(cartBillG?.grandTotal - cartBillG?.topay),
+                  )} on this order`}
                 </Text>
               </View>
             </View>

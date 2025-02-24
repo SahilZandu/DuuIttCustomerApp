@@ -27,6 +27,7 @@ const DeliveryCart = ({
   onBillDetails,
   totalBill,
   cartBillG,
+  onPressLocation,
 }) => {
   const AddInstruction = () => {
     return (
@@ -60,7 +61,10 @@ const DeliveryCart = ({
       </View>
 
       <View style={styles.mainDeliverycartView}>
-        <View style={styles.deliveryAddressView}>
+        <TouchableOpacity 
+        onPress={onPressLocation}
+        activeOpacity={0.8}
+        style={styles.deliveryAddressView}>
           <View style={styles.deliveryAddressInnerView}>
             <SvgXml xml={appImagesSvg.markerColor} />
             <View style={styles.addressView}>
@@ -72,7 +76,7 @@ const DeliveryCart = ({
             </View>
           </View>
           <SvgXml xml={appImagesSvg.rightArrow} />
-        </View>
+        </TouchableOpacity>
 
         <DotedLine />
 
@@ -101,7 +105,7 @@ const DeliveryCart = ({
                 <View style={styles.totalBillWithRate}>
                   <Text style={styles.totalBillText}>{totalBill}</Text>
                   <Text style={styles.crossLineText}>
-                    {currencyFormat(cartBillG?.cartTotal)}
+                    {currencyFormat(cartBillG?.grandTotal)}
                     {''}
                   </Text>
                   <Text style={styles.totalRateText}>
