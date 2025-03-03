@@ -62,7 +62,7 @@ export default function OrderCustomization(props) {
     isResOpen,
   } = props;
   const inputRef = useRef(null);
-  console.log('OrderCustomization item:--', item);
+  // console.log('OrderCustomization item:--', item, appCart);
   const [quan, setQuan] = useState(item?.quantity >= 1 ? item?.quantity : 1);
   const [sellAmount, setSellAmount] = useState(item?.selling_price);
   const [vcId, setVcId] = useState(null);
@@ -127,6 +127,20 @@ export default function OrderCustomization(props) {
     }, [visible]),
   );
 
+  useEffect(() => {
+    if (!appCart?.food_item || !item) return;
+    const selectedFoodItem = appCart?.food_item?.find(
+      data => item?._id === data?._id,
+    );
+    console.log(
+      'selectedFoodItem?.selected_add_on--',
+      selectedFoodItem,
+      selectedFoodItem?.selected_add_on,
+    );
+    setSellAmount(selectedFoodItem?.selling_price ?? item?.selling_price);
+    setAddons(selectedFoodItem?.selected_add_on ?? []);
+  }, [item, appCart, visible]);
+
   const calculateIcon = icon => {
     switch (icon) {
       case 'veg':
@@ -145,7 +159,7 @@ export default function OrderCustomization(props) {
       let addonsTotalPrice = addons.reduce((total, item) => {
         return total + item.addon_price;
       }, 0);
-      return parseInt(sellAmount) + parseInt(addonsTotalPrice);
+      return parseInt(sellAmount) * quan + parseInt(addonsTotalPrice);
     } else {
       return sellAmount;
     }
@@ -154,11 +168,13 @@ export default function OrderCustomization(props) {
   const getTotalPrice = () => {
     if (addons && addons?.length > 0) {
       let addonsTotalPrice = addons?.reduce((total, item) => {
-        return total + item?.addon_price;
+        return item?.addon_price
+          ? total + item?.addon_price
+          : total + item?.price;
       }, 0);
-      console.log('getTotal', addonsTotalPrice);
+      console.log('getTotal', addonsTotalPrice, addons);
       return currencyFormat(
-        (parseInt(sellAmount) + parseInt(addonsTotalPrice)) * quan,
+        parseInt(sellAmount) * quan + parseInt(addonsTotalPrice),
       );
     } else {
       return currencyFormat(sellAmount * quan);
@@ -167,7 +183,7 @@ export default function OrderCustomization(props) {
   };
 
   const checkUID = (cart, nItem) => {
-    console.log('check UIIDDDDD', nItem, cart);
+    // console.log('check UIIDDDDD', nItem, cart);
     if (cart?.cartitems?.find(i => i.itemsUID === nItem)) {
       return true;
     } else {
@@ -185,13 +201,13 @@ export default function OrderCustomization(props) {
       : null;
     let addonId = getaddonId && getaddonId > 0 ? getaddonId : null;
 
-    console.log(
-      'is varient and is addons',
-      isVcID,
-      isAddons,
-      getaddonId,
-      addonId,
-    );
+    // console.log(
+    //   'is varient and is addons',
+    //   isVcID,
+    //   isAddons,
+    //   getaddonId,
+    //   addonId,
+    // );
 
     if (isVcID && isAddons) {
       return `${id}${vcId}${addonId}`;
@@ -285,7 +301,7 @@ export default function OrderCustomization(props) {
               {getIsVarient() && (
                 <OrderVarientsComponent
                   isResOpen={isResOpen}
-                  id={vcId}
+                  id={sellAmount ?? vcId}
                   onSelectId={(id, price, name) => {
                     setVcId(id);
                     setSellAmount(price);
@@ -298,6 +314,8 @@ export default function OrderCustomization(props) {
 
               {getIsAddons() && (
                 <OrderAddonComponent
+                  isAddons={addons}
+                  item={item}
                   isResOpen={isResOpen}
                   addonData={item?.addon}
                   appCart={appCart}
@@ -316,6 +334,7 @@ export default function OrderCustomization(props) {
                   }}
                 />
               )}
+
               {/* <AddCookingRequest /> */}
 
               <View style={styles.inputTextMainView}>
@@ -526,7 +545,7 @@ const styles = StyleSheet.create({
     marginHorizontal: '4%',
     paddingHorizontal: '4%',
     marginTop: '4%',
-    paddingBottom: '1.5%',
+    paddingBottom: '2%',
   },
   addCookingView: {
     flexDirection: 'row',
@@ -559,7 +578,7 @@ const styles = StyleSheet.create({
     // elevation: 5, // Android shadow (elevation must be set to display shadow on Android)
     marginBottom: '2%',
     marginTop: '2%',
-    height: hp('24%'),
+    height: hp('18%'),
   },
   inputTextLength: {
     fontFamily: fonts.semiBold,

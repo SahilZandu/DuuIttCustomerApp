@@ -157,7 +157,7 @@ export default function Orders({navigation, route}) {
             {loading == true ? (
               <AnimatedLoader type={'orderHistoryLoader'} />
             ) : (
-              <View style={{flex: 1}}>
+              <View style={{flex: 0}}>
                 {orderList?.length > 0 ? (
                   <FlatList
                     contentContainerStyle={{paddingBottom: '30%'}}

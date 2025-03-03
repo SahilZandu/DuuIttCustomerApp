@@ -165,7 +165,7 @@ const ResturantProducts = memo(({navigation, route}) => {
       const filterA = arr?.map(group => {
         return {
           ...group,
-          food_items: group.food_items?.filter(
+          food_items: group?.food_items?.filter(
             product => product?.veg_nonveg === type,
           ),
         };
@@ -222,11 +222,17 @@ const ResturantProducts = memo(({navigation, route}) => {
     console.log('getCartList handleAddRemove:-', getCartList, item);
     if (getCartList?.cart_items?.length > 0) {
       if (getCartList?.restaurant_id == item?.restaurant_id) {
-        const checkAvailabilityById = getCartList?.cart_items?.find(
-          cartItem => cartItem?.food_item_id === item?._id,
+        // const checkAvailabilityById = getCartList?.cart_items?.find(
+        //   cartItem => cartItem?.food_item_id === item?._id,
+        // );
+        const checkAvailabilityById = getCartList?.food_item?.find(
+          cartItem => cartItem?._id === item?._id,
         );
-        // console.log('getCartList checkAvailability', checkAvailabilityById);
-
+        console.log('getCartList checkAvailability', checkAvailabilityById);
+        let addOnData = {
+          food_item_id: item?._id,
+          add_on_items: checkAvailabilityById?.selected_add_on ?? [],
+        };
         let updatedCartList = getCartList?.cart_items;
 
         if (checkAvailabilityById) {
@@ -250,6 +256,7 @@ const ResturantProducts = memo(({navigation, route}) => {
             appUser,
             restaurant,
             getCartList,
+            addOnData,
           );
           if (resUpdateCart?.statusCode == 200) {
             getUserCart(groupProducts);
@@ -263,6 +270,7 @@ const ResturantProducts = memo(({navigation, route}) => {
             appUser,
             restaurant,
             getCartList,
+            addOnData,
           );
           if (resUpdateCart?.statusCode == 200) {
             getUserCart(groupProducts);
@@ -383,7 +391,7 @@ const ResturantProducts = memo(({navigation, route}) => {
     // console.log('indexx, item---', index, item);
     const newArrayList = groupProducts?.map((data, i) => {
       if (i === index) {
-        return {...data, expandable: !data.expandable};
+        return {...data, expandable: !data?.expandable};
       }
       return {...data};
     });
@@ -461,7 +469,7 @@ const ResturantProducts = memo(({navigation, route}) => {
             keyExtractor={subItem => subItem?._id}
             ItemSeparatorComponent={() => (
               <View style={styles.separateRenderView}>
-                {Array?.from({length: 30}).map((_, index) => (
+                {Array?.from({length: 30})?.map((_, index) => (
                   <View key={index} style={styles.separateRenderDoted} />
                 ))}
               </View>
@@ -637,20 +645,25 @@ const ResturantProducts = memo(({navigation, route}) => {
             CustomizeItem,
           );
           setItemModal(false);
-
-          const getCartList = {...selectedCartList};
+          let addOnData = {
+            food_item_id: CustomizeItem?._id,
+            add_on_items: addons ?? [],
+          };
+          const getCartList = {...(selectedCartList ?? {})};
           console.log(
             'getCartList OrderCustomization:-',
             getCartList,
             CustomizeItem,
+            addOnData,
           );
 
           let updatedCustomizeItem = {
             ...CustomizeItem,
-            selling_price: iPrice ? iPrice : sellAmount,
+            selling_price: sellAmount,
             quantity: quan,
             food_item_id: CustomizeItem?._id,
-            food_item_price: iPrice ? iPrice : sellAmount,
+            food_item_price: sellAmount,
+            selected_add_on: addons ?? [],
           };
 
           if (Array?.isArray(getCartList?.cart_items)) {
@@ -658,51 +671,59 @@ const ResturantProducts = memo(({navigation, route}) => {
               cartItem => cartItem?.food_item_id === updatedCustomizeItem?._id,
             );
             // console.log('getCartList checkAvailability', checkAvailabilityById);
-            if (getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id) {
-            let updatedCartList = getCartList?.cart_items;
-            if (checkAvailabilityById) {
-              updatedCartList = getCartList?.cart_items?.map(data => {
-                if (data?.food_item_id == updatedCustomizeItem?._id) {
-                  return {...data, quantity: quan};
+            if (
+              getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id
+            ) {
+              let updatedCartList = getCartList?.cart_items;
+              if (checkAvailabilityById) {
+                updatedCartList = getCartList?.cart_items?.map(data => {
+                  if (data?.food_item_id == updatedCustomizeItem?._id) {
+                    return {
+                      ...data,
+                      quantity: quan,
+                      food_item_price: sellAmount,
+                    };
+                  }
+                  return {
+                    ...data,
+                  };
+                });
+                // console.log(
+                //   'updatedCartList--',
+                //   updatedCartList,
+                //   appUser,
+                //   restaurant,
+                //   getCartList,
+                // );
+                const resUpdateCart = await updateCart(
+                  updatedCartList,
+                  appUser,
+                  restaurant,
+                  getCartList,
+                  addOnData,
+                );
+                if (resUpdateCart?.statusCode == 200) {
+                  getUserCart(groupProducts);
                 }
-                return {
-                  ...data,
-                };
-              });
-              // console.log(
-              //   'updatedCartList--',
-              //   updatedCartList,
-              //   appUser,
-              //   restaurant,
-              //   getCartList,
-              // );
-              const resUpdateCart = await updateCart(
-                updatedCartList,
-                appUser,
-                restaurant,
-                getCartList,
-              );
-              if (resUpdateCart?.statusCode == 200) {
-                getUserCart(groupProducts);
+              } else {
+                // console.log('updateCart--', updatedCartList, appUser, restaurant, [
+                //   newItem,
+                // ]);
+                const resUpdateCart = await updateCart(
+                  [...updatedCartList, ...[updatedCustomizeItem]],
+                  appUser,
+                  restaurant,
+                  getCartList,
+                  addOnData,
+                );
+                if (resUpdateCart?.statusCode == 200) {
+                  getUserCart(groupProducts);
+                }
               }
             } else {
-              // console.log('updateCart--', updatedCartList, appUser, restaurant, [
-              //   newItem,
-              // ]);
-              const resUpdateCart = await updateCart(
-                [...updatedCartList, ...[updatedCustomizeItem]],
-                appUser,
-                restaurant,
-                getCartList,
-              );
-              if (resUpdateCart?.statusCode == 200) {
-                getUserCart(groupProducts);
-              }
+              setClickItem(updatedCustomizeItem);
+              setIsRemoveCart(true);
             }
-           }else{
-            setClickItem(updatedCustomizeItem);
-            setIsRemoveCart(true);
-          }
           } else {
             console.log('setCart--first', appUser, restaurant, [
               updatedCustomizeItem,

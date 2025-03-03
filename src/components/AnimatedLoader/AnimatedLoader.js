@@ -15,6 +15,8 @@ import FoodHomeLoader from './FoodHomeLoader';
 import RestaurantCartLoader from './RestaurantCartLoader';
 import RestaurantItemLoader from './RestaurantItemLoader';
 import FavoriteRestaurantLoader from './FavoriteRestaurantLoader';
+import RestaurantReviewsLoader from './RstaurantReviewsLoader';
+import CoupansListLoader from './CoupansListLoader';
 
 const AnimatedLoader = ({type,absolute}) => {
   return (
@@ -30,6 +32,10 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'restaurantCartLoader' &&  <RestaurantCartLoader/>}
       {type == 'restaurantItemLoader' && <RestaurantItemLoader/>}
       {type == 'favoriteRestaurantLoader' && <FavoriteRestaurantLoader/>}
+      {type == 'restaurantReviewsLoader' && <RestaurantReviewsLoader/>}
+      {type == 'coupansListLoader' && <CoupansListLoader/>}
+      
+      
       
  
       

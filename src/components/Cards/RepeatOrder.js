@@ -20,7 +20,7 @@ import { appImages, appImagesSvg } from '../../commons/AppImages';
 
 const RepeatOrder = ({ data, onPress ,onPressLikeDislike}) => {
   const renderRepeatOrderItem = ({ item, index }) => {
-    console.log('item, index--RepeatOrder', item, index);
+    // console.log('item, index--RepeatOrder', item, index);
 
     return (
       <TouchableOpacity onPress={() => {onPress(item) }} activeOpacity={1}>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', marginTop: '3%', marginLeft: '5%'
   },
   noDataText: {
-    fontSize: RFValue(11), fontFamily: fonts.medium, color: colors.black
+    fontSize: RFValue(12), fontFamily: fonts.medium, color: colors.black
   }
 });
 const unlike = `<svg width="19" height="19" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg">

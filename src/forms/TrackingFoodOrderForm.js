@@ -36,7 +36,6 @@ import {
   setCurrentLocation,
 } from '../components/GetAppLocation';
 import TrackingFoodDetailsComp from '../components/TrackingFoodDetailsComp';
-import ReviewsRatingComp from '../components/ReviewsRatingComp';
 
 const trackArray = [
   {
@@ -183,7 +182,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
     setTrackItem(res?.length > 0 ? res[0] : {});
     setOrigin(res?.length > 0 ? res[0]?.sender_address?.geo_location : {});
   };
-  console.log('trackItem---', trackItem);
+  // console.log('trackItem---', trackItem);
 
   const handleLoading = v => {
     setLoading(v);
@@ -243,7 +242,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
   };
 
   const renderItem = ({item, index}) => {
-    console.log('item--', item, index);
+    // console.log('item--', item, index);
     if (index == 0) {
       setTrackItem(item);
       //   setOrigin(item?.sender_address?.geo_location);

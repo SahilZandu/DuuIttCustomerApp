@@ -23,10 +23,15 @@ import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
-  const [textInputt, setTextInput] = useState('');
+const AddNote = ({visible, onClose, addNote, onSelectAddNote}) => {
+  const [textInputt, setTextInput] = useState(addNote ?? '');
   const onChangeText = text => {
     setTextInput(text);
+  };
+
+  const handleSave = () => {
+    onSelectAddNote(textInputt);
+    onClose()
   };
 
   return (
@@ -41,7 +46,12 @@ const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
         showsVerticalScrollIndicator={false}
         bounces={false}>
         <View style={styles.container}>
-          <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
+          <Pressable
+            onPress={() => {
+              onClose();
+              setTextInput('');
+            }}
+            style={styles.backButtonTouch}>
             <Image
               resizeMode="contain"
               style={{height: 45, width: 45}}
@@ -55,7 +65,7 @@ const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
               contentContainerStyle={{paddingBottom: '5%'}}>
               <View style={styles.scrollInnerView}>
                 <Text numberOfLines={1} style={styles.titleText}>
-                  Add a note for the restaurant
+                {'Add a note for the restaurant'}
                 </Text>
 
                 <View style={styles.mainInnerView}>
@@ -65,14 +75,14 @@ const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
                       underlineColor="transparent"
                       underlineColorAndroid={'transparent'}
                       placeholder="e.g. Don’t make it too spicy"
-                      maxLength={100}
+                      maxLength={150}
                       numberOfLines={5}
                       multiline
                       value={textInputt} // Bind the input value to state
                       onChangeText={onChangeText}
                       style={styles.inputTextView}></TextInput>
                     <Text style={styles.textLength}>
-                      {textInputt?.length}/100
+                      {textInputt?.length}/150
                     </Text>
                   </View>
 
@@ -82,7 +92,9 @@ const AddNote = ({visible, onClose, menu, onSelectMenu}) => {
                     }
                   </Text>
                   <Spacer space={'8%'} />
-                  <BTN title={'Save'} />
+                  <BTN 
+                  disable={textInputt?.length > 0 ?false :true}
+                  onPress={handleSave} title={'Save'} />
                 </View>
               </View>
             </ScrollView>
@@ -114,7 +126,7 @@ const styles = StyleSheet.create({
   },
   mainWhiteView: {
     backgroundColor: colors.white,
-    height: hp('52%'),
+    height: hp('47%'),
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     borderColor: colors.colorF9,
@@ -152,7 +164,7 @@ const styles = StyleSheet.create({
     // elevation: 5,
     marginBottom: 10,
     marginTop: '3%',
-    height: hp('24%'),
+    height: hp('17%'),
   },
   textLength: {
     fontFamily: fonts.semiBold,
@@ -167,5 +179,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: RFValue(11),
     color: colors.color64,
+    marginTop: '4%',
   },
 });

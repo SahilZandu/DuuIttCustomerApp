@@ -46,7 +46,7 @@ const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
         <View style={styles.innerView}>
           <View style={styles.imageTrackView}>
             <Image
-              resizeMode="contain"
+              resizeMode='cover'
               style={styles.image}
               source={
                 item?.restaurant?.banner?.length > 0

@@ -21,7 +21,7 @@ import Url from '../../api/Url';
 const RecommendedOrder = ({ data, onPress,onAddDec }) => {
   
   const renderRecommendedOrderItem = ({ item, index }) => {
-    console.log('renderRecommendedOrderItem--', item, index);
+    // console.log('renderRecommendedOrderItem--', item, index);
 
     return (
       <View style={styles.itemContainer(index)}>
@@ -180,6 +180,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center', marginTop: '3%', marginLeft: '5%'
   },
   noDataText: {
-    fontSize: RFValue(11), fontFamily: fonts.medium, color: colors.black
+    fontSize: RFValue(12), fontFamily: fonts.medium, color: colors.black
   }
 });

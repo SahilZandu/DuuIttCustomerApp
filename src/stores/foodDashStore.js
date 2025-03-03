@@ -317,7 +317,7 @@ export default class FoodDashStore {
     let requestData = {
       restaurant_id: restaurant?._id,
     };
-    console.log('requestData---getCompleteMealItems',requestData);
+    console.log('requestData---getCompleteMealItems', requestData);
     try {
       const res = await agent.completeMealItems(requestData);
       console.log('getCompleteMealItems Res : ', res);

@@ -29,6 +29,7 @@ const CartItems = ({
   handlenoteVisibility,
   isCartScreen,
   onEdit,
+  addANote,
 }) => {
   // isOpenNote=isOpen
   const getType = icon => {
@@ -51,10 +52,13 @@ const CartItems = ({
 
   const getIsAddons = item => {
     // return item.addon_item && item.addon_item.length > 0 ? true : false;
-    return item?.addon && item?.addon?.length > 0 ? true : false;
+    return item?.selected_add_on && item?.selected_add_on?.length > 0
+      ? true
+      : false;
   };
 
   const EditBtn = ({item}) => {
+    console.log('EditBtn item--', item);
     if (getIsVarient(item) || getIsAddons(item)) {
       return (
         <Pressable onPress={() => onEdit(item)} style={styles.editBtnView}>
@@ -152,20 +156,19 @@ const CartItems = ({
               )}
             </View> */}
             <View>
-              {item?.addon && item?.addon.length > 0 && (
+              {item?.selected_add_on && item?.selected_add_on?.length > 0 && (
                 <View style={styles.addonsView}>
-                  <View
-                    style={styles.addonInnerView}>
-                    {item?.addon?.map((items, i) => (
+                  <View style={styles.addonInnerView}>
+                    {item?.selected_add_on?.map((items, i) => (
                       <Fragment key={i}>
-                        {items?.addon?.map((data, key) => (
-                          <Text style={styles.addonsText} key={`${i}-${key}`}>
-                            {data?.name}
-                            {' , '}
-                            {/* {key === items?.addon.length - 1 ? '' : ', '} */}
-                          </Text>
-                        ))}
-                        {i === item?.addon.length - 1 && (
+                        {/* {items?.addon?.map((data, key) => ( */}
+                        <Text style={styles.addonsText} key={`${i}-${key}`}>
+                          {items?.addon_name}
+                          {' , '}
+                          {/* {key === items?.addon.length - 1 ? '' : ', '} */}
+                        </Text>
+                        {/* ))} */}
+                        {i === item?.selected_add_on?.length - 1 && (
                           <EditBtn item={item} />
                         )}
                       </Fragment>
@@ -173,6 +176,7 @@ const CartItems = ({
                   </View>
                 </View>
               )}
+              {!item?.selected_add_on?.length > 0 && <EditBtn item={item} />}
             </View>
 
             {key !== appCart?.cartitems?.length - 1 && <DotedLine />}
@@ -187,7 +191,9 @@ const CartItems = ({
         }}
         style={styles.addNoteView}>
         <Image style={styles.noteImage} source={appImages.retaurentNote} />
-        <Text style={styles.noteText}>Add a note for the restaurant</Text>
+        <Text style={styles.noteText}>
+          {addANote?.length > 0 ? addANote : 'Add a note for the restaurant'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -307,7 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: '2%',
   },
-  addonInnerView:{
+  addonInnerView: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -335,6 +341,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: {width: 0, height: 4},
     marginLeft: wp('3%'),
+    width: wp('84%'),
   },
   noteImage: {
     width: wp('4%'),
@@ -344,7 +351,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: RFValue(10),
     color: colors.color24,
-    marginLeft: '2%',
+    marginHorizontal: '3%',
   },
   editBtnView: {
     marginLeft: wp('1.5%'),

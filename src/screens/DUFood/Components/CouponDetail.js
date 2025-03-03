@@ -21,9 +21,25 @@ import DotedLine from './DotedLine';
 import {colors} from '../../../theme/colors';
 import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
+import {currencyFormat} from '../../../halpers/currencyFormat';
 
-const CouponDetail = ({visible, onClose, item, onApply}) => {
-  console.log('item--', item);
+const CouponDetail = ({
+  visible,
+  selectedData,
+  onClose,
+  item,
+  onApply,
+  getCartTotal,
+}) => {
+  // console.log(
+  //   'item--',
+  //   item,
+  //   getCartTotal,
+  // );
+
+  const isDisabled = 
+  selectedData?.referral_code === item?.referral_code || 
+  getCartTotal?.cartTotal < item?.discount_price;
 
   let list = [
     {
@@ -32,7 +48,7 @@ const CouponDetail = ({visible, onClose, item, onApply}) => {
     },
     {
       id: '2',
-      title: `Maximum instant discount of ₹ ${item?.upTo}`,
+      title: `Maximum instant discount of ₹ ${item?.discount_price}`,
     },
     {
       id: '3',
@@ -40,7 +56,7 @@ const CouponDetail = ({visible, onClose, item, onApply}) => {
     },
     {
       id: '4',
-      title: 'Maximum instant discount of ',
+      title: 'Other T&Cs may apply.',
     },
   ];
 
@@ -78,12 +94,19 @@ const CouponDetail = ({visible, onClose, item, onApply}) => {
                         source={appImages.offerPercent}
                       />
                       <Text style={styles.getText}>
-                        {`Get ${item?.percent} OFF up to ₹${item?.upTo}`}
+                        Get{' '}
+                        {item?.discount_type === 'percentage'
+                          ? `${item?.discount_percentage}%`
+                          : currencyFormat(
+                              Number(item?.discount_percentage),
+                            )}{' '}
+                        OFF up to{' '}
+                        {currencyFormat(Number(item?.discount_percentage))}
                       </Text>
                     </View>
 
                     <Text style={styles.refralCodeText}>
-                      {item?.referalCode}
+                      {item?.referral_code}
                     </Text>
                     {list?.map((data, i) => {
                       return (
@@ -101,7 +124,14 @@ const CouponDetail = ({visible, onClose, item, onApply}) => {
                     })}
                   </View>
                   <Spacer space={'13%'} />
-                  <BTN title={'Apply'} onPress={onApply} />
+                  <BTN
+                    disable={
+                      isDisabled ? true
+                        : false
+                    }
+                    title={'Apply'}
+                    onPress={onApply}
+                  />
                 </View>
               </View>
             </View>
@@ -184,7 +214,7 @@ const styles = StyleSheet.create({
   refralCodeText: {
     marginLeft: '10%',
     borderRadius: 12,
-    width: wp('24%'),
+    width: wp('26%'),
     marginTop: '3%',
     textAlign: 'center',
     paddingVertical: '0.8%',

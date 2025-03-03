@@ -12,6 +12,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+
+let renderText =''
+
 const DeliveryCart = ({
   DeliveryInMint,
   address,
@@ -28,7 +31,17 @@ const DeliveryCart = ({
   totalBill,
   cartBillG,
   onPressLocation,
+  txtInstArray,
 }) => {
+  console.log('txtInstArray--', txtInstArray);
+  useEffect(()=>{
+    if(txtInstArray){
+     renderText = txtInstArray?.join(', ');
+      console.log(renderText);
+    }
+  },[txtInstArray])
+
+
   const AddInstruction = () => {
     return (
       <TouchableOpacity
@@ -40,7 +53,15 @@ const DeliveryCart = ({
           style={styles.resImage}
           source={appImages.retaurentNote}
         />
-        {isTxtInst && <Text style={styles.instructionText}>{instuctions}</Text>}
+        <View style={{ width:wp("65%"),flexDirection:'row',flexWrap:'wrap',}}>
+        {txtInstArray?.length > 0 ? (
+                <Text style={styles.instructionText}>{renderText}</Text>
+        ) : (
+          <>
+         {!isAudio && (<Text style={styles.instructionText}>{instuctions}</Text>)}
+         </>
+        )}
+        {/* {isTxtInst && <Text style={styles.instructionText}>{instuctions}</Text>} */}
         {isAudio && (
           <View style={styles.audioView}>
             <SvgXml
@@ -49,6 +70,7 @@ const DeliveryCart = ({
             <Text style={styles.audioInstText}>{audioInstuctions}</Text>
           </View>
         )}
+        </View>
       </TouchableOpacity>
     );
   };
@@ -61,10 +83,10 @@ const DeliveryCart = ({
       </View>
 
       <View style={styles.mainDeliverycartView}>
-        <TouchableOpacity 
-        onPress={onPressLocation}
-        activeOpacity={0.8}
-        style={styles.deliveryAddressView}>
+        <TouchableOpacity
+          onPress={onPressLocation}
+          activeOpacity={0.8}
+          style={styles.deliveryAddressView}>
           <View style={styles.deliveryAddressInnerView}>
             <SvgXml xml={appImagesSvg.markerColor} />
             <View style={styles.addressView}>
@@ -92,7 +114,7 @@ const DeliveryCart = ({
               </Text>
             </View>
           </View>
-          <SvgXml xml={appImagesSvg.rightArrow} />
+          {/* <SvgXml xml={appImagesSvg.rightArrow} /> */}
         </View>
 
         <DotedLine marginTop={'3%'} />

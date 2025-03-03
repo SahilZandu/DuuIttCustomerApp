@@ -96,10 +96,14 @@ export default function PriceConfirmed({navigation, route}) {
   };
 
   const handlePriceFindRider = () => {
-    navigation.navigate('searchingRide', {
-      paymentMethod: initialValues?.paymentMethods,
-      totalAmount:total,
-    });
+    setIsPriceModal(false);
+    setTimeout(()=>{
+      navigation.navigate('searchingRide', {
+        paymentMethod: initialValues?.paymentMethods,
+        totalAmount:total,
+      });
+    },500)
+   
   };
 
   const onGestureEvent = ({nativeEvent}) => {

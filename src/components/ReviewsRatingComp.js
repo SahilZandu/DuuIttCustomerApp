@@ -36,6 +36,7 @@ const ReviewsRatingComp = ({
   onHandleLoading,
   data,
   type,
+  reviewToRider
 }) => {
   const {addReviews} = rootStore.dashboardStore;
   const [initialValues, setInitialValues] = useState({
@@ -97,7 +98,7 @@ const ReviewsRatingComp = ({
   const handleUpdate = async values => {
     console.log('values---', values);
     let payload = {};
-    if (type == 'FOOD') {
+    if (reviewToRider === false) {
       payload = {
         review: values?.feedback,
         rating: values?.rating,
@@ -105,6 +106,7 @@ const ReviewsRatingComp = ({
         order_id: data?._id,
         restaurant_id: data?.restaurant?._id,
         rider_id: '674004448c0213057bd1519c',
+        review_to_rider:reviewToRider
       };
     } else {
       payload = {
@@ -113,6 +115,7 @@ const ReviewsRatingComp = ({
         type: type,
         order_id: data?._id,
         rider_id: '674004448c0213057bd1519c',
+        review_to_rider:reviewToRider
       };
     }
     const res = await addReviews(payload, handleLoading);

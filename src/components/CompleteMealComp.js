@@ -23,7 +23,7 @@ const CompleteMealComp = ({item, index, handleAddDecMeal}) => {
     return (
       <>
         {item?.food_items?.quantity > 0 ? (
-          <View style={styles.mealQuantityView}>
+          <View  style={styles.mealQuantityView}>
             <TouchableOpacity
               onPress={() => {
                 handleAddDecMeal(item, Number(item?.food_items?.quantity) - 1);
@@ -57,8 +57,9 @@ const CompleteMealComp = ({item, index, handleAddDecMeal}) => {
       </>
     );
   };
+  
   return (
-    <View style={styles.itemContainer}>
+    <View key={index} style={styles.itemContainer}>
       <Image
         source={
           item?.food_items?.image?.length > 0

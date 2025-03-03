@@ -343,16 +343,19 @@ export default class CartStore {
     }
   };
 
-  updateCart = async (cartArray, appUser, restaurant, cart) => {
+  updateCart = async (cartArray, appUser, restaurant, cart,addOnData) => {
     let filterData = cartArray?.filter(item => item?.quantity >= 1) || [];
-
     console.log('filterData--', filterData);
+    let addonsData={
+      ...addOnData
+      }
 
     let requestData = {
       restaurant_id: restaurant?._id,
       user_id: appUser?._id,
       cart_items: filterData,
       cart_id: cart?._id,
+      selected_add_on:addonsData ?? {},
     };
     console.log(
       'requestData updateCart: ',
@@ -361,6 +364,7 @@ export default class CartStore {
       appUser,
       restaurant,
       cart,
+      addonsData
     );
     //  return
     try {

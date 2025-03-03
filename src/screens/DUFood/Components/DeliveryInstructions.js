@@ -39,6 +39,7 @@ const DeliveryInstructions = ({
   onSelectMenu,
   audioInstruction,
   txtInstuctions,
+  txtInstArray,
 }) => {
   const ref = useRef(null);
   const stref = useRef(null);
@@ -46,7 +47,7 @@ const DeliveryInstructions = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPLayig] = useState(false);
   const [isAudio, setIsAudio] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState(txtInstArray ?? []);
   // useEffect(() => {
 
   //   return () => {
@@ -74,21 +75,63 @@ const DeliveryInstructions = ({
     }
   };
 
+  // const toggleSelection = item => {
+  //   // setSelectedItems(prevSelected => {
+  //   //   if (prevSelected?.includes(item?.text)) {
+  //   //     // console.log('prevSelected>');
+  //   //     return prevSelected?.filter(itemm => itemm !== item?.text); // Remove from selected
+  //   //   } else {
+  //   //     // console.log('new>', item.text);
+  //   //     return [...prevSelected, item?.text]; // Add to selected
+  //   //   }
+  //   // });
+  //   const updatedSelectedItems = selectedItems.includes(item?.text)
+  //   ? selectedItems.filter(selected => selected !== item?.text) // Remove item if already selected
+  //   : [...selectedItems, item?.text]; // Add item if not already selected
+
+  //    setSelectedItems(updatedSelectedItems);
+  //    txtInstuctions(updatedSelectedItems)
+  // };
+
+
   const toggleSelection = item => {
-    setSelectedItems(prevSelected => {
-      if (prevSelected.includes(item.text)) {
-        console.log('prevSelected>');
-        return prevSelected.filter(itemm => itemm !== item.text); // Remove from selected
-      } else {
-        console.log('new>', item.text);
-        return [...prevSelected, item.text]; // Add to selected
-      }
-    });
+    let updatedSelectedItems = [...selectedItems];
+
+    // Remove the selected item if it already exists
+    updatedSelectedItems = updatedSelectedItems?.filter(
+      selected => selected !== item?.text,
+    );
+
+    // Define mutually exclusive options
+    if (item?.text === 'Leave with guard') {
+      updatedSelectedItems = updatedSelectedItems?.filter(
+        selected =>
+          selected !== 'Leave at door' && selected !== 'Don’t ring the bell',
+      );
+    } else if (
+      item?.text === 'Leave at door' ||
+      item?.text === 'Don’t ring the bell'
+    ) {
+      updatedSelectedItems = updatedSelectedItems?.filter(
+        selected => selected !== 'Leave with guard',
+      );
+    }
+    
+    // If item was removed in the first step, don't add it again
+    if (!selectedItems?.includes(item?.text)) {
+      updatedSelectedItems.push(item?.text);
+    }
+
+    // console.log('Updated Selected Items:', updatedSelectedItems); // Debugging
+
+    // Update the state separately
+    setSelectedItems(updatedSelectedItems);
+    txtInstuctions(updatedSelectedItems); // Update instructions
   };
 
   const startNewPlayer = async () => {
     // currentPlayingRef = stref;
-    if (stref.current?.currentState === PlayerState.paused) {
+    if (stref?.current?.currentState === PlayerState.paused) {
       await stref.current?.resumePlayer();
     } else {
       console.log('ply>');
@@ -136,15 +179,16 @@ const DeliveryInstructions = ({
   // Render item for the FlatList
   const renderItem = ({item, index}) => {
     const isSelected = selectedItems?.includes(item.text);
-    if (selectedItems.length > 0) {
-      setRecodedFilePath('');
-      txtInstuctions(selectedItems);
-    } else {
-      txtInstuctions(null);
-    }
+    // if (selectedItems?.length > 0) {
+    //   // setRecodedFilePath('');
+    //   txtInstuctions(selectedItems);
+    // } else {
+    //   txtInstuctions(null);
+    // }
 
     return (
       <TouchableOpacity
+        key={index}
         activeOpacity={0.8}
         style={[
           styles.renderItemStyle,
@@ -156,7 +200,7 @@ const DeliveryInstructions = ({
         onPress={() => {
           toggleSelection(item);
           console.log('ss', selectedItems);
-          txtInstuctions(selectedItems);
+          // txtInstuctions(selectedItems);
         }}>
         <SvgXml xml={item.img} />
         <Text style={styles.itemText}>{item.text}</Text>
@@ -208,7 +252,7 @@ const DeliveryInstructions = ({
                   } else {
                     console.log('onPress', isRecording);
                     setRecodedFilePath('');
-                    setSelectedItems([]);
+                    // setSelectedItems([]);
                     setIsRecording(!isRecording);
                     setTimeout(() => {
                       startRecording();
@@ -328,7 +372,7 @@ const DeliveryInstructions = ({
                   nestedScrollEnabled={false}
                   showsVerticalScrollIndicator={false}
                   data={items}
-                  keyExtractor={item => item?.id}
+                  keyExtractor={item => item?.id?.toString()}
                   renderItem={renderItem}
                   extraData={selectedItems} // Make sure to re-render the list when selection changes
                 />

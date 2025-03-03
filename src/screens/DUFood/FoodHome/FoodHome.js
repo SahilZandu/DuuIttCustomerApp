@@ -31,7 +31,7 @@ import CategoryCard from '../../../components/Cards/CategoryCard';
 import FoodTrackingOrder from '../Components/FoodTrackingOrder';
 import PopUp from '../../../components/appPopUp/PopUp';
 import ModalPopUpTouch from '../../../components/ModalPopUpTouch';
-import { colors } from '../../../theme/colors';
+import {colors} from '../../../theme/colors';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
 let geoLocation = {
@@ -40,7 +40,7 @@ let geoLocation = {
 };
 
 let perPage = 20;
-
+let recommendedData = [];
 export default function FoodHome({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {deleteCart, getCart, setCart, updateCart} = rootStore.cartStore;
@@ -86,7 +86,6 @@ export default function FoodHome({navigation}) {
   const [isReviewStar, setIsReviewStar] = useState(true);
   const [loadingRating, setLoadingRating] = useState(false);
 
-
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -109,14 +108,17 @@ export default function FoodHome({navigation}) {
   };
   const getRepeatedOrderListData = async () => {
     const res = await getRepeatedOrderList(handleLoading);
-    // console.log("res getRepeatedOrderListData",res)
+    console.log('res getRepeatedOrderListData', res);
     setRepeatOrdersList(res);
   };
   const getRecomendedItemsData = async () => {
     const res = await getRecomendedItems(handleLoading);
-    // console.log("res getRecomendedItemsData",res)
+    // console.log("res getRecomendedItemsData",res,recomendedList)
     setRecomendedList(res);
+    recommendedData = res;
   };
+
+  // console.log('res getRecomendedItemsData', recomendedList);
 
   const getCategoryList = async () => {
     // console.log('getCategoryList');
@@ -195,6 +197,7 @@ export default function FoodHome({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
+      recommendedData = recommendedOrderList;
       checkInternet();
       handleAndroidBackButton(navigation);
       setCurrentLocation();
@@ -206,10 +209,11 @@ export default function FoodHome({navigation}) {
           getCategoryList();
         }
       }, 300);
+
+      getRecomendedItemsData();
       onUpdateUserInfo();
       getCartItemsCount();
       getRepeatedOrderListData();
-      getRecomendedItemsData();
     }, []),
   );
 
@@ -316,7 +320,7 @@ export default function FoodHome({navigation}) {
   const onCheckRecommededItem = foodItemArray => {
     console.log('foodItemArray--', foodItemArray);
     if (foodItemArray?.length > 0) {
-      let recommendedListData = (recomendedList ?? []).map(item => {
+      let recommendedListData = (recommendedData ?? []).map(item => {
         const exactItem = foodItemArray?.find(data => data?._id === item?._id);
         return exactItem
           ? {
@@ -326,15 +330,22 @@ export default function FoodHome({navigation}) {
                 quantity: exactItem?.quantity, // ✅ Update quantity inside `item.item`
               },
             }
-          : {...item,
-            item: {
-              ...item.item, // Keep existing properties
-              quantity:0, // ✅ Update quantity inside `item.item`
-            },};
+          : {
+              ...item,
+              item: {
+                ...item.item, // Keep existing properties
+                quantity: 0, // ✅ Update quantity inside `item.item`
+              },
+            };
       });
       console.log('recommendedListData--', recommendedListData);
       // Ensure a state update with a new reference
-      setRecomendedList(recommendedListData);
+      if (recommendedListData?.length > 0) {
+        setRecomendedList(recommendedListData);
+        recommendedData = recommendedListData;
+      } else {
+        setRecomendedList(recommendedData);
+      }
     } else {
       getRecomendedItemsData();
     }
@@ -342,7 +353,7 @@ export default function FoodHome({navigation}) {
 
   const onDeleteCart = async showPopUp => {
     const deleteCartData = await deleteCart(cartItems, showPopUp);
-    console.log('deleteCartData--', deleteCartData);
+    // console.log('deleteCartData--', deleteCartData);
     if (deleteCartData?.restaurant_id?.length > 0) {
       setIsRemoveCart(false);
       getCartItemsCount();
@@ -410,7 +421,7 @@ export default function FoodHome({navigation}) {
 
   const onDeleteCartUpdateRest = async showPopUp => {
     const deleteCartData = await deleteCart(cartItems, showPopUp);
-    console.log('deleteCartData--', deleteCartData);
+    // console.log('deleteCartData--', deleteCartData);
     let restaurant = {
       _id: clickItem?.item?.restaurant_id,
     };
@@ -426,12 +437,12 @@ export default function FoodHome({navigation}) {
   };
 
   const handleAddDecRecommended = async (item, quan) => {
-    console.log(
-      'item ,quantity---',
-      item,
-      quan,
-      item?.restaurant_id || item?.item?.restaurant_id,
-    );
+    // console.log(
+    //   'item ,quantity---',
+    //   item,
+    //   quan,
+    //   item?.restaurant_id || item?.item?.restaurant_id,
+    // );
     // return
     let restaurant = {
       _id: item?.restaurant_id || item?.item?.restaurant_id,
@@ -451,10 +462,19 @@ export default function FoodHome({navigation}) {
 
     if (getCartList?.cart_items?.length > 0) {
       if (getCartList?.restaurant_id == item?.item?.restaurant_id) {
-        const checkAvailabilityById = getCartList?.cart_items?.find(
-          cartItem => cartItem?.food_item_id === item?._id,
+        // const checkAvailabilityById = getCartList?.cart_items?.find(
+        //   cartItem => cartItem?.food_item_id === item?._id,
+        // );
+        // console.log('getCartList checkAvailability', checkAvailabilityById);
+
+        const checkAvailabilityById = getCartList?.food_item?.find(
+          cartItem => cartItem?._id === item?._id,
         );
-        console.log('getCartList checkAvailability', checkAvailabilityById);
+        // console.log('getCartList checkAvailability', checkAvailabilityById);
+        let addOnData = {
+          food_item_id: item?._id,
+          add_on_items: checkAvailabilityById?.selected_add_on ?? [],
+        };
 
         let updatedCartList = getCartList?.cart_items;
 
@@ -467,31 +487,33 @@ export default function FoodHome({navigation}) {
               ...data,
             };
           });
-          console.log(
-            'updatedCartList--',
-            updatedCartList,
-            appUser,
-            restaurant,
-            getCartList,
-          );
+          // console.log(
+          //   'updatedCartList--',
+          //   updatedCartList,
+          //   appUser,
+          //   restaurant,
+          //   getCartList,
+          // );
           const resUpdateCart = await updateCart(
             updatedCartList,
             appUser,
             restaurant,
             getCartList,
+            addOnData,
           );
           if (resUpdateCart?.statusCode == 200) {
             getCartItemsCount();
           }
         } else {
-          console.log('updateCart--', updatedCartList, appUser, restaurant, [
-            newItem,
-          ]);
+          // console.log('updateCart--', updatedCartList, appUser, restaurant, [
+          //   newItem,
+          // ]);
           const resUpdateCart = await updateCart(
             [...updatedCartList, ...[newItem]],
             appUser,
             restaurant,
             getCartList,
+            addOnData,
           );
 
           if (resUpdateCart?.statusCode == 200) {
@@ -503,7 +525,7 @@ export default function FoodHome({navigation}) {
         setIsRemoveCartOtherRes(true);
       }
     } else {
-      console.log('setCart--first', [newItem], appUser, restaurant);
+      // console.log('setCart--first', [newItem], appUser, restaurant);
       const resSetCart = await setCart([newItem], appUser, restaurant);
       if (resSetCart?.restaurant_id?.length > 0) {
         // getCartItemsCount();
@@ -549,39 +571,52 @@ export default function FoodHome({navigation}) {
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles.mainScreen}
-            stickyHeaderIndices={[4]}
+            stickyHeaderIndices={
+              (repeatOrdersList?.length ?? 0) > 2 &&
+              (recomendedList?.length ?? 0) > 2
+                ? [3]
+                : (repeatOrdersList?.length ?? 0) > 2 ||
+                  (recomendedList?.length ?? 0) > 2
+                ? [2]
+                : [1]
+            }
+            // stickyHeaderIndices={[3]}
             contentContainerStyle={{
               flexGrow: 1,
               paddingBottom: hp('10%'),
             }}>
-            <View style={styles.sliderMainView}>
+            {/* <View style={styles.sliderMainView}>
               <View style={styles.sliderInnerView}>
                 <FoodSlider
                   data={sliderItems}
                   imageWidth={wp('78%')}
-                  imageHeight={hp('18%')}
+                  imageHeight={hp('16%')}
                 />
               </View>
-            </View>
+            </View> */}
 
-            <View style={styles.orderMainView}>
-              <RepeatOrder
-                data={repeatOrdersList}
-                onPress={item => {
-                  onPressRepeatOrder(item);
-                }}
-                onPressLikeDislike={item => {
-                  handleLikeDislikeRepeated(item);
-                }}
-              />
-            </View>
+            {repeatOrdersList?.length > 2 && (
+              <View style={styles.orderMainView}>
+                <RepeatOrder
+                  data={repeatOrdersList}
+                  onPress={item => {
+                    onPressRepeatOrder(item);
+                  }}
+                  onPressLikeDislike={item => {
+                    handleLikeDislikeRepeated(item);
+                  }}
+                />
+              </View>
+            )}
 
-            <View style={styles.orderMainView}>
-              <RecommendedOrder
-                data={recomendedList}
-                onAddDec={handleAddDecRecommended}
-              />
-            </View>
+            {recomendedList?.length > 2 && (
+              <View style={styles.orderMainView}>
+                <RecommendedOrder
+                  data={recomendedList}
+                  onAddDec={handleAddDecRecommended}
+                />
+              </View>
+            )}
 
             <View style={styles.orderMainView}>
               <CategoryCard data={categoryList} navigation={navigation} />
@@ -631,9 +666,7 @@ export default function FoodHome({navigation}) {
           <View style={styles.bottomCartBtnView}>
             {trackedArray?.length > 0 && (
               <FoodTrackingOrder
-                bottom={
-                  cartItems?.food_item?.length > 0 ? hp('18%') : hp('8%')
-                }
+                bottom={cartItems?.food_item?.length > 0 ? hp('18%') : hp('8%')}
                 navigation={navigation}
                 trackedArray={trackedArray}
               />
@@ -698,7 +731,6 @@ export default function FoodHome({navigation}) {
       loading={loadingRating}
       onHandleLoading={(v)=>{setLoadingRating(v)}}
       /> */}
-      
     </View>
   );
 }

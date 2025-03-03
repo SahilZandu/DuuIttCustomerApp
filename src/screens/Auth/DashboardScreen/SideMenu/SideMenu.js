@@ -270,7 +270,7 @@ export default function SideMenu({navigation}) {
         item={initialValues}
         appUser={appUser}
       />
-      <Spacer space={'2%'} />
+      <Spacer space={'1%'} />
       <AppInputScroll
         Pb={'57%'}
         padding={true}

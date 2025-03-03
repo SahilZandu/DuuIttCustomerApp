@@ -1,10 +1,8 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useEffect, useState,useCallback} from 'react';
 import {
   View,
   Text,
-  Pressable,
   Image,
-  ScrollView,
   FlatList,
   TouchableOpacity,
   StyleSheet,
@@ -23,59 +21,54 @@ import {useFocusEffect} from '@react-navigation/native';
 import {colors} from '../../../theme/colors';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import CouponDetail from '../Components/CouponDetail';
+import {rootStore} from '../../../stores/rootStore';
+import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 
-const couponsList = [
-  {
-    id: '1',
-    percent: '20%',
-    upTo: 75,
-    referalCode: 'DuuItt1',
-    status: 0,
-    time: 3,
-  },
-  {
-    id: '2',
-    percent: '10%',
-    upTo: 25,
-    referalCode: 'DuuItt2',
-    status: 0,
-    time: 10,
-  },
-  {
-    id: '3',
-    percent: '15%',
-    upTo: 55,
-    referalCode: 'DuuItt3',
-    status: 1,
-    time: 5,
-  },
-  {
-    id: '4',
-    percent: '30%',
-    upTo: 100,
-    referalCode: 'DuuItt4',
-    status: 0,
-    time: 4,
-  },
-  // Add more restaurants as needed
-];
 const CouponsList = ({navigation, route}) => {
-  const {restaurant} = route.params;
-
+  const {restaurant, selectedOffers, onCoupanSelected,couponList,getCartTotal} = route.params;
+  const {getRestaurantOffers} = rootStore.dashboardStore;
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [offerList, setOfferList] = useState(couponsList ?? []);
-  const [activeOffer, setActiveOffer] = useState({});
+  const [offerList, setOfferList] = useState(couponList ?? []);
+  const [activeOffer, setActiveOffer] = useState(selectedOffers ?? {});
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-      onCheckIsSelected();
-    }, []),
+      // onCheckIsSelected();
+      if(selectedOffers && couponList?.length > 0){
+        setOfferList(couponList)
+        onSelectedItem(selectedOffers)
+      }else{
+        getRestaurantOffersData();
+      }
+    }, [couponList,selectedOffers]),
   );
 
-  const onCheckIsSelected = () => {
-    const newList = offerList?.map((item, i) => {
+  console.log("getCartTotal--",getCartTotal);
+
+  const getRestaurantOffersData = async () => {
+    const restaurantCoupans = await getRestaurantOffers(
+      restaurant,
+      handleLoading,
+    );
+    if (restaurantCoupans?.length > 0) {
+      console.log('restaurantCoupans--', restaurantCoupans);
+      setOfferList(restaurantCoupans);
+      onCheckIsSelected(restaurantCoupans);
+      onSelectedItem(selectedOffers ?? restaurantCoupans[0])
+    } else {
+      setOfferList([]);
+    }
+  };
+
+  const handleLoading = v => {
+    console.log('v----', v);
+    setLoading(v);
+  };
+
+  const onCheckIsSelected = offersList => {
+    const newList = offersList?.map((item, i) => {
       if (item?.status == 1) {
         setActiveOffer(item);
         return {...item, status: 1};
@@ -86,13 +79,14 @@ const CouponsList = ({navigation, route}) => {
     setOfferList([...newList]);
   };
 
-  const onSelectedItem = index => {
+  const onSelectedItem = (data) => {
+    console.log("offerList---",offerList,data);
     const newOfferList = offerList?.map((item, i) => {
-      if (i == index) {
+      if (item?.referral_code == data?.referral_code) {
         setActiveOffer(item);
-        return {...item, status: 1};
+        return {...item, status: true};
       } else {
-        return {...item, status: 0};
+        return {...item, status: false};
       }
     });
     setOfferList([...newOfferList]);
@@ -104,7 +98,7 @@ const CouponsList = ({navigation, route}) => {
         key={index}
         activeOpacity={0.8}
         onPress={() => {
-          onSelectedItem(index);
+          onSelectedItem(item);
           setVisible(true);
         }}>
         <View style={styles.mainRenderView}>
@@ -112,27 +106,38 @@ const CouponsList = ({navigation, route}) => {
             <View style={styles.mainViewImageBtn}>
               <Image style={styles.image} source={appImages.offerPercent} />
               <Text numberOfLines={1} style={styles.percentText}>
-                Get {item?.percent} OFF up to{' '}
-                {currencyFormat(Number(item?.upTo))}
+                Get{' '}
+                {item?.discount_type === 'percentage'
+                  ? `${item?.discount_percentage}%`
+                  : currencyFormat(
+                      Number(item?.discount_percentage),
+                    )}{' '}
+                OFF up to{' '}
+                {currencyFormat(
+                  Number(item?.discount_percentage),
+                )}
               </Text>
             </View>
             <SvgXml
               width={18}
               height={18}
               xml={
-                item?.status == 1
+                item?.status == true
                   ? appImagesSvg.selectedRadioButton
                   : appImagesSvg.unSelectCheckBox
               }
             />
           </View>
           <Text style={styles.saveText}>
-            Save {currencyFormat(Number(item?.upTo))} with this code
+            Save{' '}
+            {currencyFormat(Number(item?.discount_price ?? item?.discount))}{' '}
+            with this code
           </Text>
-          <Text style={styles.referalCodeText}>{item?.referalCode}</Text>
+          <Text style={styles.referalCodeText}>
+            {item?.referral_code}
+          </Text>
         </View>
-        <View
-            style={styles.bottomLineView}/>
+        <View style={styles.bottomLineView} />
       </TouchableOpacity>
     );
   };
@@ -146,19 +151,40 @@ const CouponsList = ({navigation, route}) => {
           navigation.goBack();
         }}
       />
-      <FlatList
-        style={{marginTop: '2%'}}
-        data={offerList}
-        renderItem={renderCoupansItem}
-        keyExtractor={item => item?.id}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer}
-      />
+      {/* coupansListLoader */}
+      {loading ? (
+        <AnimatedLoader type={'coupansListLoader'} />
+      ) : (
+        <View style={{flex: 1}}>
+          {offerList?.length > 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              style={{marginTop: '2%'}}
+              data={offerList}
+              renderItem={renderCoupansItem}
+              keyExtractor={item => item?.id}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.listContainer}
+            />
+          ) : (
+            <View style={styles.NoDataView}>
+              <Text style={styles.NoDataText}>No Record Found</Text>
+            </View>
+          )}
+        </View>
+      )}
       <CouponDetail
+      
         onApply={() => {
+          onCoupanSelected(activeOffer);
           setVisible(false);
+          setTimeout(() => {
+            navigation.goBack();
+          }, 500);
         }}
+        selectedData={selectedOffers}
         item={activeOffer}
+        getCartTotal={getCartTotal}
         visible={visible}
         onClose={() => {
           setVisible(false);
@@ -180,7 +206,7 @@ const styles = StyleSheet.create({
   },
   mainRenderView: {
     marginHorizontal: 20,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   innerUpperView: {
     flexDirection: 'row',
@@ -214,7 +240,7 @@ const styles = StyleSheet.create({
   referalCodeText: {
     marginLeft: '8%',
     borderRadius: 12,
-    width: wp('24%'),
+    width: wp('26%'),
     marginTop: '3%',
     textAlign: 'center',
     color: colors.colorAF,
@@ -225,9 +251,19 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.colorAF,
   },
-  bottomLineView:{
+  bottomLineView: {
     backgroundColor: colors.colorD9,
     height: 1,
     margin: 20,
-  }
+  },
+  NoDataView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  NoDataText: {
+    fontSize: RFValue(15),
+    fontFamily: fonts.medium,
+    color: colors.black,
+  },
 });

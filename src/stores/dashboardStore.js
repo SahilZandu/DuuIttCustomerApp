@@ -5,6 +5,7 @@ import {useToast} from '../halpers/useToast';
 import {getUniqueId} from 'react-native-device-info';
 
 export default class DashboardStore {
+  restaurentOfferCoupan = [];
 
   updateProfile = async (values, handleLoading, onSuccess) => {
     handleLoading(true);
@@ -47,7 +48,7 @@ export default class DashboardStore {
     }
   };
 
-  saveFcmToken = async (fcm) => {
+  saveFcmToken = async fcm => {
     const deviceId = await getUniqueId();
 
     let requestData = {
@@ -81,7 +82,6 @@ export default class DashboardStore {
     }
   };
 
-
   addReviews = async (payload, handleLoading) => {
     handleLoading(true);
     let requestData = {
@@ -94,12 +94,12 @@ export default class DashboardStore {
       if (res?.statusCode == 200) {
         useToast(res?.message, 1);
         handleLoading(false);
-        return res
+        return res;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
         handleLoading(false);
-        return []
+        return [];
       }
     } catch (error) {
       console.log('error addReviews:', error);
@@ -108,10 +108,75 @@ export default class DashboardStore {
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
-      return []
+      return [];
+    }
+  };
+
+  getRestaurantReview = async (restaurant,perPage,handleLoading) => {
+    handleLoading(true);
+    let requestData = {
+      restaurant_id: restaurant?._id,
+      limit: perPage,
+    };
+    console.log('requestData----restaurantReview', requestData);
+    try {
+      const res = await agent.restaurantReview(requestData);
+      console.log('restaurantReview Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        handleLoading(false);
+        return res?.data;
+      } else {
+       const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error restaurantReview:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+      return [];
     }
   };
 
 
-  
+
+
+  getRestaurantOffers = async (restaurant,handleLoading) => {
+    handleLoading(true);
+    let requestData = {
+      restaurant_id: restaurant?._id,
+    };
+    console.log('requestData----restaurantOffers', requestData);
+    try {
+      const res = await agent.restaurantOffers(requestData);
+      console.log('restaurantOffers Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        handleLoading(false);
+        this.restaurentOfferCoupan =res?.data;
+        return res?.data;
+      } else {
+       const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        handleLoading(false);
+        this.restaurentOfferCoupan=[]
+        return [];
+      }
+    } catch (error) {
+      console.log('error restaurantOffers:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+      return [];
+    }
+  };
+
+
 }

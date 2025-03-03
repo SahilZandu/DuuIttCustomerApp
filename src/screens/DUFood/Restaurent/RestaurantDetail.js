@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,34 +7,25 @@ import {
   Image,
   FlatList,
   ScrollView,
-  Pressable,
-  ProgressBarAndroid,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-// import Base_Image_Url from '../../api/Url';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-// import CartHeader from '../../Cart/CartHeader';
 import {fonts} from '../../../theme/fonts/fonts';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {colors} from '../../../theme/colors';
-import {Rating} from 'react-native-rating-element';
 import FastImage from 'react-native-fast-image';
-import {SvgXml} from 'react-native-svg';
-// import ImageTextComponent from '../../Components/ImageTextComponent';
 import moment from 'moment';
-// import FullImageView from '../../common/FullImageView';
 import Header from '../../../components/header/Header';
-import LinearGradient from 'react-native-linear-gradient';
-// import {currencyFormat} from '../../helpers/currencyFormat';
-// import {rootStore} from '../../stores/rootStore';
-// import {APP_IMAGE_BASEURL} from '../../constant';
 import OrgReviewCard from '../Components/Cards/OrgReviewCard';
-import AppInputScroll from '../../../halpers/AppInputScroll';
 import Ratings from '../../../halpers/Ratings';
-// import { appImages } from '../../../commons/AppImages';
+import {rootStore} from '../../../stores/rootStore';
+import {ActivityIndicator} from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 
 let asestsArray = [
   {
@@ -60,16 +51,19 @@ let asestsArray = [
   },
 ];
 
+let perPage = 10;
 export default function RestaurantDetail({navigation, route}) {
   const day = new Date();
   let today = day.getDay();
   const {restaurantData} = route?.params;
-  // console.log('restaurant----',restaurantData);
-  // const {getResturantReviews} = rootStore.resturantstore;
+  // console.log('restaurant----', restaurantData);
+  const {getRestaurantReview} = rootStore.dashboardStore;
   const [fullImage, setFullImage] = useState(false);
   const [imageUriIndex, setImageUriIndex] = useState(0);
   const [orgReviews, setOrgReviews] = useState([]);
   const [restaurant, setRestaurant] = useState(restaurantData ?? {});
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [loading, setLoading] = useState(false);
   console.log('restaurant----', restaurant, restaurantData);
 
   const packageMoneyData = [
@@ -101,17 +95,47 @@ export default function RestaurantDetail({navigation, route}) {
   //     });
   //   }
   // }, [restaurant]);
+  useFocusEffect(
+    useCallback(()=>{
+     handleAndroidBackButton(navigation)
+     perPage = 10;
+    },[])
+  )
 
   useEffect(() => {
-    const getReviews = async () => {
-      //   const reviews = await getResturantReviews(restaurant?.id);
-      //   console.log('get org Reviews:', reviews);
-      //   setOrgReviews(reviews && reviews.length > 0 ? reviews : []);
-      //
-    };
-
     getReviews();
   }, []);
+
+  const getReviews = async () => {
+    const reviews = await getRestaurantReview(
+      restaurant,
+      perPage,
+      handleLoading,
+    );
+    console.log('get org Reviews:', reviews);
+    if (reviews?.length > 0) {
+      setOrgReviews(reviews);
+      setLoadingMore(false);
+    } else {
+      setOrgReviews([]);
+      setLoadingMore(false);
+    }
+  };
+
+  const handleLoading = v => {
+    console.log('v---', v);
+    setLoading(v);
+  };
+
+  const loadMoredata = () => {
+    console.log('load more');
+    if (!loadingMore && orgReviews?.length >= perPage) {
+      perPage = perPage + 10;
+      setLoadingMore(true);
+      getReviews();
+    }
+  };
+  console.log('orgReviews--', orgReviews);
 
   const photoList = (item, i) => {
     // console.log('item', item);
@@ -230,39 +254,93 @@ export default function RestaurantDetail({navigation, route}) {
       <View style={styles.mainReviewsView}>
         <View style={styles.reviewsView}>
           <Text style={styles.reviewsText}>Reviews</Text>
-          {/* {asestsArray?.length > 2 && (
-            <Pressable
-              onPress={() =>
-                navigation.navigate('orgAllReviews', {
-                  reviews: orgReviews,
-                  restaurant,
-                })
-              }>
-              <Text
-                style={{
-                  color: '#E95D5D',
-                  fontFamily: fonts.medium,
-                  fontSize: RFValue(14),
-                }}>
-                See all
-              </Text>
-            </Pressable>
-          )} */}
         </View>
         <View>
-          {/* {orgReviews
-            .filter((_, index) => index < 2)
-            .map((item, index) => (
-              <View key={index}>
-                <OrgReviewCard item={item} isDishRating={false} />
-              </View>
-            ))} */}
-          {asestsArray?.map((item, index) => (
+          {orgReviews?.map((item, index) => (
             <View key={index}>
               <OrgReviewCard item={item} isDishRating={false} />
             </View>
           ))}
         </View>
+      </View>
+    );
+  };
+  const renderFooter = () => {
+    return loadingMore ? (
+      <View style={{paddingVertical: 20}}>
+        <ActivityIndicator size="large" color={colors.main} />
+      </View>
+    ) : null;
+  };
+
+  const renderHaider = () => {
+    return (
+      <View style={styles.mainInnerView}>
+        <View style={styles.backImageTextView}>
+          <FastImage
+            style={styles.logoImage}
+            source={
+              // restaurant?.logo
+              //   ? {uri: Base_Image_Url?.Base_Image_Url + restaurant?.logo}
+              //   : AppImages.orgPlaceholder
+              appImages?.mapImg
+            }
+            resizeMode={FastImage.resizeMode.cover}
+          />
+          <Text numberOfLines={3} style={styles.addressText}>
+            {restaurant?.address}
+          </Text>
+        </View>
+
+        <View style={styles.innerView}>
+          {<DisRating />}
+
+          <View style={styles.assestMainView}>
+      
+            {asestsArray?.length > 0 ? (
+              <>
+                <Text style={styles.assestPhoto}>Photos</Text>
+                <View style={styles.assetInnerView}>
+                  <ScrollView
+                    style={styles.assetsScrollView}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}>
+                    {asestsArray?.length > 0 ? (
+                      <View style={styles.scrollViewInnnerView}>
+                        {asestsArray?.map((item, i) => photoList(item, i))}
+                      </View>
+                    ) : (
+                      <>
+                        <View style={styles.noDataView}>
+                          <Text style={styles.noDataText}>No data Found</Text>
+                        </View>
+                      </>
+                    )}
+                  </ScrollView>
+                </View>
+              </>
+            ) : null}
+          </View>
+
+          {/* <FullImageView
+      uri={{}}
+      visible={fullImage}
+      onRequestClose={() => setFullImage(false)}
+      multiImage={asestsArray}
+      imageIndex={imageUriIndex}
+    />  */}
+        </View>
+        <View style={styles.reviewsView}>
+          <Text style={styles.reviewsText}>Reviews</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const renderItem = ({item, index}) => {
+    return (
+      <View style={{marginHorizontal: 20, justifyContent: 'center'}}>
+        <OrgReviewCard item={item} index={index} isDishRating={false} />
       </View>
     );
   };
@@ -278,72 +356,27 @@ export default function RestaurantDetail({navigation, route}) {
           navigation.goBack();
         }}
       />
-      <AppInputScroll
-        Pb={'25%'}
-        padding={true}
-        keyboardShouldPersistTaps={'handled'}>
-        <View style={styles.mainInnerView}>
-          <View style={styles.backImageTextView}>
-            <FastImage
-              style={styles.logoImage}
-              source={
-                // restaurant?.logo
-                //   ? {uri: Base_Image_Url?.Base_Image_Url + restaurant?.logo}
-                //   : AppImages.orgPlaceholder
-                appImages?.mapImg
-              }
-              resizeMode={FastImage.resizeMode.cover}
-            />
-            <Text numberOfLines={3} style={styles.addressText}>
-              {restaurant?.address}
-            </Text>
+       {loading ? <AnimatedLoader type={'restaurantReviewsLoader'} />
+         :
+      <View style={styles.listMainView}>
+        {orgReviews?.length > 0 ? (
+          <FlatList
+            contentContainerStyle={{paddingBottom: '20%'}}
+            showsVerticalScrollIndicator={false}
+            data={orgReviews}
+            renderItem={renderItem}
+            keyExtractor={item => item?._id}
+            onEndReached={loadMoredata}
+            onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
+            ListFooterComponent={renderFooter}
+            ListHeaderComponent={renderHaider}
+          />
+        ) : (
+          <View style={styles.NoDataViewReviews}>
+            <Text style={styles.NoDataTextReviews}>No Record Found</Text>
           </View>
-
-          <View style={styles.innerView}>
-            {<DisRating />}
-
-            <View style={styles.assestMainView}>
-              {asestsArray?.length > 0 ? (
-                <>
-                  <Text style={styles.assestPhoto}>Photos</Text>
-                  <View style={styles.assetInnerView}>
-                    <ScrollView
-                      style={styles.assetsScrollView}
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}>
-                      {asestsArray?.length > 0 ? (
-                        <View style={styles.scrollViewInnnerView}>
-                          {/* {restaurant?.assets?.map((item, i) =>
-                          photoList(item, i),
-                        )} */}
-
-                          {asestsArray?.map((item, i) => photoList(item, i))}
-                        </View>
-                      ) : (
-                        <>
-                          <View style={styles.noDataView}>
-                            <Text style={styles.noDataText}>No data Found</Text>
-                          </View>
-                        </>
-                      )}
-                    </ScrollView>
-                  </View>
-                </>
-              ) : null}
-            </View>
-
-            {asestsArray?.length > 0 && OrgReviewsList()}
-          </View>
-
-     {/* <FullImageView
-        uri={{}}
-        visible={fullImage}
-        onRequestClose={() => setFullImage(false)}
-        multiImage={asestsArray}
-        imageIndex={imageUriIndex}
-      /> */}
-        </View>
-      </AppInputScroll>
+        )}
+      </View>}
     </View>
   );
 }
@@ -352,6 +385,10 @@ const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
     backgroundColor: colors.appBackground,
+  },
+  listMainView: {
+    flex: 1,
+    justifyContent: 'center',
   },
   mainInnerView: {
     justifyContent: 'center',
@@ -494,10 +531,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: '8%',
+    marginHorizontal: 20,
   },
   reviewsText: {
     color: colors.black,
     fontFamily: fonts.medium,
     fontSize: RFValue(13),
+  },
+  NoDataViewReviews: {
+    // justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('5%'),
+  },
+  NoDataTextReviews: {
+    fontSize: RFValue(15),
+    fontFamily: fonts.medium,
+    color: colors.black,
   },
 });

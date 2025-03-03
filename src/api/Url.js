@@ -37,7 +37,10 @@ export default  {
     recomendedItems:'food-order/recomended-items',
     getFoodOrderTracking:'food-order/get-tracking-order',
     addReviews:'reviews',
-    completeMealItems:'food-item/complete-your-meal-items'
+    completeMealItems:'food-item/complete-your-meal-items',
+    restaurantReview:'/reviews/restaurant-review',
+    // restaurantOffers:'offers/all'
+    restaurantOffers:'offers/recomended-offer'
     
 
 

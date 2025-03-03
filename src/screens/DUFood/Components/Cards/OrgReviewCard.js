@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -15,29 +16,16 @@ import {
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../../theme/fonts/fonts';
 import {appImages, appImagesSvg} from '../../../../commons/AppImages';
-// import Base_Image_Url from '../../api/Url';
 import {SvgXml} from 'react-native-svg';
-// import Spacer from '../Spacer';
-// import FastImage from 'react-native-fast-image';
 import {Rating} from 'react-native-rating-element';
 import {colors} from '../../../../theme/colors';
 import moment from 'moment';
 import Ratings from '../../../../halpers/Ratings';
+import Url from '../../../../api/Url';
+import Spacer from '../../../../halpers/Spacer';
 
-const OrgReviewCard = ({item, isDishRating}) => {
-  // const imageUrl = Base_Image_Url?.Base_Image_UrlProfile;
-
-  const asestsArray = [
-    {item: ''},
-    {item: ''},
-    {item: ''},
-    {item: ''},
-    {item: ''},
-    {item: ''},
-    {item: ''},
-    {item: ''},
-  ];
-
+const OrgReviewCard = ({item, index, isDishRating}) => {
+  // console.log('item---OrgReviewCard', item);
   function getDateMonthsAgo(dateString) {
     const formatAgo = moment(dateString);
     const formattedDate = formatAgo.fromNow(); // Example: "in 5 months" or "5 months ago"
@@ -46,26 +34,23 @@ const OrgReviewCard = ({item, isDishRating}) => {
 
   const rateWithDishes = () => {
     return (
-      <View style={styles.mainImageName}>
+      <View key={index} style={styles.mainImageName}>
         <Image
           resizeMode="cover"
           style={styles.logoImage}
           source={
-            // item?.user?.profile_picture
-            //   ? {uri: imageUrl + item?.user?.profile_picture}
-            //   : appImages.foodIMage
-            appImages.foodIMage
+            item?.customer_info?.profile_pic
+              ? {uri: Url?.Image_Url + item?.customer_info?.profile_pic}
+              : appImages.foodIMage
+            // appImages.foodIMage
           }
         />
         <View style={styles.nameDateView}>
           <Text numberOfLines={1} style={styles.nameText}>
-            {/* {item?.user?.name} */}
-            Preeti Thakur
+            {item?.customer_info?.name ?? 'No Name Added'}
           </Text>
           <Text style={styles.dateText}>
-            {/* {item?.created_at ? item?.created_at.split(',')[0] : ''} */}
-            {getDateMonthsAgo('2025-01-16T12:43:20.781Z')}
-            {/*5 monts ago */}
+            {getDateMonthsAgo(item?.createdAt)}
           </Text>
         </View>
         <View style={styles.shareLikeImageView}>
@@ -75,43 +60,35 @@ const OrgReviewCard = ({item, isDishRating}) => {
       </View>
     );
   };
- 
 
   const rating = () => {
     return (
       <View style={{marginTop: '-1%', marginHorizontal: 10}}>
         <Ratings
           mainStyle={styles.starRatingImage}
-          rateFormat={Number(3.5)}
+          rateFormat={Number(item?.rating)}
           starHeight={18}
         />
       </View>
     );
   };
 
-  const ratingImages = () => {
+  const renderItem = ({item, index}) => {
     return (
-      <ScrollView
-        style={styles.scrollView}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}>
-        <View style={styles.scrollViewInnnerView}>
-          <View style={styles.mainReviewData}>
-            {asestsArray?.map((item, index) => (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.touchImageView}
-                key={index}>
-                <Image
-                  style={styles.imageItem}
-                  resizeMode="cover"
-                  source={appImages.foodIMage}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.touchImageView}
+        key={index}>
+        <Image
+          style={styles.imageItem}
+          resizeMode="cover"
+          source={
+            item?.image
+              ? {uri: Url?.Image_Url + item?.image}
+              : appImages.foodIMage
+          }
+        />
+      </TouchableOpacity>
     );
   };
 
@@ -119,11 +96,20 @@ const OrgReviewCard = ({item, isDishRating}) => {
     <View style={styles.container}>
       {rateWithDishes()}
       {rating()}
-      <Text style={styles.descriptionText}>
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's.
-      </Text>
-      {ratingImages()}
+      <Text style={styles.descriptionText}>{item?.review}</Text>
+      <Spacer space={'3%'} />
+      {item?.dish_items?.length > 0 && (
+        <FlatList
+          contentContainerStyle={{paddingRight: '10%'}}
+          scrollEnabled={true}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          horizontal={true}
+          data={item?.dish_items}
+          renderItem={renderItem}
+          keyExtractor={item => item._id}
+        />
+      )}
     </View>
   );
 };
@@ -185,18 +171,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: RFValue(11),
     marginHorizontal: 5,
-    lineHeight:18
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewInnnerView: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  mainReviewData: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    lineHeight: 18,
   },
   touchImageView: {
     marginHorizontal: 5,

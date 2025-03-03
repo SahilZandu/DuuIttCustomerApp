@@ -1,36 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {appImagesSvg,} from '../commons/AppImages';
-import {colors} from '../theme/colors'
+import {appImagesSvg} from '../commons/AppImages';
+import {colors} from '../theme/colors';
 
-import { fonts} from '../theme/fonts/fonts';
+import {fonts} from '../theme/fonts/fonts';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {SvgXml} from 'react-native-svg';
 // import Spacer from './Spacer';
 import {currencyFormat} from '../halpers/currencyFormat';
 
 export default function OrderAddonComponent({
+  item,
   addonData,
   appCart,
   onSelect,
   isAddons,
   onLimitOver,
-  isResOpen
+  isResOpen,
 }) {
   const [addons, setaddons] = useState(
-    addonData && addonData?.addon ?   addonData?.addon :[]
-    // isAddons && isAddons.length > 0 ? isAddons : [],
+    isAddons && isAddons.length > 0 ? isAddons : [],
   );
 
+  // console.log('addonData--', item, addonData, appCart, addons, isAddons);
   let addonId = 0;
 
   const checkAddonThere = (arr, id) => {
-    console.log("arr, id",arr, id);
-    return arr?.find(item => (item?._id || item?.addon_prod_id )== id);
+    // console.log('arr, id', arr, id);
+    return arr?.find(item => (item?._id || item?.addon_prod_id) == id);
   };
 
   const getGroupLength = (a, gid) => {
@@ -38,12 +39,51 @@ export default function OrderAddonComponent({
     return f?.length;
   };
 
+  useEffect(() => {
+    if (!appCart?.food_item || !addonData) return;
+
+    const selectedFoodItem = appCart?.food_item?.find(
+      data => item?._id === data?._id,
+    );
+    if (!selectedFoodItem?.selected_add_on) return;
+
+    // Create a new addons list
+    let updatedAddons = [];
+    let updatedSelect = [];
+
+    addonData?.forEach(itemm => {
+      itemm?.addon?.forEach(data => {
+        if (
+          selectedFoodItem?.selected_add_on?.some(
+            itemId => data?._id === itemId?.addon_prod_id,
+          )
+        ) {
+          updatedAddons.push(data);
+          onPressVC(itemm, data);
+        }
+      });
+    });
+
+    addonData?.forEach(itemm => {
+      selectedFoodItem?.selected_add_on?.forEach(data => {
+        if (itemm?.addon?.some(itemId => data?.addon_prod_id === itemId?._id)) {
+          updatedSelect.push(data);
+          // onPressVC(itemm, data);
+        }
+      });
+    });
+
+    // console.log('addonsdata,updatedSelect', updatedAddons, updatedSelect);
+    setaddons([...updatedAddons]);
+    onSelect([...updatedSelect]);
+  }, [appCart, addonData]);
+
   const onPressVC = (item, value) => {
     let arr = addons;
-    
-    console.log("item:--",item)
- 
-    let limit = item?.max_selection ? item?.max_selection : item?.addon?.length
+
+    // console.log('item:--onPressVC', item, arr, value);
+
+    let limit = item?.max_selection ? item?.max_selection : item?.addon?.length;
 
     const obj = {
       addon_prod_id: value._id,
@@ -53,15 +93,35 @@ export default function OrderAddonComponent({
     };
 
     if (checkAddonThere(arr, value?._id)) {
-      let filter = arr?.filter(item => (item?._id ||  item?.addon_prod_id) !== value?._id);
-      setaddons(filter);
-       onSelect(filter);
+      let filterData = arr?.filter(
+        item => (item?._id || item?.addon_prod_id) !== value?._id,
+      );
+      // console.log('filterData', filterData);
+      const resFilter = filterData?.map((value, i) => {
+        return {
+          addon_prod_id: value._id ?? value?.addon_prod_id,
+          addon_name: value.name ?? value?.addon_name,
+          addon_price: value.price ?? value?.addon_price,
+          addon_group_id: item?._id ?? item?.addon_group_id,
+        };
+      });
+      setaddons(filterData);
+      // console.log('resFilter--', resFilter);
+      onSelect(resFilter);
     } else {
       if (getGroupLength(arr, value?.group_id) < limit) {
         setaddons([...addons, obj]);
         arr = [...addons, obj];
-        console.log('arrrrr', arr);
-         onSelect(arr);
+        const resData = arr?.map((value, i) => {
+          return {
+            addon_prod_id: value._id ?? value?.addon_prod_id,
+            addon_name: value.name ?? value?.addon_name,
+            addon_price: value.price ?? value?.addon_price,
+            addon_group_id: item?._id ?? item?.addon_group_id,
+          };
+        });
+        // console.log('arrrrr', arr,resData);
+        onSelect(resData);
       } else {
         onLimitOver(limit);
       }
@@ -69,36 +129,34 @@ export default function OrderAddonComponent({
   };
 
   const getSelectionLimit = item => {
-    let limit = item?.max_selection
-      ? item?.max_selection
-      : item?.addon?.length;
+    let limit = item?.max_selection ? item?.max_selection : item?.addon?.length;
 
     return `Select up to ${limit} option` + `${limit > 1 ? 's' : ''}`;
   };
 
   return (
-    <View pointerEvents={isResOpen ?  'auto' : 'none'}  style={{opacity : isResOpen ? 1 :0.6}} >
+    <View
+      pointerEvents={isResOpen ? 'auto' : 'none'}
+      style={{opacity: isResOpen ? 1 : 0.6}}>
       {addonData && addonData?.length > 0 && (
         <View>
           {addonData?.map((item, index) => {
             return (
-              <View
-                style={styles.conatiner}>
-                <Text
-                  style={styles.titleText}>
-                  {item?.group}{' '}
-                </Text>
-               
+              <View style={styles.conatiner}>
+                <Text style={styles.titleText}>{item?.group} </Text>
+
                 <Text style={styles.selectText}>{getSelectionLimit(item)}</Text>
                 <View
-                style={{
-                  height:2,
-                  marginBottom:'2%',
-                  marginTop:'3%',
-                  backgroundColor:colors.colorD9
-                }}/>
+                  style={{
+                    height: 2,
+                    marginBottom: '2%',
+                    marginTop: '3%',
+                    backgroundColor: colors.colorD9,
+                  }}
+                />
                 <View style={styles.mainViewRender}>
                   {item?.addon?.map((value, i) => {
+                    // console.log('value---', value);
                     return (
                       <TouchableOpacity
                         onPress={() => {
@@ -115,7 +173,7 @@ export default function OrderAddonComponent({
                               {
                                 color: checkAddonThere(addons, value?._id)
                                   ? colors.main
-                                  :colors.black,
+                                  : colors.black,
                               },
                             ]}>
                             {value?.name}
@@ -153,25 +211,25 @@ export default function OrderAddonComponent({
 }
 
 const styles = StyleSheet.create({
-  conatiner:{
+  conatiner: {
     backgroundColor: colors.white,
-    borderRadius:10,
-    shadowOffset:true,
-    shadowColor:colors.black,  // Shadow color (black)
-    shadowOffset: { width: 0, height: 2 },  // Horizontal and vertical offset
-    shadowOpacity: 0.3,  // Opacity of the shadow
-    shadowRadius: 5,  // Blur radius of the shadow
-    elevation: 5,  // Android shadow (elevation must be set to display shadow on Android)
-    shadowRadius:10,
-    marginHorizontal:'4%',
+    borderRadius: 10,
+    shadowOffset: true,
+    shadowColor: colors.black, // Shadow color (black)
+    shadowOffset: {width: 0, height: 2}, // Horizontal and vertical offset
+    shadowOpacity: 0.3, // Opacity of the shadow
+    shadowRadius: 5, // Blur radius of the shadow
+    elevation: 5, // Android shadow (elevation must be set to display shadow on Android)
+    shadowRadius: 10,
+    marginHorizontal: '4%',
     marginTop: '4%',
     paddingHorizontal: '5%',
-    paddingBottom:'2%'
+    paddingBottom: '2%',
   },
-  titleText:{
+  titleText: {
     fontSize: RFValue(13),
     fontFamily: fonts.medium,
-    color:colors.black85,
+    color: colors.black85,
     marginTop: '4%',
   },
   upperViewMain: {

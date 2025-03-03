@@ -24,6 +24,8 @@ export function useNotifications(navigation) {
 
       (remoteMessage.notification.android = {
         channelId: channelId,
+        smallIcon: 'ic_notification', // Ensure this icon is in res/drawable
+        color: '#FFFFFF', // Optional: Sets the accent color
       }),
         console.log('forground notification:', remoteMessage);
       const newa = remoteMessage.notification;

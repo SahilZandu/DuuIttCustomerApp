@@ -173,7 +173,8 @@ export default function TrackOrderPreparing({navigation,route}) {
       </AppInputScroll>
       <ReviewsRatingComp
        data={item}
-      type={'RIDE'}
+      type={'FOOD'}
+      reviewToRider={true}
       title={'How was your delivery experience?'}
       isVisible={isReviewRider}
       onClose={()=>{
@@ -182,6 +183,7 @@ export default function TrackOrderPreparing({navigation,route}) {
           setIsReviewStar(true);
           // alert("yes")
         },500);
+       
       }}
       loading={loadingRating}
       onHandleLoading={(v)=>{
@@ -191,6 +193,7 @@ export default function TrackOrderPreparing({navigation,route}) {
       <ReviewsRatingComp
        data={item}
        type={'FOOD'}
+       reviewToRider={false}
       title={'Did you enjoy your meal?'}
       isVisible={isReviewStar}
       onClose={()=>{setIsReviewStar(false)}}

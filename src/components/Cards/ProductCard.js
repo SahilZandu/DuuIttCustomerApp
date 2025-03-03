@@ -80,9 +80,7 @@ const ProductCard = ({
   };
 
   const getIsAddons = () => {
-    return item?.addon && item?.addon?.length > 0
-      ? true
-      : false;
+    return item?.addon && item?.addon?.length > 0 ? true : false;
   };
 
   // useEffect(() => {
@@ -107,7 +105,7 @@ const ProductCard = ({
     return (
       <View style={styles.nameView}>
         <Text numberOfLines={2} style={styles.nameText}>
-          {item?.name}
+          {item?.name ? item?.name : 'Not Added Name'}
         </Text>
       </View>
     );
@@ -117,12 +115,13 @@ const ProductCard = ({
     return (
       <View style={styles.priceView}>
         <Text style={styles.priceText}>
-          {currencyFormat(Number(item?.selling_price))}
+          {currencyFormat(
+            item?.selling_price ? Number(item?.selling_price) : 0,
+          )}
         </Text>
       </View>
     );
   };
-
 
   const Description = () => {
     const text = item?.description;
@@ -311,14 +310,15 @@ const styles = StyleSheet.create({
     marginBottom: '6%',
   },
   stockView: {
-    height: hp('14%'),
-    width: wp('90%'),
+    height: hp('17%'),
+    width: wp('94%'),
     borderRadius: 10,
     position: 'absolute',
     backgroundColor: 'rgba(100, 100, 100, 0.6)',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: '5%',
+    marginHorizontal: '-2.5%',
+    marginTop:'-2.5%',
   },
   availableText: {
     color: colors.white,

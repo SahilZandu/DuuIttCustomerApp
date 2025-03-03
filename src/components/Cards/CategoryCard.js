@@ -50,15 +50,19 @@ const CategoryCard = ({data, onPress, navigation}) => {
     <View>
       <Text style={styles.titleText}>What would you like to have?</Text>
       <View style={styles.flatlistView}>
-        <FlatList
-          nestedScrollEnabled={true}
-          data={data}
-          renderItem={renderProductItem}
-          keyExtractor={item => item?._id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.listContainer}
-        />
+        {data?.length > 0 ? (
+          <FlatList
+            nestedScrollEnabled={true}
+            data={data}
+            renderItem={renderProductItem}
+            keyExtractor={item => item?._id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.listContainer}
+          />
+        ) : (
+          <Text style={styles.noDataText}>No Data Found</Text>
+        )}
       </View>
     </View>
   );
@@ -124,5 +128,11 @@ const styles = StyleSheet.create({
     top: 5, // Adjust the distance from the top
     right: 5, // Adjust the distance from the right
     zIndex: 1, // Ensure the star is above the image
+  },
+  noDataText: {
+    marginLeft: '4%',
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
   },
 });
