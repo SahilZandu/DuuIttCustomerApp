@@ -8,6 +8,7 @@ let dalta = {
 };
 
 export const getGeoCodes = (latitude, longitude) => {
+  console.log("latitude, longitude",latitude, longitude);
   const {setCurrentAddress}=rootStore.myAddressStore;
   return new Promise((resolve, reject) => {
     fetch(

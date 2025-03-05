@@ -53,11 +53,11 @@ export default class ParcelStore {
     let requestData = {
       order_id: value?.orderId,
       user_type: 'customer',
-      order_cancel_by: 'customer',
+      // order_cancel_by: 'customer',
       order_type: 'parcel',
       user_id: value?.customerId,
       reason_of_cancellation: value?.reason,
-      status: 'cancelled',
+      // status: 'cancelled',
     };
     console.log('requestData:-', requestData);
     try {

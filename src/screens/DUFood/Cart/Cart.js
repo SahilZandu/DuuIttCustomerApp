@@ -36,14 +36,15 @@ import CompleteMealComp from '../../../components/CompleteMealComp';
 
 let itemForEdit = null;
 let idForUpdate = null;
-
+let allCompleteMealList =[]
 const Cart = ({navigation, route}) => {
   const {restaurant} = route.params;
   const {setCart, getCart, updateCart, selectedAddress} = rootStore.cartStore;
   const {appUser} = rootStore.commonStore;
   const {foodOrder, getCompleteMealItems, mealOrderList} =
     rootStore.foodDashboardStore;
-  const {getRestaurantOffers, restaurentOfferCoupan} = rootStore.dashboardStore;
+  const {getRestaurantOffers, restaurentOfferCoupan, applyCoupon} =
+    rootStore.dashboardStore;
   const [isPlaying, setIsPLayig] = useState(false);
   const [appCart, setAppCart] = useState({
     cartitems: [],
@@ -106,6 +107,7 @@ const Cart = ({navigation, route}) => {
           ? selectedAddress
           : appUser?.addresses[0] ?? {},
       );
+      allCompleteMealList=mealOrderList;
     }, [selectedAddress]),
   );
 
@@ -137,6 +139,7 @@ const Cart = ({navigation, route}) => {
     const res = await getCompleteMealItems(restaurant, handleMealLoading);
     console.log('res---getCompMealList', res);
     setCompleteMealAllList(res);
+    allCompleteMealList=res;
     if (res?.length > 3) {
       const mealList = res || [];
       const middleIndex = Math.ceil(mealList.length / 2);
@@ -148,6 +151,7 @@ const Cart = ({navigation, route}) => {
       setMissedSomeList(secondHalf);
     } else {
       setCompleteMealList(res);
+      setMissedSomeList([]);
     }
 
     // setCompleteMealList(firstHalf);
@@ -247,8 +251,17 @@ const Cart = ({navigation, route}) => {
       });
       setTimeout(() => {
         onCheckMealItem(cart?.food_item);
-      }, 500);
-      if (cart?.grand_total < activeOffer?.discount_price) {
+      },500);
+      if (
+        cart?.grand_total < activeOffer?.discount_price &&
+        cart?.offer?._id?.length > 0
+      ) {
+        // setActiveOffer({});
+        onApplyOffer(cart?.offer);
+      }
+      if (cart?.offer?._id?.length > 0) {
+        setActiveOffer(cart?.offer);
+      } else {
         setActiveOffer({});
       }
       setCartBillG({
@@ -309,6 +322,11 @@ const Cart = ({navigation, route}) => {
 
   const onSucces = () => {
     getUserCart();
+    // if(data){
+    //   setActiveOffer(data)
+    // }else{
+    //   setActiveOffer({})
+    // }
   };
 
   const getPlaceOrderTotal = bill => {
@@ -322,9 +340,9 @@ const Cart = ({navigation, route}) => {
   };
 
   const onCheckMealItem = foodItemArray => {
-    // console.log('foodItemArray--', foodItemArray);
-    if (foodItemArray?.length > 0 && completeMealAllList?.length > 0) {
-      let mealListData = (completeMealAllList ?? []).map(item => {
+    console.log('foodItemArray--', foodItemArray,allCompleteMealList,completeMealAllList);
+    if (foodItemArray?.length > 0 && allCompleteMealList?.length > 0) {
+      let mealListData = (allCompleteMealList ?? []).map(item => {
         const exactItem = foodItemArray?.find(
           data => data?._id === item?.food_items?._id,
         );
@@ -359,6 +377,7 @@ const Cart = ({navigation, route}) => {
       } else {
         setCompleteMealList(mealListData);
         setCompleteMealAllList(mealListData);
+        setMissedSomeList([]);
       }
     } else {
       getCompMealList();
@@ -514,19 +533,15 @@ const Cart = ({navigation, route}) => {
   };
 
   const onApplyOffer = async item => {
-    if (activeOffer?.referral_code == item?.referral_code) {
-      setLoadingOffer(true);
-      setActiveOffer({});
-      // await removeApplyCoupon(handleLoadingOffer, onSucces);
+    if (activeOffer?._id == item?._id) {
+      await applyCoupon(cartList, null, handleLoadingOffer, onSucces);
     } else {
-      setActiveOffer(item);
-      setLoadingOffer(true);
-      // await applyCoupon(item, handleLoadingOffer, navigation, false, onSucces);
+      await applyCoupon(cartList, item, handleLoadingOffer, onSucces);
     }
   };
 
   const onCoupanSelected = item => {
-    setActiveOffer(item);
+    onApplyOffer(item);
   };
   // console.log('offerList--', offerList, activeOffer);
 

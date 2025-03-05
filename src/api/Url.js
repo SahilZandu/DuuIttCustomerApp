@@ -40,7 +40,8 @@ export default  {
     completeMealItems:'food-item/complete-your-meal-items',
     restaurantReview:'/reviews/restaurant-review',
     // restaurantOffers:'offers/all'
-    restaurantOffers:'offers/recomended-offer'
+    restaurantOffers:'offers/recomended-offer',
+    applyCoupon:'cart/apply-coupon'
     
 
 

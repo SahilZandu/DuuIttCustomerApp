@@ -37,9 +37,9 @@ const CouponDetail = ({
   //   getCartTotal,
   // );
 
-  const isDisabled = 
-  selectedData?.referral_code === item?.referral_code || 
-  getCartTotal?.cartTotal < item?.discount_price;
+  // const isDisabled =
+  //   selectedData?.referral_code === item?.referral_code ||
+  //   getCartTotal?.cartTotal < item?.discount_price;
 
   let list = [
     {
@@ -126,10 +126,11 @@ const CouponDetail = ({
                   <Spacer space={'13%'} />
                   <BTN
                     disable={
-                      isDisabled ? true
+                      getCartTotal?.cartTotal < item?.discount_price
+                        ? true
                         : false
                     }
-                    title={'Apply'}
+                    title={selectedData?._id === item?._id ? 'Remove' : 'Apply'}
                     onPress={onApply}
                   />
                 </View>

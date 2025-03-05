@@ -82,7 +82,7 @@ const CouponsList = ({navigation, route}) => {
   const onSelectedItem = (data) => {
     console.log("offerList---",offerList,data);
     const newOfferList = offerList?.map((item, i) => {
-      if (item?.referral_code == data?.referral_code) {
+      if (item?._id == data?._id) {
         setActiveOffer(item);
         return {...item, status: true};
       } else {

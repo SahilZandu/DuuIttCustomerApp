@@ -75,6 +75,8 @@ const DashboardHeader2 = ({
     }, 500);
   }, [isRefersh]);
 
+  // console.log("address---",address,currentAddress);
+
   const onUpdateLatLng = () => {
     geoLocation = {
       lat: getLocation('lat'),
@@ -88,7 +90,7 @@ const DashboardHeader2 = ({
 
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
-    // console.log('addressData', addressData);
+    console.log('addressData', addressData);
     setAddress(addressData?.address);
   };
 

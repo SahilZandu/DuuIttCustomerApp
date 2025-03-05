@@ -98,6 +98,8 @@ export const agent = {
   restaurantReview: body => requests.post(Url.restaurantReview, body),
   completeMealItems: body => requests.post(Url.completeMealItems, body),
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
+  applyCoupon: body => requests.post(Url.applyCoupon, body),
+  
   
 };
 
