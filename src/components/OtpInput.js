@@ -9,12 +9,18 @@ import {
 import { colors } from '../theme/colors';
 
 
-const componentName = ({handleTextChange,clearData}) => {
+const componentName = ({handleTextChange,clearData,value}) => {
   let otpInput = useRef(null);
   
  useEffect(()=>{
   otpInput.current.clear();
  },[clearData])
+ 
+ useEffect(() => {
+  if(value && value?.length == 4){
+    otpInput.current.setValue(String(value))
+  }
+  }, [value]);
   
   return (
     <OtpInput

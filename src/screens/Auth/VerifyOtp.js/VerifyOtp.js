@@ -11,12 +11,20 @@ import AppInputScroll from '../../../halpers/AppInputScroll';
 import OtpInput from '../../../components/OtpInput';
 import ResendOtp from '../../../components/ResendOtp';
 import {styles} from './styles';
-import SmsListener from 'react-native-android-sms-listener';
 import {SvgXml} from 'react-native-svg';
 import {appImagesSvg} from '../../../commons/AppImages';
 import Header from '../../../components/header/Header';
 import {rootStore} from '../../../stores/rootStore';
 import AuthScreenContent from '../../../components/AuthScreenContent';
+import {
+  getHash,
+  startOtpListener,
+  getOtp,
+  removeListener,
+  useOtpVerify,
+} from 'react-native-otp-verify';
+
+
 
 export default function VerifyOtp({navigation, route}) {
   const {setToken} = rootStore.commonStore;
@@ -36,29 +44,32 @@ export default function VerifyOtp({navigation, route}) {
     }
   }, [value]);
 
-  useEffect(() => {
-    if (Platform.OS == 'android') {
-      const subscription = SmsListener.addListener(message => {
-        console.log('message', message);
-        // Check if the message contains the OTP pattern
-        if (message.body.includes('revealhub')) {
-          // Extract the OTP code from the message
-          const otpRegex = /(\d{4})/; // Adjust the regex pattern based on your OTP format
-          const otpMatch = message.body.match(otpRegex);
-          const otpCode = otpMatch ? otpMatch[0] : null;
-
-          // Now you have the OTP code, you can use it as needed
-          console.log('Received OTP:', otpCode);
-          setOtp(otpCode);
+  
+   // using methods only for android
+    useEffect(() => {
+      if (Platform.OS === 'android') {
+      getHash().then(hash => {
+        console.log('hash>',hash);
+        // use this hash in the message.
+      }).catch(console.log);
+  
+      startOtpListener(message => {
+        console.log('message>',message);
+        if (message.includes('is OTP')) {
+        // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
+        const otp = /(\d{4})/g.exec(message)[1];
+        setOtp(otp);
         }
       });
-
-      return () => {
-        // Clean up the listener when the component unmounts
-        subscription.remove();
-      };
+  
+      getOtp().then(pp => {
+        console.log('getOtp>',pp);
+        // use this hash in the message.
+      }).catch(console.log);
+  
+      return () => removeListener();
     }
-  }, []);
+    }, []);
 
   const handleTextChange = t => {
     console.log('triger handle change:-', t);
@@ -159,6 +170,7 @@ export default function VerifyOtp({navigation, route}) {
 
             <Spacer space={'2%'} />
             <OtpInput
+            value={otp}
               clearData={clearData}
               handleTextChange={handleTextChange}
             />
