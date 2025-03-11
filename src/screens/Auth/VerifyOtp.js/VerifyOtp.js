@@ -170,7 +170,7 @@ export default function VerifyOtp({navigation, route}) {
 
             <Spacer space={'2%'} />
             <OtpInput
-            value={otp}
+              value={otp}
               clearData={clearData}
               handleTextChange={handleTextChange}
             />
