@@ -15,5 +15,13 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.appBackground,
     
   },
-
+  titleText: {
+    fontSize: RFValue(14),
+    fontFamily: fonts.regular,
+    marginLeft: '3%',
+    color: colors.color24,
+    marginVertical: '4%',
+    paddingHorizontal:'2%',
+  
+  },
 });

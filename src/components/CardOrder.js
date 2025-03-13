@@ -24,6 +24,8 @@ import { screenWidth } from '../halpers/matrics';
 
 const CardOrder = ({item, index}) => {
   // console.log('item -- ', item);
+  let firstCapStatus = item?.status.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase();
+  //  console.log(' item?.status -- ',  item?.status);
   const setDetailsBtn = status => {
     switch (status) {
       case 'food':
@@ -126,14 +128,17 @@ const CardOrder = ({item, index}) => {
                 style={{
                   fontSize: RFValue(13),
                   fontFamily: fonts.medium,
-                  color: item?.status == 'Canceled' ? '#E70000' : '#28B056',
+                  color: item?.status == 'Canceled' 
+                  || item?.status == 'deleted' 
+                    ? '#E70000' : '#28B056',
                 }}>
-                {item?.status}
+                {firstCapStatus}
               </Text>
               <View style={{flex: 1, marginLeft: '4%'}}>
                 <SvgXml
                   xml={
                     item?.status == 'Canceled'
+                    || item?.status == 'deleted' 
                       ? appImagesSvg.crossSvg
                       : appImagesSvg.rightSvg
                   }

@@ -952,11 +952,11 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   };
 
   const driverArrive = [
-    {
-      id: 0,
-      title: 'Order ID',
-      value:  `${parcelInfo?._id}`,
-    },
+    // {
+    //   id: 0,
+    //   title: 'Order ID',
+    //   value:  `${parcelInfo?._id}`,
+    // },
     {
       id: 2,
       title: 'Bike Number',

@@ -292,7 +292,8 @@ export default function SideMenu({navigation}) {
         </ReusableSurfaceComp>
 
         <ReusableSurfaceComp title={'Money'}>
-          <TouchTextRightIconComp firstIcon={true} data={moneyOptions} />
+        <Text style={styles.titleText}>{'Comming Soon'}</Text>
+          {/* <TouchTextRightIconComp firstIcon={true} data={moneyOptions} /> */}
         </ReusableSurfaceComp>
         <ReusableSurfaceComp title={'Coupons'}>
           <TouchTextRightIconComp  firstIcon={true} data={coupanOptions} />

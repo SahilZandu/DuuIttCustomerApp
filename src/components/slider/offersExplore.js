@@ -26,7 +26,8 @@ const OffersExploreFlatList = ({data, onPress}) => {
         onPress={()=>{onPress(item)}}
         activeOpacity={0.8}
         style={styles.mainTouch}>
-        <Surface elevation={1} style={styles.surfaceView}>
+        <Surface elevation={1} style={[styles.surfaceView,
+          {backgroundColor:item?.bgColor}]}>
           <View style={styles.viewTextImage}>
             <View style={styles.viewText}>
               <Text style={styles.titleText}>{item.title}</Text>
@@ -92,13 +93,10 @@ const styles = StyleSheet.create({
     height: hp('10.1%'),
   },
   surfaceView: {
-    shadowColor: colors.black50,
     backgroundColor: colors.white,
     borderRadius: 10,
     height: hp('10%'),
     width: wp('40%'),
-    borderColor: colors.black85,
-    borderWidth: 0.3,
   },
   viewTextImage: {
     flexDirection: 'row',
@@ -114,12 +112,12 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: RFValue(12),
     fontFamily: fonts.bold,
-    color: colors.black85,
+    color: colors.white,
   },
   discountText: {
     fontSize: RFValue(10),
     fontFamily: fonts.medium,
-    color: colors.black75,
+    color: colors.white,
   },
   image: {
     height: hp('4.5%'),

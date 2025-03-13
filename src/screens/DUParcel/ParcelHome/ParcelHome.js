@@ -25,6 +25,7 @@ import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
+import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
 
 
@@ -50,6 +51,9 @@ export default function ParcelHome({navigation}) {
   const [incompletedArray, setIncompletedArray] = useState([]);
   const [internet, setInternet] = useState(true);
   const [isDelete ,setIsDelete]=useState(false)
+  const [isReviewRider, setIsReviewRider] = useState(false);
+  const [isReviewStar, setIsReviewStar] = useState(false);
+  const [loadingRating, setLoadingRating] = useState(false);
 
 
   useFocusEffect(
@@ -64,6 +68,14 @@ export default function ParcelHome({navigation}) {
       socketServices.disconnectSocket();
       setSenderAddress({})
       setReceiverAddress({})
+
+      const subscription = DeviceEventEmitter.addListener('dropped', data => {
+        console.log('dropped data -- ', data);
+        setIsReviewRider(false);
+      });
+      return () => {
+        subscription.remove();
+      };
     
     }, []),
   );
@@ -353,6 +365,25 @@ export default function ParcelHome({navigation}) {
         text={'This will delete your order request from the pending order.Are your sure?'}
         onDelete={deleteIncompleteOrder}
       />
+       {/* <ReviewsRatingComp
+       data={item}
+      type={'PickUp'}
+      reviewToRider={true}
+      title={'How was your delivery experience?'}
+      isVisible={isReviewRider}
+      onClose={()=>{
+        setIsReviewRider(false),
+        setTimeout(() => {
+          setIsReviewStar(true);
+          // alert("yes")
+        },500);
+       
+      }}
+      loading={loadingRating}
+      onHandleLoading={(v)=>{
+        setLoadingRating(v)
+      }}
+      /> */}
       {trackedArray?.length > 0 && (
         <TrackingOrderComp
           navigation={navigation}
