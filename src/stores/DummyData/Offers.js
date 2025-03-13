@@ -36,38 +36,43 @@ export const offerArray = [
 export const offerExplore = [
   {
     id: 1,
-    image: appImages.rewards,
+    image: appImages.rewardsWhite,
     title: 'Rewards',
     discount: 'Up to 60% OFF',
     route: 'rewards',
+    bgColor:'#FFB100',
   },
   {
     id: 2,
-    image: appImages.giftCards,
+    image: appImages.giftCardsWhite,
     title: 'Gift Cards',
     discount: 'Starting at ₹250',
     route: 'giftCard',
+    bgColor:'#41A006',
   },
   {
     id: 3,
-    image: appImages.vouchers,
+    image: appImages.vouchersWhite,
     title: 'Vouchers',
     discount: 'Up to 60% OFF',
     route: 'vouchers',
+    bgColor:'#00AAE0',
   },
   {
     id: 4,
-    image: appImages.rewardStars,
+    image: appImages.rewardStarsWhite,
     title: 'Reward Stars',
     discount: 'Collect coins to level up',
     route: '',
+    bgColor:'#883DF2',
   },
   {
     id: 5,
-    image: appImages.wallet,
+    image: appImages.walletWhite,
     title: 'Wallet',
     discount: 'Add cash to your wallet',
     route: '',
+    bgColor:'#4B2FFA',
   },
 ];
 

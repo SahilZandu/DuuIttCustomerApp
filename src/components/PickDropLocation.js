@@ -200,7 +200,7 @@ const PickDropLocation = ({
             <View style={{flexDirection: 'column', marginTop: '3%'}}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.senderText, {flex: 1, marginTop: '2%'}]}>
-                  {pick ? pick : 'Sender'}
+                  {pick ? pick : 'Sender location'}
                 </Text>
                 {addOnPick && (
                   <TouchableOpacity
@@ -262,7 +262,7 @@ const PickDropLocation = ({
             <View style={{flexDirection: 'column'}}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={[styles.reciverText, {flex: 1}]}>
-                  {drop ? drop : 'Receiver'}{' '}
+                  {drop ? drop : 'Receiver location'}{' '}
                 </Text>
                 {addOnDrop && (
                   <TouchableOpacity

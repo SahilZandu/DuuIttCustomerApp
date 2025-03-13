@@ -81,9 +81,9 @@ export const mainArray = [
   {
     id: 1,
     image: appImages.home2,
-    title: 'Lorem Ipsum',
+    title: '',
     message:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+      "",
   },
   // {
   //   id: 2,
@@ -266,10 +266,12 @@ export const resCategoryList =[
               price: 200,
               product_id: 66,
               // second_gp: [Object],
+              
               varient_id_1: '49',
               varient_id_2: '52',
             },
             {
+              
               first_gp: {name: '10 inch'},
               id: 73,
               price: 200,

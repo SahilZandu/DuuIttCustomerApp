@@ -152,15 +152,15 @@ export default function SideMenu({navigation}) {
       show: true,
       disable: false,
     },
-    {
-      title: 'About',
-      onPress: () => {
-        console.log('About');
-      },
-      icon: appImagesSvg.aboutSvg,
-      show: true,
-      disable: false,
-    },
+    // {
+    //   title: 'About',
+    //   onPress: () => {
+    //     console.log('About');
+    //   },
+    //   icon: appImagesSvg.aboutSvg,
+    //   show: true,
+    //   disable: false,
+    // },
     {
       title: 'Send feedback',
       onPress: () => {
@@ -291,12 +291,12 @@ export default function SideMenu({navigation}) {
           <TouchTextRightIconComp firstIcon={true} data={parcelOptions} />
         </ReusableSurfaceComp>
 
-        <ReusableSurfaceComp title={'Money'}>
+        {/* <ReusableSurfaceComp title={'Money'}>
           <TouchTextRightIconComp firstIcon={true} data={moneyOptions} />
-        </ReusableSurfaceComp>
-        <ReusableSurfaceComp title={'Coupons'}>
+        </ReusableSurfaceComp> */}
+        {/* <ReusableSurfaceComp title={'Coupons'}>
           <TouchTextRightIconComp  firstIcon={true} data={coupanOptions} />
-        </ReusableSurfaceComp>
+        </ReusableSurfaceComp> */}
 
         <ReusableSurfaceComp title={'More'}>
           <TouchTextRightIconComp firstIcon={true} data={moreOptions} />

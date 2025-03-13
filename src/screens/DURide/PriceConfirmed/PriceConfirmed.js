@@ -184,8 +184,8 @@ export default function PriceConfirmed({navigation, route}) {
               <PickDropLocation
                 pickUpLocation={pickUpLocation}
                 dropLocation={dropLocation}
-                pick={'Pickup'}
-                drop={'Dropped'}
+                pick={'Pickup location'}
+                drop={'Drop location'}
               />
               {minMaxHp == hp('80%') && (
                 <View>

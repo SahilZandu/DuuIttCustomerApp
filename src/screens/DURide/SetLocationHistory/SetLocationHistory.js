@@ -274,8 +274,8 @@ const SetLocationHistory = ({navigation}) => {
           onPressPickLocation={onPressPickLocation}
           onPressDropLocation={onPressDropLocation}
           onChangePress={()=>{onChangePress()}}
-          pick={'Pickup'}
-          drop={'Dropped'}
+          pick={'Pickup loaction'}
+          drop={'Dropped location'}
         />
 
         {/* <View style={styles.currentLocView}>
@@ -321,7 +321,7 @@ const SetLocationHistory = ({navigation}) => {
                     fontFamily: fonts.medium,
                     color: colors.black,
                   }}>
-                  No Data Found
+                 You haven't set an address yet.
                 </Text>
               </View>
             )}

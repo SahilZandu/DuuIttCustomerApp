@@ -36,7 +36,7 @@ export const ordersArray = [
     itemArray: [
       {
         id: 1,
-        pickup_drop: 'Pickup point',
+        pickup_drop: 'Pickup location',
         pickup: 'Phase 5, Sector 59, Sahibzada Ajit...',
         drop: 'TDI TAJ PLAZA Block-505',
       },
@@ -54,7 +54,7 @@ export const ordersArray = [
     itemArray: [
       {
         id: 1,
-        pickup_drop: 'Pickup point',
+        pickup_drop: 'Pickup location',
         pickup: 'Phase 5, Sector 59, Sahibzada Ajit...',
         drop: 'TDI TAJ PLAZA Block-505',
       },
@@ -98,7 +98,7 @@ export const ordersArray = [
     itemArray: [
       {
         id: 1,
-        pickup_drop: 'Pickup point',
+        pickup_drop: 'Pickup location',
         pickup: 'Phase 5, Sector 59, Sahibzada Ajit...',
         drop: 'TDI TAJ PLAZA Block-505',
       },
@@ -117,7 +117,7 @@ export const ordersArray = [
     itemArray: [
       {
         id: 1,
-        pickup_drop: 'Pickup point',
+        pickup_drop: 'Pickup location',
         pickup: 'Phase 5, Sector 59, Sahibzada Ajit...',
         drop: 'TDI TAJ PLAZA Block-505',
       },
@@ -160,7 +160,7 @@ export const ordersArray = [
     itemArray: [
       {
         id: 1,
-        pickup_drop: 'Pickup point',
+        pickup_drop: 'Pickup location',
         pickup: 'Phase 5, Sector 59, Sahibzada Ajit...',
         drop: 'TDI TAJ PLAZA Block-505',
       },
@@ -179,7 +179,7 @@ export const ordersArray = [
     itemArray: [
       {
         id: 1,
-        pickup_drop: 'Pickup point',
+        pickup_drop: 'Pickup location',
         pickup: 'Phase 5, Sector 59, Sahibzada Ajit...',
         drop: 'TDI TAJ PLAZA Block-505',
       },

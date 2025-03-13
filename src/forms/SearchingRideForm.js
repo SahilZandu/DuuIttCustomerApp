@@ -684,7 +684,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   const [rideDetailsVisible, setRideDetailsVisible] = useState(false);
   const [sliderItems, setSliderItems] = useState(silderArray);
   const [multipleRider, setMultipleRider] = useState(true);
-  const [minMaxHp, setMinMaxHp] = useState(screenHeight(78));
+  const [minMaxHp, setMinMaxHp] = useState(screenHeight(67));
 
   const getLocation = type => {
     let d =
@@ -952,11 +952,11 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
   };
 
   const driverArrive = [
-    {
-      id: 0,
-      title: 'Order ID',
-      value:  `${parcelInfo?._id}`,
-    },
+    // {
+    //   id: 0,
+    //   title: 'Order ID',
+    //   value:  `${parcelInfo?._id}`,
+    // },
     {
       id: 2,
       title: 'Bike Number',
@@ -1022,7 +1022,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
       if (nativeEvent?.translationY >= 0) {
         setMinMaxHp(screenHeight(35));
       } else {
-        setMinMaxHp(screenHeight(78));
+        setMinMaxHp(screenHeight(67));
       }
     }
     // if(nativeEvent?.absoluteY >= 451 && nativeEvent?.absoluteY <= 600){
@@ -1123,7 +1123,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
                     onDotPress();
                   }}
                 />
-                {minMaxHp == screenHeight(78) && (
+                {minMaxHp == screenHeight(67) && (
                   <>
                     <ImageNameRatingComp
                     parcelInfo={parcelInfo}

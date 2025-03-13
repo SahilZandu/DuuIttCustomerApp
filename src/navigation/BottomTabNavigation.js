@@ -97,7 +97,7 @@ export function DashboardBottomNavigator() {
                 // marginTop:hp('-4%'),
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.8%'),
+                bottom: hp('1.5%'),
               }}>
               <Text
                 style={{
@@ -231,7 +231,7 @@ export function RideBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.8%'),
+                bottom: hp('1.2%'),
               }}>
               <Text
                 style={{
@@ -363,7 +363,7 @@ export function FoodBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.8%'),
+                bottom: hp('1.2%'),
               }}>
               <Text
                 style={{
@@ -492,7 +492,7 @@ export function ParcelBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.8%'),
+                bottom: hp('1.2%'),
               }}>
               <Text
                 style={{
@@ -573,7 +573,7 @@ const styles = {
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
     paddingVertical: '2%',
-    height: hp('7.5%'),
+    height: hp('8%'),
     backgroundColor: colors.white, // Make the background transparent
     borderTopWidth: 0,
     paddingBottom: 0,

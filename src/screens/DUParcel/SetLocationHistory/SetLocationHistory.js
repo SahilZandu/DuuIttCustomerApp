@@ -319,7 +319,7 @@ const SetLocationHistory = ({navigation}) => {
                     fontFamily: fonts.medium,
                     color: colors.black,
                   }}>
-                  No Data Found
+                  You haven't set an address yet.
                 </Text>
               </View>
             )}

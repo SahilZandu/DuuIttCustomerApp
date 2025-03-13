@@ -142,8 +142,8 @@ const RidePriceForm = ({navigation}) => {
                   }}
                   onPressPickLocation={onPressPickLocation}
                   onPressDropLocation={onPressDropLocation}
-                  pick={'Pickup'}
-                  drop={'Dropped'}
+                  pick={'Pickup location'}
+                  drop={'Dropped location'}
                
                 />
               </View>

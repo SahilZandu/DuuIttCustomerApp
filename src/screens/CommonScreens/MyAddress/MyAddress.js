@@ -135,7 +135,7 @@ export default function MyAddress({navigation, route}) {
                   />
                 ) : (
                   <View style={styles.noDataView}>
-                    <Text style={styles.noDataText}>No Data Found</Text>
+                    <Text style={styles.noDataText}>You haven't set an address yet.</Text>
                   </View>
                 )}
               </View>

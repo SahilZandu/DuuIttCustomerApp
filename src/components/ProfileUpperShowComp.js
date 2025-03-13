@@ -27,7 +27,7 @@ const ProfileUpperShowComp = ({navigation, appUser, item}) => {
             />
             <View style={styles.textEditImageMainView}>
               <View style={styles.textEditImageView}>
-                <Text style={styles.nameText}>{item?.name}</Text>
+                <Text numberOfLines={1} style={styles.nameText}>{item?.name}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('profile');
@@ -38,8 +38,8 @@ const ProfileUpperShowComp = ({navigation, appUser, item}) => {
                   <SvgXml xml={appImagesSvg.editProfile} />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.emailText}>{item?.email}</Text>
-              <Text style={styles.phoneText}>{item?.phone}</Text>
+              <Text numberOfLines={2} style={styles.emailText}>{item?.email}</Text>
+              <Text numberOfLines={1} style={styles.phoneText}>{item?.phone}</Text>
             </View>
           </View>
         </View>
