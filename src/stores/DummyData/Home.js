@@ -270,6 +270,7 @@ export const resCategoryList =[
               varient_id_2: '52',
             },
             {
+              
               first_gp: {name: '10 inch'},
               id: 73,
               price: 200,
