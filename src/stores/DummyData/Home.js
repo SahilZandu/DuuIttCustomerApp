@@ -266,6 +266,7 @@ export const resCategoryList =[
               price: 200,
               product_id: 66,
               // second_gp: [Object],
+              
               varient_id_1: '49',
               varient_id_2: '52',
             },
