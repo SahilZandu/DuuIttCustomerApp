@@ -182,7 +182,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'Settings',
       onPress: () => {
-        console.log('Order Histroy');
+        console.log('Settings');
       },
       icon: appImagesSvg.settingSvg,
       show: true,
