@@ -206,4 +206,35 @@ export default class DashboardStore {
       return [];
     }
   };
+
+  appFeedback = async (values,handleLoading,navigation) => {
+    handleLoading(true);
+    let requestData = {
+      feedback: values?.feedback,
+      type: 'customer',
+    };
+
+    console.log('appFeedback', requestData);
+
+    try {
+      const res = await agent.appFeedback(requestData);
+      console.log('appFeedback Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        navigation.goBack();
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+      handleLoading(false);
+    } catch (error) {
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      console.log('error appFeedback:', error);
+    }
+  };
+
 }

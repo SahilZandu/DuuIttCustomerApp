@@ -74,7 +74,8 @@ export const colors = {
     color33:'#333333',
     colorFE:'#FEF0F3',
     colorC9:'#C9FFDB',
-    grey:'#7D7D7D'
+    grey:'#7D7D7D',
+    colorE8:'#E8E7E7'
     
    
   

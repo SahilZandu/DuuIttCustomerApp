@@ -99,6 +99,7 @@ export const agent = {
   completeMealItems: body => requests.post(Url.completeMealItems, body),
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
   applyCoupon: body => requests.post(Url.applyCoupon, body),
+  appFeedback: body => requests.post(Url.appFeedback, body),
   
   
 };

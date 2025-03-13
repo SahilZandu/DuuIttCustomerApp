@@ -21,6 +21,7 @@ import GiftCardPurcahseList from '../screens/Auth/DashboardScreen/WalletScreen/G
 import RewardsStars from '../screens/Auth/DashboardScreen/WalletScreen/RewardsStars/RewardsStars';
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
+import Settings from '../screens/Auth/DashboardScreen/Settings/Settings';
 
 
 const Stack = createNativeStackNavigator();
@@ -56,6 +57,8 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="rewardsStars" component={RewardsStars} />
        <Stack.Screen name="myAddress" component={MyAddress} />
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
+       <Stack.Screen name="settings" component={Settings} />
+       
        
        
        

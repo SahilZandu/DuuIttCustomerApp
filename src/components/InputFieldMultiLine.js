@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, TouchableOpacity, View, Text, TextInput} from 'react-native';
+import {Pressable, TouchableOpacity, View, Text, TextInput, Platform} from 'react-native';
 import {useFormikContext} from 'formik';
 import {colors} from '../theme/colors';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -87,7 +87,7 @@ function InputFieldMultiLine({
               paddingVertical: '2%',
               textAlignVertical: 'top', // Aligns text to the top
               textAlign: 'left',        // Aligns text to the left
-              paddingHorizontal: 0,     // Removes extra horizontal padding
+              paddingHorizontal:0,     // Removes extra horizontal padding
             }}
             maxLength={maxLength}
             {...otherProps}

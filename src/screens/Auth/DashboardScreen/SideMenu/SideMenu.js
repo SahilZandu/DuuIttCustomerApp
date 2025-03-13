@@ -182,7 +182,8 @@ export default function SideMenu({navigation}) {
     {
       title: 'Settings',
       onPress: () => {
-        console.log('Settings');
+        navigation.navigate('settings');
+        // console.log('Settings');
       },
       icon: appImagesSvg.settingSvg,
       show: true,

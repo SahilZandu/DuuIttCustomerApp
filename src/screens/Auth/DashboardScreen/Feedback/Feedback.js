@@ -14,8 +14,10 @@ import CTA from '../../../../components/cta/CTA';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import { feedbackValidations } from '../../../../forms/formsValidation/feedbackValidations';
 import { Strings } from '../../../../translates/strings';
+import { rootStore } from '../../../../stores/rootStore';
 
 export default function Feedback({navigation}) {
+  const {appFeedback}=rootStore.dashboardStore;
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({
     feedback: '',
@@ -45,7 +47,13 @@ export default function Feedback({navigation}) {
     );
   };
 
-  const handleFeedback = values => {};
+  const handleFeedback = async(values) => {
+    await appFeedback(values,handleLoading,navigation)
+  };
+
+  const handleLoading =(v)=>{
+    setLoading(v)
+  }
 
   return (
     <View style={styles.container}>

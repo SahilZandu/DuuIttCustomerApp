@@ -41,7 +41,8 @@ export default  {
     restaurantReview:'/reviews/restaurant-review',
     // restaurantOffers:'offers/all'
     restaurantOffers:'offers/recomended-offer',
-    applyCoupon:'cart/apply-coupon'
+    applyCoupon:'cart/apply-coupon',
+    appFeedback :'orders/app-feedback '
     
 
 
