@@ -16,6 +16,7 @@ const ProfileUpperShowComp = ({navigation, appUser, item}) => {
       <View style={styles.container}>
         <View style={styles.innerView}>
           <View style={styles.imageTextMainView}>
+          <View style={styles.imageView}>
             <Image
               resizeMode="cover"
               style={styles.image}
@@ -25,12 +26,13 @@ const ProfileUpperShowComp = ({navigation, appUser, item}) => {
                   : appImages.avtarImage
               }
             />
+            </View>
             <View style={styles.textEditImageMainView}>
               <View style={styles.textEditImageView}>
                 <Text numberOfLines={1} style={styles.nameText}>{item?.name}</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('profile');
+                    navigation.navigate('profile',{screenName:'sideMenu'});
                   }}
                   hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
                   style={styles.editImage}
@@ -78,13 +80,21 @@ const styles = StyleSheet.create({
   imageTextMainView: {
     flexDirection: 'row',
   },
-  image: {
+  imageView:{
     width: 70,
     height: 70,
     borderRadius: 100,
     marginLeft: '5%',
     borderColor: colors.main,
     borderWidth: 0.3,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 100,
+    // marginLeft: '5%',
+    // borderColor: colors.main,
+    // borderWidth: 0.3,
   },
   textEditImageMainView: {
     flex: 1,

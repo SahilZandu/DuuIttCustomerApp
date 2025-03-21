@@ -6,10 +6,8 @@ import {
 } from 'react-native-responsive-screen';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../theme/fonts/fonts';
-import {SvgXml} from 'react-native-svg';
 import {colors} from '../../../theme/colors';
 import {currencyFormat} from '../../../halpers/currencyFormat';
-// import { View } from 'react-native-reanimated/lib/typescript/Animated';
 
 const textProps = {
   color: colors.white,
@@ -19,19 +17,6 @@ const textProps = {
 
 const ViewCartBtn = ({viewCart, isCart, isDash}) => {
   console.log('ViewCartBtn items', viewCart, isCart, isDash);
-  const [totalAmount, setTotalAmount] = useState(0);
-  // useEffect(() => {
-  //   if (isCart?.length > 0) {
-  //     const newTotal = isCart.reduce(
-  //       (acc, item) => acc + (item?.sellingprice * item?.quantity || 0),
-  //       0,
-  //     );
-  //     setTotalAmount(newTotal);
-  //   } else {
-  //     setTotalAmount(0);
-  //   }
-  // }, [isCart]);
-
   return (
     <Pressable
       onPress={() => {

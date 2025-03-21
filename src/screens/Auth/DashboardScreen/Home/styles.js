@@ -1,11 +1,9 @@
 import {StyleSheet} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import { colors } from '../../../../theme/colors';
-import { fonts } from '../../../../theme/fonts/fonts';
 
 
 
@@ -22,10 +20,11 @@ export const styles = StyleSheet.create({
     marginHorizontal:10
   },
   bottomImageView:{
-    marginTop: '5%'
+    marginTop: '1%'
   },
   bottomImage:{
-    height: hp('30%'), width: wp('100%')
+    height: hp('30%'),
+     width: wp('100%')
   }
  
  

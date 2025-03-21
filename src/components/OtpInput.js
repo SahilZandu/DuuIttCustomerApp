@@ -6,7 +6,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { colors } from '../theme/colors';
 
 
 const componentName = ({handleTextChange,clearData,value}) => {
@@ -34,8 +33,6 @@ const componentName = ({handleTextChange,clearData,value}) => {
         pinCodeContainerStyle: styles.borderStyleBase,
         pinCodeTextStyle: styles.pinCodeText,
         focusedPinCodeContainerStyle:styles.focusedPinCodeContainer
-  
-
       }}
       onTextChange={handleTextChange}
     />

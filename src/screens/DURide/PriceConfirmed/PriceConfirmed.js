@@ -35,6 +35,7 @@ import BTN from '../../../components/cta/BTN';
 import LinearGradient from 'react-native-linear-gradient';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../../../theme/fonts/fonts';
+import Slider from '@react-native-community/slider';
 
 let priceArray = [0, 10, 20, 30, 40, 50];
 
@@ -57,10 +58,14 @@ export default function PriceConfirmed({navigation, route}) {
   const [fare, setFare] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedWidth, setSelectedWidth] = useState('0%');
+  const [fireValue, setFireValue] = useState(0);
+  console.log('fireValue--', fireValue);
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
+      setSelectedCount(0)
+      setSelectedWidth('0%')
     }, []),
   );
 
@@ -112,25 +117,77 @@ export default function PriceConfirmed({navigation, route}) {
     }
   };
 
-  const onNegative = () => {
-    if (fare < total) {
-      let newFare = total - 10;
-      let newCount = selectedCount - 0.2;
-      let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
-      setTotal(Number(newFare));
-      setSelectedCount(newCount);
-      setSelectedWidth(newWidth);
+  // const onNegative = () => {
+  //   if (fare < total) {
+  //     let newFare = total - 10;
+  //     let newCount = selectedCount - 0.2;
+  //     let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
+  //     setTotal(Number(newFare));
+  //     setSelectedCount(newCount);
+  //     setSelectedWidth(newWidth);
+  //   }
+  // };
+
+  // const onPositive = () => {
+  //   if (fare + priceArray.at(-1) > total) {
+  //     let newFare = total + 10;
+  //     let newCount = selectedCount + 0.2;
+  //     let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
+  //     setTotal(Number(newFare));
+  //     setSelectedCount(newCount);
+  //     setSelectedWidth(newWidth);
+  //   }
+  // };
+
+  const onNegative = val => {
+    // console.log('val---', val);
+    if (val >= 5) {
+      if (fare < total) {
+        let newFare = total - 10 * val;
+        let newCount = selectedCount - 0.2 * val;
+        let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(val);
+      }
+    } else {
+      if (fare < total) {
+        let newFare = total - 10;
+        let newCount = selectedCount - 0.2;
+        let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(fireValue - 1);
+      }
     }
   };
 
-  const onPositive = () => {
-    if (fare + priceArray.at(-1) > total) {
-      let newFare = total + 10;
-      let newCount = selectedCount + 0.2;
-      let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
-      setTotal(Number(newFare));
-      setSelectedCount(newCount);
-      setSelectedWidth(newWidth);
+  const onPositive = val => {
+    // console.log('val---', val);
+    if (val <= 5) {
+      // const fixedNum = Number(val?.toFixed(0));
+      // console.log("val---",fixedNum);
+      if (fare + priceArray.at(-1) > total) {
+        let newFare = fare + 10 * val;
+        let newCount = 0 + 0.2 * val;
+        let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(val);
+      }
+    } else {
+      if (fare + priceArray.at(-1) > total) {
+        let newFare = total + 10;
+        let newCount = selectedCount + 0.2;
+        let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(fireValue + 1);
+      }
     }
   };
 
@@ -226,7 +283,7 @@ export default function PriceConfirmed({navigation, route}) {
                 </View>
               )}
               <Spacer space={'10%'} />
-              <BtnForm onPress={handleFindRider} />
+              <BtnForm onPress={(value)=>{handleFindRider(value)}} />
             </View>
           </Formik>
         </Animated.View>
@@ -286,7 +343,32 @@ export default function PriceConfirmed({navigation, route}) {
               You can also directly type the fare
             </Text>
             <View style={{justifyContent: 'center', marginTop: hp('3%')}}>
-              <ProgressBarWithGradient progress={selectedCount} />
+            <ProgressBarWithGradient progress={selectedCount} />
+              <View style={styles.sliderView}>
+                <Slider
+                  style={{width: wp(90), height: 10}}
+                  minimumValue={0}
+                  step={1}
+                  maximumValue={5}
+                  value={fireValue}
+                  onValueChange={val => {
+                    const fixedNum = Number(val?.toFixed(0));
+                    // console.log('val---', fixedNum);
+                    setTimeout(() => {
+                      setFireValue(fixedNum);
+                      if (fireValue < fixedNum) {
+                        onPositive(fixedNum);
+                      } else {
+                        onNegative(fixedNum);
+                      }
+                    });
+                  }}
+                  thumbImage={appImages.fareBtn}
+                  minimumTrackTintColor="transparent"
+                  maximumTrackTintColor="transparent"
+                />
+              </View>
+              {/* <ProgressBarWithGradient progress={selectedCount} />
               <SvgXml
                 style={{
                   position: 'absolute',
@@ -294,7 +376,7 @@ export default function PriceConfirmed({navigation, route}) {
                   left: selectedWidth,
                 }}
                 xml={appImagesSvg.progessBarIcon}
-              />
+              /> */}
             </View>
 
             <View
@@ -323,7 +405,7 @@ export default function PriceConfirmed({navigation, route}) {
               }}>
               <SvgXml
                 onPress={() => {
-                  onNegative();
+                  onNegative('-10');
                 }}
                 width={30}
                 height={30}
@@ -331,7 +413,7 @@ export default function PriceConfirmed({navigation, route}) {
               />
               <SvgXml
                 onPress={() => {
-                  onPositive();
+                  onPositive('+10');
                 }}
                 width={30}
                 height={30}

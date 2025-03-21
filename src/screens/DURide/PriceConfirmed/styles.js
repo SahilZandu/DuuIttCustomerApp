@@ -106,5 +106,11 @@ export const styles = StyleSheet.create({
     marginHorizontal: -7,
     alignContent: 'center',
     justifyContent: 'center',
-  }
+  },
+  progessBarView:{
+    justifyContent: 'center', marginTop: hp('3%')
+  },
+  sliderView:{
+    position: 'absolute', justifyContent: 'center'
+  },
 });

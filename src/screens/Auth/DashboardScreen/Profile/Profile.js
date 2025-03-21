@@ -9,8 +9,9 @@ import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 
 
-export default function Profile({navigation}) {
+export default function Profile({navigation,route}) {
   const [internet, setInternet] = useState(true);
+  const {screenName}=route.params;
 
   useFocusEffect(
     useCallback(() => {
@@ -46,7 +47,7 @@ export default function Profile({navigation}) {
         <NoInternet/>
       ) : (
         <>
-     <ProfileForm navigation={navigation} />
+     <ProfileForm navigation={navigation} screenName={screenName}/>
      </>
      )}
     </View>

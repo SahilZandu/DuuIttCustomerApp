@@ -20,11 +20,16 @@ import BTN from './cta/BTN';
 import PickDropComp from './PickDropComp';
 import moment from 'moment';
 import Url from '../api/Url';
-import { screenWidth } from '../halpers/matrics';
+import {screenWidth} from '../halpers/matrics';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
-const CardOrder = ({item, index}) => {
+const CardOrder = ({item, index, handleDetails}) => {
   // console.log('item -- ', item);
-  let firstCapStatus = item?.status.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase();
+  let firstCapStatus =
+    item?.status.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase();
   //  console.log(' item?.status -- ',  item?.status);
   const setDetailsBtn = status => {
     switch (status) {
@@ -67,96 +72,60 @@ const CardOrder = ({item, index}) => {
   };
 
   return (
-    <Surface
-      elevation={2}
-      style={{
-        shadowColor: colors.black, // You can customize shadow color
-        backgroundColor: colors.white,
-        alignSelf: 'center',
-        borderRadius: 10,
-        width: screenWidth(90),
-        marginTop: '5%',
-      }}>
+    <Surface elevation={2} style={styles.container}>
       <TouchableOpacity
         key={index}
         activeOpacity={0.8}
-        style={{
-          alignSelf: 'center',
-          borderRadius: 10,
-        }}>
-        <View
-          style={{
-            paddingHorizontal: '3%',
-            marginTop: '5%',
-            flexDirection: 'row',
-          }}>
+        style={styles.innerView}>
+        <View style={styles.imageDateView}>
+        <View style={styles.imageView}>
           <Image
-            style={{width: 75, height: 75, borderRadius: 10}}
+            resizeMode="cover"
+            style={styles.image}
             source={
               item?.rider?.profile_pic?.length > 0
                 ? {uri: Url.Image_Url + item?.rider?.profile_pic}
                 : setImageIcon(item?.order_type)
             }
           />
-          <View style={{flex: 1, flexDirection: 'column', marginLeft: '2.5%'}}>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: RFValue(15),
-                fontFamily: fonts.medium,
-                color: colors.black,
-              }}>
+          </View>
+          <View style={styles.nameDateView}>
+            <Text numberOfLines={1} style={styles.nameText}>
               {item?.name ? item?.name : `Tracking ID:${item?.customer_id}`}
             </Text>
-            <Text
-              style={{
-                fontSize: RFValue(13),
-                fontFamily: fonts.medium,
-                color: '#838282',
-                marginTop: '3%',
-              }}>
+            <Text style={styles.dateText}>
               {dateTimeFormat(item?.createdAt)}
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: '3%',
-              }}>
+            <View style={styles.statusView}>
               <Text
-                style={{
-                  fontSize: RFValue(13),
-                  fontFamily: fonts.medium,
-                  color: item?.status == 'Canceled' 
-                  || item?.status == 'deleted' 
-                    ? '#E70000' : '#28B056',
-                }}>
+                style={[
+                  styles.statusText,
+                  {
+                    color:
+                      item?.status == 'Canceled' || item?.status == 'deleted'
+                        ? '#E70000'
+                        : '#28B056',
+                  },
+                ]}>
                 {firstCapStatus}
               </Text>
               <View style={{flex: 1, marginLeft: '4%'}}>
                 <SvgXml
                   xml={
-                    item?.status == 'Canceled'
-                    || item?.status == 'deleted' 
+                    item?.status == 'Canceled' || item?.status == 'deleted'
                       ? appImagesSvg.crossSvg
                       : appImagesSvg.rightSvg
                   }
                 />
               </View>
-              <Text
-                style={{
-                  fontSize: RFValue(13),
-                  fontFamily: fonts.medium,
-                  color: colors.black,
-                }}>
+              <Text style={styles.amountText}>
                 {currencyFormat(item?.total_amount)}
               </Text>
             </View>
           </View>
         </View>
 
-        <View style={{marginHorizontal: 10, marginTop: '3%'}}>
+        <View style={styles.orderItemView}>
           {item?.order_type !== 'food' ? (
             <PickDropComp
               item={{
@@ -196,19 +165,14 @@ const CardOrder = ({item, index}) => {
             </>
           )}
 
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: '12%',
-              justifyContent: 'space-between',
-            }}>
+          <View style={styles.bottomBtn}>
             <BTN
               backgroundColor={colors.white}
               labelColor={colors.main}
               width={screenWidth(38)}
               title={setDetailsBtn(item?.order_type)}
               onPress={() => {
-                // handleVerify(otp);
+                handleDetails(item);
               }}
               bottomCheck={15}
               textTransform={'capitalize'}
@@ -231,3 +195,76 @@ const CardOrder = ({item, index}) => {
 };
 
 export default CardOrder;
+
+const styles = StyleSheet.create({
+  container: {
+    shadowColor: colors.black, // You can customize shadow color
+    backgroundColor: colors.white,
+    alignSelf: 'center',
+    borderRadius: 10,
+    width: screenWidth(90),
+    marginTop: '5%',
+  },
+  innerView: {
+    alignSelf: 'center',
+    borderRadius: 10,
+  },
+  imageDateView: {
+    paddingHorizontal: '3%',
+    // marginTop: '5%',
+    paddingVertical: '5%',
+    flexDirection: 'row',
+  },
+  imageView: {
+    width: 75,
+    height: 75,
+    borderRadius: 10,
+    borderWidth:0.3,
+    borderColor:colors.main
+  },
+  image: {
+    width: 75,
+    height: 75,
+    borderRadius: 10,
+  },
+  nameDateView: {
+    flex: 1,
+    flexDirection: 'column',
+    marginLeft: '2.5%',
+  },
+  nameText: {
+    fontSize: RFValue(15),
+    fontFamily: fonts.medium,
+    color: colors.black,
+  },
+  dateText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    color: '#838282',
+    marginTop: '3%',
+  },
+  statusView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '3%',
+  },
+  statusText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+  },
+  amountText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    color: colors.black,
+  },
+  orderItemView: {
+    marginHorizontal: 10,
+    marginTop: '3%',
+  },
+  bottomBtn: {
+    flexDirection: 'row',
+    marginTop:hp(4.5),
+    justifyContent: 'space-between',
+  },
+});

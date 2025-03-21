@@ -33,6 +33,7 @@ import SenderReceiverForm from './SenderReceiverForm';
 import InputFieldLabel from '../components/InputFieldLabel';
 import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
 import {silderArray} from '../stores/DummyData/Home';
+import IncompletedAppRule from '../halpers/IncompletedAppRule';
 
 const parcelInst = [
   {
@@ -57,6 +58,7 @@ const PriceDetailsForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
     rootStore.myAddressStore;
   const {addRequestParcelRide} = rootStore.parcelStore;
+  const {appUser}=rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -69,12 +71,16 @@ const PriceDetailsForm = ({navigation}) => {
   const [initialValues, setInitialValues] = useState({
     phone: receiverAddress?.phone?.toString(),
   });
+  const [appUserData ,setAppUserData]=useState(appUser ?? {})
 
   useFocusEffect(
     useCallback(() => {
       getCheckSenderReceiverData();
+      const {appUser}=rootStore.commonStore;
+      setAppUserData(appUser)
     }, []),
   );
+  console.log("appUser parcel --",appUser);
 
   const getCheckSenderReceiverData = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
@@ -222,7 +228,7 @@ const PriceDetailsForm = ({navigation}) => {
             style={{flex: 1}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <AppInputScroll
-              Pb={'22%'}
+              Pb={hp('40%')}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
               <View style={{flex: 1, marginHorizontal: 20}}>
@@ -274,6 +280,13 @@ const PriceDetailsForm = ({navigation}) => {
           </View>
         </>
       </Formik>
+      {(appUserData?.profile_pic?.length === 0) && (
+        <IncompletedAppRule
+          title={'App Confirmation'}
+          message={'Please complete your profile first.'}
+          onHanlde={() => navigation.navigate('profile',{screenName:'parcelRoute'})}
+        />
+      )}
       <ModalPopUp
         isVisible={isAddressModal}
         onClose={() => {

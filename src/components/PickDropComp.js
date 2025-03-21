@@ -28,7 +28,7 @@ const PickDropComp = ({item,lineHeight,pickUpTextStyle,dropTextStyle}) => {
         <Text
           numberOfLines={1}
           style={styles.pickupPointText}>
-          pickup location{' '}
+          Pickup location{' '}
         </Text>
         <Text
           numberOfLines={1}

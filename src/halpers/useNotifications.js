@@ -20,12 +20,14 @@ export function useNotifications(navigation) {
         id: 'duuittcustomer.com',
         name: 'duuitt',
         priority: 'high',
+        
       });
 
       (remoteMessage.notification.android = {
         channelId: channelId,
-        smallIcon: 'ic_notification', // Ensure this icon is in res/drawable
-        color: '#FFFFFF', // Optional: Sets the accent color
+        smallIcon: 'ic_launcher', // Uses the app icon
+        largeIcon: 'ic_launcher', // Uses the app icon
+        // color: '#FFFFFF', // Optional: Sets the accent color
       }),
         console.log('forground notification:', remoteMessage);
       const newa = remoteMessage.notification;

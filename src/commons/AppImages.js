@@ -626,6 +626,9 @@ yellowStarUnactive:`<svg xmlns="http://www.w3.org/2000/svg" width="33" height="3
 yellowStarActive:`<svg xmlns="http://www.w3.org/2000/svg" width="33" height="30" viewBox="0 0 33 30" fill="none">
 <path d="M16.5 0L21.8342 9.15817L32.1924 11.4012L25.1308 19.3043L26.1985 29.8488L16.5 25.575L6.80154 29.8488L7.86916 19.3043L0.807568 11.4012L11.1658 9.15817L16.5 0Z" fill="#FAA61A"/>
 </svg>`,
+rightWhiteArrow :`<svg xmlns="http://www.w3.org/2000/svg" width="6" height="9" viewBox="0 0 6 9" fill="none">
+<path d="M1.24998 8L4.74998 4.5L1.24998 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`
 
 };
 
@@ -874,4 +877,5 @@ export const appImages = {
   ruppeYellowIcon:require('../assets/ruppeYellow.png'),
   ruppeGreyIcon:require('../assets/ruppeGrey.png'),
   countCoinIcon:require('../assets/countCoin.png'),
+  fareBtn:require('../assets/fareBtn.png'),
 };

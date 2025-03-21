@@ -19,12 +19,14 @@ import HomeSlider from '../components/slider/homeSlider';
 import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
 import { silderArray } from '../stores/DummyData/Home';
+import IncompletedAppRule from '../halpers/IncompletedAppRule';
 
 
 const RidePriceForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
     rootStore.myAddressStore;
   const {addRequestParcelRide} = rootStore.parcelStore;
+  const {appUser}=rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -34,13 +36,18 @@ const RidePriceForm = ({navigation}) => {
   const [isAddressModal, setIsAddressModal] = useState(false);
   const [isStatus, setIsStatus] = useState('');
   const [isSecure, setIsSecure] = useState(false);
+  const [appUserData ,setAppUserData]=useState(appUser ?? {})
  
 
   useFocusEffect(
     useCallback(() => {
       getCheckSenderReceiverData();
+      const {appUser}=rootStore.commonStore;
+      setAppUserData(appUser)
     }, []),
   );
+
+  console.log("appUser ride --",appUser);
 
   const getCheckSenderReceiverData = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
@@ -157,6 +164,14 @@ const RidePriceForm = ({navigation}) => {
             <FormButton loading={loading} onPress={handlePrice} />
           </View>
         </>
+
+        {(appUserData?.profile_pic?.length === 0) && (
+        <IncompletedAppRule
+          title={'App Confirmation'}
+          message={'Please complete your profile first.'}
+          onHanlde={() => navigation.navigate('profile',{screenName:'rideRoute'})}
+        />
+      )}
 
       <ModalPopUp
         isVisible={isAddressModal}

@@ -27,7 +27,7 @@ const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            navigation.navigate('profile');
+            navigation.navigate('profile',{screenName:'sideMenu'});
           }}
           style={styles.profileTouchView}>
           <SvgXml height={22} width={22} xml={appImagesSvg.profileIcon} />

@@ -21,13 +21,19 @@ import {homeCS, homeRideCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import MapRoute from '../../../components/MapRoute';
-import {setCurrentLocation} from '../../../components/GetAppLocation';
+import {getCurrentLocation, setCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
 import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
+
+
+let geoLocation = {
+  lat: null,
+  lng: null,
+};
 
 export default function RideHome({navigation}) {
   const {appUser} = rootStore.commonStore;
@@ -39,6 +45,14 @@ export default function RideHome({navigation}) {
   const [incompletedArray, setIncompletedArray] = useState([]);
   const [internet, setInternet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -52,6 +66,14 @@ export default function RideHome({navigation}) {
       socketServices.disconnectSocket();
       setSenderAddress({});
       setReceiverAddress({});
+      setTimeout(() => {
+        geoLocation = {
+          lat: getLocation('lat'),
+          lng: getLocation('lng'),
+        };
+        console.log('Updated geoLocation:', geoLocation);
+      }, 1000);
+      
     }, []),
   );
 
@@ -203,6 +225,7 @@ export default function RideHome({navigation}) {
 
           <MapRoute
             mapContainerView={{height: hp('25%')}}
+            origin={geoLocation}
             isPendingReq={true}
           />
           <SearchTextIcon

@@ -23,7 +23,6 @@
 
 // //  const destination = {lat: 30.7145, lng: 76.7149};
 
-
 // // const MapRoute = ({
 // //     mapContainerView, origin ,destination
 // // }) => {
@@ -33,7 +32,7 @@
 // //     const [long, setLong] = useState(76.715126);
 // //     const [destinationLocation, setDestinationLocation] = useState({});
 // //     const [coords, setcoords] = useState([]);
-    
+
 // //     useEffect(()=>{
 // //       if(Object?.keys(origin || {})?.length > 0){
 // //       setLat(origin?.lat)
@@ -46,7 +45,6 @@
 // //     },[origin,destination])
 
 // //     console.log("destination--",destination,destinationLocation)
-    
 
 // //   return (
 // //     <View style={styles.homeSubContainer}>
@@ -130,10 +128,8 @@
 // //         width: 35,
 // //         marginTop: Platform.OS == 'ios' ? '25%' : 0,
 // //       },
- 
+
 // // });
-
-
 
 // import React, { useEffect, useRef, useState } from 'react';
 // import { StyleSheet, View, Image, Platform, Dimensions } from 'react-native';
@@ -254,27 +250,34 @@
 //   },
 // });
 
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {appImages} from '../commons/AppImages';
+import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import PolylineDecoder from '@mapbox/polyline';
+import {colors} from '../theme/colors';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Image, Platform, Dimensions } from 'react-native';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { appImages } from '../commons/AppImages';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import PolylineDecoder from '@mapbox/polyline'; 
-import { colors } from '../theme/colors';
-
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';  // Add your Google Maps API key here
+const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
-const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
+const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   const mapRef = useRef(null);
-  const [lat, setLat] = useState(30.7076);
-  const [long, setLong] = useState(76.715126);
-  const [destinationLocation, setDestinationLocation] = useState({lat:30.7076,lng:76.715126});
+  const [lat, setLat] = useState(origin?.lat ? Number(origin?.lat) : null);
+  const [long, setLong] = useState(
+    origin?.lng ? Number(origin?.lng) :null,
+  );
+  const [destinationLocation, setDestinationLocation] = useState({
+    lat: null,
+    lng: null,
+  });
   const [coords, setCoords] = useState([]);
 
   // Update latitude and longitude based on origin
@@ -285,20 +288,27 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     }
   }, [origin]);
 
-   // Memoized region to prevent re-rendering unless lat or long changes
-   const region = useMemo(
+  // Memoized region to prevent re-rendering unless lat or long changes
+  const region = useMemo(
     () => ({
       latitude: lat,
       longitude: long,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     }),
-    [lat, long]
+    [lat, long],
   );
 
   // Fetch and set route only when both origin and destination are defined
   useEffect(() => {
-    if (origin && origin?.lat && origin?.lng && destination && destination?.lat && destination?.lng) {
+    if (
+      origin &&
+      origin?.lat &&
+      origin?.lng &&
+      destination &&
+      destination?.lat &&
+      destination?.lng
+    ) {
       setDestinationLocation(destination);
       fetchRoute(origin, destination);
     }
@@ -308,12 +318,18 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const fetchRoute = async (origin, destination) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat},${origin?.lng}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${
+          origin?.lat
+        },${origin?.lng}&destination=${Number(destination?.lat)},${Number(
+          destination?.lng,
+        )}&key=${API_KEY}`,
       );
       const json = await response.json();
 
       if (json.routes?.length) {
-        const points = PolylineDecoder.decode(json.routes[0].overview_polyline.points);
+        const points = PolylineDecoder.decode(
+          json.routes[0].overview_polyline.points,
+        );
         const routeCoords = points?.map(point => ({
           latitude: point[0],
           longitude: point[1],
@@ -321,13 +337,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         setCoords(routeCoords);
       }
     } catch (error) {
-      console.error("Error fetching route: ", error);
+      console.error('Error fetching route: ', error);
     }
-
   };
 
   return (
-    <View pointerEvents={isPendingReq ? 'none' : 'auto'} style={styles.homeSubContainer}>
+    <View
+      pointerEvents={isPendingReq ? 'none' : 'auto'}
+      style={styles.homeSubContainer}>
       <MapView
         provider={PROVIDER_GOOGLE}
         ref={mapRef}
@@ -340,26 +357,41 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         zoomTapEnabled
         rotateEnabled
         loadingEnabled
-        showsCompass
-      >
+        showsCompass>
         {/* Origin Marker */}
+         {origin?.lat && origin?.lng && (
         <Marker
           key={`origin-${lat}-${long}`} // Add key prop to prevent flickering
-          coordinate={{ latitude: lat, longitude: long }}
-        >
-          <Image resizeMode="contain" source={appImages.markerImage} style={styles.markerImage} />
-        </Marker>
+          coordinate={{latitude: lat, longitude: long}}>
+          <Image
+            resizeMode="contain"
+            source={appImages.markerImage}
+            style={styles.markerImage}
+          />
+        </Marker>)}
 
         {/* Destination Marker */}
         {destinationLocation?.lat && destinationLocation?.lng && (
-          <Marker coordinate={{ latitude: Number(destinationLocation?.lat), longitude: Number(destinationLocation?.lng)}}>
-            <Image resizeMode="contain" source={appImages.markerImage} style={styles.markerImage} />
+          <Marker
+            coordinate={{
+              latitude: Number(destinationLocation?.lat),
+              longitude: Number(destinationLocation?.lng),
+            }}>
+            <Image
+              resizeMode="contain"
+              source={appImages.markerImage}
+              style={styles.markerImage}
+            />
           </Marker>
         )}
 
         {/* Polyline for the Route */}
-        {coords.length > 0 && (
-          <Polyline coordinates={coords} strokeWidth={4} strokeColor={colors.main} />
+        {coords?.length > 0 && (
+          <Polyline
+            coordinates={coords}
+            strokeWidth={4}
+            strokeColor={colors.main}
+          />
         )}
       </MapView>
     </View>
@@ -374,7 +406,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     shadowRadius: 1,
-    shadowOffset: { height: 2, width: 0 },
+    shadowOffset: {height: 2, width: 0},
   },
   mapContainer: {
     alignSelf: 'center',
@@ -388,5 +420,3 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
-
-

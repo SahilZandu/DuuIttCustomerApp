@@ -61,7 +61,7 @@ const FormButton = ({loading, onPress}) => {
   );
 };
 
-const ProfileForm = ({navigation}) => {
+const ProfileForm = ({navigation, screenName}) => {
   const {updateProfile} = rootStore.dashboardStore;
   const {appUser} = rootStore.commonStore;
   const refRBSheet = useRef(null);
@@ -127,6 +127,9 @@ const ProfileForm = ({navigation}) => {
     setTimeout(() => {
       setUpdate(true);
     }, 50);
+    if (screenName !== 'sideMenu') {
+      navigation.goBack();
+    }
   };
 
   const DatePickeButton = ({}) => {
@@ -193,12 +196,14 @@ const ProfileForm = ({navigation}) => {
               <View style={{flex: 1, marginHorizontal: 20}}>
                 {/* {<ProfileCoverImage />} */}
                 <View style={styles.imageMainView}>
+                  <View style={styles.imageView}>
                   <Image
                     style={styles.image}
                     source={
                       image?.length > 0 ? {uri: image} : appImages.avtarImage
                     }
                   />
+                  </View>
                   <View style={styles.editIconMain}>
                     <TouchableOpacity
                       onPress={() => {
@@ -258,7 +263,8 @@ const ProfileForm = ({navigation}) => {
               </View>
             </AppInputScroll>
           </KeyboardAvoidingView>
-          <View style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
+          <View
+            style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
             <FormButton loading={loading} onPress={handleLogin} />
           </View>
           <DatePickeButton />
@@ -295,12 +301,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: '10%',
   },
-  image: {
+  imageView: {
     width: 100,
     height: 100,
     borderRadius: 100,
     borderWidth: 0.5,
     borderColor: colors.main,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    // borderWidth: 0.5,
+    // borderColor: colors.main,
   },
   editIconMain: {
     backgroundColor: 'white',

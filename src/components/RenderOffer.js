@@ -30,10 +30,10 @@ const RenderOffer = ({data}) => {
               </TouchableOpacity>
             </Surface>
 
-            <View style={styles.textView}>
+            {/* <View style={styles.textView}>
               <Text style={styles.title}>{item?.title}</Text>
               <Text style={styles.message}>{item?.message}</Text>
-            </View>
+            </View> */}
           </View>
         );
       })}

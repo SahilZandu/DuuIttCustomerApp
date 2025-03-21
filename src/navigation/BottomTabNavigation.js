@@ -18,6 +18,8 @@ import Offers from '../screens/Auth/DashboardScreen/Offers/Offers';
 import RideHome from '../screens/DURide/RideHome/RideHome';
 import FoodHome from '../screens/DUFood/FoodHome/FoodHome';
 import ResturantMenuProducts from '../screens/DUFood/Restaurent/ResturantMenuProducts';
+import * as Animatable from 'react-native-animatable';
+
  
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 
@@ -68,6 +70,13 @@ export function DashboardBottomNavigator() {
           }
           return (
             <View style={styles.iconContainer}>
+               {focused && update == true && (
+                <Animatable.View
+                  style={styles.animatedView}
+                  duration={800}
+                  animation={'fadeIn'}
+                  iterationCount={1}></Animatable.View>
+              )}
               <SvgXml xml={iconName} />
             </View>
           );
@@ -202,6 +211,13 @@ export function RideBottomNavigator() {
           }
           return (
             <View style={styles.iconContainer}>
+              {focused && update == true && (
+                <Animatable.View
+                  style={styles.animatedView}
+                  duration={800}
+                  animation={'fadeIn'}
+                  iterationCount={1}></Animatable.View>
+              )}
               <SvgXml xml={iconName} />
             </View>
           );
@@ -330,6 +346,13 @@ export function FoodBottomNavigator() {
           }
           return (
             <View style={styles.iconContainer}>
+              {focused && update == true && (
+                <Animatable.View
+                  style={styles.animatedView}
+                  duration={800}
+                  animation={'fadeIn'}
+                  iterationCount={1}></Animatable.View>
+              )}
               <SvgXml xml={iconName} />
             </View>
           );
@@ -463,6 +486,13 @@ export function ParcelBottomNavigator() {
           }
           return (
             <View style={styles.iconContainer}>
+              {focused && update == true && (
+                <Animatable.View
+                  style={styles.animatedView}
+                  duration={800}
+                  animation={'fadeIn'}
+                  iterationCount={1}></Animatable.View>
+              )}
               <SvgXml xml={iconName} />
             </View>
           );
@@ -553,14 +583,32 @@ const styles = {
     alignItems: 'center',
     backgroundColor: colors.white,
   },
-
+  animatedView:{
+    height: hp('0.8%'),
+    backgroundColor: colors.main,
+    width: wp('20%'),
+    position: 'absolute',
+    top: '10%',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
     marginTop: hp('-1%'),
-    // paddingBottom: '0%',
+    width: wp('20%'),
+    borderTopWidth: Platform.OS == 'android' ? 0.1 : 0.1,
+    height: hp('8%'),
   },
+
+  // iconContainer: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   backgroundColor: 'transparent',
+  //   marginTop: hp('-1%'),
+  //   // paddingBottom: '0%',
+  // },
   //   tabBarLabelStyle:{
   //     fontSize: RFValue(11),
   //     fontFamily: fonts.bold,

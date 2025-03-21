@@ -124,7 +124,7 @@ export default function Orders({navigation, route}) {
   const renderItem = ({item, i}) => {
     return (
       <>
-        <CardOrder item={item} index={i} />
+        <CardOrder item={item} index={i} handleDetails={(item)=>{navigation.navigate('orderDetails',{item:item})}} />
       </>
     );
   };

@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Animated,
+  Alert,
 } from 'react-native';
 import {appImages, appImagesSvg} from '../../../commons/AppImages';
 import {styles} from './styles';
@@ -35,6 +36,7 @@ import {fonts} from '../../../theme/fonts/fonts';
 import {SvgXml} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import BTN from '../../../components/cta/BTN';
+import Slider from '@react-native-community/slider';
 
 let priceArray = [0, 10, 20, 30, 40, 50];
 const paymentMethod = ['Cash', 'QR Code'];
@@ -56,10 +58,14 @@ export default function PriceConfirmed({navigation, route}) {
   const [fare, setFare] = useState(0);
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedWidth, setSelectedWidth] = useState('0%');
+  const [fireValue, setFireValue] = useState(0);
+  console.log('fireValue--', fireValue);
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
+      setSelectedCount(0);
+      setSelectedWidth('0%');
     }, []),
   );
 
@@ -91,19 +97,18 @@ export default function PriceConfirmed({navigation, route}) {
     setMinMaxHp(hp('35%'));
     setIsPriceModal(true);
     //  navigation.navigate('searchingRide', {
-    //   paymentMethod: value?.paymentMethods,
+    //  paymentMethod: value?.paymentMethods,
     // });
   };
 
   const handlePriceFindRider = () => {
     setIsPriceModal(false);
-    setTimeout(()=>{
+    setTimeout(() => {
       navigation.navigate('searchingRide', {
         paymentMethod: initialValues?.paymentMethods,
-        totalAmount:total,
+        totalAmount: total,
       });
-    },500)
-   
+    }, 500);
   };
 
   const onGestureEvent = ({nativeEvent}) => {
@@ -115,25 +120,55 @@ export default function PriceConfirmed({navigation, route}) {
     }
   };
 
-  const onNegative = () => {
-    if (fare < total) {
-      let newFare = total - 10;
-      let newCount = selectedCount - 0.2;
-      let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
-      setTotal(Number(newFare));
-      setSelectedCount(newCount);
-      setSelectedWidth(newWidth);
+  const onNegative = val => {
+    // console.log('val---', val);
+    if (val >= 5) {
+      if (fare < total) {
+        let newFare = total - 10 * val;
+        let newCount = selectedCount - 0.2 * val;
+        let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(val);
+      }
+    } else {
+      if (fare < total) {
+        let newFare = total - 10;
+        let newCount = selectedCount - 0.2;
+        let newWidth = `${parseFloat(selectedWidth) - parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(fireValue - 1);
+      }
     }
   };
 
-  const onPositive = () => {
-    if (fare + priceArray.at(-1) > total) {
-      let newFare = total + 10;
-      let newCount = selectedCount + 0.2;
-      let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
-      setTotal(Number(newFare));
-      setSelectedCount(newCount);
-      setSelectedWidth(newWidth);
+  const onPositive = val => {
+    // console.log('val---', val);
+    if (val <= 5) {
+      // const fixedNum = Number(val?.toFixed(0));
+      // console.log("val---",fixedNum);
+      if (fare + priceArray.at(-1) > total) {
+        let newFare = fare + 10 * val;
+        let newCount = 0 + 0.2 * val;
+        let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(val);
+      }
+    } else {
+      if (fare + priceArray.at(-1) > total) {
+        let newFare = total + 10;
+        let newCount = selectedCount + 0.2;
+        let newWidth = `${parseFloat(selectedWidth) + parseFloat('18')}%`;
+        setTotal(Number(newFare));
+        setSelectedCount(newCount);
+        setSelectedWidth(newWidth);
+        setFireValue(fireValue + 1);
+      }
     }
   };
 
@@ -228,7 +263,11 @@ export default function PriceConfirmed({navigation, route}) {
                 </>
               )}
               <Spacer space={'10%'} />
-              <BtnForm onPress={handleFindRider} />
+              <BtnForm
+                onPress={value => {
+                  handleFindRider(value);
+                }}
+              />
             </View>
           </Formik>
         </Animated.View>
@@ -238,56 +277,48 @@ export default function PriceConfirmed({navigation, route}) {
         onClose={() => {
           setIsPriceModal(false);
         }}>
-        <View
-          style={{
-            height: hp('48%'),
-            backgroundColor: colors.white,
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          }}>
-          <View style={{marginHorizontal: 20}}>
-            <Text
-              style={{
-                fontSize: RFValue(15),
-                fontFamily: fonts.bold,
-                color: colors.black,
-                marginTop: '5%',
-              }}>
-              Raise your fair
-            </Text>
-            <Text
-              style={{
-                fontSize: RFValue(13),
-                fontFamily: fonts.regular,
-                color: colors.color24,
-                marginTop: '3%',
-                lineHeight: 20,
-              }}>
+        <View style={styles.modalMainView}>
+          <View style={styles.modalTitleView}>
+            <Text style={styles.modalTitle}>Raise your fair</Text>
+            <Text style={styles.modalMessage}>
               We charge no commission. Full amount goes to the rider
             </Text>
 
             <Text
-              style={{
-                fontSize: RFValue(32),
-                fontFamily: fonts.semiBold,
-                color: colors.black,
-                marginTop: '5%',
-                textAlign: 'center',
-              }}>
+              style={styles.modalAmount}>
               {currencyFormat(total)}
             </Text>
             <Text
-              style={{
-                fontSize: RFValue(12),
-                fontFamily: fonts.regular,
-                color: colors.black,
-                marginTop: '3%',
-                textAlign: 'center',
-              }}>
-              You can also directly type the fare
+              style={styles.modalFairText}>
+              You can also directly set the fare
             </Text>
-            <View style={{justifyContent: 'center', marginTop: hp('3%')}}>
+            <View style={styles.progessBarView}>
               <ProgressBarWithGradient progress={selectedCount} />
+              <View style={styles.sliderView}>
+                <Slider
+                  style={{width: wp(90), height: 10}}
+                  minimumValue={0}
+                  step={1}
+                  maximumValue={5}
+                  value={fireValue}
+                  onValueChange={val => {
+                    const fixedNum = Number(val?.toFixed(0));
+                    // console.log('val---', fixedNum);
+                    setTimeout(() => {
+                      setFireValue(fixedNum);
+                      if (fireValue < fixedNum) {
+                        onPositive(fixedNum);
+                      } else {
+                        onNegative(fixedNum);
+                      }
+                    });
+                  }}
+                  thumbImage={appImages.fareBtn}
+                  minimumTrackTintColor="transparent"
+                  maximumTrackTintColor="transparent"
+                />
+              </View>
+              {/* <ProgressBarWithGradient progress={selectedCount} />
               <SvgXml
                 style={{
                   position: 'absolute',
@@ -295,17 +326,11 @@ export default function PriceConfirmed({navigation, route}) {
                   left: selectedWidth,
                 }}
                 xml={appImagesSvg.progessBarIcon}
-              />
+              /> */}
             </View>
 
             <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                marginHorizontal: 10,
-                marginTop: '6%',
-              }}>
+              style={styles.priceRenderView}>
               {priceArray?.map((item, i) => {
                 return (
                   <View>
@@ -315,16 +340,10 @@ export default function PriceConfirmed({navigation, route}) {
               })}
             </View>
             <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                marginHorizontal: 10,
-                marginTop: '4%',
-              }}>
+              style={styles.btnPNView}>
               <SvgXml
                 onPress={() => {
-                  onNegative();
+                  onNegative('-10');
                 }}
                 width={30}
                 height={30}
@@ -332,7 +351,7 @@ export default function PriceConfirmed({navigation, route}) {
               />
               <SvgXml
                 onPress={() => {
-                  onPositive();
+                  onPositive('+10');
                 }}
                 width={30}
                 height={30}

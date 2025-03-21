@@ -16,7 +16,7 @@ import {homeParcelCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import MapRoute from '../../../components/MapRoute';
-import {setCurrentLocation} from '../../../components/GetAppLocation';
+import {getCurrentLocation, setCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import moment from 'moment';
 import TrackingOrderComp from '../../../components/TrackingOrderComp';
@@ -28,7 +28,10 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
 
-
+let geoLocation = {
+  lat: null,
+  lng: null,
+};
 export default function ParcelHome({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {
@@ -54,12 +57,20 @@ export default function ParcelHome({navigation}) {
   const [isReviewRider, setIsReviewRider] = useState(false);
   const [isReviewStar, setIsReviewStar] = useState(false);
   const [loadingRating, setLoadingRating] = useState(false);
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
 
 
   useFocusEffect(
     useCallback(() => {
       // setCurrentLocation();
-      handleAndroidBackButton();
+      handleAndroidBackButton(navigation);
       onUpdateUserInfo();
       getTrackingOrder();
       getIncompleteOrder();
@@ -68,17 +79,28 @@ export default function ParcelHome({navigation}) {
       socketServices.disconnectSocket();
       setSenderAddress({})
       setReceiverAddress({})
-
-      const subscription = DeviceEventEmitter.addListener('dropped', data => {
-        console.log('dropped data -- ', data);
-        setIsReviewRider(false);
-      });
-      return () => {
-        subscription.remove();
-      };
-    
+      setTimeout(() => {
+        geoLocation = {
+          lat: getLocation('lat'),
+          lng: getLocation('lng'),
+        };
+        console.log('Updated geoLocation:', geoLocation);
+      }, 1000);
+      
     }, []),
   );
+
+  useEffect(()=>{
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data -- ', data);
+      setIsReviewRider(false);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+
+  },[])
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener(
@@ -254,7 +276,11 @@ export default function ParcelHome({navigation}) {
         appUserInfo={appUserInfo}
       />
 
-      <MapRoute mapContainerView={{height: hp('25%')}} isPendingReq={true} />
+      <MapRoute 
+      mapContainerView={{height: hp('25%')}} 
+      origin={geoLocation}
+      isPendingReq={true} 
+      />
       <SearchTextIcon
         title={'Enter pick up or send location'}
         onPress={() => {

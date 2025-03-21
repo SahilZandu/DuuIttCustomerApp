@@ -51,7 +51,8 @@ const DashbordScreens = [
   'claimGiftCardList',
   'rewardsStars',
   'trackingFoodOrderList',
-  'settings'
+  'settings',
+  'orderDetails'
 
 ];
 

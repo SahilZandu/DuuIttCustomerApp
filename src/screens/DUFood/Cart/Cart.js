@@ -33,10 +33,11 @@ import DeliveryCart from './DeliveryCart';
 import Url from '../../../api/Url';
 import OrderCustomization from '../../../components/OrderCustomization';
 import CompleteMealComp from '../../../components/CompleteMealComp';
+import IncompletedAppRule from '../../../halpers/IncompletedAppRule';
 
 let itemForEdit = null;
 let idForUpdate = null;
-let allCompleteMealList =[]
+let allCompleteMealList = [];
 const Cart = ({navigation, route}) => {
   const {restaurant} = route.params;
   const {setCart, getCart, updateCart, selectedAddress} = rootStore.cartStore;
@@ -65,10 +66,11 @@ const Cart = ({navigation, route}) => {
   const [isOpenNote, setIsOpenNote] = useState(false);
   const [isInstruction, setIsInstruction] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState(
-    selectedAddress?.address?.length > 0
+     selectedAddress?.address?.length > 0
       ? selectedAddress
       : appUser?.addresses[0] ?? {},
   );
+  const [appUserData ,setAppUserData]=useState(appUser ?? {})
 
   // const [cartBillG, setCartBillG] = useState(null);
   const [cartBillG, setCartBillG] = useState({
@@ -97,6 +99,7 @@ const Cart = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
+      const {appUser} = rootStore.commonStore;
       handleAndroidBackButton(navigation);
       getUserCart();
       // if (restaurant) {
@@ -107,9 +110,12 @@ const Cart = ({navigation, route}) => {
           ? selectedAddress
           : appUser?.addresses[0] ?? {},
       );
-      allCompleteMealList=mealOrderList;
+      allCompleteMealList = mealOrderList;
+      setAppUserData(appUser)
     }, [selectedAddress]),
   );
+
+  // console.log("appUser cart --",appUser);
 
   useEffect(() => {
     getRestaurantOffersData();
@@ -139,7 +145,7 @@ const Cart = ({navigation, route}) => {
     const res = await getCompleteMealItems(restaurant, handleMealLoading);
     console.log('res---getCompMealList', res);
     setCompleteMealAllList(res);
-    allCompleteMealList=res;
+    allCompleteMealList = res;
     if (res?.length > 3) {
       const mealList = res || [];
       const middleIndex = Math.ceil(mealList.length / 2);
@@ -251,7 +257,7 @@ const Cart = ({navigation, route}) => {
       });
       setTimeout(() => {
         onCheckMealItem(cart?.food_item);
-      },500);
+      }, 500);
       if (
         cart?.grand_total < activeOffer?.discount_price &&
         cart?.offer?._id?.length > 0
@@ -340,7 +346,12 @@ const Cart = ({navigation, route}) => {
   };
 
   const onCheckMealItem = foodItemArray => {
-    console.log('foodItemArray--', foodItemArray,allCompleteMealList,completeMealAllList);
+    console.log(
+      'foodItemArray--',
+      foodItemArray,
+      allCompleteMealList,
+      completeMealAllList,
+    );
     if (foodItemArray?.length > 0 && allCompleteMealList?.length > 0) {
       let mealListData = (allCompleteMealList ?? []).map(item => {
         const exactItem = foodItemArray?.find(
@@ -807,6 +818,31 @@ const Cart = ({navigation, route}) => {
         product={itemForEdit?.addon}
       /> */}
 
+      {/* {(appUser?.profile_pic?.length > 0 ||
+        appUser?.email?.length > 0 ||
+        appUser?.phone?.length > 0) ? 
+          null :(
+          <IncompletedAppRule
+            title={'App Confirmation'}
+            message={' Please add your address first.'}
+            onHanlde={() => onPressLocation()}
+          />
+        )} */}
+      {(appUserData?.profile_pic?.length === 0) && (
+        <IncompletedAppRule
+          title={'App Confirmation'}
+          message={'Please complete your profile first.'}
+          onHanlde={() => navigation.navigate('profile',{screenName:'foodRoute'})}
+        />
+      )}
+
+      {(deliveryAddress?.length === 0) && (
+        <IncompletedAppRule
+          title={'App Confirmation'}
+          message={'Please add your address first.'}
+          onHanlde={() => onPressLocation()}
+        />
+      )}
       <OrderCustomization
         isResOpen={isEdit}
         appCart={cartList}

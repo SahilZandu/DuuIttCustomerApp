@@ -79,6 +79,7 @@ const ResturantProducts = memo(({navigation, route}) => {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
+      const {appUser} = rootStore.commonStore;
       filterType = 'all';
       setTimeout(() => {
         const {categoryMenuList} = rootStore.foodDashboardStore;
@@ -599,7 +600,6 @@ const ResturantProducts = memo(({navigation, route}) => {
           viewCart={() => navigation.navigate('cart', {restaurant})}
         />
       )}
-
       {/* {isOtherCart && !loading && (
         <DashboardCartBtn
           bottom={'6%'}

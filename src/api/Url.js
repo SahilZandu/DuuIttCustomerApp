@@ -45,8 +45,5 @@ export default  {
     appFeedback :'orders/app-feedback '
     
 
-
-   
-   
 } 
 
