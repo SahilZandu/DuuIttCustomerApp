@@ -163,6 +163,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 10,
     marginTop: '4%',
+  },
+  priceText:{
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
   }
   
 });

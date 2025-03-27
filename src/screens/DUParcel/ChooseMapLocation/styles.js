@@ -23,4 +23,29 @@ export const styles = StyleSheet.create({
     // height: hp('23%'),
     height:screenHeight(23)
   },
+  currentLocTouch: {
+    position: 'absolute',
+    bottom: hp('24%'),
+    right: '3%',
+    backgroundColor: colors.white,
+    borderRadius: 10,
+  },
+  currentLocView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '5%',
+    paddingHorizontal: '3%',
+  },
+
+  currentLocImage: {
+    width: 22,
+    height: 22,
+  },
+  currentLocText: {
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.main,
+    marginLeft: '3%',
+  },
 });

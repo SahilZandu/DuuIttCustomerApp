@@ -279,9 +279,14 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     lng: null,
   });
   const [coords, setCoords] = useState([]);
+  const [delta ,setDelta]=useState({
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+  })
 
   // Update latitude and longitude based on origin
   useEffect(() => {
+    console.log('origin--',origin,destination);
     if (Object?.keys(origin || {})?.length > 0) {
       setLat(Number(origin?.lat));
       setLong(Number(origin?.lng));
@@ -289,15 +294,27 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   }, [origin]);
 
   // Memoized region to prevent re-rendering unless lat or long changes
+  // const region = useMemo(
+  //   () => ({
+  //     latitude: lat,
+  //     longitude: long,
+  //     latitudeDelta: LATITUDE_DELTA,
+  //     longitudeDelta: LONGITUDE_DELTA,
+  //   }),
+  //   [lat, long],
+  // );
+
   const region = useMemo(
     () => ({
       latitude: lat,
       longitude: long,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
+      latitudeDelta:delta?.latitudeDelta,
+      longitudeDelta:delta?.longitudeDelta,
     }),
-    [lat, long],
+    [lat, long,delta],
   );
+
+ 
 
   // Fetch and set route only when both origin and destination are defined
   useEffect(() => {
@@ -340,6 +357,8 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
       console.error('Error fetching route: ', error);
     }
   };
+
+
 
   return (
     <View

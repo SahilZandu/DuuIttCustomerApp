@@ -42,7 +42,11 @@ export default  {
     // restaurantOffers:'offers/all'
     restaurantOffers:'offers/recomended-offer',
     applyCoupon:'cart/apply-coupon',
-    appFeedback :'orders/app-feedback '
+    appFeedback :'orders/app-feedback',
+
+    
+    wallet:'wallet',
+    walletUpdateBalance:"wallet/update-balance"
     
 
 } 

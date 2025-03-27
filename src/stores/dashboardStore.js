@@ -6,6 +6,9 @@ import {getUniqueId} from 'react-native-device-info';
 
 export default class DashboardStore {
   restaurentOfferCoupan = [];
+  welletBalance ={}
+  transactionList=[]
+
 
   updateProfile = async (values, handleLoading, onSuccess) => {
     handleLoading(true);
@@ -234,6 +237,112 @@ export default class DashboardStore {
         : 'Something went wrong';
       useToast(m, 0);
       console.log('error appFeedback:', error);
+    }
+  };
+
+
+  getWallet = async (appUser, handleLoading) => {
+    const requestData = {
+      userId: appUser?._id,
+    };
+    try {
+      const res = await agent.wallet(requestData);
+      console.log('get wallet Res : ', res);
+      if (res?.statusCode == 200) {
+        res?.data
+          ? (this.welletBalance = res?.data)
+          : (this.welletBalance = []);
+        handleLoading(false);
+        return res?.data;
+        // useToast(res.message, 1);
+        // return res?.data;
+      } else {
+        this.welletBalance = [];
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      handleLoading(false);
+      console.log('error get wallet List:', error);
+      return [];
+    }
+  };
+
+  getTransactionHistory = async (appUser,limit,range, handleLoading) => {
+    const requestData = {
+      userId: appUser?._id,
+      transaction: true,
+      page: 1,
+      limit:limit,
+      range:range?.toLowerCase()
+    };
+    console.log("requestData--=",requestData);
+    try {
+      const res = await agent.transactionHistory(requestData);
+      console.log('get getTransactionHistory Res : ', res);
+      if (res?.statusCode == 200) {
+        res?.data?.transactions?.length > 0
+          ? (this.transactionList = res?.data?.transactions)
+          : (this.transactionList = []);
+        handleLoading(false);
+        return res?.data?.transactions;
+        // useToast(res.message, 1);
+        // return res?.data;
+      } else {
+        this.transactionList = [];
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      handleLoading(false);
+      console.log('error get TransactionHistory List:', error);
+      return [];
+    }
+  };
+
+
+  addWalletBalance = async (
+    appUser,
+    amount,
+    paymentId,
+    status,
+    handleLoading,
+    onHandleScuuess,
+  ) => {
+    const requestData = {
+      created_by: appUser?._id,
+      user_type:"customer",
+      amount: Number(amount),
+      payment_id: paymentId,
+      type: 'credit',
+      status: status, // -----for customer---- > deposits or duuitt_credits
+      reason: 'Recharge',
+    };
+
+    console.log("requestData addWalletBalance--",requestData);
+    try {
+      const res = await agent.walletUpdateBalance(requestData);
+      console.log('add walletUpdateBalance Res : ', res);
+      if (res?.statusCode == 200) {
+        handleLoading(false);
+        useToast(res.message, 1);
+        onHandleScuuess();
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+      }
+    } catch (error) {
+      handleLoading(false);
+      console.log('error add walletUpdateBalance List:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
     }
   };
 

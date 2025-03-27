@@ -34,5 +34,30 @@ export const styles = StyleSheet.create({
     fontSize:RFValue(15),
     fontFamily:fonts.medium,
     color:colors.black
-  }
+  },
+  currentLocTouch: {
+    position: 'absolute',
+    bottom: hp('22%'),
+    right: '3%',
+    backgroundColor: colors.white,
+    borderRadius: 10,
+  },
+  currentLocView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '5%',
+    paddingHorizontal: '3%',
+  },
+
+  currentLocImage: {
+    width: 22,
+    height: 22,
+  },
+  currentLocText: {
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.main,
+    marginLeft: '3%',
+  },
 });

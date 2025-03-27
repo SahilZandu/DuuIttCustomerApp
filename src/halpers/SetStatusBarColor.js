@@ -52,7 +52,8 @@ const DashbordScreens = [
   'rewardsStars',
   'trackingFoodOrderList',
   'settings',
-  'orderDetails'
+  'orderDetails',
+  'transactionHistory'
 
 ];
 

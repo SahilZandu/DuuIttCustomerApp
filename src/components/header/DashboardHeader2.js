@@ -146,7 +146,7 @@ const DashboardHeader2 = ({
         <TouchableOpacity
           hitSlop={{top: 10, bottom: 10, left: 20, right: 20}}
           onPress={() => {
-            navigation.navigate('profile');
+            navigation.navigate('profile',{screenName:'home'});
           }}
           activeOpacity={0.8}>
           <Image

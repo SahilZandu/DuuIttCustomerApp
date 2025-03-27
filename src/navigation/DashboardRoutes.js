@@ -23,6 +23,7 @@ import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
 import Settings from '../screens/Auth/DashboardScreen/Settings/Settings';
 import OrderDetails from '../screens/Auth/DashboardScreen/OrderDetails/OrderDetails';
+import TransactionHistory from '../screens/Auth/DashboardScreen/TransationHistory/TransationHistory';
 
 
 const Stack = createNativeStackNavigator();
@@ -59,7 +60,9 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="myAddress" component={MyAddress} />
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
        <Stack.Screen name="settings" component={Settings} />
-       <Stack.Screen name="orderDetails" component={OrderDetails} />
+       <Stack.Screen name="orderDetails" component={OrderDetails} />  
+       <Stack.Screen name="transactionHistory" component={TransactionHistory} />
+       
        
        
        

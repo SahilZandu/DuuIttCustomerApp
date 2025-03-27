@@ -32,12 +32,14 @@ export default function VerifyOtp({navigation, route}) {
   const {value, loginType} = route.params;
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState(null);
+  const [otpBtn, setOtpBtn] = useState(null);
   const [clearValue, setClearValue] = useState(false);
   const [mobileEmail, setMobileEmail] = useState(value);
   const [clearData, setClearData] = useState(false);
 
   useEffect(() => {
     setOtp('');
+    setOtpBtn('')
     setClearValue(!clearValue);
     if (value) {
       setMobileEmail(value);
@@ -59,6 +61,7 @@ export default function VerifyOtp({navigation, route}) {
         // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
         const otp = /(\d{4})/g.exec(message)[1];
         setOtp(otp);
+        setOtpBtn(otp)
         }
       });
   
@@ -73,7 +76,8 @@ export default function VerifyOtp({navigation, route}) {
 
   const handleTextChange = t => {
     console.log('triger handle change:-', t);
-    setOtp(t);
+    // setOtp(t);
+    setOtpBtn(t)
     if (t?.length == 4) {
       handleVerify(t);
     }
@@ -82,10 +86,10 @@ export default function VerifyOtp({navigation, route}) {
   const FormButton = ({loading, onPress}) => {
     return (
       <CTA
-        disable={otp?.length != 4}
+        disable={(otp?.length != 4 || otpBtn?.length != 4)}
         title={Strings.verify}
         onPress={() => {
-          onPress(otp);
+          onPress(otpBtn);
         }}
         loading={loading}
         theme={'primary'}
@@ -102,7 +106,6 @@ export default function VerifyOtp({navigation, route}) {
     // await setToken("true")
     // navigation.navigate('dashborad' , {screen:'home'})
     //  }
-
     await verifyOtp(
       mobileEmail,
       loginType,
@@ -117,9 +120,16 @@ export default function VerifyOtp({navigation, route}) {
     setLoading(v);
   };
 
+
+  const handleResendLoading = v => {
+    console.log("handleResendLoading",v);
+    // setLoading(v);
+  };
+
   const onResendClear = async () => {
     console.log('resend');
     setOtp('');
+    setOtpBtn('')
     setClearData(!clearData);
   };
 
@@ -179,7 +189,7 @@ export default function VerifyOtp({navigation, route}) {
               value={mobileEmail}
               type={loginType}
               onResendClear={onResendClear}
-              handleLoading={handleLoading}
+              handleLoading={handleResendLoading}
             />
             <View style={{marginTop: '30%'}}>
               <FormButton loading={loading} onPress={handleVerify} />

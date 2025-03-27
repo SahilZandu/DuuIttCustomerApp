@@ -48,7 +48,6 @@
 // import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 // import { cancelParcel, cancelParcelRide, cancelRide } from '../stores/DummyData/CancelData';
 
-
 // const SearchingRideForm = ({navigation, route}) => {
 //   const intervalId = useRef(null);
 //   const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
@@ -195,7 +194,6 @@
 //     console.log('Socket state:', socketServices?.socket?.connected, request);
 //     socketServices.emit('remaining-distance', request);
 //   };
-
 
 //   const onGetNearByRider = async info => {
 //     console.log('info--', info, parcelInfo);
@@ -393,7 +391,7 @@
 //                     <ImageNameRatingComp
 //                     parcelInfo={parcelInfo}
 //                      />
-                     
+
 //                     <DriverArrivingComp
 //                       topLine={false}
 //                       title={'Pickup in 10 minutes'}
@@ -578,25 +576,6 @@
 //   },
 // });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, {useEffect, useState, useRef, useCallback, useMemo} from 'react';
 import {
   Text,
@@ -658,16 +637,16 @@ import Url from '../api/Url';
 import FastImage from 'react-native-fast-image';
 import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
-import { silderArray } from '../stores/DummyData/Home';
+import {silderArray} from '../stores/DummyData/Home';
 
-
-const SearchingRideForm = ({navigation, route, screenName}) => {
-  const {addParcelInfo, parcels_Cancel, parcelsFindRider} =
+const 
+SearchingRideForm = ({navigation, route, screenName}) => {
+  const {addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
   const {appUser} = rootStore.commonStore;
   const {updateOrderStatus} = rootStore.orderStore;
   const refRBSheet = useRef(null);
-  const {paymentMethod,totalAmount} = route.params;
+  const {paymentMethod, totalAmount} = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
   const [searchingFind, setSearchingFind] = useState('searching');
@@ -695,12 +674,13 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     return d ? d : '';
   };
 
-  console.log('paymentMethod--', paymentMethod, addParcelInfo);
+  console.log('paymentMethod--', paymentMethod, addParcelInfo, parcelInfo);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
       console.log('new order data -- ', data);
       setParcelInfo(data);
+      setAddParcelInfo(data);
       setSearchArrive('arrive');
     });
 
@@ -720,11 +700,13 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     };
   }, []);
 
+
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('picked', data => {
       console.log('picked data -- ', data);
       // navigation.navigate('parcel', {screen: 'home'});
       setParcelInfo(data);
+      setAddParcelInfo(data);
       if (screenName == 'parcel') {
         navigation.navigate('pickSuccessfully');
         setSearchArrive('search');
@@ -755,30 +737,54 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
     // ridePickupParcel()
   }, []);
 
+  // useEffect(() => {
+  //   const {addParcelInfo} = rootStore.parcelStore;
+  //   if (Object?.keys(addParcelInfo)?.length > 0) {
+  //     setSenderLocation(addParcelInfo?.sender_address?.geo_location);
+  //     setDestination(addParcelInfo?.receiver_address?.geo_location);
+  //     setRiderDest(addParcelInfo?.rider?.geo_location);
+  //     setParcelInfo(addParcelInfo);
+  //     setTimeout(() => {
+  //       setSearching(false);
+  //       if (
+  //         addParcelInfo?.status == 'accepted' ||
+  //         addParcelInfo?.status == 'picked'
+  //       ) {
+  //         setSearchArrive('arrive');
+  //         if (addParcelInfo?.status == 'picked') {
+  //           setMinMaxHp(screenHeight(35));
+  //         }
+  //         // refRBSheet.current.open();
+  //       } else {
+  //         onGetNearByRider(addParcelInfo);
+  //       }
+  //     }, 1000);
+  //   }
+  // }, [addParcelInfo,parcelInfo]);
+
   useEffect(() => {
-    const {addParcelInfo} = rootStore.parcelStore;
-    if (Object?.keys(addParcelInfo)?.length > 0) {
-      setSenderLocation(addParcelInfo?.sender_address?.geo_location);
-      setDestination(addParcelInfo?.receiver_address?.geo_location);
-      setRiderDest(addParcelInfo?.rider?.geo_location);
-      setParcelInfo(addParcelInfo);
+    if (Object?.keys(parcelInfo)?.length > 0) {
+      setSenderLocation(parcelInfo?.sender_address?.geo_location);
+      setDestination(parcelInfo?.receiver_address?.geo_location);
+      setRiderDest(parcelInfo?.rider?.geo_location);
+      // setParcelInfo(parcelInfo);
       setTimeout(() => {
         setSearching(false);
         if (
-          addParcelInfo?.status == 'accepted' ||
-          addParcelInfo?.status == 'picked'
+          parcelInfo?.status == 'accepted' ||
+          parcelInfo?.status == 'picked'
         ) {
           setSearchArrive('arrive');
-          if (addParcelInfo?.status == 'picked') {
+          if (parcelInfo?.status == 'picked') {
             setMinMaxHp(screenHeight(35));
           }
           // refRBSheet.current.open();
         } else {
-          onGetNearByRider(addParcelInfo);
+          onGetNearByRider(parcelInfo);
         }
       }, 1000);
     }
-  }, []);
+  }, [parcelInfo]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -823,7 +829,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
           setTimeout(() => {
             getSocketLocation(socketServices);
           }, 1500);
-        }, 10000);
+        }, 20000);
         return () => {
           // This will run when the screen is unfocused
           clearInterval(intervalId);
@@ -844,7 +850,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
           refresh: '',
         };
         socketServices.emit('find-nearby-riders', query);
-      }, 10000);
+      }, 20000);
       return () => {
         clearInterval(findNearbyRiders);
       };
@@ -879,14 +885,11 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
 
   const refershFindRidersData = () => {
     setSearching(false);
-    if (
-      addParcelInfo?.status == 'accepted' ||
-      addParcelInfo?.status == 'picked'
-    ) {
+    if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
       setSearchArrive('arrive');
     } else {
       setSearchingFind('searching');
-      onGetNearByRider(addParcelInfo);
+      onGetNearByRider(parcelInfo);
     }
   };
 
@@ -932,7 +935,7 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
       parcel_id: info?._id,
       geo_location: info?.sender_address?.geo_location,
       paymentMode: paymentMethod === 'Cash' ? 'cash' : 'online',
-      total_amount: totalAmount
+      total_amount: totalAmount,
     };
 
     const res = await parcelsFindRider(value, handleLoadingRider);
@@ -976,8 +979,8 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
 
   const onCancelRequest = async () => {
     const value = {
-      orderId: addParcelInfo?._id,
-      customerId: addParcelInfo?.customer_id,
+      orderId: parcelInfo?._id,
+      customerId: parcelInfo?.customer_id,
       reason: cancelReason,
     };
 
@@ -1055,18 +1058,23 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
               )}
             </>
           ) : (
-            <MapRoute
-              origin={riderDest}
-              destination={
-                senderLocation
-                // destination
-              }
-              mapContainerView={
-                Platform.OS == 'ios'
-                  ? {height: screenHeight(58)}
-                  : {height: screenHeight(68)}
-              }
-            />
+            <>
+              {riderDest?.lng && senderLocation?.lng ? (
+                <MapRoute
+                  origin={riderDest}
+                  destination={
+                    parcelInfo?.status == 'picked'
+                      ? destination
+                      : senderLocation
+                  }
+                  mapContainerView={
+                    Platform.OS == 'ios'
+                      ? {height: screenHeight(58)}
+                      : {height: screenHeight(68)}
+                  }
+                />
+              ) : null}
+            </>
           )}
         </View>
         {searchArrive == 'search' ? (
@@ -1103,11 +1111,13 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
               </View>
             ) : (
               <RiderNotAvailableComp
-              onRefershFindRiders={()=>{refershFindRidersData()}}
-              onBackToHome={()=>{
-                backToHome();
+                onRefershFindRiders={() => {
+                  refershFindRidersData();
                 }}
-               />
+                onBackToHome={() => {
+                  backToHome();
+                }}
+              />
             )}
           </View>
         ) : (
@@ -1125,10 +1135,8 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
                 />
                 {minMaxHp == screenHeight(67) && (
                   <>
-                    <ImageNameRatingComp
-                    parcelInfo={parcelInfo}
-                     />
-                     
+                    <ImageNameRatingComp parcelInfo={parcelInfo} />
+
                     <DriverArrivingComp
                       topLine={false}
                       title={'Pickup in 10 minutes'}
@@ -1165,19 +1173,20 @@ const SearchingRideForm = ({navigation, route, screenName}) => {
                       }}
                     />
 
-                    {driverArrive?.map((item, i) => {
-                      return (
-                        <TextRender
-                          title={item?.title}
-                          value={
-                            item?.title == 'Cash'
-                              ? currencyFormat(Number(item?.value))
-                              : item?.value
-                          }
-                          bottomLine={true}
-                        />
-                      );
-                    })}
+                    {/* {driverArrive?.map((item, i) => {
+                      return ( */}
+                    <TextRender
+                      title={'Bike Number'}
+                      value={
+                        `${parcelInfo?.rider?.vehicle_info?.vehicle_number}`
+                        // item?.title == 'Cash'
+                        //   ? currencyFormat(Number(item?.value))
+                        //   : item?.value
+                      }
+                      bottomLine={true}
+                    />
+                    {/* ); */}
+                    {/* })} */}
                   </>
                 )}
                 <View style={{marginLeft: '6%', alignSelf: 'center'}}>
@@ -1312,4 +1321,3 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
 });
-

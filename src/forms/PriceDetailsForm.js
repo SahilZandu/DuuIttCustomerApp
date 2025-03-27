@@ -58,7 +58,7 @@ const PriceDetailsForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
     rootStore.myAddressStore;
   const {addRequestParcelRide} = rootStore.parcelStore;
-  const {appUser}=rootStore.commonStore;
+  const {appUser} = rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -71,16 +71,16 @@ const PriceDetailsForm = ({navigation}) => {
   const [initialValues, setInitialValues] = useState({
     phone: receiverAddress?.phone?.toString(),
   });
-  const [appUserData ,setAppUserData]=useState(appUser ?? {})
+  const [appUserData, setAppUserData] = useState(appUser ?? {});
 
   useFocusEffect(
     useCallback(() => {
       getCheckSenderReceiverData();
-      const {appUser}=rootStore.commonStore;
-      setAppUserData(appUser)
+      const {appUser} = rootStore.commonStore;
+      setAppUserData(appUser);
     }, []),
   );
-  console.log("appUser parcel --",appUser);
+  console.log('appUser parcel --', appUser);
 
   const getCheckSenderReceiverData = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
@@ -280,11 +280,14 @@ const PriceDetailsForm = ({navigation}) => {
           </View>
         </>
       </Formik>
-      {(appUserData?.profile_pic?.length === 0) && (
+      {(appUserData?.profile_pic == null ||
+        appUserData?.profile_pic?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}
           message={'Please complete your profile first.'}
-          onHanlde={() => navigation.navigate('profile',{screenName:'parcelRoute'})}
+          onHanlde={() =>
+            navigation.navigate('profile', {screenName: 'parcelRoute'})
+          }
         />
       )}
       <ModalPopUp

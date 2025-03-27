@@ -1,5 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Platform, View} from 'react-native';
+import {
+  Alert,
+  Platform,
+  Text,
+  Touchable,
+  View,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,14 +20,31 @@ import Spacer from '../../../halpers/Spacer';
 import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGooglePlaceHolder';
 import Header from '../../../components/header/Header';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
-import { screenHeight } from '../../../halpers/matrics';
-import { rootStore } from '../../../stores/rootStore';
+import {screenHeight} from '../../../halpers/matrics';
+import {rootStore} from '../../../stores/rootStore';
+import {appImages} from '../../../commons/AppImages';
+import {getGeoCodes} from '../../../components/GeoCodeAddress';
+import {getCurrentLocation} from '../../../components/GetAppLocation';
+import MapLocationRoute from '../../../components/MapLocationRoute';
 
+let currentLocation = {
+  lat: null,
+  lng: null,
+};
 const ChooseMapLocation = ({navigation, route}) => {
-  const {setSenderAddress, setReceiverAddress, senderAddress,
-    receiverAddress} = rootStore.myAddressStore;
+  const {setSenderAddress, setReceiverAddress, senderAddress, receiverAddress} =
+    rootStore.myAddressStore;
   const {pickDrop, item} = route.params;
   console.log('pickDrop--', pickDrop, item);
+  const getLocation = type => {
+    // console.log('gettt', getCurrentLocation());
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
   const [geoLocation, setGeoLocation] = useState({
     lat: '',
     lng: '',
@@ -35,14 +60,21 @@ const ChooseMapLocation = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    setTimeout(()=>{
-    if (Object?.keys(item || {})?.length > 0) {
-      setGeoLocation(item?.geo_location);
-      setAddress(item?.address);
-      setName(item?.name);
-    }
-  },1000)
+    setTimeout(() => {
+      if (Object?.keys(item || {})?.length > 0) {
+        setGeoLocation(item?.geo_location);
+        setAddress(item?.address);
+        setName(item?.name);
+      }
+    }, 1000);
   }, [item]);
+
+  useEffect(() => {
+    currentLocation = {
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    };
+  }, []);
 
   const onHandleConfirm = () => {
     const newItem = {
@@ -50,7 +82,7 @@ const ChooseMapLocation = ({navigation, route}) => {
       address: address,
       geo_location: geoLocation,
     };
-    console.log("newItem---",newItem,pickDrop)
+    console.log('newItem---', newItem, pickDrop);
 
     // navigation.navigate('senderReceiverDetails', {
     //   pickDrop: pickDrop,
@@ -58,26 +90,50 @@ const ChooseMapLocation = ({navigation, route}) => {
     // });
     if (pickDrop == 'pick') {
       setSenderAddress(newItem);
-    setTimeout(()=>{
-      if(receiverAddress?.address?.length > 0){
-        navigation.navigate('priceDetails');
-      }else{
-        navigation.navigate('setLocationHistory');
-      }
-    },200)
-     
+      setTimeout(() => {
+        if (receiverAddress?.address?.length > 0) {
+          navigation.navigate('priceDetails');
+        } else {
+          navigation.navigate('setLocationHistory');
+        }
+      }, 200);
     } else {
       setReceiverAddress(newItem);
-     setTimeout(()=>{
-      if(senderAddress?.address?.length > 0){
-        navigation.navigate('priceDetails');
-      }else{
-        navigation.navigate('setLocationHistory');
-      }
-    },200)
+      setTimeout(() => {
+        if (senderAddress?.address?.length > 0) {
+          navigation.navigate('priceDetails');
+        } else {
+          navigation.navigate('setLocationHistory');
+        }
+      }, 200);
     }
+  };
 
+  const handleCurrentAddress = async () => {
+    const addressData = await getGeoCodes(
+      currentLocation?.lat,
+      currentLocation?.lng,
+    );
+    // console.log('addressData', addressData);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    setName(nameData[0]);
+    setAddress(addressData?.address);
+    setGeoLocation(addressData?.geo_location);
+  };
 
+  const handleTouchAddress = async (loaction) => {
+    console.log("loaction---",loaction);
+    const addressData = await getGeoCodes(
+      loaction?.latitude,
+      loaction?.longitude,
+    );
+    // console.log('addressData', addressData);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    setName(nameData[0]);
+    setAddress(addressData?.address);
+    setGeoLocation(addressData?.geo_location);
   };
 
   return (
@@ -90,9 +146,45 @@ const ChooseMapLocation = ({navigation, route}) => {
         }}
       />
       <View style={{flex: 1}}>
-        <MapRoute mapContainerView={Platform.OS == 'ios' ?{height:screenHeight(70)} :{height: screenHeight(74)}} origin={geoLocation} />
-        <AutoCompleteGooglePlaceHolder onPressAddress={onPressAddress} address={address} />
+      
+      <MapLocationRoute
+          mapContainerView={
+            Platform.OS == 'ios'
+              ? {height: screenHeight(70)}
+              : {height: screenHeight(74)}
+          }
+          origin={geoLocation}
+          onTouchLocation={handleTouchAddress}
+        />
+        {/* <MapRoute
+          mapContainerView={
+            Platform.OS == 'ios'
+              ? {height: screenHeight(70)}
+              : {height: screenHeight(74)}
+          }
+          origin={geoLocation}
+        /> */}
+        <AutoCompleteGooglePlaceHolder
+          onPressAddress={onPressAddress}
+          address={address}
+        />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            handleCurrentAddress();
+          }}
+          style={styles.currentLocTouch}>
+          <View style={styles.currentLocView}>
+            <Image
+              resizeMode="contain"
+              style={styles.currentLocImage}
+              source={appImages.currentLocationIcon}
+            />
+            <Text style={styles.currentLocText}>Current location</Text>
+          </View>
+        </TouchableOpacity>
       </View>
+
       <View style={styles.bottomPopUpContainer}>
         <View style={{paddingHorizontal: 30, marginTop: '3%'}}>
           {!address?.length > 0 ? (

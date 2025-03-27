@@ -1,10 +1,5 @@
-import React, {useCallback, useEffect,useState} from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
 import CTA from '../components/cta/CTA';
 import {
   heightPercentageToDP as hp,
@@ -18,15 +13,14 @@ import {rootStore} from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
 import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
-import { silderArray } from '../stores/DummyData/Home';
+import {silderArray} from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
-
 
 const RidePriceForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
     rootStore.myAddressStore;
   const {addRequestParcelRide} = rootStore.parcelStore;
-  const {appUser}=rootStore.commonStore;
+  const {appUser} = rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -36,18 +30,17 @@ const RidePriceForm = ({navigation}) => {
   const [isAddressModal, setIsAddressModal] = useState(false);
   const [isStatus, setIsStatus] = useState('');
   const [isSecure, setIsSecure] = useState(false);
-  const [appUserData ,setAppUserData]=useState(appUser ?? {})
- 
+  const [appUserData, setAppUserData] = useState(appUser ?? {});
 
   useFocusEffect(
     useCallback(() => {
       getCheckSenderReceiverData();
-      const {appUser}=rootStore.commonStore;
-      setAppUserData(appUser)
+      const {appUser} = rootStore.commonStore;
+      setAppUserData(appUser);
     }, []),
   );
 
-  console.log("appUser ride --",appUser);
+  console.log('appUser ride --', appUser);
 
   const getCheckSenderReceiverData = () => {
     const {senderAddress, receiverAddress} = rootStore.myAddressStore;
@@ -61,7 +54,6 @@ const RidePriceForm = ({navigation}) => {
   };
 
   const handlePrice = async () => {
-    
     const newdata = {
       weight: weight,
       quantity: quantity,
@@ -70,12 +62,11 @@ const RidePriceForm = ({navigation}) => {
       receiver_address: receiverAddress,
       billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
       isSecure: isSecure,
-      order_type:'ride',
+      order_type: 'ride',
     };
     console.log('newdata--', newdata);
 
     await addRequestParcelRide(newdata, navigation, handleLoading);
-
   };
 
   const handleLoading = v => {
@@ -83,7 +74,6 @@ const RidePriceForm = ({navigation}) => {
   };
 
   const FormButton = ({loading, onPress}) => {
-
     return (
       <CTA
         title={'Proceed'}
@@ -132,44 +122,46 @@ const RidePriceForm = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-        <>
-          <KeyboardAvoidingView
-            style={{flex: 1}}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <AppInputScroll
-              Pb={'22%'}
-              padding={true}
-              keyboardShouldPersistTaps={'handled'}>
-              <View style={{flex: 1, marginHorizontal: 20}}>
-                <PickDropLocation
-                  pickUpLocation={pickUpLocation}
-                  dropLocation={dropLocation}
-                  onChangePress={() => {
-                    onChangePress();
-                  }}
-                  onPressPickLocation={onPressPickLocation}
-                  onPressDropLocation={onPressDropLocation}
-                  pick={'Pickup location'}
-                  drop={'Dropped location'}
-               
-                />
-              </View>
-              <View style={{marginHorizontal: 10}}>
-                <HomeSlider data={sliderItems} />
-              </View>
-            </AppInputScroll>
-          </KeyboardAvoidingView>
+      <>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <AppInputScroll
+            Pb={'22%'}
+            padding={true}
+            keyboardShouldPersistTaps={'handled'}>
+            <View style={{flex: 1, marginHorizontal: 20}}>
+              <PickDropLocation
+                pickUpLocation={pickUpLocation}
+                dropLocation={dropLocation}
+                onChangePress={() => {
+                  onChangePress();
+                }}
+                onPressPickLocation={onPressPickLocation}
+                onPressDropLocation={onPressDropLocation}
+                pick={'Pickup location'}
+                drop={'Dropped location'}
+              />
+            </View>
+            <View style={{marginHorizontal: 10}}>
+              <HomeSlider data={sliderItems} />
+            </View>
+          </AppInputScroll>
+        </KeyboardAvoidingView>
 
-          <View style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
-            <FormButton loading={loading} onPress={handlePrice} />
-          </View>
-        </>
+        <View style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
+          <FormButton loading={loading} onPress={handlePrice} />
+        </View>
+      </>
 
-        {(appUserData?.profile_pic?.length === 0) && (
+       {(appUserData?.profile_pic == null ||
+        appUserData?.profile_pic?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}
           message={'Please complete your profile first.'}
-          onHanlde={() => navigation.navigate('profile',{screenName:'rideRoute'})}
+          onHanlde={() =>
+            navigation.navigate('profile', {screenName: 'rideRoute'})
+          }
         />
       )}
 
@@ -195,6 +187,4 @@ const RidePriceForm = ({navigation}) => {
 
 export default RidePriceForm;
 
-const styles = StyleSheet.create({
-  
-});
+const styles = StyleSheet.create({});

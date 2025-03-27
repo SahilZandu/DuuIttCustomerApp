@@ -100,13 +100,19 @@ export const agent = {
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
   applyCoupon: body => requests.post(Url.applyCoupon, body),
   appFeedback: body => requests.post(Url.appFeedback, body),
-  
-  
+
+  wallet: body => requests.get(`${Url.wallet}/${body?.userId}`),
+  walletUpdateBalance: body => requests.patch(Url.walletUpdateBalance, body),
+  transactionHistory: body =>
+    requests.get(
+      `${Url.wallet}/${body?.userId}?transaction_history=${body?.transaction}&page=${body?.page}&limit=${body?.limit}&range=${body?.range}`,
+    ),
 };
 
 const requests = {
   get: url => axios.get(url).then(responseBody),
   post: (url, body) => axios.post(url, body).then(responseBody),
+  patch: (url, body) => axios.patch(url, body).then(responseBody),
   // put: (url, body) => axios.put(url, body).then(responseBody),
   // del: (url) => axios.delete(url).then(responseBody),
   postForm: (url, formData) => {

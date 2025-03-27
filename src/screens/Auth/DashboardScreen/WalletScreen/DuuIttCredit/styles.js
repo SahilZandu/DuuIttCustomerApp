@@ -42,5 +42,13 @@ export const styles = StyleSheet.create({
     transationHistText: {
         fontSize: RFValue(13), fontFamily: fonts.semiBold, color: colors.color24
     },
+    noDataView:{
+        flex: 1, justifyContent: 'center', alignItems: 'center'
+      },
+      naDataText:{
+        fontSize: RFValue(15),
+        fontFamily: fonts.medium,
+        color: colors.black,
+      }
 
 });

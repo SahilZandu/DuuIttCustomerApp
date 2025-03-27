@@ -185,7 +185,7 @@ const SetLocationHistory = ({navigation}) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'pick',
       item: {
-        name: name,
+        name:name,
         address: pickUpLocation ? pickUpLocation : currentAddress,
         geo_location: geoLocation,
       },

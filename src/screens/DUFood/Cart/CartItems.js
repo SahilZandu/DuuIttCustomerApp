@@ -34,7 +34,6 @@ const CartItems = ({
   // isOpenNote=isOpen
   const getType = icon => {
     switch (icon) {
-      case 'simple':
       case 'veg':
         return appImagesSvg?.veg;
       case 'egg':

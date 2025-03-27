@@ -97,5 +97,17 @@ export const styles = StyleSheet.create({
         fontSize: RFValue(13),
         fontFamily: fonts.medium,
       },
+      transationHistTouch: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        paddingVertical: 15,
+      },
+      viewTransationHistText: {
+        fontSize: RFValue(12),
+        fontFamily: fonts.medium,
+        color: colors.main,
+      },
 
 });

@@ -17,6 +17,8 @@ import RestaurantItemLoader from './RestaurantItemLoader';
 import FavoriteRestaurantLoader from './FavoriteRestaurantLoader';
 import RestaurantReviewsLoader from './RstaurantReviewsLoader';
 import CoupansListLoader from './CoupansListLoader';
+import WalletLoader from './WalletLoader';
+import TransactionHistoryLoader from './TransactionHistoryLoader';
 
 const AnimatedLoader = ({type,absolute}) => {
   return (
@@ -34,6 +36,10 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'favoriteRestaurantLoader' && <FavoriteRestaurantLoader/>}
       {type == 'restaurantReviewsLoader' && <RestaurantReviewsLoader/>}
       {type == 'coupansListLoader' && <CoupansListLoader/>}
+      {type == 'walletLoader' && <WalletLoader/>}
+      {type == 'transactionHistoryLoader' && <TransactionHistoryLoader/>}
+      
+      
       
       
       

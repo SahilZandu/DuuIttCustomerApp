@@ -75,7 +75,7 @@ const ResendOtp = ({value, type,onResendClear,handleLoading}) => {
     
        <Text style={{fontFamily:fonts.bold ,fontSize: RFValue(12), color:colors.main}}>
        {' '} {Strings.resend} {''}
-        ({timerCount != 0 ? `${secondsToHms(timerCount)}`:'00'})
+        {timerCount != 0 ? `(${secondsToHms(timerCount)})`:''}
         </Text>
      
     </Pressable>

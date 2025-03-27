@@ -108,7 +108,7 @@ export default function PriceConfirmed({navigation, route}) {
         paymentMethod: initialValues?.paymentMethods,
         totalAmount: total,
       });
-    }, 500);
+    },500);
   };
 
   const onGestureEvent = ({nativeEvent}) => {
@@ -284,19 +284,15 @@ export default function PriceConfirmed({navigation, route}) {
               We charge no commission. Full amount goes to the rider
             </Text>
 
-            <Text
-              style={styles.modalAmount}>
-              {currencyFormat(total)}
-            </Text>
-            <Text
-              style={styles.modalFairText}>
-              You can also directly set the fare
+            <Text style={styles.modalAmount}>{currencyFormat(total)}</Text>
+            <Text style={styles.modalFairText}>
+              You can also directly increase the fare
             </Text>
             <View style={styles.progessBarView}>
               <ProgressBarWithGradient progress={selectedCount} />
               <View style={styles.sliderView}>
                 <Slider
-                  style={{width: wp(90), height: 10}}
+                  style={{width: wp(90), height: hp(5)}}
                   minimumValue={0}
                   step={1}
                   maximumValue={5}
@@ -313,9 +309,24 @@ export default function PriceConfirmed({navigation, route}) {
                       }
                     });
                   }}
-                  thumbImage={appImages.fareBtn}
+                  // thumbImage={Image.resolveAssetSource(appImages.fareBtn)}
+                  // thumbImage={appImages.fareBtn}
+                  thumbTintColor="transparent" // Hide default thumb
                   minimumTrackTintColor="transparent"
                   maximumTrackTintColor="transparent"
+                />
+                <Image
+                  source={appImages.fareBtn}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    position: 'absolute',
+                    justifyContent:'center',
+                    alignSelf:'center',
+                    top: -1,
+                    left: (fireValue / 5) * wp(90) - 19, // Dynamically move thumb
+                  }}
+                  resizeMode="contain"
                 />
               </View>
               {/* <ProgressBarWithGradient progress={selectedCount} />
@@ -329,18 +340,16 @@ export default function PriceConfirmed({navigation, route}) {
               /> */}
             </View>
 
-            <View
-              style={styles.priceRenderView}>
+            <View style={styles.priceRenderView}>
               {priceArray?.map((item, i) => {
                 return (
                   <View>
-                    <Text>{item}</Text>
+                    <Text style={styles.priceText}>{item}</Text>
                   </View>
                 );
               })}
             </View>
-            <View
-              style={styles.btnPNView}>
+            <View style={styles.btnPNView}>
               <SvgXml
                 onPress={() => {
                   onNegative('-10');

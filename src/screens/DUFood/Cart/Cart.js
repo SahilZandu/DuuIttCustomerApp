@@ -95,7 +95,7 @@ const Cart = ({navigation, route}) => {
   const [addANote, setAddANote] = useState('');
   const [offerList, setOfferList] = useState(restaurentOfferCoupan ?? []);
 
-  // console.log('deliveryAddress---', deliveryAddress);
+  console.log('deliveryAddress---', deliveryAddress);
 
   useFocusEffect(
     useCallback(() => {
@@ -818,7 +818,7 @@ const Cart = ({navigation, route}) => {
         product={itemForEdit?.addon}
       /> */}
 
-      {/* {(appUser?.profile_pic?.length > 0 ||
+      {(appUser?.profile_pic?.length > 0 ||
         appUser?.email?.length > 0 ||
         appUser?.phone?.length > 0) ? 
           null :(
@@ -827,8 +827,10 @@ const Cart = ({navigation, route}) => {
             message={' Please add your address first.'}
             onHanlde={() => onPressLocation()}
           />
-        )} */}
-      {(appUserData?.profile_pic?.length === 0) && (
+        )}
+        
+      {(appUserData?.profile_pic == null || 
+       appUserData?.profile_pic?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}
           message={'Please complete your profile first.'}
@@ -836,7 +838,8 @@ const Cart = ({navigation, route}) => {
         />
       )}
 
-      {(deliveryAddress?.length === 0) && (
+
+      {( Object.keys(deliveryAddress)?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}
           message={'Please add your address first.'}

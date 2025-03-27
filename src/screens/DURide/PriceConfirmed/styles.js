@@ -113,4 +113,9 @@ export const styles = StyleSheet.create({
   sliderView:{
     position: 'absolute', justifyContent: 'center'
   },
+  priceText:{
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
+  }
 });

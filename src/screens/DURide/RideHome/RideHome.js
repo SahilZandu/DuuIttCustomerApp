@@ -28,6 +28,7 @@ import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
+import MapLocationRoute from '../../../components/MapLocationRoute';
 
 
 let geoLocation = {
@@ -45,6 +46,7 @@ export default function RideHome({navigation}) {
   const [incompletedArray, setIncompletedArray] = useState([]);
   const [internet, setInternet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
+  const [originLocation ,setOriginLocation]=useState({})
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -71,8 +73,9 @@ export default function RideHome({navigation}) {
           lat: getLocation('lat'),
           lng: getLocation('lng'),
         };
+        setOriginLocation(geoLocation)
         console.log('Updated geoLocation:', geoLocation);
-      }, 1000);
+      },1500);
       
     }, []),
   );
@@ -134,6 +137,9 @@ export default function RideHome({navigation}) {
     const resIncompleteOrder = await getPendingForCustomer('ride');
     console.log('resIncompleteOrder ride--', resIncompleteOrder);
     setIncompletedArray(resIncompleteOrder);
+    if(resIncompleteOrder?.length > 0){
+    setAddParcelInfo(resIncompleteOrder[0]);
+    }
   };
 
   const deleteIncompleteOrder = async () => {
@@ -223,11 +229,12 @@ export default function RideHome({navigation}) {
             appUserInfo={appUserInfo}
           />
 
-          <MapRoute
+           <MapLocationRoute
             mapContainerView={{height: hp('25%')}}
-            origin={geoLocation}
+            origin={geoLocation ?? originLocation}
             isPendingReq={true}
           />
+          
           <SearchTextIcon
             title={'Enter pick up or send location'}
             onPress={() => {

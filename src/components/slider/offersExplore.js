@@ -24,7 +24,7 @@ const OffersExploreFlatList = ({data, onPress}) => {
     <View style={styles.mainRender}>
       <TouchableOpacity
         onPress={()=>{onPress(item)}}
-        activeOpacity={0.8}
+        activeOpacity={0.9}
         style={styles.mainTouch}>
         <Surface elevation={1} style={[styles.surfaceView,
           {backgroundColor:item?.bgColor}]}>

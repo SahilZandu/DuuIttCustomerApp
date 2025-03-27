@@ -134,7 +134,6 @@ export default function CartItemUpdate({
     if (icon && icon.length > 0) {
       // Use switch statement based on the value of icon
       switch (icon) {
-        case 'simple':
         case 'veg':
           return appImagesSvg?.veg;
         case 'egg':

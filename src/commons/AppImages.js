@@ -628,7 +628,10 @@ yellowStarActive:`<svg xmlns="http://www.w3.org/2000/svg" width="33" height="30"
 </svg>`,
 rightWhiteArrow :`<svg xmlns="http://www.w3.org/2000/svg" width="6" height="9" viewBox="0 0 6 9" fill="none">
 <path d="M1.24998 8L4.74998 4.5L1.24998 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`
+</svg>`,
+greenArrowIcon:`<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 13 13" fill="none">
+<path d="M2.7085 6.50016H10.2918M10.2918 6.50016L6.50016 2.7085M10.2918 6.50016L6.50016 10.2918" stroke="#28B056" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`,
 
 };
 

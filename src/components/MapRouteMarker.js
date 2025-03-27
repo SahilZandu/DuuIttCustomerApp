@@ -79,7 +79,7 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
               }}>
               <Image
                 resizeMode="contain"
-                source={appImages.markerImage}
+                source={appImages.searchingRide}
                 style={styles.markerImage}
               />
             </Marker>
@@ -87,8 +87,8 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
         ) : (
           <Marker coordinate={{latitude: lat, longitude: long}}>
             <Image
-              resizeMode="contain"
-              source={appImages.markerImage}
+              resizeMode='contain'
+              source={appImages.searchingRide}
               style={styles.markerImage}
             />
           </Marker>
@@ -115,8 +115,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   markerImage: {
-    height: 35,
-    width: 35,
+    height: 50,
+    width: 50,
     marginTop: Platform.OS == 'ios' ? '25%' : 0,
   },
 });

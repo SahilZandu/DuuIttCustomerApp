@@ -71,7 +71,7 @@ export default function PickUpdateActions({onSelectUri, name}) {
   const onHandleCamera = async () => {
     const img = await LaunchCamera();
     console.log('result', img);
-    if (img?.didCancel) {
+    if (img?.didCancel || img?.errorCode == "camera_unavailable") {
       console.log('Camera close');
     } else {
       onSelectUri(img?.assets[0]?.uri);

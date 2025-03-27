@@ -43,7 +43,8 @@ export default class ParcelStore {
     }
   };
 
-  setAddParcelInfo = async item => {
+  setAddParcelInfo = async (item) => {
+    console.log("item---setAddParcelInfo",item);
     this.addParcelInfo = item;
   };
 

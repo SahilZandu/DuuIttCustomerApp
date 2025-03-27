@@ -26,6 +26,10 @@ import AddMoneyCoinComp from '../../../../../components/AddMoneyCoinComp';
 import Spacer from '../../../../../halpers/Spacer';
 import TabTextIcon from '../../../../../components/TabTextIcon';
 import ReviewsRatingComp from '../../../../../components/ReviewsRatingComp';
+import { SvgXml } from 'react-native-svg';
+import { rootStore } from '../../../../../stores/rootStore';
+import { usePayment } from '../../../../../halpers/usePayment';
+import AnimatedLoader from '../../../../../components/AnimatedLoader/AnimatedLoader';
 
 let tabs = [
   {text: 'All'},
@@ -35,17 +39,80 @@ let tabs = [
 ];
 let defaultType = 'All';
 
+let defaultValue =""
 
 const Wallet = ({navigation}) => {
+  const {getWallet,welletBalance,addWalletBalance }=rootStore.dashboardStore
+  const {appUser}=rootStore.commonStore
   const [type, setType] = useState('All');
-  const [value, onChangeText] = useState(0);
+  const [value, setValue] = useState('');
   const [addMoney, setAddMoney] = useState(false);
+  const [walletData,setWalletData]=useState(welletBalance ??{})
+  const [loading ,setLoading]=useState(false)
+  const [loadingWallet ,setLoadingWallet]=useState(walletData?.balance > 0 ? false :true)
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
+      getWalletData()
     }, []),
   );
+
+  const getWalletData = async () => {
+    const res = await getWallet(appUser, handleWalletLoading);
+    console.log('res--getWalletData', res);
+    setWalletData(res);
+  };
+  // console.log('res--walletData', walletData);
+ const handleWalletLoading =(v)=>{
+  setLoadingWallet(v)
+ }
+ 
+
+  const handleLoading = v => {
+    setLoading(v);
+  };
+
+  const onAdd = (amount) => {
+    setLoading(true);
+    let data = {topay: Number(value)};
+
+    console.log("data---value",data,value,amount);
+    usePayment(data, onSuccess, onError);
+    setTimeout(()=>{
+      setLoading(false);
+    },1000)
+  };
+  console.log("value---",value);
+
+  const onSuccess = async data => {
+    console.log('onSuccess---', data);
+    setAddMoney(prev => !prev);
+    setLoading(false);
+    defaultValue = '';
+    let paymentId = data?.razorpay_payment_id;
+    await addWalletBalance(
+      appUser,
+      Number(value),
+      paymentId,
+      'deposits',
+      handleLoading,
+      onHandleScuuess,
+    );
+  };
+
+  const onError = () => {
+    setAddMoney(prev => !prev);
+    setValue('');
+    defaultValue = '';
+    setLoading(false);
+    console.log('error');
+  };
+
+  const onHandleScuuess = () => {
+    setValue('');
+    getWalletData();
+  };
 
   let coinsArray = [
     {
@@ -131,12 +198,17 @@ const Wallet = ({navigation}) => {
     // setOrderList(filter);
   };
   const handleTabRatePress = async text => {
-    onChangeText(text);
+    setValue(text);
   };
 
-  const handleAddMoneyToggle = useCallback(() => {
-    setAddMoney(prev => !prev);
-  }, []);
+  const handleAddMoneyToggle = useCallback(item => {
+    console.log('item----', item);
+    if (item === 'Add') {
+        onAdd(value)
+    } else {
+      setAddMoney(prev => !prev);
+    }
+  }, [value]);
 
 
   return (
@@ -148,6 +220,9 @@ const Wallet = ({navigation}) => {
           navigation.goBack();
         }}
       />
+       {loadingWallet == true  ? (
+        <AnimatedLoader type={'walletLoader'} />
+      ) : (
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -160,22 +235,24 @@ const Wallet = ({navigation}) => {
               <View style={styles.innerViewWallet}>
                 <View style={styles.walletTotalBalView}>
                   <Text style={styles.totalBalValue}>
-                    {currencyFormat(250.5)}
+                    {currencyFormat(walletData?.balance ?? 0)}
                   </Text>
                   <Text style={styles.totalBalText}>Total Balance</Text>
                   <View style={styles.bottomLine} />
                 </View>
                 <AddMoneyCoinComp
+                loading={loading}
                   item={{
                     name: 'Deposits',
-                    price: 150.5,
+                    price: Number(walletData?.deposits ?? 0),
                   }}
                   // onPressTouch={()}
                   bottomLine={!addMoney}
-                  onAddMoney={() => {
-                    handleAddMoneyToggle();
+                  onAddMoney={item => {
+                    handleAddMoneyToggle(item);
                   }}
                   addBtn={addMoney}
+                  value={value}
                 />
                 {addMoney && (
                   <View style={styles.addMoneyInnerView}>
@@ -194,7 +271,7 @@ const Wallet = ({navigation}) => {
                         placeholder="Enter Amount"
                         keyboardType="numeric"
                         maxLength={6}
-                        onChangeText={text => onChangeText(text)}
+                        onChangeText={(text) =>(setValue(text))}
                         value={value}
                         style={styles.inputText}
                       />
@@ -211,9 +288,9 @@ const Wallet = ({navigation}) => {
                 <AddMoneyCoinComp
                   item={{
                     name: 'Duuitt Credites',
-                    price: 150.5,
+                    price: Number(walletData?.duuitt_credits ?? 0),
                   }}
-                  bottomLine
+                  bottomLine={true}
                   onPressTouch={() => {
                     navigation.navigate('duuIttCredit');
                   }}
@@ -228,11 +305,19 @@ const Wallet = ({navigation}) => {
                     onPressTouch={() => {
                       navigation.navigate('rewardsStars');
                     }}
+                    bottomLine={true}
                   />
                 )}
+
+                <TouchableOpacity
+                onPress={()=>{navigation.navigate('transactionHistory')}}
+                  style={styles.transationHistTouch}>
+                  <Text style={styles.viewTransationHistText}> View Transaction History</Text>
+                  <SvgXml style={{marginLeft:'1%'}} xml={appImagesSvg.greenArrowIcon} />
+                </TouchableOpacity>
               </View>
             </Surface>
-            <View>
+            {/* <View>
               <View style={styles.transationHistView}>
                 <Text style={styles.transationHistText}>
                   Transaction History
@@ -249,7 +334,7 @@ const Wallet = ({navigation}) => {
                   return <TransationHistComp data={data} index={index} />;
                 })}
               </View>
-            </View>
+            </View> */}
 
             <View>
               <Text style={styles.giftCartText}>Gift Cards</Text>
@@ -262,7 +347,7 @@ const Wallet = ({navigation}) => {
             </View>
           </View>
         </AppInputScroll>
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView>)}
     </View>
   );
 };

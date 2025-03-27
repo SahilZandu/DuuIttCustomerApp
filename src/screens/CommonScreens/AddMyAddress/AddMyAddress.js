@@ -38,7 +38,13 @@ import {Surface} from 'react-native-paper';
 import {rootStore} from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
+import MapLocationRoute from '../../../components/MapLocationRoute';
 
+
+let currentLocation = {
+  lat: null,
+  lng: null,
+};
 export default function AddMyAddress({navigation, route}) {
   const {type, data, screenName} = route.params;
 
@@ -111,6 +117,13 @@ export default function AddMyAddress({navigation, route}) {
   }, [data]);
 
   useEffect(() => {
+    currentLocation = {
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    };
+  }, []);
+
+  useEffect(() => {
     if (address?.length > 0) {
       setLoadingAddress(false);
     } else {
@@ -119,7 +132,7 @@ export default function AddMyAddress({navigation, route}) {
       }, 2000);
     }
   }, [address]);
-
+ 
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
     // console.log('addressData', addressData);
@@ -130,6 +143,7 @@ export default function AddMyAddress({navigation, route}) {
     setLocationId(addressData?.place_Id);
     setGeoLocation(addressData?.geo_location);
   };
+  
 
   const FormButton = ({loading, onPress}) => {
     const {dirty, isValid, values} = useFormikContext();
@@ -172,7 +186,7 @@ export default function AddMyAddress({navigation, route}) {
       }
     }, 300);
   };
-
+ 
   const onPressAddress = (data, details) => {
     setName(details?.name);
     setAddress(details?.formatted_address);
@@ -282,6 +296,36 @@ export default function AddMyAddress({navigation, route}) {
     );
   };
 
+
+  const handleCurrentAddress = async () => {
+    const addressData = await getGeoCodes(
+      currentLocation?.lat,
+      currentLocation?.lng,
+    );
+    // console.log('addressData', addressData);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    setName(nameData[0]);
+    setAddress(addressData?.address);
+    setLocationId(addressData?.place_Id);
+    setGeoLocation(addressData?.geo_location);
+  };
+
+  const handleTouchAddress = async (loaction) => {
+    console.log("loaction---",loaction);
+    const addressData = await getGeoCodes(
+      loaction?.latitude,
+      loaction?.longitude,
+    );
+    // console.log('addressData', addressData);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    setName(nameData[0]);
+    setAddress(addressData?.address);
+    setLocationId(addressData?.place_Id);
+    setGeoLocation(addressData?.geo_location);
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -292,16 +336,40 @@ export default function AddMyAddress({navigation, route}) {
         }}
       />
       <View style={styles.main}>
-        <MapRouteMarker
+        {/* <MapRouteMarker
           mapContainerView={{
             height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
           }}
           origin={geoLocation}
+        /> */}
+         <MapLocationRoute
+          mapContainerView={{
+            height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
+          }
+          }
+          origin={geoLocation}
+          onTouchLocation={handleTouchAddress}
         />
         <AutoCompleteGooglePlaceHolder
           onPressAddress={onPressAddress}
           address={address}
         />
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            handleCurrentAddress();
+          }}
+          style={styles.currentLocTouch}>
+          <View style={styles.currentLocView}>
+            <Image
+              resizeMode="contain"
+              style={styles.currentLocImage}
+              source={appImages.currentLocationIcon}
+            />
+            <Text style={styles.currentLocText}>Current location</Text>
+          </View>
+        </TouchableOpacity>
 
         <View style={styles.addressView}>
           {!address?.length > 0 ? (
