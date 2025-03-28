@@ -7,19 +7,20 @@ function handleAndroidBackButton(navigation) {
     if (navigation) {
       navigation.goBack();
     } else {
-      Alert.alert(
-            'Exit App',
-            'Are you sure you want exit the application?', [{
-                text: 'Cancel',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel'
-            }, {
-                text: 'OK',
-                onPress: () => BackHandler.exitApp()
-            }, ], {
-                cancelable: false
-            }
-         )
+      BackHandler.exitApp();
+      // Alert.alert(
+      //       'Exit App',
+      //       'Are you sure you want exit the application?', [{
+      //           text: 'Cancel',
+      //           onPress: () => console.log('Cancel Pressed'),
+      //           style: 'cancel'
+      //       }, {
+      //           text: 'OK',
+      //           onPress: () => BackHandler.exitApp()
+      //       }, ], {
+      //           cancelable: false
+      //       }
+      //    )
     }
     return true;
   };
