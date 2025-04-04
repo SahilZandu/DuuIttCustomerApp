@@ -114,45 +114,6 @@ const Wallet = ({navigation}) => {
     getWalletData();
   };
 
-  let coinsArray = [
-    {
-      name: 'Deposits',
-      price: 150.5,
-      onPress: () => {
-        navigation.navigate('duuIttCredit');
-      },
-    },
-    {
-      name: 'Duuitt Credites',
-      price: 50.0,
-      onPress: () => {
-        navigation.navigate('duuIttCredit');
-      },
-    },
-    {
-      name: 'Reward Coins',
-      price: 250.5,
-      onPress: () => {
-        navigation.navigate('duuIttCredit');
-      },
-    },
-  ];
-
-  let transationHistory = [
-    {
-      name: 'Wesley Mcclaflin',
-      image: appImages.avtarImage,
-      date: new Date(),
-      price: 300,
-    },
-    {
-      name: 'Wesley Mcclaflin',
-      image: appImages.avtarImage,
-      date: new Date(),
-      price: 200,
-    },
-  ];
-
   const giftCardOptions = [
     {
       title: 'Buy Gift Card',

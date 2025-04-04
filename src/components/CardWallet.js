@@ -41,7 +41,7 @@ const CardWallet = ({item, index}) => {
               {item?.payment_id}
             </Text>
             <Text numberOfLines={1} style={styles.itemPaymentText}>
-              {dateTimeFormat(item?.timestamp)}
+              {dateTimeFormat(item?.date ?? item?.timestamp )}
             </Text>
           </View>
           <View style={styles.kmCurrencyView}>

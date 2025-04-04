@@ -19,6 +19,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternet from './src/components/NoInternet';
 import { rootStore } from './src/stores/rootStore';
+import Toast from 'react-native-toast-message';
 
 
 let focusRoute = '';
@@ -98,6 +99,7 @@ function App() {
             <Root />
           </SafeAreaView>
         </NavigationContainer>
+        <Toast/>
       </NotifierWrapper>
       </GestureHandlerRootView>
     </PaperProvider>

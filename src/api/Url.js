@@ -46,7 +46,9 @@ export default  {
 
     
     wallet:'wallet',
-    walletUpdateBalance:"wallet/update-balance"
+    walletUpdateBalance:"wallet/update-balance",
+    paymentsCreateOrder:'payments/create-order',
+    paymentsVerify:'payments/verify'
     
 
 } 

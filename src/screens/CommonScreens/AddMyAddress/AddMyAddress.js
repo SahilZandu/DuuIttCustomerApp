@@ -391,7 +391,7 @@ export default function AddMyAddress({navigation, route}) {
                 index={0}
                 onPress={() => {}}
               />
-              <Spacer space={'12%'} />
+              <Spacer space={hp('3.5%')} />
               <CTA
                 disable={!(address || name)}
                 onPress={() => {

@@ -107,7 +107,11 @@ export const agent = {
     requests.get(
       `${Url.wallet}/${body?.userId}?transaction_history=${body?.transaction}&page=${body?.page}&limit=${body?.limit}&range=${body?.range}`,
     ),
+
+    paymentsCreateOrder: body => requests.post(Url.paymentsCreateOrder, body),
+    paymentsVerify: body => requests.post(Url.paymentsVerify, body),
 };
+
 
 const requests = {
   get: url => axios.get(url).then(responseBody),

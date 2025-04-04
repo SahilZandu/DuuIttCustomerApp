@@ -346,4 +346,72 @@ export default class DashboardStore {
     }
   };
 
+
+
+  paymentsCreateOrder = async (amount) => {
+    // handleLoading(true);
+    let requestData = {
+      amount : Number(amount),
+      currency : "INR",
+      status: true
+    };
+
+    console.log('paymentsCreateOrder', requestData);
+
+    try {
+      const res = await agent.paymentsCreateOrder(requestData);
+      console.log('paymentsCreateOrder Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        // handleLoading(false);
+        return res
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        // handleLoading(false);
+        return res
+      }
+   
+    } catch (error) {
+      // handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      console.log('error paymentsCreateOrder:', error);
+      return []
+    }
+  };
+
+
+  paymentsVerify = async (data) => {
+    let requestData = {
+      order_id:data?.razorpay_order_id,
+      razorpay_payment_id:data?.razorpay_payment_id,
+      razorpay_signature:data?.razorpay_signature,
+    };
+
+    console.log('paymentsVerify requestData', requestData);
+
+    try {
+      const res = await agent.paymentsVerify(requestData);
+      console.log('paymentsVerify Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        return res
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        return res
+      }
+    } catch (error) {
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+      console.log('error paymentsVerify:', error);
+      return []
+    }
+  };
+
 }

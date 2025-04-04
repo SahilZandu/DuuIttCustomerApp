@@ -91,7 +91,6 @@ export default function Home({navigation}) {
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
       if (enabled) {
         console.log('Authorization status:', authStatus);
         await registerForRemoteMessages();

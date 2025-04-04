@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Alert,
   Image,
@@ -8,20 +8,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg, appImages} from '../../commons/AppImages';
-import {colors} from '../../theme/colors';
-import {fonts} from '../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg, appImages } from '../../commons/AppImages';
+import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts/fonts';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Url from '../../api/Url';
-import {getCurrentLocation, setCurrentLocation} from '../GetAppLocation';
-import {getGeoCodes} from '../GeoCodeAddress';
-import {useFocusEffect} from '@react-navigation/native';
-import {rootStore} from '../../stores/rootStore';
+import { getCurrentLocation, setCurrentLocation } from '../GetAppLocation';
+import { getGeoCodes } from '../GeoCodeAddress';
+import { useFocusEffect } from '@react-navigation/native';
+import { rootStore } from '../../stores/rootStore';
+import { currencyFormat } from '../../halpers/currencyFormat';
 
 let geoLocation = {
   lat: null,
@@ -40,7 +41,8 @@ const DashboardHeader2 = ({
   onBlur,
 }) => {
   const searchInputRef = useRef(null);
-  const {currentAddress} = rootStore.myAddressStore;
+    const {getWallet,welletBalance }=rootStore.dashboardStore
+  const { currentAddress } = rootStore.myAddressStore;
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -51,6 +53,7 @@ const DashboardHeader2 = ({
   };
   const [address, setAddress] = useState(currentAddress?.address);
   const [isRefersh, setIsRefersh] = useState(false);
+  const [walletData,setWalletData]=useState(welletBalance ??{})
   // const [geoLocation, setGeoLocation] = useState({
   //   lat: getLocation('lat'),
   //   lng: getLocation('lng'),
@@ -60,6 +63,9 @@ const DashboardHeader2 = ({
     useCallback(() => {
       setAddress(currentAddress?.address);
       setCurrentLocation();
+      if(walletData?.balance == undefined){
+        getWalletData();
+      }
       setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
@@ -75,6 +81,18 @@ const DashboardHeader2 = ({
     }, 500);
   }, [isRefersh]);
 
+
+
+  const getWalletData = async () => {
+    const res = await getWallet(appUserInfo, handleWalletLoading);
+    console.log('res--getWalletData', res);
+    setWalletData(res);
+  };
+  // console.log('res--walletData', walletData);
+ const handleWalletLoading =(v)=>{
+ console.log('v--handleWalletLoading',v);
+ 
+ }
   // console.log("address---",address,currentAddress);
 
   const onUpdateLatLng = () => {
@@ -102,8 +120,8 @@ const DashboardHeader2 = ({
         paddingBottom: '3%',
         marginTop: '4%',
         paddingHorizontal: 20,
-        borderBottomColor:colors.colorD9,
-        borderBottomWidth:1
+        borderBottomColor: colors.colorD9,
+        borderBottomWidth: 1
       }}>
       <View
         style={{
@@ -112,31 +130,58 @@ const DashboardHeader2 = ({
           justifyContent: 'center',
         }}>
         <TouchableOpacity
-          hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
           activeOpacity={0.9}
           onPress={onPress}
-          style={{marginRight: '4%', marginLeft: '-2%'}}>
+          style={{ marginRight: '4%', marginLeft: '-2%' }}>
           <SvgXml xml={appImagesSvg.backArrow} />
         </TouchableOpacity>
 
         <View
-          style={{flex: 1, backgroundColor: colors.appBackground, marginRight: '1%'}}>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontSize: RFValue(15),
-              fontFamily: fonts.semiBold,
-              color: colors.black,
-              width: wp('68%'),
+          style={{ flex: 1, backgroundColor: colors.appBackground, marginRight: '1%' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontSize: RFValue(15),
+                fontFamily: fonts.semiBold,
+                color: colors.black,
+                width: wp('50%'),
+              }}>
+              Hello {appUserInfo?.name}
+            </Text>
+            {appUserInfo?.isWallet !== true &&
+             <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              right: wp(0.5),
+              borderRadius: 20, borderWidth: 1,
+              paddingHorizontal: 8,
+              paddingVertical: 1,
+              borderColor: colors.main,
+              backgroundColor: colors.colorD45,
+              justifyContent: 'center',
             }}>
-            Hello {appUserInfo?.name}
-          </Text>
+              <Image resizeMode='cover'
+                style={{ height: 15, width: 15 }} 
+                source={appImages.ruppeYellowIcon} />
+              <Text
+                numberOfLines={1}
+                style={{
+                  marginLeft: wp(0.1),
+                  fontSize: RFValue(9),
+                  fontFamily: fonts.semiBold,
+                  color: colors.main,
+                  maxWidth: wp(12)
+                }}> {currencyFormat(walletData?.balance ?? 0)}</Text>
+            </View>}
+          </View>
           <Text
             style={{
               fontSize: RFValue(10),
               fontFamily: fonts.regular,
               color: colors.colorA9,
-              width: wp('68%'),
+              width: wp('70%'),
             }}
             numberOfLines={1}>
             {address}
@@ -144,9 +189,9 @@ const DashboardHeader2 = ({
         </View>
 
         <TouchableOpacity
-          hitSlop={{top: 10, bottom: 10, left: 20, right: 20}}
+          hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
           onPress={() => {
-            navigation.navigate('profile',{screenName:'home'});
+            navigation.navigate('profile', { screenName: 'home' });
           }}
           activeOpacity={0.8}>
           <Image
@@ -159,7 +204,7 @@ const DashboardHeader2 = ({
             }}
             source={
               appUserInfo?.profile_pic?.length > 0
-                ? {uri: Url.Image_Url + appUserInfo?.profile_pic}
+                ? { uri: Url.Image_Url + appUserInfo?.profile_pic }
                 : appImages.profileImage
             }
           />
@@ -207,12 +252,12 @@ const DashboardHeader2 = ({
               <TouchableOpacity
                 onPress={onCancelPress}
                 activeOpacity={0.8}
-                hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}>
+                hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}>
                 <SvgXml
                   width={21}
                   height={21}
                   xml={appImagesSvg.cancelSvg2}
-                  style={{right: wp('0.1%')}}
+                  style={{ right: wp('0.1%') }}
                 />
               </TouchableOpacity>
             ) : (
@@ -221,12 +266,12 @@ const DashboardHeader2 = ({
                 //   handleSearchButtonPress();
                 // }}
                 activeOpacity={0.8}
-                hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}>
+                hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}>
                 <SvgXml
                   width={20}
                   height={20}
                   xml={appImagesSvg.searchIcon}
-                  style={{right: wp('0.7%')}}
+                  style={{ right: wp('0.7%') }}
                 />
               </TouchableOpacity>
             )}
@@ -240,8 +285,8 @@ const DashboardHeader2 = ({
             <TouchableOpacity
               onPress={onMicroPhone}
               activeOpacity={0.8}
-              hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}
-              style={{left: wp('3%')}}>
+              hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}
+              style={{ left: wp('3%') }}>
               <SvgXml width={20} height={20} xml={appImagesSvg.microPhoneSvg} />
             </TouchableOpacity>
           </View>
