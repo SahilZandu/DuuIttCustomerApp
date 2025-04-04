@@ -113,11 +113,16 @@ export default function PriceConfirmed({navigation, route}) {
 
   const onGestureEvent = ({nativeEvent}) => {
     console.log('nativeEvent----------', nativeEvent);
-    if (nativeEvent?.translationY >= 0) {
-      setMinMaxHp(hp('35%'));
-    } else {
-      setMinMaxHp(hp('80%'));
-    }
+    // if (nativeEvent?.translationY >= 0) {
+    //   setMinMaxHp(hp('35%'));
+    // } else {
+    //   setMinMaxHp(hp('80%'));
+    // }
+     if (nativeEvent?.absoluteY >= 100 && nativeEvent?.absoluteY <= 250) {
+          setMinMaxHp(hp('35%'));
+        } else if (nativeEvent?.absoluteY >= 400 && nativeEvent?.absoluteY <= 500) {
+          setMinMaxHp(hp('80%'));
+        }
   };
 
   const onNegative = val => {
@@ -210,7 +215,7 @@ export default function PriceConfirmed({navigation, route}) {
         origin={pickDropDetails?.sender_address?.geo_location}
         destination={pickDropDetails?.receiver_address?.geo_location}
         mapContainerView={
-          Platform.OS == 'ios' ? {height: hp('67%')} : {height: hp('67%')}
+          Platform.OS == 'ios' ? {height:minMaxHp == hp('80%') ? hp('30%'): hp('67%')} : {height:minMaxHp == hp('80%') ? hp('30%'): hp('67%')}
         }
       />
       <PanGestureHandler onGestureEvent={onGestureEvent}>
