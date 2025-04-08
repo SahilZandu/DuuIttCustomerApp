@@ -576,18 +576,15 @@
 //   },
 // });
 
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback} from 'react';
 import {
   Text,
   View,
   Image,
-  TouchableOpacity,
   Platform,
   StyleSheet,
-  Alert,
   Linking,
   Animated,
-  ScrollView,
   DeviceEventEmitter,
 } from 'react-native';
 import {
@@ -600,15 +597,11 @@ import { fonts } from '../theme/fonts/fonts';
 import { colors } from '../theme/colors';
 import * as Progress from 'react-native-progress';
 import DriverArrivingComp from '../components/DriverArrivingComp';
-import RBSheet from '@lunalee/react-native-raw-bottom-sheet';
-import Rating from '../components/Rating';
 import TextRender from '../components/TextRender';
-import { currencyFormat } from '../halpers/currencyFormat';
 import OtpShowComp from '../components/OtpShowComp';
 import MapRouteMarker from '../components/MapRouteMarker';
 import { rootStore } from '../stores/rootStore';
 import MapRoute from '../components/MapRoute';
-import DriverMeetPickup from '../components/DriverMeetPickup';
 import MeetingPickupComp from '../components/MeetPickupComp';
 import HomeSlider from '../components/slider/homeSlider';
 import PopUpRideDetails from '../components/PopUpRideDetails';
@@ -645,7 +638,6 @@ const
       rootStore.parcelStore;
     const { appUser } = rootStore.commonStore;
     const { updateOrderStatus } = rootStore.orderStore;
-    const refRBSheet = useRef(null);
     const { paymentMethod, totalAmount } = route.params;
     const [searching, setSearching] = useState(true);
     const [searchArrive, setSearchArrive] = useState('search');
@@ -1036,7 +1028,7 @@ const
       } else {
         if (nativeEvent?.absoluteY >= 200 && nativeEvent?.absoluteY <= 350) {
           setMinMaxHp(screenHeight(35));
-        } else if (nativeEvent?.absoluteY >= 400 && nativeEvent?.absoluteY <= 500) {
+        } else if (nativeEvent?.absoluteY >= 550 && nativeEvent?.absoluteY <= 900) {
           setMinMaxHp(screenHeight(69));
         }
       }

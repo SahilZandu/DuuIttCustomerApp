@@ -15,6 +15,7 @@ import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
 import {silderArray} from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
+import MapRoute from '../components/MapRoute';
 
 const RidePriceForm = ({navigation}) => {
   const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
@@ -127,9 +128,14 @@ const RidePriceForm = ({navigation}) => {
           style={{flex: 1}}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <AppInputScroll
-            Pb={'22%'}
+            Pb={'15%'}
             padding={true}
             keyboardShouldPersistTaps={'handled'}>
+            <MapRoute
+              origin={senderAddress?.geo_location}
+              destination={receiverAddress?.geo_location}
+              mapContainerView={{height:Platform.OS == 'ios' ? hp('28%') : hp('28%')}}
+            />
             <View style={{flex: 1, marginHorizontal: 20}}>
               <PickDropLocation
                 pickUpLocation={pickUpLocation}
@@ -154,7 +160,7 @@ const RidePriceForm = ({navigation}) => {
         </View>
       </>
 
-       {(appUserData?.profile_pic == null ||
+      {(appUserData?.profile_pic == null ||
         appUserData?.profile_pic?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}

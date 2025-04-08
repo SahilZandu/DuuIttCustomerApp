@@ -20,33 +20,83 @@ axios.interceptors.request.use(
   },
 );
 
-axios.interceptors.response.use(undefined, error => {
-  if (error.message === 'Network Error' && !error.response) {
-    throw error;
-  }
 
-  if (error.code && error.code === 'ECONNABORTED')
-    throw 'Network/Server timeout error';
+axios.interceptors.response.use(
+  response => {
+    const statusCode = response?.data?.statusCode;
 
-  const {status} = error.response;
-  if (status === 404) {
-    throw error.response;
-  }
+    console.log('✅ Axios Response:', response, statusCode);
 
-  if (status === 400) {
-    console.log(status);
-    throw error.response;
-  }
+    if (statusCode === 404 || statusCode === 400) {
+      return Promise.reject(response); // treat it as an error
+    }
 
-  if (status === 401) {
-    rootStore.commonStore.setToken(null);
-    rootStore.commonStore.setAppUser(null);
-    RNRestart.restart();
-    throw error.response;
-  }
+    if (statusCode === 401) {
+      rootStore.commonStore.setToken(null);
+      rootStore.commonStore.setAppUser(null);
+      RNRestart.restart();
+      return Promise.reject(response);
+    }
 
-  throw error;
-});
+    return response;
+  },
+  error => {
+    console.log('❌ Axios Error:', error);
+
+    if (error.message === 'Network Error' && !error.response) {
+      return Promise.reject(error);
+    }
+
+    if (error.code === 'ECONNABORTED') {
+      return Promise.reject(new Error('Network/Server timeout error'));
+    }
+
+    const status = error?.response?.status || error?.statusCode;
+
+    if (status === 404 || status === 400) {
+      return Promise.reject(error.response || error);
+    }
+
+    if (status === 401) {
+      rootStore.commonStore.setToken(null);
+      rootStore.commonStore.setAppUser(null);
+      RNRestart.restart();
+      return Promise.reject(error.response || error);
+    }
+
+    return Promise.reject(error);
+  },
+);
+
+// axios.interceptors.response.use(undefined, error => {
+//   // console.log("error===axios",error);
+//   if (error.message === 'Network Error' && !error.response) {
+//     throw error;
+//   }
+
+//   if (error.code && error.code === 'ECONNABORTED')
+//     throw 'Network/Server timeout error';
+
+//   const {status} = error.response;
+//   if (status === 404) {
+//     throw error.response;
+//   }
+
+//   if (status === 400) {
+//     console.log(status);
+//     RNRestart.restart();
+//     throw error.response;
+//   }
+
+//   if (status === 401) {
+//     rootStore.commonStore.setToken(null);
+//     rootStore.commonStore.setAppUser(null);
+//     RNRestart.restart();
+//     throw error.response;
+//   }
+
+//   throw error;
+// });
 
 const responseBody = response => response.data;
 
@@ -108,17 +158,18 @@ export const agent = {
       `${Url.wallet}/${body?.userId}?transaction_history=${body?.transaction}&page=${body?.page}&limit=${body?.limit}&range=${body?.range}`,
     ),
 
-    paymentsCreateOrder: body => requests.post(Url.paymentsCreateOrder, body),
-    paymentsVerify: body => requests.post(Url.paymentsVerify, body),
+  paymentsCreateOrder: body => requests.post(Url.paymentsCreateOrder, body),
+  paymentsVerify: body => requests.post(Url.paymentsVerify, body),
+  deleteAccount: body =>
+    requests.delete(`${Url.deleteAccount}/${body?.userId}`),
 };
-
 
 const requests = {
   get: url => axios.get(url).then(responseBody),
   post: (url, body) => axios.post(url, body).then(responseBody),
   patch: (url, body) => axios.patch(url, body).then(responseBody),
+  delete: url => axios.delete(url).then(responseBody),
   // put: (url, body) => axios.put(url, body).then(responseBody),
-  // del: (url) => axios.delete(url).then(responseBody),
   postForm: (url, formData) => {
     return axios
       .post(url, formData, {

@@ -11,9 +11,12 @@ export default function TouchableTextSwitch({
   toggle,
   title,
   text,
+  onPress
 }) {
   return (
-    <TouchableOpacity activeOpacity={toggle ? 1 : 0.8}>
+    <TouchableOpacity 
+    activeOpacity={toggle ? 1 : 0.8}
+    onPress={onPress}>
       <View style={styles.min}>
         <Text numberOfLines={1} style={styles.titleText}>
           {title}
@@ -27,7 +30,7 @@ export default function TouchableTextSwitch({
                   : [{scaleX: 1}, {scaleY: 0.9}],
             }}
             value={activateSwitch}
-            trackColor={{false: colors.colorAF, true: colors.black}}
+            trackColor={{false: colors.red, true: colors.main}}
             thumbColor={activateSwitch ? colors.white : colors.white}
             onValueChange={onTogglePress}
           />

@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TextInput,
   Alert,
+  Keyboard,
 } from 'react-native';
 import CTA from '../components/cta/CTA';
 import {Formik, useFormik, useFormikContext} from 'formik';
@@ -34,6 +35,7 @@ import InputFieldLabel from '../components/InputFieldLabel';
 import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
 import {silderArray} from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
+import MapRoute from '../components/MapRoute';
 
 const parcelInst = [
   {
@@ -231,6 +233,11 @@ const PriceDetailsForm = ({navigation}) => {
               Pb={hp('40%')}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
+                 <MapRoute
+              origin={senderAddress?.geo_location}
+              destination={receiverAddress?.geo_location}
+              mapContainerView={{height:Platform.OS == 'ios' ? hp('25%') : hp('25%')}}
+            />
               <View style={{flex: 1, marginHorizontal: 20}}>
                 <PickDropLocation
                   pickUpLocation={pickUpLocation}

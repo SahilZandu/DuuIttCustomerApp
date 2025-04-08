@@ -1,4 +1,4 @@
-import React, {useState, useCallback,useEffect} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {View, Text, DeviceEventEmitter} from 'react-native';
 import {appImagesSvg} from '../../../../commons/AppImages';
 import {styles} from './styles';
@@ -16,17 +16,25 @@ import Spacer from '../../../../halpers/Spacer';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
-
-
+import PopUp from '../../../../components/appPopUp/PopUp';
 
 export default function SideMenu({navigation}) {
   const {setToken, setAppUser, appUser} = rootStore.commonStore;
+  const [initialValues, setInitialValues] = useState({
+    image: '',
+    name: '',
+    email: '',
+    phone: '',
+  });
+  const [internet, setInternet] = useState(true);
+  const [isLogout, setIsLogout] = useState(false);
+
   const foodOptions = [
     {
       title: 'Your Order',
       onPress: () => {
         // console.log('Order Histroy');
-        navigation.navigate('tab3',{tabText:'Food'})
+        navigation.navigate('tab3', {tabText: 'Food'});
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -35,7 +43,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'My Favorite',
       onPress: () => {
-        navigation.navigate('favoriteRestaurant')
+        navigation.navigate('favoriteRestaurant');
       },
       icon: appImagesSvg.myFavorate,
       show: true,
@@ -47,7 +55,7 @@ export default function SideMenu({navigation}) {
       title: 'Your Order',
       onPress: () => {
         // console.log('Order Histroy');
-        navigation.navigate('tab3',{tabText:'Ride'})
+        navigation.navigate('tab3', {tabText: 'Ride'});
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -59,7 +67,7 @@ export default function SideMenu({navigation}) {
       title: 'Your Order',
       onPress: () => {
         // console.log('Order Histroy');
-        navigation.navigate('tab3',{tabText:'Parcel'})
+        navigation.navigate('tab3', {tabText: 'Parcel'});
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -71,7 +79,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'Wallet',
       onPress: () => {
-        navigation.navigate('wallet')
+        navigation.navigate('wallet');
         // console.log('Wallet');
       },
       icon: appImagesSvg.walletSvg,
@@ -82,7 +90,7 @@ export default function SideMenu({navigation}) {
       title: 'Buy  Gift Card',
       onPress: () => {
         // console.log('Buy  Gift Card');
-        navigation.navigate('giftCard')
+        navigation.navigate('giftCard');
       },
       icon: appImagesSvg.giftCardSvg,
       show: true,
@@ -92,7 +100,7 @@ export default function SideMenu({navigation}) {
       title: 'Claim Gift Card',
       onPress: () => {
         // console.log('Claim Gift Card');
-        navigation.navigate('claimGiftCardList')
+        navigation.navigate('claimGiftCardList');
       },
       icon: appImagesSvg.myFavorate,
       show: true,
@@ -101,7 +109,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'Reward Coins',
       onPress: () => {
-        navigation.navigate('rewardsStars') 
+        navigation.navigate('rewardsStars');
         // console.log('Reward Coins');
       },
       icon: appImagesSvg.currencySvg,
@@ -111,7 +119,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'Duuitt Credits',
       onPress: () => {
-        navigation.navigate('duuIttCredit')
+        navigation.navigate('duuIttCredit');
         // console.log('Duuitt Credits');
       },
       icon: appImagesSvg.duuIttCoin,
@@ -145,7 +153,7 @@ export default function SideMenu({navigation}) {
     {
       title: 'My Address',
       onPress: () => {
-        navigation.navigate('myAddress',{screenName:'home'})
+        navigation.navigate('myAddress', {screenName: 'home'});
         // console.log('My Address');
       },
       icon: appImagesSvg.myAddressSvg,
@@ -193,33 +201,26 @@ export default function SideMenu({navigation}) {
     {
       title: 'Logout',
       onPress: async () => {
-        let query ={
-          user_id:appUser?._id
-          }
-        socketServices.emit('remove-user',query)
-        socketServices.disconnectSocket();
-        await setToken(null);
-        await setAppUser(null);
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: 'auth'}],
-          }),
-        );
+        setIsLogout(true);
+        // let query ={
+        //   user_id:appUser?._id
+        //   }
+        // socketServices.emit('remove-user',query)
+        // socketServices.disconnectSocket();
+        // await setToken(null);
+        // await setAppUser(null);
+        // navigation.dispatch(
+        //   CommonActions.reset({
+        //     index: 0,
+        //     routes: [{name: 'auth'}],
+        //   }),
+        // );
       },
       icon: appImagesSvg.logOutSvg,
       show: true,
       disable: false,
     },
   ];
-
-  const [initialValues, setInitialValues] = useState({
-    image: '',
-    name: '',
-    email: '',
-    phone: '',
-  });
-  const [internet, setInternet] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -238,7 +239,7 @@ export default function SideMenu({navigation}) {
       console.log('internet event');
     });
   }, []);
-  
+
   const checkInternet = () => {
     fetch().then(state => {
       setInternet(state.isInternetReachable);
@@ -262,48 +263,80 @@ export default function SideMenu({navigation}) {
     });
   };
 
+  const handleLogout = async () => {
+    let query = {
+      user_id: appUser?._id,
+    };
+    socketServices.emit('remove-user', query);
+    socketServices.disconnectSocket();
+    await setToken(null);
+    await setAppUser(null);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'auth'}],
+      }),
+    );
+    setTimeout(() => {
+      setIsLogout(false);
+    }, 1000);
+  };
+
   return (
     <View style={styles.container}>
-      {internet == false ? <NoInternet/> 
-      :<> 
-      <ProfileUpperShowComp
-        navigation={navigation}
-        item={initialValues}
-        appUser={appUser}
-      />
-      <Spacer space={'1%'} />
-      <AppInputScroll
-        Pb={'57%'}
-        padding={true}
-        keyboardShouldPersistTaps={'handled'}>
-        <ProfileCompleteIconTextComp
-          navigation={navigation}
-          appUser={appUser}
-        />
-        <ReusableSurfaceComp title={'Food'}>
-          <TouchTextRightIconComp  firstIcon={true} data={foodOptions} />
-        </ReusableSurfaceComp>
+      {internet == false ? (
+        <NoInternet />
+      ) : (
+        <>
+          <ProfileUpperShowComp
+            navigation={navigation}
+            item={initialValues}
+            appUser={appUser}
+          />
+          <Spacer space={'1%'} />
+          <AppInputScroll
+            Pb={'57%'}
+            padding={true}
+            keyboardShouldPersistTaps={'handled'}>
+            <ProfileCompleteIconTextComp
+              navigation={navigation}
+              appUser={appUser}
+            />
+            <ReusableSurfaceComp title={'Food'}>
+              <TouchTextRightIconComp firstIcon={true} data={foodOptions} />
+            </ReusableSurfaceComp>
 
-        <ReusableSurfaceComp title={'Ride'}>
-          <TouchTextRightIconComp firstIcon={true} data={rideOptions} />
-        </ReusableSurfaceComp>
+            <ReusableSurfaceComp title={'Ride'}>
+              <TouchTextRightIconComp firstIcon={true} data={rideOptions} />
+            </ReusableSurfaceComp>
 
-        <ReusableSurfaceComp title={'Parcel'}>
-          <TouchTextRightIconComp firstIcon={true} data={parcelOptions} />
-        </ReusableSurfaceComp>
+            <ReusableSurfaceComp title={'Parcel'}>
+              <TouchTextRightIconComp firstIcon={true} data={parcelOptions} />
+            </ReusableSurfaceComp>
 
-        {/* <ReusableSurfaceComp title={'Money'}>
+            {/* <ReusableSurfaceComp title={'Money'}>
           <TouchTextRightIconComp firstIcon={true} data={moneyOptions} />
         </ReusableSurfaceComp> */}
-        {/* <ReusableSurfaceComp title={'Coupons'}>
+            {/* <ReusableSurfaceComp title={'Coupons'}>
           <TouchTextRightIconComp  firstIcon={true} data={coupanOptions} />
         </ReusableSurfaceComp> */}
 
-        <ReusableSurfaceComp title={'More'}>
-          <TouchTextRightIconComp firstIcon={true} data={moreOptions} />
-        </ReusableSurfaceComp>
-      </AppInputScroll>
-      </>}
+            <ReusableSurfaceComp title={'More'}>
+              <TouchTextRightIconComp firstIcon={true} data={moreOptions} />
+            </ReusableSurfaceComp>
+            <PopUp
+              visible={isLogout}
+              type={'logout'}
+              onClose={() => setIsLogout(false)}
+              title={'Are you sure you want to log out?'}
+              text={
+                'You will be signed out of your account. Do you want to continue?'
+              }
+              onDelete={handleLogout}
+            />
+          </AppInputScroll>
+        </>
+      )}
     </View>
   );
 }

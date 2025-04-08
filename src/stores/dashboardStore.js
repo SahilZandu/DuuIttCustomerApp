@@ -414,4 +414,39 @@ export default class DashboardStore {
     }
   };
 
+
+  deleteAccount = async (appUser,handleLoading) => {
+    let requestData = {
+      userId:appUser?._id
+    };
+
+    console.log('deleteAccount requestData', requestData);
+
+    try {
+      const res = await agent.deleteAccount(requestData);
+      console.log('deleteAccount Res :', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading();
+        return res
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading();
+        return res
+      }
+    } catch (error) {
+      console.log('error paymentsVerify:', error);
+      handleLoading();
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+
+      return []
+    }
+  };
+
+  
+
 }

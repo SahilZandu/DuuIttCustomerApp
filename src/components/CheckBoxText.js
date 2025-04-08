@@ -19,7 +19,7 @@ const CheckBoxText = ({data, name, value, title,titleStyle}) => {
 
 
   return (
-    <View style={{marginTop: '6%',}}>
+    <View style={{marginTop: '3%',}}>
       <Text style={[styles.title, titleStyle]}>{title}</Text>
       <View style={styles.rovView}>
         {data?.map((item, key) => (

@@ -809,6 +809,7 @@ export const appImages = {
   cashImage: require('../assets/cashImage.png'),
   qrCodeImage: require('../assets/qrCodeImage.png'),
   searchingRide: require('../assets/searchingRide.png'),
+  markerRideImage: require('../assets/markerRideImage.png'),
   callImage: require('../assets/callImage.png'),
   messageImage: require('../assets/messageImage.png'),
   packetImage: require('../assets/packetImage.png'),

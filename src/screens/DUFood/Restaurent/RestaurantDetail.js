@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  ActivityIndicator,
   ScrollView,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -22,7 +23,6 @@ import Header from '../../../components/header/Header';
 import OrgReviewCard from '../Components/Cards/OrgReviewCard';
 import Ratings from '../../../halpers/Ratings';
 import {rootStore} from '../../../stores/rootStore';
-import {ActivityIndicator} from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';

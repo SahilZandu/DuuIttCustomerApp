@@ -96,10 +96,10 @@ const AutoCompleteGooglePlaceHolder = ({onPressAddress,address}) => {
       }}
       renderRightButton={() => (
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={{marginRight: hp('0.1%')}}>
-            {/* <MicIcon name="mic" size={size / 35} color={'grey'} /> */}
-          </TouchableOpacity>
-          <TouchableOpacity style={{justifyContent:'center'}} 
+          <TouchableOpacity
+          activeOpacity={0.8}
+          hitSlop={{top:10,bottom:10,left:15,right:15}}
+           style={{justifyContent:'center'}} 
           onPress={() => ClearData()}>
           <SvgXml xml={appImagesSvg.crossBlackIcon} />
           </TouchableOpacity>

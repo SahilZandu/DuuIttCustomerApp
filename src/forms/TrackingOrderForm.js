@@ -122,19 +122,19 @@ const TrackingOrderForm = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      if(trackedArray?.length > 0){
-      const intervalId = setInterval(() => {
-        setCurrentLocation();
-        setTimeout(() => {
-          getSocketLocation(socketServices, trackItem);
-        }, 1500);
-      }, 10000);
-      return () => {
-        // This will run when the screen is unfocused
-        clearInterval(intervalId);
-      };
-    }
-    }, [trackItem,trackedArray]),
+      if (trackedArray?.length > 0) {
+        const intervalId = setInterval(() => {
+          setCurrentLocation();
+          setTimeout(() => {
+            getSocketLocation(socketServices, trackItem);
+          }, 1500);
+        }, 10000);
+        return () => {
+          // This will run when the screen is unfocused
+          clearInterval(intervalId);
+        };
+      }
+    }, [trackItem, trackedArray]),
   );
 
   const getSocketLocation = async (socketServices, trackItem) => {
@@ -262,7 +262,7 @@ const TrackingOrderForm = ({navigation}) => {
             elevation={3}
             style={[
               styles.trackingSurfaceView,
-              {height:item?.secure ? hp('62%') : hp('54.5%')},
+              {height: item?.secure ? hp('62%') : hp('54.5%')},
             ]}>
             <View style={styles.innerTrackingView}>
               <DriverTrackingProfileComp
@@ -272,9 +272,7 @@ const TrackingOrderForm = ({navigation}) => {
                       ? item?.rider?.profile_pic
                       : setTrackImage(item?.order_type),
 
-                  name: item?.rider?.name
-                    ? item?.rider?.name
-                    : 'DuuItt Rider',
+                  name: item?.rider?.name ? item?.rider?.name : 'DuuItt Rider',
                   rating: '4.5',
                 }}
                 onMessage={() => {
