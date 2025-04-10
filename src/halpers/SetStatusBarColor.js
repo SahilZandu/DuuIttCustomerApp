@@ -2,7 +2,7 @@ import {colors} from '../theme/colors';
 
 const primaryScreens = ['splash'];
 
-const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test'];
+const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test','customerSupport'];
 
 const DashbordScreens = [
   'home',

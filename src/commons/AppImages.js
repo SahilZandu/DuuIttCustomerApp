@@ -882,4 +882,5 @@ export const appImages = {
   ruppeGreyIcon:require('../assets/ruppeGrey.png'),
   countCoinIcon:require('../assets/countCoin.png'),
   fareBtn:require('../assets/fareBtn.png'),
+  customerSupportImage:require('../assets/customerSupportImage.png'),
 };

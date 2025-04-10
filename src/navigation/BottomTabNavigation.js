@@ -32,7 +32,7 @@ export function DashboardBottomNavigator() {
     setUpdate(false);
     setTimeout(() => {
       setUpdate(true);
-    }, 200);
+    }, 100);
   };
 
   return (
@@ -74,7 +74,7 @@ export function DashboardBottomNavigator() {
                 <Animatable.View
                   style={styles.animatedView}
                   duration={800}
-                  animation={'fadeIn'}
+                  animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
               <SvgXml xml={iconName} />
@@ -173,7 +173,7 @@ export function RideBottomNavigator() {
     setUpdate(false);
     setTimeout(() => {
       setUpdate(true);
-    }, 200);
+    },100);
   };
 
   return (
@@ -215,7 +215,7 @@ export function RideBottomNavigator() {
                 <Animatable.View
                   style={styles.animatedView}
                   duration={800}
-                  animation={'fadeIn'}
+                  animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
               <SvgXml xml={iconName} />
@@ -308,7 +308,7 @@ export function FoodBottomNavigator() {
     setUpdate(false);
     setTimeout(() => {
       setUpdate(true);
-    }, 200);
+    }, 100);
   };
 
   return (
@@ -350,7 +350,7 @@ export function FoodBottomNavigator() {
                 <Animatable.View
                   style={styles.animatedView}
                   duration={800}
-                  animation={'fadeIn'}
+                  animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
               <SvgXml xml={iconName} />
@@ -448,7 +448,7 @@ export function ParcelBottomNavigator() {
     setUpdate(false);
     setTimeout(() => {
       setUpdate(true);
-    }, 200);
+    },100);
   };
 
   return (
@@ -490,7 +490,8 @@ export function ParcelBottomNavigator() {
                 <Animatable.View
                   style={styles.animatedView}
                   duration={800}
-                  animation={'fadeIn'}
+                  // animation={'fadeIn'}
+                  animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
               <SvgXml xml={iconName} />

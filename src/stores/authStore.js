@@ -5,7 +5,7 @@ import {useToast} from '../halpers/useToast';
 
 export default class AuthStore {
 
-  login = async (values, type, navigation, handleLoading) => {
+  login = async (values, type, navigation, handleLoading,onDeactiveAccount) => {
     handleLoading(true);
     let requestData = {};
     if (type == 'Mobile') {
@@ -30,12 +30,18 @@ export default class AuthStore {
         useToast(res.message, 1);
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
+        if(message == 'Your account is deactivated'){
+          onDeactiveAccount();
+        }
         useToast(message, 0);
       }
       handleLoading(false);
     } catch (error) {
       console.log('error:', error);
       handleLoading(false);
+      if(error?.data?.message == 'Your account is deactivated'){
+        onDeactiveAccount();
+      }
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
@@ -278,6 +284,24 @@ export default class AuthStore {
       console.log('addDeviceToken API Res:', res);
     } catch (error) {
       console.log('error:', error);
+    }
+  };
+
+  getAdminInfo = async handleLoading => {
+    try {
+      const res = await agent.adminInfo();
+      console.log('getAdminInfo API Res:', res);
+      if (res?.statusCode == 200) {
+        handleLoading(false);
+        return res?.data;
+      } else {
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error:getAdminInfo', error);
+      handleLoading(false);
+      return [];
     }
   };
 }

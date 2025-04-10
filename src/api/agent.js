@@ -162,6 +162,7 @@ export const agent = {
   paymentsVerify: body => requests.post(Url.paymentsVerify, body),
   deleteAccount: body =>
     requests.delete(`${Url.deleteAccount}/${body?.userId}`),
+    adminInfo: () => requests.get(Url.adminInfo),
 };
 
 const requests = {

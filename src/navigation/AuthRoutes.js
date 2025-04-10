@@ -5,6 +5,7 @@ import VerifyOtp from '../screens/Auth/VerifyOtp.js/VerifyOtp';
 import ForgotPass from '../screens/Auth/ForgotPass/ForgotPass';
 import SetPass from '../screens/Auth/SetPass/SetPass';
 import MyWebComponent from '../screens/Auth/MyWebComponent/MyWebComponent';
+import CustomerSupport from '../screens/CommonScreens/CustomerSupport/CustomerSupport';
 
 
 
@@ -24,6 +25,7 @@ export default function AuthRoutes(props) {
        <Stack.Screen name="setPass" component={SetPass} />
        <Stack.Screen name="verifyOtp" component={VerifyOtp} /> 
        <Stack.Screen name="myWebComponent" component={MyWebComponent} /> 
+       <Stack.Screen name="customerSupport" component={CustomerSupport} /> 
        
     </Stack.Navigator>
   );

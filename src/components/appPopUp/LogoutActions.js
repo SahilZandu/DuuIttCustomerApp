@@ -5,8 +5,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { fonts } from '../../theme/fonts/fonts';
-
+import {fonts} from '../../theme/fonts/fonts';
 
 const LogoutActions = ({onCancle, onLogout, type}) => {
   const actions = [
@@ -15,10 +14,9 @@ const LogoutActions = ({onCancle, onLogout, type}) => {
       onAction: () => onCancle(),
     },
     {
-      action: type == 'logout' ? 'Logout' : 'Back',
+      action: type == 'logout' ? 'Logout' : 'Continue',
       onAction: () => onLogout(),
     },
-    
   ];
 
   const [loading, setLoading] = useState(false);
@@ -34,7 +32,7 @@ const LogoutActions = ({onCancle, onLogout, type}) => {
       {actions?.map((item, key) => (
         <Pressable
           onPress={() => {
-            if (type == 'logout') {
+            if (type == 'logout' || type == 'continue') {
               setLoading(true);
             }
             item.onAction();
@@ -51,12 +49,13 @@ const LogoutActions = ({onCancle, onLogout, type}) => {
             backgroundColor:
               key == 0
                 ? 'white'
-                : type == 'logout'
+                : type == 'logout' || type == 'continue'
                 ? '#CB2F2F'
                 : 'rgba(254, 240, 199, 1)',
             marginRight: key == 0 ? 15 : 0,
           }}>
-          {type == 'logout' && item?.action == 'Logout' ? (
+          {(type == 'logout' && item?.action == 'Logout') ||
+          (type == 'continue' && item?.action == 'Continue') ? (
             loading == true ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
             ) : (
@@ -67,7 +66,7 @@ const LogoutActions = ({onCancle, onLogout, type}) => {
                   color:
                     key == 0
                       ? '#333333'
-                      : type == 'logout'
+                      : type == 'logout' || type == 'continue'
                       ? 'white'
                       : '#DC6803',
                 }}>
@@ -80,7 +79,11 @@ const LogoutActions = ({onCancle, onLogout, type}) => {
                 fontSize: RFValue(11),
                 fontFamily: fonts.medium,
                 color:
-                  key == 0 ? '#333333' : type == 'logout' ? 'white' : '#DC6803',
+                  key == 0
+                    ? '#333333'
+                    : type == 'logout' || type == 'continue'
+                    ? 'white'
+                    : '#DC6803',
               }}>
               {item?.action}
             </Text>

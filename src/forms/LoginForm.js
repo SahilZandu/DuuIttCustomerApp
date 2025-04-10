@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, TouchableOpacity,StyleSheet} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import CTA from '../components/cta/CTA';
 import {Formik, useFormikContext} from 'formik';
 import {loginValidations} from './formsValidation/loginValidations';
@@ -12,8 +12,8 @@ import Spacer from '../halpers/Spacer';
 import {Strings} from '../translates/strings';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {fonts} from '../theme/fonts/fonts';
-import { rootStore } from '../stores/rootStore';
-
+import {rootStore} from '../stores/rootStore';
+import PopUp from '../components/appPopUp/PopUp';
 
 const initialValues = {
   email: '',
@@ -36,16 +36,29 @@ const FormButton = ({loading, onPress}) => {
 const LoginForm = ({navigation, type}) => {
   const [loading, setLoading] = useState(false);
   const [secureTextEntry, setsecureTextEntry] = useState(true);
+  const [isDeactive, setIsDeactive] = useState(false);
 
-    const {login} = rootStore.authStore;
+  const {login} = rootStore.authStore;
 
-  const handleLogin = async (values) => {
+  const handleLogin = async values => {
     // console.log('values', values);
     // navigation.navigate('verifyOtp', {value: values, loginType: type});
-        await login(values,type,navigation,handleLoading)
+    await login(values, type, navigation, handleLoading, onDeactiveAccount);
   };
   const handleLoading = v => {
     setLoading(v);
+  };
+
+  const onDeactiveAccount = () => {
+    setIsDeactive(true);
+  };
+
+  const handleDeactiveAccount = () => {
+    setIsDeactive(false);
+    setTimeout(()=>{
+      navigation.navigate('customerSupport')
+    },200);
+
   };
 
   return (
@@ -86,22 +99,31 @@ const LoginForm = ({navigation, type}) => {
           />
         )}
 
-     {type == 'Email' && (
-     <View style={styles.forgotView}>
-          <TouchableOpacity
-          onPress={()=>{navigation.navigate("forgotPass")}}
-            activeOpacity={0.8}
-            style={styles.forgotTouch}>
-            <Text
-              style={styles.forgotText}>
-              {Strings.forgotPassword}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {type == 'Email' && (
+          <View style={styles.forgotView}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('forgotPass');
+              }}
+              activeOpacity={0.8}
+              style={styles.forgotTouch}>
+              <Text style={styles.forgotText}>{Strings.forgotPassword}</Text>
+            </TouchableOpacity>
+          </View>
         )}
 
         <Spacer space={'12%'} />
         <FormButton loading={loading} onPress={handleLogin} />
+        <PopUp
+          visible={isDeactive}
+          type={'continue'}
+          onClose={() => setIsDeactive(false)}
+          title={'Account Deactivated'}
+          text={
+            'Your account is currently deactivated. Please contact support team or log in again to reactivate your account.'
+          }
+          onDelete={handleDeactiveAccount}
+        />
       </View>
     </Formik>
   );
@@ -110,25 +132,25 @@ const LoginForm = ({navigation, type}) => {
 export default LoginForm;
 
 const styles = StyleSheet.create({
-
-  main:{
-    width: wp('85%'), alignSelf: 'center',
+  main: {
+    width: wp('85%'),
+    alignSelf: 'center',
   },
 
-  forgotView:{
-    justifyContent: 'flex-end', alignItems: 'flex-end'
+  forgotView: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
-  forgotTouch:{
+  forgotTouch: {
     width: wp('35%'),
     height: hp('4%'),
     alignItems: 'center',
     justifyContent: 'center',
   },
-  forgotText:{
+  forgotText: {
     fontSize: RFValue(12),
     fontFamily: fonts.bold,
     textAlign: 'right',
     color: '#28B056',
-  }
-
-})
+  },
+});

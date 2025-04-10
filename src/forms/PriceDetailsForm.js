@@ -110,7 +110,14 @@ const PriceDetailsForm = ({navigation}) => {
       type: 'Others',
       sender_address: senderAddress,
       receiver_address: newReceiverAddress,
-      billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
+      // billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
+       billing_detail: {
+        delivery_fee: 9,
+         distance_fee: 0,
+         discount: 0,
+         platform_fee: 2,
+         gst_fee: 10
+          },
       isSecure: isSecure,
       order_type: 'parcel',
     };

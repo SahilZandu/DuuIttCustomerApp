@@ -12,56 +12,67 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-
-const MapLocationRoute = ({mapContainerView, origin,isPendingReq,onTouchLocation}) => {
+const MapLocationRoute = ({
+  mapContainerView,
+  origin,
+  isPendingReq,
+  onTouchLocation,
+}) => {
   const mapRef = useRef(null);
-  const [lat, setLat] = useState(origin?.lat ? Number(origin?.lat) : null);
-  const [long, setLong] = useState(
-    origin?.lng ? Number(origin?.lng) :null,
-  );
-  const [delta ,setDelta]=useState({
+  const [mapRegion, setMapRegion] = useState({
+    latitude: origin?.lat ? Number(origin?.lat) : 0,
+    longitude: origin?.lng ? Number(origin?.lng) : 0,
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
-  })
+  });
 
-  // Update latitude and longitude based on origin
+  // Update region when origin changes
   useEffect(() => {
-    console.log('origin--',origin);
-    if (Object?.keys(origin || {})?.length > 0) {
-      setLat(Number(origin?.lat));
-      setLong(Number(origin?.lng));
+    if (origin?.lat && origin?.lng) {
+      setMapRegion(prev => ({
+        ...prev,
+        latitude: Number(origin?.lat),
+        longitude: Number(origin?.lng),
+      }));
     }
   }, [origin]);
 
+  const handleRegionChangeComplete = useCallback(region => {
+    setMapRegion(region);
+  }, []);
 
-  const region = useMemo(
-    () => ({
-      latitude: lat,
-      longitude: long,
-      latitudeDelta:delta?.latitudeDelta,
-      longitudeDelta:delta?.longitudeDelta,
-    }),
-    [lat, long,delta],
+  const onTouchLocationData = useCallback(
+    coordinate => {
+      setMapRegion(prev => ({
+        ...prev,
+        latitude: Number(coordinate?.latitude),
+        longitude: Number(coordinate?.longitude),
+      }));
+      onTouchLocation(coordinate);
+    },
+    [onTouchLocation],
   );
 
-   
-    const handleRegionChangeComplete = (region) => {
-      console.log("Updated region:", region);
-      setTimeout(()=>{
-        setDelta({
-          latitudeDelta: region?.latitudeDelta,
-          longitudeDelta: region?.longitudeDelta,
-        },5000)
-      })
-     
-    };
+  // Memoize marker component
+  const OriginMarker = useMemo(() => {
+    if (!origin?.lat || !origin?.lng) return null;
 
-
-    const onTouchLocationData =(coordinate)=>{
-        setLong(Number(coordinate?.longitude))
-        setLat(Number(coordinate?.latitude))
-        onTouchLocation(coordinate)
-    }
+    return (
+      <Marker
+        coordinate={{
+          latitude: Number(origin.lat),
+          longitude: Number(origin.lng),
+        }}
+        useLegacyPinView={true}
+        tracksViewChanges={true}>
+        <Image
+          resizeMode="contain"
+          source={appImages.markerImage}
+          style={styles.markerImage}
+        />
+      </Marker>
+    );
+  }, [origin?.lat, origin?.lng]);
 
   return (
     <View
@@ -75,49 +86,21 @@ const MapLocationRoute = ({mapContainerView, origin,isPendingReq,onTouchLocation
         scrollEnabled={false}
         showsScale
         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        region={region}
+        region={mapRegion}
         zoomTapEnabled
         rotateEnabled
         loadingEnabled
-        onRegionChangeComplete={handleRegionChangeComplete} // Listen for zoom changes
-        onPress={(e) =>{
-           console.log('e.nativeEvent',e.nativeEvent)
-           const coordinate =e.nativeEvent?.coordinate
-            onTouchLocationData(coordinate)
-      }}
-
-      onPoiClick={(e) =>{
-        console.log('e.nativeEvent onPoiClick',e.nativeEvent)
-        const coordinate =e.nativeEvent?.coordinate
-        onTouchLocationData(coordinate)
-   }}
-  //  onPanDrag={(e) =>{
-  //       console.log('e.nativeEvent onPanDrag',e.nativeEvent)
-  //       const coordinate =e.nativeEvent?.coordinate
-  //       setTimeout(()=>{
-  //         setLong(Number(coordinate?.longitude))
-  //         setLat(Number(coordinate?.latitude))
-  //       },500)
-  //  }}
-  
+        onRegionChangeComplete={handleRegionChangeComplete}
+        onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
+        onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
         showsCompass>
-        {/* Origin Marker */}
-         {origin?.lat && origin?.lng && (
-        <Marker
-          key={`origin-${lat}-${long}`} // Add key prop to prevent flickering
-          coordinate={{latitude: lat, longitude: long}}>
-          <Image
-            resizeMode="contain"
-            source={appImages.markerImage}
-            style={styles.markerImage}
-          />
-        </Marker>)}
+        {OriginMarker}
       </MapView>
     </View>
   );
 };
 
-export default MapLocationRoute;
+export default React.memo(MapLocationRoute);
 
 const styles = StyleSheet.create({
   homeSubContainer: {
@@ -140,13 +123,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-
-
-
-
-
 // import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 // import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
 // import {
@@ -160,7 +136,6 @@ const styles = StyleSheet.create({
 // const ASPECT_RATIO = width / height;
 // const LATITUDE_DELTA = 0.0922;
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
 
 // const MapLocationRoute = ({mapContainerView, origin,isPendingReq,onTouchLocation}) => {
 //   const mapRef = useRef(null);
@@ -182,7 +157,6 @@ const styles = StyleSheet.create({
 //     }
 //   }, [origin]);
 
-
 //   const region = useMemo(
 //     () => ({
 //       latitude: lat,
@@ -193,7 +167,6 @@ const styles = StyleSheet.create({
 //     [lat, long,delta],
 //   );
 
-   
 //     const handleRegionChangeComplete = (region) => {
 //       console.log("Updated region:", region);
 //       setTimeout(()=>{
@@ -202,9 +175,8 @@ const styles = StyleSheet.create({
 //           longitudeDelta: region?.longitudeDelta,
 //         },5000)
 //       })
-     
-//     };
 
+//     };
 
 //     const onTouchLocationData =(coordinate)=>{
 //         setLong(Number(coordinate?.longitude))
@@ -248,7 +220,7 @@ const styles = StyleSheet.create({
 //   //         setLat(Number(coordinate?.latitude))
 //   //       },500)
 //   //  }}
-  
+
 //         showsCompass>
 //         {/* Origin Marker */}
 //          {origin?.lat && origin?.lng && (
@@ -288,4 +260,3 @@ const styles = StyleSheet.create({
 //     marginTop: Platform.OS === 'ios' ? '25%' : 0,
 //   },
 // });
-

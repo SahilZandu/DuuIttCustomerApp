@@ -49,7 +49,8 @@ export default  {
     walletUpdateBalance:"wallet/update-balance",
     paymentsCreateOrder:'payments/create-order',
     paymentsVerify:'payments/verify',
-    deleteAccount:'customers/info'
+    deleteAccount:'customers/info',
+    adminInfo:'/admin/info',
 
     
 
