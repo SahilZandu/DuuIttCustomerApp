@@ -35,23 +35,25 @@ export default function Settings({navigation}) {
     const res = await deleteAccount(appUser, handleLoading);
     console.log('res delete--', res, res?.statusCode);
     if (res?.statusCode == 200) {
-      let query = {
-        user_id: appUser?._id,
-      };
-      socketServices.emit('remove-user', query);
-      socketServices.disconnectSocket();
-      await setToken(null);
-      await setAppUser(null);
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'auth'}],
-        }),
-      );
-    }
-    setTimeout(() => {
       setIsDelete(false);
-    }, 1000);
+      setTimeout(async () => {
+        let query = {
+          user_id: appUser?._id,
+        };
+        socketServices.emit('remove-user', query);
+        socketServices.disconnectSocket();
+        await setToken(null);
+        await setAppUser(null);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'auth'}],
+          }),
+        );
+      }, 500);
+    } else {
+      setIsDelete(false);
+    }
   };
 
   const handleLoading = () => {

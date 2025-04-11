@@ -264,22 +264,22 @@ export default function SideMenu({navigation}) {
   };
 
   const handleLogout = async () => {
-    let query = {
-      user_id: appUser?._id,
-    };
-    socketServices.emit('remove-user', query);
-    socketServices.disconnectSocket();
-    await setToken(null);
-    await setAppUser(null);
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: 'auth'}],
-      }),
-    );
-    setTimeout(() => {
-      setIsLogout(false);
-    }, 1000);
+    setIsLogout(false);
+    setTimeout(async () => {
+      let query = {
+        user_id: appUser?._id,
+      };
+      socketServices.emit('remove-user', query);
+      socketServices.disconnectSocket();
+      await setToken(null);
+      await setAppUser(null);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'auth'}],
+        }),
+      );
+    }, 500);
   };
 
   return (

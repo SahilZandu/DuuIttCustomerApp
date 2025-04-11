@@ -632,8 +632,7 @@ import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import { silderArray } from '../stores/DummyData/Home';
 
-const
-  SearchingRideForm = ({ navigation, route, screenName }) => {
+const SearchingRideForm = ({ navigation, route, screenName }) => {
     const { addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider } =
       rootStore.parcelStore;
     const { appUser } = rootStore.commonStore;
@@ -670,10 +669,12 @@ const
 
     useEffect(() => {
       const subscription = DeviceEventEmitter.addListener('newOrder', data => {
+      if(data?.order_type == "ride"){
         console.log('new order data -- ', data);
         setParcelInfo(data);
         setAddParcelInfo(data);
         setSearchArrive('arrive');
+        }
       });
 
       return () => {
@@ -684,8 +685,10 @@ const
     useEffect(() => {
       const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
         console.log('cancel Order data -- ', data);
+        if(data?.order_type == "ride"){
         navigation.navigate(screenName, { screen: 'home' });
         setSearchArrive('search');
+        }
       });
       return () => {
         subscription.remove();
@@ -697,6 +700,7 @@ const
       const subscription = DeviceEventEmitter.addListener('picked', data => {
         console.log('picked data -- ', data);
         // navigation.navigate('parcel', {screen: 'home'});
+        if(data?.order_type == "ride"){
         setParcelInfo(data);
         setAddParcelInfo(data);
         if (screenName == 'parcel') {
@@ -705,6 +709,7 @@ const
         } else {
           setMinMaxHp(screenHeight(35));
         }
+      }
       });
       return () => {
         subscription.remove();
@@ -714,10 +719,12 @@ const
     useEffect(() => {
       const subscription = DeviceEventEmitter.addListener('dropped', data => {
         console.log('dropped data -- ', data);
+        if(data?.order_type == "ride"){
         if (screenName == 'ride') {
           navigation.navigate(screenName, { screen: 'home' });
           setSearchArrive('search');
         }
+      }
       });
       return () => {
         subscription.remove();

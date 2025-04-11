@@ -1,31 +1,19 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  DeviceEventEmitter,
-} from 'react-native';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import {View, Image, DeviceEventEmitter} from 'react-native';
+import {appImages} from '../../../commons/AppImages';
 import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect, useTheme} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import TrackingOrderCard from '../../../components/TrackingOrderCard';
 import {homeParcelCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
-import MapRoute from '../../../components/MapRoute';
-import {
-  getCurrentLocation,
-  setCurrentLocation,
-} from '../../../components/GetAppLocation';
+import {getCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import moment from 'moment';
 import TrackingOrderComp from '../../../components/TrackingOrderComp';
@@ -34,13 +22,14 @@ import socketServices from '../../../socketIo/SocketServices';
 import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
-import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import MapLocationRoute from '../../../components/MapLocationRoute';
+import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
 let geoLocation = {
   lat: null,
   lng: null,
 };
+let ratingData = {};
 export default function ParcelHome({navigation}) {
   const {appUser} = rootStore.commonStore;
   const {
@@ -93,24 +82,27 @@ export default function ParcelHome({navigation}) {
         setOriginLocation(geoLocation);
         console.log('Updated geoLocation:', geoLocation);
       }, 1500);
+      ratingData = {};
     }, []),
   );
 
-  useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener('dropped', data => {
-      console.log('dropped data -- ', data);
-      setIsReviewRider(false);
-    });
+  // useEffect(() => {
+  //   const subscription = DeviceEventEmitter.addListener('dropped', data => {
+  //     console.log('dropped data -- Parcel ', data);
+  //     setIsReviewRider(true);
+  //   });
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
       console.log('new order data -- ', data);
-      getIncompleteOrder();
+      if (data?.order_type == 'parcel') {
+        getIncompleteOrder();
+      }
     });
 
     return () => {
@@ -121,7 +113,9 @@ export default function ParcelHome({navigation}) {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
       console.log('cancel Order data -- ', data);
+      if (data?.order_type == 'parcel') {
       getIncompleteOrder();
+      }
     });
     return () => {
       subscription.remove();
@@ -131,8 +125,10 @@ export default function ParcelHome({navigation}) {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('picked', data => {
       console.log('picked data -- ', data);
+      if (data?.order_type == 'parcel') {
       // navigation.navigate('parcel', {screen: 'home'});
       getTrackingOrder();
+      }
     });
     return () => {
       subscription.remove();
@@ -141,14 +137,19 @@ export default function ParcelHome({navigation}) {
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('dropped', data => {
-      console.log('dropped data -- ', data);
+      console.log('dropped data --Parcel ', data);
+      if (data?.order_type == 'parcel') {
+      setIsReviewRider(true);
+      ratingData = data;
       getTrackingOrder();
+      }
     });
     return () => {
       subscription.remove();
     };
   }, []);
 
+  console.log('ratingDat----,', ratingData);
   const getTrackingOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
     setTrackedArray(resTrack);
@@ -273,7 +274,7 @@ export default function ParcelHome({navigation}) {
             }}
             appUserInfo={appUserInfo}
           />
-           <MapLocationRoute
+          <MapLocationRoute
             mapContainerView={{height: hp('25%')}}
             origin={geoLocation ?? originLocation}
             isPendingReq={true}
@@ -392,25 +393,21 @@ export default function ParcelHome({navigation}) {
             }
             onDelete={deleteIncompleteOrder}
           />
-          {/* <ReviewsRatingComp
-       data={item}
-      type={'PickUp'}
-      reviewToRider={true}
-      title={'How was your delivery experience?'}
-      isVisible={isReviewRider}
-      onClose={()=>{
-        setIsReviewRider(false),
-        setTimeout(() => {
-          setIsReviewStar(true);
-          // alert("yes")
-        },500);
-       
-      }}
-      loading={loadingRating}
-      onHandleLoading={(v)=>{
-        setLoadingRating(v)
-      }}
-      /> */}
+          <ReviewsRatingComp
+            //data={{}}
+            data={ratingData}
+            type={'PARCEL'}
+            reviewToRider={true}
+            title={'How was your parcel delivery experience?'}
+            isVisible={isReviewRider}
+            onClose={() => {
+              setIsReviewRider(false);
+            }}
+            loading={loadingRating}
+            onHandleLoading={v => {
+              setLoadingRating(v);
+            }}
+          />
           {trackedArray?.length > 0 && (
             <TrackingOrderComp
               navigation={navigation}

@@ -105,7 +105,7 @@ const ReviewsRatingComp = ({
         type: type,
         order_id: data?._id,
         restaurant_id: data?.restaurant?._id,
-        rider_id: '674004448c0213057bd1519c',
+        rider_id: data?.rider_id,
         review_to_rider:reviewToRider
       };
     } else {
@@ -114,7 +114,7 @@ const ReviewsRatingComp = ({
         rating: values?.rating,
         type: type,
         order_id: data?._id,
-        rider_id: '674004448c0213057bd1519c',
+        rider_id: data?.rider_id,
         review_to_rider:reviewToRider
       };
     }

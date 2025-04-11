@@ -30,9 +30,10 @@ export default function TouchableTextSwitch({
                   : [{scaleX: 1}, {scaleY: 0.9}],
             }}
             value={activateSwitch}
-            trackColor={{false: colors.red, true: colors.main}}
+            trackColor={{false:colors.red, true: colors.main}}
             thumbColor={activateSwitch ? colors.white : colors.white}
             onValueChange={onTogglePress}
+            ios_backgroundColor={colors.red} // Fix for iOS "off" track color
           />
         )}
       </View>

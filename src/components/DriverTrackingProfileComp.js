@@ -20,16 +20,16 @@ import Url from '../api/Url';
 
 const DriverTrackingProfileComp = ({topLine, item, onMessage, onCall}) => {
   // console.log('Driver--', item);
- 
+
   return (
     <View>
       {topLine && <View style={styles.topLineView} />}
       <View style={styles.main}>
         <Image
-          resizeMode='cover'
+          resizeMode="cover"
           style={styles.userImage}
           source={
-              item?.image?.toString()?.includes('profile')
+            item?.image?.toString()?.includes('profile')
               ? {uri: Url.Image_Url + item?.image}
               : item.image
           }
@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
     height: 55,
     width: 55,
     borderRadius: 100,
+    borderWidth: 0.3,
+    borderColor: colors.main,
   },
   textRatingView: {
     flex: 1,

@@ -84,6 +84,8 @@ const styles = StyleSheet.create({
     height: 55,
     width: 55,
     borderRadius: 100,
+    borderWidth:0.3,
+    borderColor:colors.main
   },
   trackIdView: {
     flexDirection: 'column',

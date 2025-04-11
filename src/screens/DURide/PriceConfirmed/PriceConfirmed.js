@@ -678,11 +678,12 @@ export default function PriceConfirmed({navigation, route}) {
       <MapRoute
         origin={pickDropDetails?.sender_address?.geo_location}
         destination={pickDropDetails?.receiver_address?.geo_location}
-        mapContainerView={{height: hp('45%')}}
+        mapContainerView={{height: hp('48%')}}
       />
 
       <View style={styles.containerDriverTouch}>
-        <View style={styles.topLineView} />
+        {/* <View style={styles.topLineView} /> */}
+        <Spacer space={'2%'}/>
         <Formik initialValues={initialValues}>
           <>
             <AppInputScroll

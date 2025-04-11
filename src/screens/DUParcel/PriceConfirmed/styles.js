@@ -261,7 +261,7 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     bottom: 0,
-    height: hp('55%'),
+    height: hp('53%'),
     width: wp('100%'),
   },
   innerDriverView: {

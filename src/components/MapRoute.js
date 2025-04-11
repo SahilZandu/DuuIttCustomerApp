@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -29,6 +36,13 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
   });
+  const [region, setRegion] = useState({
+    latitude: Number(origin?.lat) ? Number(origin?.lat) : lat,
+    longitude: Number(origin?.lng) ? Number(origin?.lng) : long,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+  });
+  const [isMapReady, setIsMapReady] = useState(false);
 
   // Update latitude and longitude based on origin
   useEffect(() => {
@@ -36,18 +50,31 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     if (Object?.keys(origin || {})?.length > 0) {
       setLat(Number(origin?.lat));
       setLong(Number(origin?.lng));
+      setRegion({
+        latitude: Number(origin?.lat) ? Number(origin?.lat) : lat,
+        longitude: Number(origin?.lng) ? Number(origin?.lng) : long,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
     }
   }, [origin]);
 
-  const region = useMemo(
-    () => ({
-      latitude: lat,
-      longitude: long,
-      latitudeDelta: delta?.latitudeDelta,
-      longitudeDelta: delta?.longitudeDelta,
-    }),
-    [lat, long, delta],
-  );
+  const handleMapReady = () => {
+    console.log('Map is ready');
+    if (
+      destinationLocation?.lat?.toString()?.length > 0 &&
+      lat?.toString()?.length > 0
+    ) {
+      setTimeout(() => {
+        setIsMapReady(true);
+      },5000);
+    }else{
+      setTimeout(() => {
+        setIsMapReady(true);
+      }, 12000);
+    }
+    
+  };
 
   // Fetch and set route only when both origin and destination are defined
   useEffect(() => {
@@ -99,20 +126,21 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         provider={PROVIDER_GOOGLE}
         ref={mapRef}
         style={[styles.mapContainer, mapContainerView]}
-        zoomEnabled
-        scrollEnabled
-        showsScale
+        zoomEnabled={true}
+        scrollEnabled={true}
+        showsScale={true}
         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
         region={region}
-        zoomTapEnabled
-        rotateEnabled
-        loadingEnabled
-        showsCompass>
+        zoomTapEnabled={true}
+        rotateEnabled={true}
+        loadingEnabled={true}
+        showsCompass={true}
+        onMapReady={handleMapReady}>
         {/* Origin Marker */}
         {lat && long && (
           <Marker
             coordinate={{latitude: lat, longitude: long}}
-            tracksViewChanges={true}
+            tracksViewChanges={!isMapReady}
             useLegacyPinView={true}>
             <Image
               resizeMode="cover"
@@ -129,7 +157,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
               latitude: Number(destinationLocation?.lat),
               longitude: Number(destinationLocation?.lng),
             }}
-            tracksViewChanges={false}
+            tracksViewChanges={!isMapReady}
             useLegacyPinView={true}>
             <Image
               resizeMode="contain"
@@ -152,7 +180,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   );
 };
 
-export default MapRoute;
+export default memo(MapRoute);
 
 const styles = StyleSheet.create({
   homeSubContainer: {
@@ -179,10 +207,6 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
-
-
-
-
 
 // import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 // import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
@@ -368,8 +392,6 @@ const styles = StyleSheet.create({
 //     marginTop: Platform.OS === 'ios' ? '25%' : 0,
 //   },
 // });
-
-
 
 // import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 // import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
@@ -564,4 +586,3 @@ const styles = StyleSheet.create({
 //     marginTop: Platform.OS === 'ios' ? '25%' : 0,
 //   },
 // });
-

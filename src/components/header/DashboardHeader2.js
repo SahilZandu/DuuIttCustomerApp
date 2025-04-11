@@ -150,7 +150,7 @@ const DashboardHeader2 = ({
               }}>
               Hello {appUserInfo?.name}
             </Text>
-            {appUserInfo?.isWallet !== true &&
+            {appUserInfo?.isWallet == true &&
              <View style={{
               flexDirection: 'row',
               alignItems: 'center',

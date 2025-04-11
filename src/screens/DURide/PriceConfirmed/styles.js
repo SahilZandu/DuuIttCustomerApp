@@ -216,20 +216,12 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     bottom: 0,
-    height:hp('55%'),
+    height:hp('53%'),
     width: wp('100%'),
   },
   innerDriverView: {
     paddingHorizontal: 20,
     marginTop: '2%',
-  },
-  topLineView: {
-    height: hp('0.5%'),
-    backgroundColor: colors.colorD9,
-    width:wp('15%'),
-    borderRadius: 10,
-    alignSelf: 'center',
-    marginTop: '3%',
   },
   homeSliderView:{
     marginHorizontal: -7,

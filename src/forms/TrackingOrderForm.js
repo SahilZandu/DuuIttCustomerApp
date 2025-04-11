@@ -167,8 +167,10 @@ const TrackingOrderForm = ({navigation}) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('dropped', data => {
       console.log('dropped data -- ', data);
-      getTrackingOrder();
-      setIsModalTrack(false);
+      if (data?.order_type == 'parcel' || data?.order_type == 'food') {
+        getTrackingOrder();
+        setIsModalTrack(false);
+      }
     });
     return () => {
       subscription.remove();
@@ -319,6 +321,7 @@ const TrackingOrderForm = ({navigation}) => {
                     </Text>
                   </View>
                   <Image
+                    resizeMode="contain"
                     style={styles.tarckImage}
                     source={appImages.mapTrackImage}
                   />
@@ -438,8 +441,8 @@ const styles = StyleSheet.create({
   tarckImage: {
     marginRight: '2%',
     alignSelf: 'center',
-    width: wp('21%'),
-    height: hp('10%'),
+    width: 80,
+    height: 80,
     marginTop: '1%',
   },
   modalMainView: {

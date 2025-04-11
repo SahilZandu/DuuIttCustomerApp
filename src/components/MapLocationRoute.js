@@ -19,12 +19,16 @@ const MapLocationRoute = ({
   onTouchLocation,
 }) => {
   const mapRef = useRef(null);
+
   const [mapRegion, setMapRegion] = useState({
     latitude: origin?.lat ? Number(origin?.lat) : 0,
     longitude: origin?.lng ? Number(origin?.lng) : 0,
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
   });
+  const [isMapReady, setIsMapReady] = useState(false);
+
+  console.log('origin---11', origin);
 
   // Update region when origin changes
   useEffect(() => {
@@ -37,9 +41,6 @@ const MapLocationRoute = ({
     }
   }, [origin]);
 
-  const handleRegionChangeComplete = useCallback(region => {
-    setMapRegion(region);
-  }, []);
 
   const onTouchLocationData = useCallback(
     coordinate => {
@@ -53,26 +54,18 @@ const MapLocationRoute = ({
     [onTouchLocation],
   );
 
-  // Memoize marker component
-  const OriginMarker = useMemo(() => {
-    if (!origin?.lat || !origin?.lng) return null;
-
-    return (
-      <Marker
-        coordinate={{
-          latitude: Number(origin.lat),
-          longitude: Number(origin.lng),
-        }}
-        useLegacyPinView={true}
-        tracksViewChanges={true}>
-        <Image
-          resizeMode="contain"
-          source={appImages.markerImage}
-          style={styles.markerImage}
-        />
-      </Marker>
-    );
-  }, [origin?.lat, origin?.lng]);
+  const handleMapReady = () => {
+    console.log('Map is ready');
+    if (origin?.lat?.toString()?.length > 0) {
+      setTimeout(() => {
+        setIsMapReady(true);
+      }, 5000);
+    } else {
+      setTimeout(() => {
+        setIsMapReady(true);
+      }, 12000);
+    }
+  };
 
   return (
     <View
@@ -90,11 +83,26 @@ const MapLocationRoute = ({
         zoomTapEnabled
         rotateEnabled
         loadingEnabled
-        onRegionChangeComplete={handleRegionChangeComplete}
         onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
         onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
-        showsCompass>
-        {OriginMarker}
+        showsCompass
+        onMapReady={handleMapReady}>
+        {mapRegion?.latitude?.toString()?.length > 0 &&
+          mapRegion?.longitude?.toString()?.length > 0 && (
+            <Marker
+              coordinate={{
+                latitude: Number(mapRegion?.latitude),
+                longitude: Number(mapRegion?.longitude),
+              }}
+              tracksViewChanges={!isMapReady}
+              useLegacyPinView={true}>
+              <Image
+                resizeMode="contain"
+                source={appImages.markerImage}
+                style={styles.markerImage}
+              />
+            </Marker>
+          )}
       </MapView>
     </View>
   );

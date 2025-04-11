@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import {styles} from './styles';
 import Header from '../../../components/header/Header';
 import SearchingRideForm from '../../../forms/SearchingRideForm';
+import SearchingParcelForm from '../../../forms/SearchingParcelForm';
 
 const SearchingRide = ({navigation, route}) => {
  
@@ -15,7 +16,9 @@ const SearchingRide = ({navigation, route}) => {
           navigation.goBack();
         }}
       /> */}
-      <SearchingRideForm navigation={navigation} route={route} screenName={'parcel'}/>
+      {/* <SearchingRideForm navigation={navigation} route={route} screenName={'parcel'}/> */}
+       <SearchingParcelForm navigation={navigation} route={route} screenName={'parcel'}/>
+      
 
     </View>
   );

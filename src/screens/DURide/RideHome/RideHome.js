@@ -1,14 +1,11 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
-  Text,
-  TouchableOpacity,
   View,
   Image,
   DeviceEventEmitter,
 } from 'react-native';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import {appImages} from '../../../commons/AppImages';
 import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -17,10 +14,9 @@ import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import {useFocusEffect} from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import {homeCS, homeRideCS} from '../../../stores/DummyData/Home';
+import {homeRideCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
-import MapRoute from '../../../components/MapRoute';
 import {getCurrentLocation, setCurrentLocation} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
@@ -29,12 +25,14 @@ import {fetch} from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
 import MapLocationRoute from '../../../components/MapLocationRoute';
+import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 
 
 let geoLocation = {
   lat: null,
   lng: null,
 };
+let ratingData = {};
 
 export default function RideHome({navigation}) {
   const {appUser} = rootStore.commonStore;
@@ -47,6 +45,8 @@ export default function RideHome({navigation}) {
   const [internet, setInternet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const [originLocation ,setOriginLocation]=useState({})
+  const [isReviewRider ,setIsReviewRider]=useState(false)
+  const [loadingRating, setLoadingRating] = useState(false);
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -76,6 +76,7 @@ export default function RideHome({navigation}) {
         setOriginLocation(geoLocation)
         console.log('Updated geoLocation:', geoLocation);
       },1500);
+      ratingData = {};
       
     }, []),
   );
@@ -83,7 +84,9 @@ export default function RideHome({navigation}) {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
       console.log('new order data -- ', data);
+      if(data?.order_type == "ride"){
       getIncompleteOrder();
+      }
     });
 
     return () => {
@@ -94,44 +97,32 @@ export default function RideHome({navigation}) {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
       console.log('cancel Order data -- ', data);
+      if(data?.order_type == "ride"){
       getIncompleteOrder();
+      }
     });
     return () => {
       subscription.remove();
     };
   }, []);
 
-  // useEffect(() => {
-  //   const subscription = DeviceEventEmitter.addListener(
-  //     'picked',
-  //     data => {
-  //     console.log('picked data -- ',data)
-  //     // navigation.navigate('parcel', {screen: 'home'});
-  //     getTrackingOrder()
-  //     },
-  //   );
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      'dropped',
+      data => {
+      console.log('dropped data --Ride ',data)
+      if(data?.order_type == "ride"){
+      setIsReviewRider(true)
+      ratingData = data;
+      }
+      },
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   const subscription = DeviceEventEmitter.addListener(
-  //     'dropped',
-  //     data => {
-  //     console.log('dropped data -- ',data)
-  //      getTrackingOrder();
-  //     },
-  //   );
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
-
-  // const getTrackingOrder = async () => {
-  //   const resTrack = await ordersTrackOrder(handleLoadingTrack);
-  //   setTrackedArray(resTrack);
-  // };
+  console.log('ratingDat----,', ratingData);
 
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
@@ -304,6 +295,21 @@ export default function RideHome({navigation}) {
             }
             onDelete={deleteIncompleteOrder}
           />
+    <ReviewsRatingComp
+      //  data={{}}
+      data={ratingData}
+      type={'RIDE'}
+      reviewToRider={true}
+      title={'How was your ride experience?'}
+      isVisible={isReviewRider}
+      onClose={()=>{
+        setIsReviewRider(false)
+      }}
+      loading={loadingRating}
+      onHandleLoading={(v)=>{
+        setLoadingRating(v)
+      }}
+      />
         </>
       )}
     </View>
