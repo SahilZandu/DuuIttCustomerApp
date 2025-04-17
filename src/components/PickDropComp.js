@@ -1,3 +1,102 @@
+// import React from 'react';
+// import {StyleSheet, View, Text} from 'react-native';
+// import {RFValue} from 'react-native-responsive-fontsize';
+// import {
+//   heightPercentageToDP as hp,
+//   widthPercentageToDP as wp,
+// } from 'react-native-responsive-screen';
+// import {colors} from '../theme/colors';
+// import {fonts} from '../theme/fonts/fonts';
+
+// const PickDropComp = ({
+//   item,
+//   lineHeight,
+//   pickUpTextStyle,
+//   dropTextStyle,
+//   upperCircleColor,
+//   lineColor,
+//   bottomCircleColor
+// }) => {
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.circleViewMain}>
+//         <View style={styles.upperCircle(upperCircleColor)} />
+//         <View style={styles.middleLine(lineHeight, lineColor)} />
+//         <View style={styles.bottomCircle(bottomCircleColor)} />
+//       </View>
+//       <View style={styles.textMainView}>
+//         <Text numberOfLines={1} style={styles.pickupPointText}>
+//           Pickup location{' '}
+//         </Text>
+//         <Text numberOfLines={1} style={[styles.pickUpText, pickUpTextStyle]}>
+//           {item?.pickup}
+//         </Text>
+//         <Text numberOfLines={1} style={[styles.dropText, dropTextStyle]}>
+//           {item?.drop}
+//         </Text>
+//       </View>
+//     </View>
+//   );
+// };
+
+// export default PickDropComp;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flexDirection: 'row',
+//     marginTop: '4%',
+//   },
+//   circleViewMain: {
+//     flexDirection: 'column',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   upperCircle: upperCircleColor => ({
+//     height: 13,
+//     width: 13,
+//     borderRadius: 100,
+//     borderWidth: 3,
+//     borderColor: upperCircleColor ? upperCircleColor : colors.main,
+//   }),
+//   middleLine: (lineHeight, lineColor) => ({
+//     marginTop: '-2%',
+//     height: lineHeight ? lineHeight : 42,
+//     width: 2.5,
+//     backgroundColor: lineColor ? lineColor : colors.main,
+//   }),
+//   bottomCircle:(bottomCircleColor) => ({
+//     height: 13,
+//     width: 13,
+//     backgroundColor: bottomCircleColor ? bottomCircleColor : colors.main,
+//     borderRadius: 100,
+//     borderWidth: 3,
+//     borderColor: bottomCircleColor ? bottomCircleColor : colors.main,
+//   }),
+//   textMainView: {
+//     flexDirection: 'column',
+//     marginLeft: '3%',
+//   },
+//   pickupPointText: {
+//     fontSize: RFValue(12),
+//     fontFamily: fonts.medium,
+//     color: colors.color83,
+//   },
+//   pickUpText: {
+//     flex: 1,
+//     fontSize: RFValue(12),
+//     fontFamily: fonts.medium,
+//     color: colors.color83,
+//     marginTop: '1%',
+//     width: wp('75%'),
+//   },
+//   dropText: {
+//     fontSize: RFValue(12),
+//     fontFamily: fonts.medium,
+//     color: colors.black,
+//     width: wp('75%'),
+//   },
+// });
+
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -5,39 +104,33 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { colors } from '../theme/colors';
+import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-
-const PickDropComp = ({item,lineHeight,pickUpTextStyle,dropTextStyle}) => {
+const PickDropComp = ({
+  item,
+  lineHeight,
+  pickUpTextStyle,
+  dropTextStyle,
+  upperCircleColor,
+  lineColor,
+  bottomCircleColor
+}) => {
   return (
     <View style={styles.container}>
-      <View
-        style={styles.circleViewMain}>
-        <View
-          style={styles.upperCircle}
-        />
-        <View
-          style={styles.middleLine(lineHeight)}
-        />
-        <View
-          style={styles.bottomCircle}
-        />
+      <View style={styles.circleViewMain}>
+        <View style={styles.upperCircle(upperCircleColor)} />
+        <View style={styles.middleLine(lineHeight, lineColor)} />
+        <View style={styles.bottomCircle(bottomCircleColor)} />
       </View>
       <View style={styles.textMainView}>
-        <Text
-          numberOfLines={1}
-          style={styles.pickupPointText}>
+        <Text numberOfLines={1} style={styles.pickupPointText}>
           Pickup location{' '}
         </Text>
-        <Text
-          numberOfLines={1}
-          style={[styles.pickUpText,pickUpTextStyle]}>
+        <Text numberOfLines={3} style={[styles.pickUpText, pickUpTextStyle]}>
           {item?.pickup}
         </Text>
-        <Text
-          numberOfLines={1}
-          style={[styles.dropText,dropTextStyle]}>
+        <Text numberOfLines={3} style={[styles.dropText, dropTextStyle]}>
           {item?.drop}
         </Text>
       </View>
@@ -48,58 +141,61 @@ const PickDropComp = ({item,lineHeight,pickUpTextStyle,dropTextStyle}) => {
 export default PickDropComp;
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flexDirection: 'row',
-     marginTop: '4%'
+    marginTop: '4%',
   },
-  circleViewMain:{
+  circleViewMain: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  upperCircle:{
+  upperCircle: upperCircleColor => ({
     height: 13,
     width: 13,
     borderRadius: 100,
     borderWidth: 3,
-    borderColor: colors.main,
-  },
-  middleLine:(lineHeight)=>({
-    marginTop: '-2%',
-    height:lineHeight ? lineHeight: 42,
-    width: 2.5,
-    backgroundColor:colors.main,
+    borderColor: upperCircleColor ? upperCircleColor : colors.main,
   }),
-  bottomCircle:{
+  middleLine: (lineHeight, lineColor) => ({
+    marginTop: '-2%',
+    height: lineHeight ? lineHeight : 42,
+    width: 2.5,
+    backgroundColor: lineColor ? lineColor : colors.main,
+  }),
+  bottomCircle:(bottomCircleColor) => ({
     height: 13,
     width: 13,
-    backgroundColor: colors.main,
+    backgroundColor: bottomCircleColor ? bottomCircleColor : colors.main,
     borderRadius: 100,
     borderWidth: 3,
-    borderColor:colors.main,
-  },
-  textMainView:{
+    borderColor: bottomCircleColor ? bottomCircleColor : colors.main,
+  }),
+  textMainView: {
     flexDirection: 'column',
-     marginLeft: '3%'
+    marginLeft: '3%',
   },
-  pickupPointText:{
+  pickupPointText: {
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
-    color:colors.color83,
+    color: colors.color83,
   },
-  pickUpText:{
+  pickUpText: {
     flex: 1,
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
-    color:colors.color83,
+    color: colors.color83,
     marginTop: '1%',
     width: wp('75%'),
+    textAlign:'left'
   },
-  dropText:{
+  dropText: {
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
-    color:colors.black,
+    color: colors.black,
     width: wp('75%'),
-  }
-
+    marginTop: '2%',
+    textAlign:'left'
+  },
 });
+

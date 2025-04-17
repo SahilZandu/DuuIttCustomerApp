@@ -200,6 +200,9 @@ export const appImagesSvg = {
   crossSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
   <path d="M14.1654 5.83301L5.83203 14.1663M5.83203 5.83301L14.1654 14.1663" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`,
+  crossRedSvg:`<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 8 7" fill="none">
+  <path d="M1.51758 7H0.102539L3.02832 3.46582L0.328125 0.164062H1.78418L3.75977 2.57715L5.70117 0.164062H7.11621L4.46387 3.43848L7.38281 7H5.91992L3.73926 4.32715L1.51758 7Z" fill="#E70000"/>
+  </svg>`,
   vegSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 14 15" fill="none">
   <rect x="0.5" y="1" width="13" height="13" rx="3.5" stroke="#1B951C"/>
   <rect x="3" y="3.5" width="8" height="8" rx="4" fill="#1B951C"/>
@@ -883,4 +886,5 @@ export const appImages = {
   countCoinIcon:require('../assets/countCoin.png'),
   fareBtn:require('../assets/fareBtn.png'),
   customerSupportImage:require('../assets/customerSupportImage.png'),
+  googleMapsIcon: require('../assets/googleMapsIcon.png'),
 };

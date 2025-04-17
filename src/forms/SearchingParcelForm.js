@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Linking,
   Animated,
   DeviceEventEmitter,
+  TouchableOpacity,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -53,6 +54,7 @@ import {silderArray} from '../stores/DummyData/Home';
 const SearchingParcelForm = ({navigation, route, screenName}) => {
   const {addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider} =
     rootStore.parcelStore;
+  const intervalRef = useRef(null);
   const {appUser} = rootStore.commonStore;
   const {updateOrderStatus} = rootStore.orderStore;
   const {paymentMethod, totalAmount} = route.params;
@@ -73,6 +75,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   const [sliderItems, setSliderItems] = useState(silderArray);
   const [multipleRider, setMultipleRider] = useState(true);
   const [minMaxHp, setMinMaxHp] = useState(screenHeight(69));
+  const [rideProgess, setRideProgess] = useState(0.2);
+  const [rideProgessImage, setRideProgessImage] = useState(hp('1%'));
 
   const getLocation = type => {
     let d =
@@ -84,6 +88,20 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   };
 
   console.log('paymentMethod--', paymentMethod, addParcelInfo, parcelInfo);
+  useEffect(() => {
+    setRideProgessImage(hp('1%'));
+    setRideProgess(0.2);
+    intervalRef.current = setInterval(() => {
+      console.log('Running every 7500ms');
+
+      setRideProgess(prev => prev + 0.1);
+      setRideProgessImage(prev => prev + hp('4.2%'));
+    }, 7500); // 7500ms = 7.5s
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -366,6 +384,19 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     }
   };
 
+  const openMap = (riderDest, destination, label) => {
+    const latLng = `${riderDest?.lat},${riderDest?.lng}`;
+    const latlng1 = `${destination?.lat},${destination?.lng}`;
+    const url = Platform.select({
+      ios: `http://maps.apple.com/?saddr=${latLng}&daddr=${latlng1}&q=${label}`, //   url = `http://maps.apple.com/?ll=${latLng}&q=${label}`;
+      android: `geo:${latLng}?q=${latlng1}(${label})`,
+    });
+
+    Linking.openURL(url).catch(err =>
+      console.error('Failed to open map:', err),
+    );
+  };
+
   const onCancelRequest = async () => {
     const value = {
       orderId: parcelInfo?._id,
@@ -419,15 +450,24 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     // }
 
     if (parcelInfo?.status == 'picked') {
-      if (nativeEvent?.absoluteY >= 200 && nativeEvent?.absoluteY <= 350) {
+      if (
+        nativeEvent?.absoluteY >= 200 &&
+        nativeEvent?.absoluteY <= 399 &&
+        nativeEvent?.velocityY > 0
+      ) {
         setMinMaxHp(screenHeight(35));
       }
     } else {
-      if (nativeEvent?.absoluteY >= 200 && nativeEvent?.absoluteY <= 350) {
+      if (
+        nativeEvent?.absoluteY >= 200 &&
+        nativeEvent?.absoluteY <= 399 &&
+        nativeEvent?.velocityY > 0
+      ) {
         setMinMaxHp(screenHeight(35));
       } else if (
-        nativeEvent?.absoluteY >= 550 &&
-        nativeEvent?.absoluteY <= 900
+        nativeEvent?.absoluteY >= 500 &&
+        nativeEvent?.absoluteY <= 900 &&
+        nativeEvent?.velocityY < 0
       ) {
         setMinMaxHp(screenHeight(69));
       }
@@ -478,6 +518,25 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 }
               />
               {/* ) : null} */}
+              {parcelInfo?.status == 'picked' && (
+                <TouchableOpacity
+                  onPress={async () => {
+                    const destination =
+                      parcelInfo?.status == 'picked'
+                        ? destination
+                        : senderLocation;
+
+                    await openMap(riderDest, destination, 'Destination');
+                  }}
+                  activeOpacity={0.8}
+                  style={styles.googleMapsIconTouch}>
+                  <Image
+                    resizeMode="cover"
+                    style={styles.googleMpasImage}
+                    source={appImages?.googleMapsIcon}
+                  />
+                </TouchableOpacity>
+              )}
             </>
           )}
         </View>
@@ -498,13 +557,15 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 <View style={{marginTop: '4%'}}>
                   <Image
                     resizeMode="contain"
-                    style={styles.bikeImage}
+                    // style={styles.bikeImage}
+                    style={[styles.bikeImage, {marginLeft: rideProgessImage}]}
                     source={appImages.searchingRide}
                   />
                   <Progress.Bar
                     indeterminate={searching}
                     indeterminateAnimationDuration={1000}
-                    progress={0.2}
+                    // progress={0.2}
+                    progress={rideProgess}
                     width={screenWidth(84)}
                     height={screenHeight(0.5)}
                     color={colors.color43}
@@ -516,6 +577,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
             ) : (
               <RiderNotAvailableComp
                 onRefershFindRiders={() => {
+                  setRideProgessImage(hp('1%'));
+                  setRideProgess(0.2);
                   refershFindRidersData();
                 }}
                 onBackToHome={() => {
@@ -723,5 +786,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     marginTop: '3%',
+  },
+  googleMapsIconTouch: {
+    position: 'absolute',
+    right: hp('2%'),
+    top: hp('2%'),
+  },
+  googleMpasImage: {
+    height: 45,
+    width: 45,
   },
 });

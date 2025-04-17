@@ -28,9 +28,7 @@ import {
 
 const CardOrder = ({item, index, handleDetails}) => {
   // console.log('item -- ', item);
-  let firstCapStatus =
-    item?.status.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase();
-  //  console.log(' item?.status -- ',  item?.status);
+
   const setDetailsBtn = status => {
     switch (status) {
       case 'food':
@@ -71,6 +69,17 @@ const CardOrder = ({item, index, handleDetails}) => {
     }
   };
 
+  const setStatusData = status => {
+    switch (status) {
+      case 'cancelled':
+        return 'Cancelled';
+      case 'completed':
+        return 'Completed';
+      default:
+        return 'Completed';
+    }
+  };
+
   return (
     <Surface elevation={2} style={styles.container}>
       <TouchableOpacity
@@ -78,20 +87,21 @@ const CardOrder = ({item, index, handleDetails}) => {
         activeOpacity={0.8}
         style={styles.innerView}>
         <View style={styles.imageDateView}>
-        <View style={styles.imageView}>
-          <Image
-            resizeMode="cover"
-            style={styles.image}
-            source={
-              item?.rider?.profile_pic?.length > 0
-                ? {uri: Url.Image_Url + item?.rider?.profile_pic}
-                : setImageIcon(item?.order_type)
-            }
-          />
+          <View style={styles.imageView}>
+            <Image
+              resizeMode="cover"
+              style={styles.image}
+              source={
+                // setImageIcon(item?.order_type)
+                item?.rider?.profile_pic?.length > 0
+                  ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                  : setImageIcon(item?.order_type)
+              }
+            />
           </View>
           <View style={styles.nameDateView}>
             <Text numberOfLines={1} style={styles.nameText}>
-              {item?.name ? item?.name : `Tracking ID:${item?.customer_id}`}
+              {item?.name ? item?.name : `ID:${item?._id}`}
             </Text>
             <Text style={styles.dateText}>
               {dateTimeFormat(item?.createdAt)}
@@ -101,19 +111,16 @@ const CardOrder = ({item, index, handleDetails}) => {
                 style={[
                   styles.statusText,
                   {
-                    color:
-                      item?.status == 'Canceled' || item?.status == 'deleted'
-                        ? '#E70000'
-                        : '#28B056',
+                    color: item?.status == 'cancelled' ? '#E70000' : '#28B056',
                   },
                 ]}>
-                {firstCapStatus}
+                {setStatusData(item?.status)}
               </Text>
-              <View style={{flex: 1, marginLeft: '4%'}}>
+              <View style={{flex: 1, marginLeft: '2%'}}>
                 <SvgXml
                   xml={
-                    item?.status == 'Canceled' || item?.status == 'deleted'
-                      ? appImagesSvg.crossSvg
+                    item?.status == 'cancelled'
+                      ? appImagesSvg.crossRedSvg
                       : appImagesSvg.rightSvg
                   }
                 />
@@ -126,6 +133,15 @@ const CardOrder = ({item, index, handleDetails}) => {
         </View>
 
         <View style={styles.orderItemView}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.riderNameText}>{'Rider'}:</Text>
+            <Text
+              numberOfLines={1}
+              style={[styles.riderNameText, {color: colors.black}]}>
+              {' '}
+              {item?.rider?.name ?? 'No Rider'}{' '}
+            </Text>
+          </View>
           {item?.order_type !== 'food' ? (
             <PickDropComp
               item={{
@@ -134,7 +150,14 @@ const CardOrder = ({item, index, handleDetails}) => {
                 pickup: item?.sender_address?.address,
                 drop: item?.receiver_address?.address,
               }}
-              lineHeight={48}
+              upperCircleColor={
+                item?.status == 'cancelled' ? colors.red : colors.main
+              }
+              lineColor={item?.status == 'cancelled' ? colors.red : colors.main}
+              bottomCircleColor={
+                item?.status == 'cancelled' ? colors.red : colors.main
+              }
+              lineHeight={50}
             />
           ) : (
             <>
@@ -219,8 +242,8 @@ const styles = StyleSheet.create({
     width: 75,
     height: 75,
     borderRadius: 10,
-    borderWidth:0.3,
-    borderColor:colors.main
+    borderWidth: 0.3,
+    borderColor: colors.main,
   },
   image: {
     width: 75,
@@ -233,7 +256,7 @@ const styles = StyleSheet.create({
     marginLeft: '2.5%',
   },
   nameText: {
-    fontSize: RFValue(15),
+    fontSize: RFValue(14),
     fontFamily: fonts.medium,
     color: colors.black,
   },
@@ -258,13 +281,18 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black,
   },
+  riderNameText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    color: colors.main,
+  },
   orderItemView: {
     marginHorizontal: 10,
-    marginTop: '3%',
+    marginTop: '0%',
   },
   bottomBtn: {
     flexDirection: 'row',
-    marginTop:hp(4.5),
+    marginTop: hp(4.5),
     justifyContent: 'space-between',
   },
 });

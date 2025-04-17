@@ -46,7 +46,7 @@ const TrackingDetailsComp = ({onViewDetails, item, xml, index}) => {
                 Tracking ID :
               </Text>
               <Text numberOfLines={1} style={styles.trackId}>
-                {item?.tracking_id !== null ? item?.tracking_id :item?._id}
+                {item?.tracking_id !== null ? item?.tracking_id :item?.order_id}
               </Text>
             </View>
           </View>

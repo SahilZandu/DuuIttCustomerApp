@@ -6,48 +6,54 @@ import {
 } from 'react-native-responsive-screen';
 import {appImages} from '../commons/AppImages';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
+import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
 
-const {width, height} = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+let currentLocation = {};
 
 const MapLocationRoute = ({
   mapContainerView,
   origin,
   isPendingReq,
   onTouchLocation,
+  height,
 }) => {
   const mapRef = useRef(null);
-
   const [mapRegion, setMapRegion] = useState({
     latitude: origin?.lat ? Number(origin?.lat) : 0,
     longitude: origin?.lng ? Number(origin?.lng) : 0,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
+    latitudeDelta: getMpaDalta().latitudeDelta,
+    longitudeDelta: getMpaDalta().longitudeDelta,
   });
-  const [isMapReady, setIsMapReady] = useState(false);
+  const [isMapReady, setIsMapReady] = useState(
+    currentLocation?.lat?.toString()?.length > 0 ? true : false,
+  );
 
   console.log('origin---11', origin);
 
   // Update region when origin changes
   useEffect(() => {
     if (origin?.lat && origin?.lng) {
+      currentLocation = origin;
       setMapRegion(prev => ({
         ...prev,
         latitude: Number(origin?.lat),
         longitude: Number(origin?.lng),
+        latitudeDelta: getMpaDalta().latitudeDelta,
+        longitudeDelta: getMpaDalta().longitudeDelta,
       }));
     }
   }, [origin]);
 
-
   const onTouchLocationData = useCallback(
     coordinate => {
+      console.log('coordinate---', coordinate);
       setMapRegion(prev => ({
         ...prev,
         latitude: Number(coordinate?.latitude),
         longitude: Number(coordinate?.longitude),
+        latitudeDelta: getMpaDalta().latitudeDelta,
+        longitudeDelta: getMpaDalta().longitudeDelta,
       }));
       onTouchLocation(coordinate);
     },
@@ -59,7 +65,7 @@ const MapLocationRoute = ({
     if (origin?.lat?.toString()?.length > 0) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 5000);
+      }, 6000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
@@ -73,13 +79,18 @@ const MapLocationRoute = ({
       style={styles.homeSubContainer}>
       <MapView
         provider={PROVIDER_GOOGLE}
+        onRegionChange={e => {
+          setMpaDalta(e);
+          // console.log('e---onRegionChange', e);
+        }}
         ref={mapRef}
         style={[styles.mapContainer, mapContainerView]}
         zoomEnabled
-        scrollEnabled={false}
+        scrollEnabled={true}
         showsScale
         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        region={mapRegion}
+        // region={mapRegion}
+        initialRegion={mapRegion}
         zoomTapEnabled
         rotateEnabled
         loadingEnabled
@@ -94,7 +105,7 @@ const MapLocationRoute = ({
                 latitude: Number(mapRegion?.latitude),
                 longitude: Number(mapRegion?.longitude),
               }}
-              tracksViewChanges={!isMapReady}
+              // tracksViewChanges={!isMapReady}
               useLegacyPinView={true}>
               <Image
                 resizeMode="contain"
@@ -104,6 +115,15 @@ const MapLocationRoute = ({
             </Marker>
           )}
       </MapView>
+      {isMapReady == false && (
+        // <View style={{position: 'absolute'}}>
+        <AnimatedLoader
+          absolute={'relative'}
+          type={'homeMapLoader'}
+          height={height}
+        />
+        // </View>
+      )}
     </View>
   );
 };
@@ -125,11 +145,138 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   markerImage: {
-    height: 35,
-    width: 35,
+    height: 30,
+    width: 30,
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
+
+// import React, {useCallback, useEffect, useRef, useState} from 'react';
+// import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
+// import {
+//   heightPercentageToDP as hp,
+//   widthPercentageToDP as wp,
+// } from 'react-native-responsive-screen';
+// import {appImages} from '../commons/AppImages';
+// import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+
+// const {width, height} = Dimensions.get('window');
+// const ASPECT_RATIO = width / height;
+// const LATITUDE_DELTA = 0.005; // Zoom level (smaller = closer)
+// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+// const MapLocationRoute = ({
+//   mapContainerView,
+//   origin,
+//   isPendingReq,
+//   onTouchLocation,
+// }) => {
+//   const mapRef = useRef(null);
+//   const [isMapReady, setIsMapReady] = useState(false);
+//   const [mapRegion, setMapRegion] = useState({
+//     latitude: origin?.lat ? Number(origin?.lat) : 0,
+//     longitude: origin?.lng ? Number(origin?.lng) : 0,
+//     latitudeDelta: LATITUDE_DELTA,
+//     longitudeDelta: LONGITUDE_DELTA,
+//   });
+
+//   // Animate map to origin whenever it changes
+//   useEffect(() => {
+//     if (origin?.lat && origin?.lng && mapRef?.current) {
+//       const newRegion = {
+//         latitude: Number(origin.lat),
+//         longitude: Number(origin.lng),
+//         latitudeDelta: LATITUDE_DELTA,
+//         longitudeDelta: LONGITUDE_DELTA,
+//       };
+//       mapRef.current.animateToRegion(newRegion, 1000); // smooth zoom
+//       setMapRegion(newRegion);
+//     }
+//   }, [origin]);
+
+//   const onTouchLocationData = useCallback(
+//     coordinate => {
+//       const newRegion = {
+//         latitude: Number(coordinate?.latitude),
+//         longitude: Number(coordinate?.longitude),
+//         latitudeDelta: LATITUDE_DELTA,
+//         longitudeDelta: LONGITUDE_DELTA,
+//       };
+//       if (mapRef.current) {
+//         mapRef.current.animateToRegion(newRegion, 1000); // smooth zoom
+//       }
+//       setMapRegion(newRegion);
+//       onTouchLocation(coordinate);
+//     },
+//     [onTouchLocation],
+//   );
+
+//   const handleMapReady = () => {
+//     setIsMapReady(true);
+//   };
+
+//   return (
+//     <View
+//       pointerEvents={isPendingReq ? 'none' : 'auto'}
+//       style={styles.homeSubContainer}>
+//       <MapView
+//         provider={PROVIDER_GOOGLE}
+//         ref={mapRef}
+//         style={[styles.mapContainer, mapContainerView]}
+//         zoomEnabled
+//         scrollEnabled
+//         showsScale
+//         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+//         initialRegion={mapRegion} // use initialRegion instead of region
+//         zoomTapEnabled
+//         rotateEnabled
+//         loadingEnabled
+//         onMapReady={handleMapReady}
+//         onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
+//         onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
+//         showsCompass>
+//         {mapRegion?.latitude && mapRegion?.longitude && (
+//           <Marker
+//             coordinate={{
+//               latitude: Number(mapRegion.latitude),
+//               longitude: Number(mapRegion.longitude),
+//             }}
+//             tracksViewChanges={!isMapReady}
+//             useLegacyPinView={true}>
+//             <Image
+//               resizeMode="contain"
+//               source={appImages.markerImage}
+//               style={styles.markerImage}
+//             />
+//           </Marker>
+//         )}
+//       </MapView>
+//     </View>
+//   );
+// };
+
+// export default React.memo(MapLocationRoute);
+
+// const styles = StyleSheet.create({
+//   homeSubContainer: {
+//     alignItems: 'flex-start',
+//     justifyContent: 'center',
+//     overflow: 'hidden',
+//     shadowRadius: 1,
+//     shadowOffset: {height: 2, width: 0},
+//   },
+//   mapContainer: {
+//     alignSelf: 'center',
+//     height: hp('35%'),
+//     width: wp('100%'),
+//     overflow: 'hidden',
+//   },
+//   markerImage: {
+//     height: 30,
+//     width: 30,
+//     marginTop: Platform.OS === 'ios' ? '25%' : 0,
+//   },
+// });
 
 // import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 // import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';

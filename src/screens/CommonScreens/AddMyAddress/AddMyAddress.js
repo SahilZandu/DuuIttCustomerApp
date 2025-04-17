@@ -30,7 +30,7 @@ import {Strings} from '../../../translates/strings';
 import {addMyAddressValidations} from '../../../forms/formsValidation/addMyAddressValidations';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import {getCurrentLocation} from '../../../components/GetAppLocation';
-import {getGeoCodes} from '../../../components/GeoCodeAddress';
+import {getGeoCodes, setMpaDaltaInitials} from '../../../components/GeoCodeAddress';
 import {appImages} from '../../../commons/AppImages';
 import Modal from 'react-native-modal';
 import Tabs2 from '../../../components/Tabs2';
@@ -39,7 +39,6 @@ import {rootStore} from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
-
 
 let currentLocation = {
   lat: null,
@@ -80,7 +79,8 @@ export default function AddMyAddress({navigation, route}) {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      setMpaDaltaInitials();
+      handleAndroidBackButton(navigation);
       if (type == 'add') {
         getCurrentAddress();
       }
@@ -132,7 +132,7 @@ export default function AddMyAddress({navigation, route}) {
       }, 2000);
     }
   }, [address]);
- 
+
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
     // console.log('addressData', addressData);
@@ -143,7 +143,6 @@ export default function AddMyAddress({navigation, route}) {
     setLocationId(addressData?.place_Id);
     setGeoLocation(addressData?.geo_location);
   };
-  
 
   const FormButton = ({loading, onPress}) => {
     const {dirty, isValid, values} = useFormikContext();
@@ -186,7 +185,7 @@ export default function AddMyAddress({navigation, route}) {
       }
     }, 300);
   };
- 
+
   const onPressAddress = (data, details) => {
     setName(details?.name);
     setAddress(details?.formatted_address);
@@ -296,7 +295,6 @@ export default function AddMyAddress({navigation, route}) {
     );
   };
 
-
   const handleCurrentAddress = async () => {
     const addressData = await getGeoCodes(
       currentLocation?.lat,
@@ -311,19 +309,24 @@ export default function AddMyAddress({navigation, route}) {
     setGeoLocation(addressData?.geo_location);
   };
 
-  const handleTouchAddress = async (loaction) => {
-    console.log("loaction---",loaction);
+  const handleTouchAddress = async loaction => {
+    console.log('loaction---', loaction);
     const addressData = await getGeoCodes(
       loaction?.latitude,
       loaction?.longitude,
     );
     // console.log('addressData', addressData);
+    let newLocation = {
+      lat: loaction?.latitude,
+      lng: loaction?.longitude,
+    };
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setAddress(addressData?.address);
     setLocationId(addressData?.place_Id);
-    setGeoLocation(addressData?.geo_location);
+    //setGeoLocation(addressData?.geo_location);
+    setGeoLocation(newLocation);
   };
 
   return (
@@ -342,13 +345,13 @@ export default function AddMyAddress({navigation, route}) {
           }}
           origin={geoLocation}
         /> */}
-         <MapLocationRoute
+        <MapLocationRoute
           mapContainerView={{
             height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
-          }
-          }
+          }}
           origin={geoLocation}
           onTouchLocation={handleTouchAddress}
+          height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
         />
         <AutoCompleteGooglePlaceHolder
           onPressAddress={onPressAddress}

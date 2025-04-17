@@ -165,7 +165,7 @@ export default function Orders({navigation, route}) {
                     showsVerticalScrollIndicator={false}
                     data={orderList}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item?._id}
                     onEndReached={loadMoredata}
                     onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
                     ListFooterComponent={renderFooter}

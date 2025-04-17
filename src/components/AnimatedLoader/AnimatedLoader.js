@@ -19,8 +19,9 @@ import RestaurantReviewsLoader from './RstaurantReviewsLoader';
 import CoupansListLoader from './CoupansListLoader';
 import WalletLoader from './WalletLoader';
 import TransactionHistoryLoader from './TransactionHistoryLoader';
+import HomeMapLoader from './HomeMapLoader';
 
-const AnimatedLoader = ({type,absolute}) => {
+const AnimatedLoader = ({type,absolute,height}) => {
   return (
     <View style={{position:absolute ? 'absolute' : 'relative', width: wp('100%')}}>
       {type == 'myAddress' && <MyAddressLoader />}
@@ -38,6 +39,8 @@ const AnimatedLoader = ({type,absolute}) => {
       {type == 'coupansListLoader' && <CoupansListLoader/>}
       {type == 'walletLoader' && <WalletLoader/>}
       {type == 'transactionHistoryLoader' && <TransactionHistoryLoader/>}
+      {type == 'homeMapLoader' && <HomeMapLoader height={height}/>}
+      
       
       
       

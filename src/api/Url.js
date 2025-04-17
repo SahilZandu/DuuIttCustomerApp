@@ -38,7 +38,7 @@ export default  {
     getFoodOrderTracking:'food-order/get-tracking-order',
     addReviews:'reviews',
     completeMealItems:'food-item/complete-your-meal-items',
-    restaurantReview:'/reviews/restaurant-review',
+    restaurantReview:'reviews/restaurant-review',
     // restaurantOffers:'offers/all'
     restaurantOffers:'offers/recomended-offer',
     applyCoupon:'cart/apply-coupon',
@@ -50,7 +50,7 @@ export default  {
     paymentsCreateOrder:'payments/create-order',
     paymentsVerify:'payments/verify',
     deleteAccount:'customers/info',
-    adminInfo:'/admin/info',
+    adminInfo:'admin/info',
 
     
 

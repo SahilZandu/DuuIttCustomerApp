@@ -15,10 +15,10 @@ export const styles = StyleSheet.create({
   outerScrollView: {
     flex: 1,
     backgroundColor: colors.white,
-    marginTop: '2%',
+    marginTop: '0.5%',
   },
   bottomImageView:{
-    marginTop: '5%'
+    marginTop: '0.1%'
   },
   bottomImage:{
     height: hp('30%'), width: wp('100%')

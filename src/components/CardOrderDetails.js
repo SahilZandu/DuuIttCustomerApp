@@ -31,8 +31,17 @@ import DotedLine from '../screens/DUFood/Components/DotedLine';
 
 const CardOrderDetails = ({item}) => {
   // console.log('item -- ', item);
-  let firstCapStatus =
-    item?.status.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase();
+
+  const setStatusData = status => {
+    switch (status) {
+      case 'cancelled':
+        return 'Cancelled';
+      case 'completed':
+        return 'Completed';
+      default:
+        return 'Completed';
+    }
+  };
 
   const setTitleText = status => {
     switch (status) {
@@ -48,9 +57,9 @@ const CardOrderDetails = ({item}) => {
     {
       id: '1',
       name: setTitleText(item?.order_type),
-      price: item?.total_amount ?? 200,
+      price: item?.total_amount,
       coupanCode: '',
-      bottomLine: false,
+      bottomLine: item?.order_type !== 'food' ? true : false,
       isShow: true,
     },
     {
@@ -61,14 +70,14 @@ const CardOrderDetails = ({item}) => {
       bottomLine: false,
       isShow: item?.order_type == 'food' ? true : false,
     },
-    {
-      id: '3',
-      name: 'Platform fee',
-      price: 10,
-      coupanCode: '',
-      bottomLine: item?.order_type !== 'food' ? true : false,
-      isShow: true,
-    },
+    // {
+    //   id: '3',
+    //   name: 'Platform fee',
+    //   price: 10,
+    //   coupanCode: '',
+    //   bottomLine: item?.order_type !== 'food' ? true : false,
+    //   isShow: true,
+    // },
     {
       id: '4',
       name: 'GST and Restaurant Charges',
@@ -95,8 +104,11 @@ const CardOrderDetails = ({item}) => {
     },
     {
       id: '7',
-      name: 'Total',
-      price: item?.total_amount + 10 ?? 210,
+      name: 'Total Paid',
+      price:
+        item?.status == 'cancelled'
+          ? 0
+          : item?.total_amount,
       coupanCode: '',
       bottomLine: false,
       isShow: true,
@@ -136,20 +148,21 @@ const CardOrderDetails = ({item}) => {
       <AppInputScroll padding={true} Pb={hp('25%')}>
         <TouchableOpacity style={{flex: 1}} activeOpacity={0.8}>
           <View style={styles.imageDateView}>
-          <View style={styles.imageView}>
-            <Image
-              resizeMode="cover"
-              style={styles.image}
-              source={
-                item?.rider?.profile_pic?.length > 0
-                  ? {uri: Url.Image_Url + item?.rider?.profile_pic}
-                  : setImageIcon(item?.order_type)
-              }
-            />
+            <View style={styles.imageView}>
+              <Image
+                resizeMode="cover"
+                style={styles.image}
+                source={
+                  setImageIcon(item?.order_type)
+                  // item?.rider?.profile_pic?.length > 0
+                  //   ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                  //   : setImageIcon(item?.order_type)
+                }
+              />
             </View>
             <View style={styles.trackTextView}>
               <Text numberOfLines={1} style={styles.trackIdText}>
-                {item?.name ? item?.name : `Tracking ID:${item?.customer_id}`}
+                {item?.name ? item?.name : `ID:${item?._id}`}
               </Text>
               <Text style={styles.dateText}>
                 {dateTimeFormat(item?.createdAt)}
@@ -160,18 +173,18 @@ const CardOrderDetails = ({item}) => {
                     styles.statusText,
                     {
                       color:
-                        item?.status == 'Canceled' || item?.status == 'deleted'
+                        item?.status == 'cancelled'
                           ? '#E70000'
                           : '#28B056',
                     },
                   ]}>
-                  {firstCapStatus}
+                  {setStatusData(item?.status)}
                 </Text>
                 <View style={styles.statusImageView}>
                   <SvgXml
                     xml={
-                      item?.status == 'Canceled' || item?.status == 'deleted'
-                        ? appImagesSvg.crossSvg
+                      item?.status == 'cancelled'
+                        ? appImagesSvg.crossRedSvg
                         : appImagesSvg.rightSvg
                     }
                   />
@@ -183,6 +196,15 @@ const CardOrderDetails = ({item}) => {
             </View>
           </View>
           <View style={{marginTop: '3%'}}>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.riderNameText}>{'Rider'}:</Text>
+            <Text
+              numberOfLines={1}
+              style={[styles.riderNameText, {color: colors.black}]}>
+              {' '}
+              {item?.rider?.name ?? 'No Rider'}{' '}
+            </Text>
+          </View>
             {item?.order_type !== 'food' ? (
               <PickDropComp
                 item={{
@@ -191,7 +213,22 @@ const CardOrderDetails = ({item}) => {
                   pickup: item?.sender_address?.address,
                   drop: item?.receiver_address?.address,
                 }}
-                lineHeight={48}
+                lineHeight={60}
+                upperCircleColor={
+                  item?.status == 'cancelled' 
+                    ? colors.red
+                    : colors.main
+                }
+                lineColor={
+                  item?.status == 'cancelled'
+                    ? colors.red
+                    : colors.main
+                }
+                bottomCircleColor={
+                  item?.status == 'cancelled'
+                    ? colors.red
+                    : colors.main
+                }
               />
             ) : (
               <>
@@ -311,8 +348,8 @@ const styles = StyleSheet.create({
     width: 75,
     height: 75,
     borderRadius: 10,
-    borderWidth:0.3,
-    borderColor:colors.main
+    borderWidth: 0.3,
+    borderColor: colors.main,
   },
   image: {
     width: 75,
@@ -321,14 +358,14 @@ const styles = StyleSheet.create({
   },
   trackTextView: {flex: 1, flexDirection: 'column', marginLeft: '2.5%'},
   trackIdText: {
-    fontSize: RFValue(15),
+    fontSize: RFValue(14),
     fontFamily: fonts.medium,
     color: colors.black,
   },
   dateText: {
     fontSize: RFValue(13),
     fontFamily: fonts.medium,
-    color: '#838282',
+    color: colors.color83,
     marginTop: '3%',
   },
   statusView: {
@@ -343,12 +380,17 @@ const styles = StyleSheet.create({
   },
   statusImageView: {
     flex: 1,
-    marginLeft: '4%',
+    marginLeft: '2%',
   },
   amountText: {
     fontSize: RFValue(13),
     fontFamily: fonts.medium,
     color: colors.black,
+  },
+  riderNameText: {
+    fontSize: RFValue(13),
+    fontFamily: fonts.medium,
+    color: colors.main,
   },
   billingSummary: {
     fontFamily: fonts.bold,

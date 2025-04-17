@@ -170,7 +170,7 @@ import {screenHeight} from '../halpers/matrics';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const dotLineArray = [1, 2, 3, 4];
+const dotLineArray = [1, 2, 3, 4, 5, 6];
 
 const PickDropLocation = ({
   pickUpLocation,
@@ -197,9 +197,9 @@ const PickDropLocation = ({
               style={{width: 25, height: 25, marginTop: '2%'}}
               source={appImages.pickIconSet}
             />
-            <View style={{flexDirection: 'column', marginTop: '3%'}}>
+            <View style={{flexDirection: 'column'}}>
               <View style={{flexDirection: 'row'}}>
-                <Text style={[styles.senderText, {flex: 1, marginTop: '2%'}]}>
+                <Text style={[styles.senderText, {flex: 1, top: hp('4%')}]}>
                   {pick ? pick : 'Sender location'}
                 </Text>
                 {addOnPick && (
@@ -210,14 +210,19 @@ const PickDropLocation = ({
                   </TouchableOpacity>
                 )}
               </View>
-              <Text numberOfLines={1} style={styles.text}>
+              <Text
+                numberOfLines={2}
+                style={[styles.pickedText, {marginTop: hp('4%')}]}>
                 {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
               </Text>
             </View>
             {cancelPickUp && (
               <>
                 {pickUpLocation != '' && (
-                  <Pressable style={{padding: 5}} onPress={cancelPickUp}>
+                  <Pressable
+                    hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
+                    style={{padding: 5, top: '4%'}}
+                    onPress={cancelPickUp}>
                     <SvgXml xml={appImagesSvg.crossBlackIcon} />
                   </Pressable>
                 )}
@@ -230,21 +235,7 @@ const PickDropLocation = ({
               return (
                 <View style={{justifyContent: 'center', position: 'relative'}}>
                   <View style={styles.dottedView} />
-                  {item == 2 && <View style={styles.dottedWithLine} />}
-                  {/* {(item == 2 && onChangePress) && (
-                  <TouchableOpacity
-                  hitSlop={{top:20,bottom:20,left:20,right:20}}
-                    onPress={onChangePress}
-                    activeOpacity={0.8}
-                    style={{
-                      position: 'absolute',
-                      right: wp('14%'),
-                      top: hp('-0.4%'),
-                    }}>
-                    <SvgXml xml={appImagesSvg.changeLocationAddress} />
-                  </TouchableOpacity>
-                 
-                )} */}
+                  {item == 3 && <View style={styles.dottedWithLine} />}
                 </View>
               );
             })}
@@ -260,26 +251,35 @@ const PickDropLocation = ({
               source={appImages.dropIconSet}
             />
             <View style={{flexDirection: 'column'}}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row', top: hp('-4%')}}>
                 <Text style={[styles.reciverText, {flex: 1}]}>
                   {drop ? drop : 'Receiver location'}{' '}
                 </Text>
                 {addOnDrop && (
                   <TouchableOpacity
                     onPress={addOnDrop}
-                    style={styles.addOnTouch}>
+                    style={styles.addOnRTouch}
+                  >
                     <Text style={styles.addOnText}>Add</Text>
                   </TouchableOpacity>
                 )}
               </View>
-              <Text numberOfLines={1} style={styles.dropText(pickUpLocation)}>
+              <Text
+                numberOfLines={2}
+                style={[
+                  styles.dropText(pickUpLocation),
+                  {marginTop: hp('-4%')},
+                ]}>
                 {dropLocation == '' ? 'Set drop location' : dropLocation}
               </Text>
             </View>
             {cancelDrop && (
               <>
                 {dropLocation != '' && (
-                  <Pressable onPress={cancelDrop}>
+                  <Pressable
+                    style={{padding: 5}}
+                    hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
+                    onPress={cancelDrop}>
                     <SvgXml xml={appImagesSvg.crossBlackIcon} />
                   </Pressable>
                 )}
@@ -329,23 +329,24 @@ const styles = StyleSheet.create({
   senderText: {
     marginLeft: '3%',
     // width: wp('70%'),
-    fontSize: RFValue(12),
-    fontFamily: fonts.medium,
-    color: colors.black85,
+    // fontSize: RFValue(12),
+    // fontFamily: fonts.medium,
+    // color: colors.black85,
   },
-  text: {
+  pickedText: {
     marginLeft: '3%',
-    width: wp('70%'),
+    width: wp('72%'),
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
     marginTop: '1%',
+    height: '100%',
   },
   dottedView: {
     height: 9,
     width: 3,
     backgroundColor: colors.color95,
-    marginTop: '1.5%',
+    marginTop: '1%',
     marginLeft: '0.2%',
   },
   dottedWithLine: {
@@ -372,23 +373,33 @@ const styles = StyleSheet.create({
   },
   dropText: pickUpLocation => ({
     marginLeft: '3%',
-    width: wp('70%'),
+    width: wp('72%'),
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
-    marginBottom: '4%',
-    marginTop: '0.5%',
+    // marginBottom: '4%',
+    // marginTop: '0.5%',
     // color: pickUpLocation == '' ? colors.black50 : colors.black,
   }),
   addOnTouch: {
     // backgroundColor: '#D9D9D9',
     height: hp('3.5%'),
-    width: wp('15%'),
-    borderRadius: 10,
-    marginRight: '-8%',
+    // borderRadius: 10,
+    marginRight: '-7%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '-2%',
+    top: hp('5%'),
+  },
+  addOnRTouch: {
+    // backgroundColor: '#D9D9D9',
+    height: hp('3.5%'),
+    // borderRadius: 10,
+    marginRight: '-7%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '-2%',
+    // top: hp('5%'),
   },
   addOnText: {
     fontSize: RFValue(12),

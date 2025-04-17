@@ -24,6 +24,7 @@ import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
+import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 
 let geoLocation = {
   lat: null,
@@ -65,6 +66,7 @@ export default function ParcelHome({navigation}) {
   useFocusEffect(
     useCallback(() => {
       // setCurrentLocation();
+      setMpaDaltaInitials();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();
       getTrackingOrder();
@@ -82,7 +84,7 @@ export default function ParcelHome({navigation}) {
         setOriginLocation(geoLocation);
         console.log('Updated geoLocation:', geoLocation);
       }, 1500);
-      ratingData = {};
+    
     }, []),
   );
 
@@ -139,8 +141,10 @@ export default function ParcelHome({navigation}) {
     const subscription = DeviceEventEmitter.addListener('dropped', data => {
       console.log('dropped data --Parcel ', data);
       if (data?.order_type == 'parcel') {
-      setIsReviewRider(true);
       ratingData = data;
+      setTimeout(() => {
+        setIsReviewRider(true);
+      }, 300);
       getTrackingOrder();
       }
     });
@@ -149,7 +153,7 @@ export default function ParcelHome({navigation}) {
     };
   }, []);
 
-  console.log('ratingDat----,', ratingData);
+  console.log('ratingData----', ratingData);
   const getTrackingOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
     setTrackedArray(resTrack);
@@ -296,7 +300,7 @@ export default function ParcelHome({navigation}) {
               padding={true}
               Pb={getHeight(trackedArray, incompletedArray)}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{marginTop: '2%', marginHorizontal: 20}}>
+              <View style={{marginTop: '4%', marginHorizontal: 20}}>
                 {/* <View>
               <Text
                 style={{

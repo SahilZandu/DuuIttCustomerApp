@@ -181,7 +181,7 @@ const DashboardHeader2 = ({
               fontSize: RFValue(10),
               fontFamily: fonts.regular,
               color: colors.colorA9,
-              width: wp('70%'),
+              width: wp('68%'),
             }}
             numberOfLines={1}>
             {address}

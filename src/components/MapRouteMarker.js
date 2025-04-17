@@ -13,17 +13,11 @@ import MapView, {
 } from 'react-native-maps';
 import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
 
-const {width, height} = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
 const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
   console.log('markerArray--', markerArray);
   const mapRef = useRef(null);
   const [lat, setLat] = useState(Number(origin?.lat));
   const [long, setLong] = useState(Number(origin?.lng));
-  const [coords, setcoords] = useState([]);
 
   useEffect(() => {
     if (Object?.keys(origin || {})?.length > 0) {
@@ -42,10 +36,9 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
 
   return (
     <View style={styles.homeSubContainer}>
-      {/* {lat && long && coords && coords?.length > 0 ? ( */}
       <MapView
         onRegionChange={e => {
-          // setMpaDalta(e);
+          setMpaDalta(e);
         }}
         provider={PROVIDER_GOOGLE}
         ref={mapRef}
@@ -55,41 +48,42 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
         showsScale={true}
         mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
         paddingAdjustmentBehavior={'automatic'}
-        // region={calculateRegion(coords)}
-        region={{
+        initialRegion={{
           latitude: lat,
           longitude: long,
           latitudeDelta: getMpaDalta().latitudeDelta,
           longitudeDelta: getMpaDalta().longitudeDelta,
         }}
-        //   onRegionChangeComplete={() =>
-        //   CoordinatesValue(originLoactaion, destinationLocation)
-        // }
+        // region={}
         zoomTapEnabled
         rotateEnabled
         loadingEnabled
-        showsCompass>
+        showsCompass
+      >
         {markerArray && markerArray?.length > 0 ? (
           markerArray?.map((marker, index) => (
             <Marker
               key={index}
+              useLegacyPinView={true}
               coordinate={{
                 latitude: Number(marker?.geo_location?.lat),
                 longitude: Number(marker?.geo_location?.lng),
               }}>
               <Image
                 resizeMode="contain"
-                source={appImages.searchingRide}
+                source={appImages.markerImage}
                 style={styles.markerImage}
               />
             </Marker>
           ))
         ) : (
-          <Marker coordinate={{latitude: lat, longitude: long}}>
+          <Marker
+            useLegacyPinView={true}
+            coordinate={{latitude: lat, longitude: long}}>
             <Image
-              resizeMode='contain'
+              resizeMode="contain"
               source={appImages.searchingRide}
-              style={styles.markerImage}
+              style={styles.markerRiderImage}
             />
           </Marker>
         )}
@@ -115,8 +109,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   markerImage: {
-    height: 50,
-    width: 50,
+    height: 30,
+    width: 30,
+    marginTop: Platform.OS == 'ios' ? '25%' : 0,
+  },
+  markerRiderImage: {
+    height: 40,
+    width: 40,
     marginTop: Platform.OS == 'ios' ? '25%' : 0,
   },
 });

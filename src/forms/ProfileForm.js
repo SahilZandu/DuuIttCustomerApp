@@ -131,16 +131,30 @@ const ProfileForm = ({navigation, screenName}) => {
       navigation.goBack();
     }
   };
+  const parseDateFromString = dateStr => {
+    if (!dateStr) return new Date(); // fallback to current date
+
+    const [day, month, year] = dateStr?.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
 
   const DatePickeButton = ({}) => {
-    const {setFieldValue} = useFormikContext();
+    const {setFieldValue, values} = useFormikContext();
+
+    // Get date from formik field or fallback to current date
+
+     
+    const selectedDate = values?.dob
+      ? parseDateFromString(values?.dob)
+      : dateStart;
+    console.log('selectedDate--', selectedDate, values, parseDateFromString(values.dob));
     return (
       <DatePicker
         modal
         mode="date"
         maximumDate={dateStart}
         open={showPicker}
-        date={dateStart}
+        date={selectedDate}
         format="DD-MM-YYYY"
         onConfirm={date => {
           setShowPicker(false);
@@ -197,12 +211,12 @@ const ProfileForm = ({navigation, screenName}) => {
                 {/* {<ProfileCoverImage />} */}
                 <View style={styles.imageMainView}>
                   <View style={styles.imageView}>
-                  <Image
-                    style={styles.image}
-                    source={
-                      image?.length > 0 ? {uri: image} : appImages.avtarImage
-                    }
-                  />
+                    <Image
+                      style={styles.image}
+                      source={
+                        image?.length > 0 ? {uri: image} : appImages.avtarImage
+                      }
+                    />
                   </View>
                   <View style={styles.editIconMain}>
                     <TouchableOpacity

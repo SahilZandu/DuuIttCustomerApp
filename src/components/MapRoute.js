@@ -15,16 +15,14 @@ import {appImages} from '../commons/AppImages';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import PolylineDecoder from '@mapbox/polyline';
 import {colors} from '../theme/colors';
+import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
 
-const {width, height} = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
 const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   const mapRef = useRef(null);
+  const bearingRef = useRef(0);
   const [lat, setLat] = useState(origin?.lat ? Number(origin?.lat) : null);
   const [long, setLong] = useState(origin?.lng ? Number(origin?.lng) : null);
   const [destinationLocation, setDestinationLocation] = useState({
@@ -32,32 +30,48 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     lng: null,
   });
   const [coords, setCoords] = useState([]);
-  const [delta, setDelta] = useState({
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  });
   const [region, setRegion] = useState({
     latitude: Number(origin?.lat) ? Number(origin?.lat) : lat,
     longitude: Number(origin?.lng) ? Number(origin?.lng) : long,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
+    latitudeDelta: getMpaDalta().latitudeDelta,
+    longitudeDelta: getMpaDalta().longitudeDelta,
   });
   const [isMapReady, setIsMapReady] = useState(false);
 
   // Update latitude and longitude based on origin
   useEffect(() => {
     console.log('origin--', origin, destination);
-    if (Object?.keys(origin || {})?.length > 0) {
+    if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
       setLat(Number(origin?.lat));
       setLong(Number(origin?.lng));
-      setRegion({
+      const newRegion = {
         latitude: Number(origin?.lat) ? Number(origin?.lat) : lat,
         longitude: Number(origin?.lng) ? Number(origin?.lng) : long,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
+        latitudeDelta: getMpaDalta().latitudeDelta,
+        longitudeDelta: getMpaDalta().longitudeDelta,
+      };
+      setRegion(newRegion);
+      // if (mapRef.current) {
+      //   mapRef?.current?.animateToRegion(newRegion, 1000);
+      //   }
     }
   }, [origin]);
+
+  const originMarker = useMemo(
+    () => ({
+      latitude: lat,
+      longitude: long,
+    }),
+    [lat, long],
+  );
+
+  const destinationMarker = useMemo(
+    () => ({
+      latitude: Number(destinationLocation?.lat),
+      longitude: Number(destinationLocation?.lng),
+    }),
+    [destinationLocation],
+  );
 
   const handleMapReady = () => {
     console.log('Map is ready');
@@ -67,16 +81,98 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     ) {
       setTimeout(() => {
         setIsMapReady(true);
-      },5000);
-    }else{
+      }, 5000);
+    } else {
       setTimeout(() => {
         setIsMapReady(true);
       }, 12000);
     }
-    
   };
 
+  const getBearing = (start, end) => {
+    const lat1 = (start.lat * Math.PI) / 180;
+    const lon1 = (start.lng * Math.PI) / 180;
+    const lat2 = (end.lat * Math.PI) / 180;
+    const lon2 = (end.lng * Math.PI) / 180;
+    const dLon = lon2 - lon1;
+    const y = Math.sin(dLon) * Math.cos(lat2);
+    const x =
+      Math.cos(lat1) * Math.sin(lat2) -
+      Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+    const bearing = Math.atan2(y, x);
+    const bearingDeg = (bearing * 180) / Math.PI;
+    return (bearingDeg + 360) % 360;
+  };
+
+  useEffect(() => {
+    if (!origin || !destination || !mapRef.current) return;
+
+    // Ensure lat/lng are numbers
+    const lat = Number(origin?.lat);
+    const lng = Number(origin?.lng);
+    const destLat = Number(destination?.lat);
+    const destLng = Number(destination?.lng);
+
+    // If any value is NaN, don't proceed
+    if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
+    const timeout = setInterval(() => {
+      const bearing = getBearing({lat, lng}, {lat: destLat, lng: destLng});
+
+      const camera = {
+        center: {
+          latitude: lat,
+          longitude: lng,
+        },
+        // heading: bearing || 0,
+        heading: bearingRef.current || bearing, // Keep the same heading
+        pitch: 30,
+        zoom: 17,
+        altitude: 300,
+      };
+      if (mapRef.current) {
+        mapRef.current.animateCamera(camera, {duration: 1000});
+      }
+    }, 2000);
+
+    return () => clearInterval(timeout);
+  }, [origin, destination]);
+
+  // useEffect(() => {
+  //   if (!origin || !destination || !mapRef.current) return;
+
+  //   // Ensure lat/lng are numbers
+  //   const lat = Number(origin?.lat);
+  //   const lng = Number(origin?.lng);
+  //   const destLat = Number(destination?.lat);
+  //   const destLng = Number(destination?.lng);
+
+  //   // If any value is NaN, don't proceed
+  //   if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
+  //   const timeout = setTimeout(() => {
+  //     const bearing = getBearing({lat, lng}, {lat: destLat, lng: destLng});
+
+  //     const camera = {
+  //       center: {
+  //         latitude: lat,
+  //         longitude: lng,
+  //       },
+  //       // heading: bearing || 0,
+  //       heading: bearingRef.current || bearing, // Keep the same heading
+  //       pitch: 30,
+  //       zoom: 17,
+  //       altitude: 300,
+  //     };
+  //     if (mapRef.current) {
+  //       mapRef.current.animateCamera(camera, {duration: 1000});
+  //     }
+  //   }, 2000);
+
+  //   return () => clearTimeout(timeout);
+  // }, [origin, destination]);
+
   // Fetch and set route only when both origin and destination are defined
+  
   useEffect(() => {
     if (
       origin &&
@@ -124,23 +220,30 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
       style={styles.homeSubContainer}>
       <MapView
         provider={PROVIDER_GOOGLE}
+        onRegionChange={e => {
+          setMpaDalta(e);
+          // console.log('e---onRegionChange', e);
+        }}
         ref={mapRef}
         style={[styles.mapContainer, mapContainerView]}
         zoomEnabled={true}
         scrollEnabled={true}
         showsScale={true}
         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        region={region}
+        // region={region}
+        initialRegion={region}
         zoomTapEnabled={true}
         rotateEnabled={true}
         loadingEnabled={true}
         showsCompass={true}
+        cacheEnabled={false}
+        followsUserLocation={false}
+        showsUserLocation={false}
         onMapReady={handleMapReady}>
         {/* Origin Marker */}
         {lat && long && (
           <Marker
-            coordinate={{latitude: lat, longitude: long}}
-            tracksViewChanges={!isMapReady}
+            coordinate={originMarker}
             useLegacyPinView={true}>
             <Image
               resizeMode="cover"
@@ -153,10 +256,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         {/* Destination Marker */}
         {destinationLocation?.lat && destinationLocation?.lng && (
           <Marker
-            coordinate={{
-              latitude: Number(destinationLocation?.lat),
-              longitude: Number(destinationLocation?.lng),
-            }}
+            coordinate={destinationMarker}
             tracksViewChanges={!isMapReady}
             useLegacyPinView={true}>
             <Image
@@ -197,17 +297,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   markerImage: {
-    height: 35,
-    width: 35,
+    height: 30,
+    width: 30,
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
   markerBikeImage: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
-
 
 // import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 // import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';

@@ -14,7 +14,7 @@ const PickDropImageComp = ({item, image}) => {
         pickUpTextStyle={{color: colors.black, width: wp('65%')}}
         dropTextStyle={{width: wp('65%')}}
         item={item}
-        lineHeight={48}
+        lineHeight={90}
       />
       <View style={{left: '2%', top: '3%'}}>
         <Image

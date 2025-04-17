@@ -1,9 +1,5 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {
-  View,
-  Image,
-  DeviceEventEmitter,
-} from 'react-native';
+import {View, Image, DeviceEventEmitter} from 'react-native';
 import {appImages} from '../../../commons/AppImages';
 import {styles} from './styles';
 import {
@@ -17,7 +13,10 @@ import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import {homeRideCS} from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
-import {getCurrentLocation, setCurrentLocation} from '../../../components/GetAppLocation';
+import {
+  getCurrentLocation,
+  setCurrentLocation,
+} from '../../../components/GetAppLocation';
 import {rootStore} from '../../../stores/rootStore';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
 import socketServices from '../../../socketIo/SocketServices';
@@ -26,12 +25,13 @@ import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
-
+import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 
 let geoLocation = {
   lat: null,
   lng: null,
 };
+
 let ratingData = {};
 
 export default function RideHome({navigation}) {
@@ -44,8 +44,8 @@ export default function RideHome({navigation}) {
   const [incompletedArray, setIncompletedArray] = useState([]);
   const [internet, setInternet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
-  const [originLocation ,setOriginLocation]=useState({})
-  const [isReviewRider ,setIsReviewRider]=useState(false)
+  const [originLocation, setOriginLocation] = useState({});
+  const [isReviewRider, setIsReviewRider] = useState(false);
   const [loadingRating, setLoadingRating] = useState(false);
   const getLocation = type => {
     let d =
@@ -58,6 +58,7 @@ export default function RideHome({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
+      setMpaDaltaInitials();
       checkInternet();
       handleAndroidBackButton(navigation);
       setCurrentLocation();
@@ -73,19 +74,17 @@ export default function RideHome({navigation}) {
           lat: getLocation('lat'),
           lng: getLocation('lng'),
         };
-        setOriginLocation(geoLocation)
+        setOriginLocation(geoLocation);
         console.log('Updated geoLocation:', geoLocation);
-      },1500);
-      ratingData = {};
-      
+      }, 1500);
     }, []),
   );
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
       console.log('new order data -- ', data);
-      if(data?.order_type == "ride"){
-      getIncompleteOrder();
+      if (data?.order_type == 'ride') {
+        getIncompleteOrder();
       }
     });
 
@@ -97,8 +96,8 @@ export default function RideHome({navigation}) {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
       console.log('cancel Order data -- ', data);
-      if(data?.order_type == "ride"){
-      getIncompleteOrder();
+      if (data?.order_type == 'ride') {
+        getIncompleteOrder();
       }
     });
     return () => {
@@ -107,29 +106,30 @@ export default function RideHome({navigation}) {
   }, []);
 
   useEffect(() => {
-    const subscription = DeviceEventEmitter.addListener(
-      'dropped',
-      data => {
-      console.log('dropped data --Ride ',data)
-      if(data?.order_type == "ride"){
-      setIsReviewRider(true)
-      ratingData = data;
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data --Ride ', data);
+      if (data?.order_type == 'ride') {
+        ratingData = data;
+        console.log('ratingData----1', ratingData,data,ratingData = data);
+        setTimeout(() => {
+          setIsReviewRider(true);
+        }, 300);
+        getIncompleteOrder();
       }
-      },
-    );
+    });
     return () => {
       subscription.remove();
     };
   }, []);
 
-  console.log('ratingDat----,', ratingData);
+  console.log('ratingData----', ratingData);
 
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
     console.log('resIncompleteOrder ride--', resIncompleteOrder);
     setIncompletedArray(resIncompleteOrder);
-    if(resIncompleteOrder?.length > 0){
-    setAddParcelInfo(resIncompleteOrder[0]);
+    if (resIncompleteOrder?.length > 0) {
+      setAddParcelInfo(resIncompleteOrder[0]);
     }
   };
 
@@ -175,14 +175,14 @@ export default function RideHome({navigation}) {
     setAddParcelInfo(incompletedArray[0]);
     let checkStatus = incompletedArray[0]?.status;
     if (
-      (checkStatus == 'accepted' ||
+      checkStatus == 'accepted' ||
       checkStatus == 'find-rider' ||
-      checkStatus == 'picked')
+      checkStatus == 'picked'
     ) {
       navigation.navigate('searchingRide', {
         paymentMethod:
           incompletedArray[0]?.payment_mode == 'cash' ? 'Cash' : 'Online',
-          totalAmount:incompletedArray[0]?.total_amount,
+        totalAmount: incompletedArray[0]?.total_amount,
       });
     } else {
       navigation.navigate('priceConfirmed', {
@@ -220,12 +220,12 @@ export default function RideHome({navigation}) {
             appUserInfo={appUserInfo}
           />
 
-           <MapLocationRoute
+          <MapLocationRoute
             mapContainerView={{height: hp('25%')}}
             origin={geoLocation ?? originLocation}
             isPendingReq={true}
           />
-          
+
           <SearchTextIcon
             title={'Enter pick up or send location'}
             onPress={() => {
@@ -243,7 +243,7 @@ export default function RideHome({navigation}) {
               padding={true}
               Pb={getHeight(trackedArray, incompletedArray)}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{marginTop: '2%', marginHorizontal: 20}}>
+              <View style={{marginTop: '4%', marginHorizontal: 20}}>
                 <View
                   style={{
                     justifyContent: 'center',
@@ -263,7 +263,7 @@ export default function RideHome({navigation}) {
               </View>
               <View style={styles.bottomImageView}>
                 <Image
-                  resizeMode='contain'
+                  resizeMode="contain"
                   style={styles.bottomImage}
                   source={appImages.rideHomeBootmImage}
                 />
@@ -295,21 +295,21 @@ export default function RideHome({navigation}) {
             }
             onDelete={deleteIncompleteOrder}
           />
-    <ReviewsRatingComp
-      //  data={{}}
-      data={ratingData}
-      type={'RIDE'}
-      reviewToRider={true}
-      title={'How was your ride experience?'}
-      isVisible={isReviewRider}
-      onClose={()=>{
-        setIsReviewRider(false)
-      }}
-      loading={loadingRating}
-      onHandleLoading={(v)=>{
-        setLoadingRating(v)
-      }}
-      />
+          <ReviewsRatingComp
+            //  data={{}}
+            data={ratingData}
+            type={'RIDE'}
+            reviewToRider={true}
+            title={'How was your ride experience?'}
+            isVisible={isReviewRider}
+            onClose={() => {
+              setIsReviewRider(false);
+            }}
+            loading={loadingRating}
+            onHandleLoading={v => {
+              setLoadingRating(v);
+            }}
+          />
         </>
       )}
     </View>

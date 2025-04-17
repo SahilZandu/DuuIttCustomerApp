@@ -255,11 +255,11 @@ export default function SideMenu({navigation}) {
           ? Url?.Image_Url + appUser?.profile_pic
           : '',
       name: appUser?.name?.length > 0 ? appUser?.name : 'User Name',
-      email: appUser?.email?.length > 0 ? appUser?.email : 'Example@gmail.com',
+      email: appUser?.email?.length > 0 ? appUser?.email : '',
       phone:
         appUser?.phone?.toString()?.length > 0
           ? appUser?.phone?.toString()
-          : '9876543210',
+          : '',
     });
   };
 
@@ -330,7 +330,7 @@ export default function SideMenu({navigation}) {
               onClose={() => setIsLogout(false)}
               title={'Are you sure you want to log out?'}
               text={
-                'You will be signed out of your account. Do you want to continue?'
+                'You will be log out of your account. Do you want to continue?'
               }
               onDelete={handleLogout}
             />
