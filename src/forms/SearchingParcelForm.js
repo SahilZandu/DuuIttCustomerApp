@@ -543,37 +543,50 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
         {searchArrive == 'search' ? (
           <View style={styles.containerSearchingView}>
             {searchingFind == 'searching' ? (
-              <View style={styles.innerSearchingView}>
-                <View style={styles.textMainView}>
-                  <Text style={styles.searchingPartnerText}>
-                    {screenName == 'parcel'
-                      ? 'Searching Delivery Partner'
-                      : 'Searching Ride'}
-                  </Text>
-                  <Text style={styles.findNearbyText}>
-                    Finding drivers nearby
-                  </Text>
-                </View>
-                <View style={{marginTop: '4%'}}>
-                  <Image
-                    resizeMode="contain"
-                    // style={styles.bikeImage}
-                    style={[styles.bikeImage, {marginLeft: rideProgessImage}]}
-                    source={appImages.searchingRide}
+              <>
+                {parcelInfo?.status === 'find-rider' ||
+                parcelInfo?.status === 'pending' ? (
+                  <View style={styles.innerSearchingView}>
+                    <View style={styles.textMainView}>
+                      <Text style={styles.searchingPartnerText}>
+                        {screenName == 'parcel'
+                          ? 'Searching Delivery Partner'
+                          : 'Searching Ride'}
+                      </Text>
+                      <Text style={styles.findNearbyText}>
+                        Finding drivers nearby
+                      </Text>
+                    </View>
+                    <View style={{marginTop: '4%'}}>
+                      <Image
+                        resizeMode="contain"
+                        // style={styles.bikeImage}
+                        style={[
+                          styles.bikeImage,
+                          {marginLeft: rideProgessImage},
+                        ]}
+                        source={appImages.searchingRide}
+                      />
+                      <Progress.Bar
+                        indeterminate={searching}
+                        indeterminateAnimationDuration={1000}
+                        // progress={0.2}
+                        progress={rideProgess}
+                        width={screenWidth(84)}
+                        height={screenHeight(0.5)}
+                        color={colors.color43}
+                        borderColor={colors.color95}
+                        unfilledColor={colors.color95}
+                      />
+                    </View>
+                  </View>
+                ) : (
+                  <AnimatedLoader
+                    absolute={'relative'}
+                    type={'selectedRiderLoader'}
                   />
-                  <Progress.Bar
-                    indeterminate={searching}
-                    indeterminateAnimationDuration={1000}
-                    // progress={0.2}
-                    progress={rideProgess}
-                    width={screenWidth(84)}
-                    height={screenHeight(0.5)}
-                    color={colors.color43}
-                    borderColor={colors.color95}
-                    unfilledColor={colors.color95}
-                  />
-                </View>
-              </View>
+                )}
+              </>
             ) : (
               <RiderNotAvailableComp
                 onRefershFindRiders={() => {

@@ -247,7 +247,7 @@ const PickDropLocation = ({
             // disabled={pickUpLocation == '' ? true : false}
             style={styles.dropTouch(pickUpLocation)}>
             <Image
-              style={{width: 25, height: 25}}
+              style={{width: 25, height: 25, top: hp('-0.3%')}}
               source={appImages.dropIconSet}
             />
             <View style={{flexDirection: 'column'}}>
@@ -258,8 +258,7 @@ const PickDropLocation = ({
                 {addOnDrop && (
                   <TouchableOpacity
                     onPress={addOnDrop}
-                    style={styles.addOnRTouch}
-                  >
+                    style={styles.addOnRTouch}>
                     <Text style={styles.addOnText}>Add</Text>
                   </TouchableOpacity>
                 )}
@@ -318,20 +317,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     height: hp('20%'),
-    marginTop: '5%',
+    marginTop: hp('1%'),
   },
   mainTouch: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: '4%',
     height: hp('4%'),
+    marginTop: '1%',
   },
   senderText: {
     marginLeft: '3%',
     // width: wp('70%'),
-    // fontSize: RFValue(12),
-    // fontFamily: fonts.medium,
-    // color: colors.black85,
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black85,
   },
   pickedText: {
     marginLeft: '3%',
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '-2%',
-    top: hp('5%'),
+    top: hp('4%'),
   },
   addOnRTouch: {
     // backgroundColor: '#D9D9D9',

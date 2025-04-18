@@ -53,39 +53,64 @@ const CardOrderDetails = ({item}) => {
         return 'Ride Amount';
     }
   };
+
+  //   billing_detail:
+  // delivery_fee: 7
+  // discount: 0
+  // distance_fee: 27
+  // gst_fee: 6.2496
+  // platform_fee: 1.5
   const billDetails = [
     {
       id: '1',
-      name: setTitleText(item?.order_type),
-      price: item?.total_amount,
+      name: 'Distance Fee',
+      price: item?.billing_detail?.distance_fee ?? 0,
       coupanCode: '',
-      bottomLine: item?.order_type !== 'food' ? true : false,
+      // bottomLine: item?.order_type !== 'food' ? true : false,
+      bottomLine: false,
       isShow: true,
+      gstIcon: false,
     },
     {
       id: '2',
-      name: 'Delivery Fee',
-      price: 150,
+      name: 'Management Fare',
+      price: item?.billing_detail?.delivery_fee ?? 0,
       coupanCode: '',
       bottomLine: false,
-      isShow: item?.order_type == 'food' ? true : false,
+      // isShow: item?.order_type == 'food' ? true : false,
+      isShow: true,
+      gstIcon: false,
     },
-    // {
-    //   id: '3',
-    //   name: 'Platform fee',
-    //   price: 10,
-    //   coupanCode: '',
-    //   bottomLine: item?.order_type !== 'food' ? true : false,
-    //   isShow: true,
-    // },
+    {
+      id: '3',
+      name: 'Platform fee',
+      price: item?.billing_detail?.platform_fee ?? 0,
+      coupanCode: '',
+      // bottomLine: item?.order_type !== 'food' ? true : false,
+      bottomLine: false,
+      isShow: true,
+      gstIcon: false,
+    },
     {
       id: '4',
-      name: 'GST and Restaurant Charges',
-      price: 5,
+      name: item?.order_type == 'food' ? 'GST and Restaurant Charges' : 'GST',
+      price: item?.billing_detail?.gst_fee ?? 0,
       coupanCode: '',
       bottomLine: true,
-      isShow: item?.order_type == 'food' ? true : false,
+      // isShow: item?.order_type == 'food' ? true : false,
+      isShow: true,
+      gstIcon: true,
     },
+    {
+      id: '5',
+      name: setTitleText(item?.order_type),
+      price: item?.total_amount,
+      coupanCode: '',
+      bottomLine: true,
+      isShow: item?.order_type !== 'food' ? true : false,
+      gstIcon: false,
+    },
+
     {
       id: '5',
       name: 'Grand Total',
@@ -93,6 +118,7 @@ const CardOrderDetails = ({item}) => {
       coupanCode: '',
       bottomLine: false,
       isShow: item?.order_type == 'food' ? true : false,
+      gstIcon: false,
     },
     {
       id: '6',
@@ -101,17 +127,16 @@ const CardOrderDetails = ({item}) => {
       coupanCode: 'DUIT75',
       bottomLine: false,
       isShow: item?.order_type == 'food' ? true : false,
+      gstIcon: false,
     },
     {
       id: '7',
       name: 'Total Paid',
-      price:
-        item?.status == 'cancelled'
-          ? 0
-          : item?.total_amount,
+      price: item?.status == 'cancelled' ? 0 : item?.total_amount,
       coupanCode: '',
       bottomLine: false,
       isShow: true,
+      gstIcon: false,
     },
   ];
 
@@ -153,10 +178,10 @@ const CardOrderDetails = ({item}) => {
                 resizeMode="cover"
                 style={styles.image}
                 source={
-                  setImageIcon(item?.order_type)
-                  // item?.rider?.profile_pic?.length > 0
-                  //   ? {uri: Url.Image_Url + item?.rider?.profile_pic}
-                  //   : setImageIcon(item?.order_type)
+                  // setImageIcon(item?.order_type)
+                  item?.rider?.profile_pic?.length > 0
+                    ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                    : setImageIcon(item?.order_type)
                 }
               />
             </View>
@@ -173,9 +198,7 @@ const CardOrderDetails = ({item}) => {
                     styles.statusText,
                     {
                       color:
-                        item?.status == 'cancelled'
-                          ? '#E70000'
-                          : '#28B056',
+                        item?.status == 'cancelled' ? '#E70000' : '#28B056',
                     },
                   ]}>
                   {setStatusData(item?.status)}
@@ -196,15 +219,15 @@ const CardOrderDetails = ({item}) => {
             </View>
           </View>
           <View style={{marginTop: '3%'}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.riderNameText}>{'Rider'}:</Text>
-            <Text
-              numberOfLines={1}
-              style={[styles.riderNameText, {color: colors.black}]}>
-              {' '}
-              {item?.rider?.name ?? 'No Rider'}{' '}
-            </Text>
-          </View>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.riderNameText}>{'Rider'}:</Text>
+              <Text
+                numberOfLines={1}
+                style={[styles.riderNameText, {color: colors.black}]}>
+                {' '}
+                {item?.rider?.name ?? 'No Rider'}{' '}
+              </Text>
+            </View>
             {item?.order_type !== 'food' ? (
               <PickDropComp
                 item={{
@@ -213,21 +236,15 @@ const CardOrderDetails = ({item}) => {
                   pickup: item?.sender_address?.address,
                   drop: item?.receiver_address?.address,
                 }}
-                lineHeight={60}
+                lineHeight={70}
                 upperCircleColor={
-                  item?.status == 'cancelled' 
-                    ? colors.red
-                    : colors.main
+                  item?.status == 'cancelled' ? colors.red : colors.main
                 }
                 lineColor={
-                  item?.status == 'cancelled'
-                    ? colors.red
-                    : colors.main
+                  item?.status == 'cancelled' ? colors.red : colors.main
                 }
                 bottomCircleColor={
-                  item?.status == 'cancelled'
-                    ? colors.red
-                    : colors.main
+                  item?.status == 'cancelled' ? colors.red : colors.main
                 }
               />
             ) : (
@@ -271,6 +288,7 @@ const CardOrderDetails = ({item}) => {
                   {item?.isShow == true ? (
                     <View style={styles.billDetailRenderView}>
                       <TextRender
+                        gstShow={item?.gstIcon}
                         titleStyle={[
                           styles.titleText,
                           {

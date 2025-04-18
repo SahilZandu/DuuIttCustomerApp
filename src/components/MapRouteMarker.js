@@ -14,7 +14,7 @@ import MapView, {
 import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
 
 const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
-  console.log('markerArray--', markerArray);
+  // console.log('markerArray--', markerArray);
   const mapRef = useRef(null);
   const [lat, setLat] = useState(Number(origin?.lat));
   const [long, setLong] = useState(Number(origin?.lng));
@@ -54,12 +54,16 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
           latitudeDelta: getMpaDalta().latitudeDelta,
           longitudeDelta: getMpaDalta().longitudeDelta,
         }}
-        // region={}
+        // region={{
+        //   latitude: lat,
+        //   longitude: long,
+        //   latitudeDelta: getMpaDalta().latitudeDelta,
+        //   longitudeDelta: getMpaDalta().longitudeDelta,
+        // }}
         zoomTapEnabled
         rotateEnabled
         loadingEnabled
-        showsCompass
-      >
+        showsCompass>
         {markerArray && markerArray?.length > 0 ? (
           markerArray?.map((marker, index) => (
             <Marker

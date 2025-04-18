@@ -17,7 +17,6 @@ import PolylineDecoder from '@mapbox/polyline';
 import {colors} from '../theme/colors';
 import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
 
-
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
 const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
@@ -40,7 +39,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
 
   // Update latitude and longitude based on origin
   useEffect(() => {
-    console.log('origin--', origin, destination);
+    // console.log('origin--', origin, destination);
     if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
       setLat(Number(origin?.lat));
       setLong(Number(origin?.lng));
@@ -74,7 +73,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   );
 
   const handleMapReady = () => {
-    console.log('Map is ready');
+    // console.log('Map is ready');
     if (
       destinationLocation?.lat?.toString()?.length > 0 &&
       lat?.toString()?.length > 0
@@ -172,7 +171,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   // }, [origin, destination]);
 
   // Fetch and set route only when both origin and destination are defined
-  
+
   useEffect(() => {
     if (
       origin &&
@@ -210,7 +209,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         setCoords(routeCoords);
       }
     } catch (error) {
-      console.error('Error fetching route: ', error);
+      console.log('Error fetching route: ', error);
     }
   };
 
@@ -242,9 +241,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         onMapReady={handleMapReady}>
         {/* Origin Marker */}
         {lat && long && (
-          <Marker
-            coordinate={originMarker}
-            useLegacyPinView={true}>
+          <Marker coordinate={originMarker} useLegacyPinView={true}>
             <Image
               resizeMode="cover"
               source={appImages.markerRideImage}

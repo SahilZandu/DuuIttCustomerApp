@@ -1,5 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Platform,
+  Dimensions,
+  Text,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -20,8 +27,8 @@ const MapLocationRoute = ({
 }) => {
   const mapRef = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat ? Number(origin?.lat) : 0,
-    longitude: origin?.lng ? Number(origin?.lng) : 0,
+    latitude: origin?.lat ? Number(origin?.lat) : 30.7076,
+    longitude: origin?.lng ? Number(origin?.lng) : 76.715126,
     latitudeDelta: getMpaDalta().latitudeDelta,
     longitudeDelta: getMpaDalta().longitudeDelta,
   });
@@ -29,25 +36,29 @@ const MapLocationRoute = ({
     currentLocation?.lat?.toString()?.length > 0 ? true : false,
   );
 
-  console.log('origin---11', origin);
+  console.log('origin---11', origin, mapRegion);
 
   // Update region when origin changes
   useEffect(() => {
-    if (origin?.lat && origin?.lng) {
+    if (origin) {
       currentLocation = origin;
       setMapRegion(prev => ({
         ...prev,
-        latitude: Number(origin?.lat),
-        longitude: Number(origin?.lng),
+        latitude: origin?.lat
+          ? Number(origin?.lat)
+          : Number(currentLocation?.lat),
+        longitude: origin?.lng
+          ? Number(origin?.lng)
+          : Number(currentLocation?.lng),
         latitudeDelta: getMpaDalta().latitudeDelta,
         longitudeDelta: getMpaDalta().longitudeDelta,
       }));
     }
-  }, [origin]);
+  }, [origin, isMapReady]);
 
   const onTouchLocationData = useCallback(
     coordinate => {
-      console.log('coordinate---', coordinate);
+      // console.log('coordinate---', coordinate);
       setMapRegion(prev => ({
         ...prev,
         latitude: Number(coordinate?.latitude),
@@ -61,11 +72,11 @@ const MapLocationRoute = ({
   );
 
   const handleMapReady = () => {
-    console.log('Map is ready');
+    // console.log('Map is ready');
     if (origin?.lat?.toString()?.length > 0) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 6000);
+      }, 5000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
@@ -89,8 +100,8 @@ const MapLocationRoute = ({
         scrollEnabled={true}
         showsScale
         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        // region={mapRegion}
-        initialRegion={mapRegion}
+        region={mapRegion}
+        // initialRegion={mapRegion}
         zoomTapEnabled
         rotateEnabled
         loadingEnabled

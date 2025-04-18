@@ -20,6 +20,7 @@ import CoupansListLoader from './CoupansListLoader';
 import WalletLoader from './WalletLoader';
 import TransactionHistoryLoader from './TransactionHistoryLoader';
 import HomeMapLoader from './HomeMapLoader';
+import SelectedRiderLoader from './SelectedRiderLoader';
 
 const AnimatedLoader = ({type,absolute,height}) => {
   return (
@@ -40,6 +41,8 @@ const AnimatedLoader = ({type,absolute,height}) => {
       {type == 'walletLoader' && <WalletLoader/>}
       {type == 'transactionHistoryLoader' && <TransactionHistoryLoader/>}
       {type == 'homeMapLoader' && <HomeMapLoader height={height}/>}
+      {type == 'selectedRiderLoader' && <SelectedRiderLoader/>}
+      
       
       
       

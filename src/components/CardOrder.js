@@ -157,7 +157,7 @@ const CardOrder = ({item, index, handleDetails}) => {
               bottomCircleColor={
                 item?.status == 'cancelled' ? colors.red : colors.main
               }
-              lineHeight={50}
+              lineHeight={70}
             />
           ) : (
             <>
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   imageDateView: {
     paddingHorizontal: '3%',
     // marginTop: '5%',
-    paddingVertical: '5%',
+    paddingVertical: hp('2%'),
     flexDirection: 'row',
   },
   imageView: {
@@ -292,7 +292,8 @@ const styles = StyleSheet.create({
   },
   bottomBtn: {
     flexDirection: 'row',
-    marginTop: hp(4.5),
+    marginTop: hp('4.5%'),
     justifyContent: 'space-between',
+    marginBottom: hp('0.2%'),
   },
 });

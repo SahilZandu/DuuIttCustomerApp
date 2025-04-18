@@ -887,4 +887,5 @@ export const appImages = {
   fareBtn:require('../assets/fareBtn.png'),
   customerSupportImage:require('../assets/customerSupportImage.png'),
   googleMapsIcon: require('../assets/googleMapsIcon.png'),
+  infoIcon: require('../assets/infoIcon.png'),
 };

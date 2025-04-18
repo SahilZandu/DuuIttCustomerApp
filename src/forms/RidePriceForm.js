@@ -62,11 +62,11 @@ const RidePriceForm = ({navigation}) => {
       sender_address: senderAddress,
       receiver_address: receiverAddress,
       billing_detail: {
-      delivery_fee: 9,
+      delivery_fee: 0,
        distance_fee: 0,
        discount: 0,
        platform_fee: 2,
-       gst_fee: 10
+       gst_fee: 18
         },
       isSecure: isSecure,
       order_type: 'ride',

@@ -23,9 +23,11 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import {screenHeight} from '../../../halpers/matrics';
 import {rootStore} from '../../../stores/rootStore';
 import {appImages} from '../../../commons/AppImages';
-import {getGeoCodes} from '../../../components/GeoCodeAddress';
+import {getGeoCodes, setMpaDaltaInitials} from '../../../components/GeoCodeAddress';
 import {getCurrentLocation} from '../../../components/GetAppLocation';
 import MapLocationRoute from '../../../components/MapLocationRoute';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 
 let currentLocation = {
   lat: null,
@@ -58,6 +60,13 @@ const ChooseMapLocation = ({navigation, route}) => {
     setAddress(details?.formatted_address);
     setGeoLocation(details?.geometry?.location);
   };
+
+  useFocusEffect(
+    useCallback(()=>{
+      handleAndroidBackButton(navigation)
+      setMpaDaltaInitials();
+    })
+  )
 
   useEffect(() => {
     setTimeout(() => {
@@ -131,9 +140,15 @@ const ChooseMapLocation = ({navigation, route}) => {
     // console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);
+    let newLocation = {
+      lat: loaction?.latitude,
+      lng: loaction?.longitude,
+    };
     setName(nameData[0]);
     setAddress(addressData?.address);
-    setGeoLocation(addressData?.geo_location);
+    // setGeoLocation(addressData?.geo_location);
+    setGeoLocation(newLocation);
+    
   };
 
   return (

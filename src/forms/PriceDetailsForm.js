@@ -111,13 +111,13 @@ const PriceDetailsForm = ({navigation}) => {
       sender_address: senderAddress,
       receiver_address: newReceiverAddress,
       // billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
-       billing_detail: {
-        delivery_fee: 9,
-         distance_fee: 0,
-         discount: 0,
-         platform_fee: 2,
-         gst_fee: 10
-          },
+      billing_detail: {
+        delivery_fee: 0,
+        distance_fee: 0,
+        discount: 0,
+        platform_fee: 2,
+        gst_fee: 18,
+      },
       isSecure: isSecure,
       order_type: 'parcel',
     };
@@ -240,11 +240,13 @@ const PriceDetailsForm = ({navigation}) => {
               Pb={hp('40%')}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
-                 <MapRoute
-              origin={senderAddress?.geo_location}
-              destination={receiverAddress?.geo_location}
-              mapContainerView={{height:Platform.OS == 'ios' ? hp('25%') : hp('25%')}}
-            />
+              <MapRoute
+                origin={senderAddress?.geo_location}
+                destination={receiverAddress?.geo_location}
+                mapContainerView={{
+                  height: Platform.OS == 'ios' ? hp('25%') : hp('25%'),
+                }}
+              />
               <View style={{flex: 1, marginHorizontal: 20}}>
                 <PickDropLocation
                   pickUpLocation={pickUpLocation}
@@ -264,7 +266,7 @@ const PriceDetailsForm = ({navigation}) => {
                   }}
                 />
 
-                <View style={{marginTop: '4%'}}>
+                <View style={{marginTop: hp('1%')}}>
                   <Text style={styles.parcelInstView}>Parcel Instructions</Text>
 
                   <View style={styles.parcelInstInnerView}>
