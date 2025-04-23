@@ -51,6 +51,7 @@ export default  {
     paymentsVerify:'payments/verify',
     deleteAccount:'customers/info',
     adminInfo:'admin/info',
+   updateCustomerInfo :'customers/update-customer-info'
 
     
 

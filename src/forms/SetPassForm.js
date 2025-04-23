@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View} from 'react-native';
 import CTA from '../components/cta/CTA';
 import {Formik, useFormikContext} from 'formik';
 import InputField from '../components/InputField';
@@ -11,6 +11,9 @@ import Spacer from '../halpers/Spacer';
 import {Strings} from '../translates/strings';
 import {setPassValidations} from './formsValidation/setPassValidations';
 import { rootStore } from '../stores/rootStore';
+import { colors } from '../theme/colors';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 
 
 
@@ -39,6 +42,12 @@ const SetPassForm = ({navigation, route}) => {
   }
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton(navigation);
+    }, []),
+  );
+
   const handleSetPass = async(values) => {
     // console.log('values', values);
     // navigation.navigate('verifyOtp', {value: values, loginType: type});
@@ -56,7 +65,7 @@ const SetPassForm = ({navigation, route}) => {
       validationSchema={setPassValidations()}>
       <View style={{width: wp('85%'), alignSelf: 'center'}}>
         <InputField
-          textColor={'#000000'}
+          textColor={colors.black}
           autoCapitalize={'none'}
           name={'password'}
           label={''}
@@ -66,7 +75,7 @@ const SetPassForm = ({navigation, route}) => {
           rightIconName={!secureTextEntry ? 'eye' : 'eye-off'}
         />
         <InputField
-          textColor={'#000000'}
+         textColor={colors.black}
           autoCapitalize={'none'}
           name={'confirm'}
           label={''}

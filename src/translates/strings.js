@@ -19,5 +19,8 @@ export const Strings = {
     yourNewPasswordDifferent:"Your New Password Must Be Different from Previously Used Password.",
     save:'Save',
     continue:'Continue',
-    TellUsLoveAbout :'Tell us what you love about the app, or what we could be doing better.'
+    TellUsLoveAbout :'Tell us what you love about the app, or what we could be doing better.',
+    personalInformation:'Personal Information',
+    tellUsAboutYourself:'Tell us about yourself',
+    next:'Next'
 }

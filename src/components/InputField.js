@@ -24,6 +24,8 @@ function InputField({
   isBlur,
   onPress,
   onChange,
+  editable,
+  keyboardType,
   ...otherProps
 }) {
   const {
@@ -55,6 +57,7 @@ function InputField({
               fontSize: RFValue(13),
               fontFamily: fonts.regular,
               color: '#8F8F8F',
+              marginLeft:'2%'
             }}>
             {inputLabel}
           </Text>
@@ -67,9 +70,11 @@ function InputField({
             placeholderTextColor={colors.color95}
             outlineColor={colors.colorB6}
             activeOutlineColor={colors.color95}
+            editable={editable}
+            keyboardType={keyboardType}
             style={{
               paddingLeft: prefix ? '10%' : '2%',
-              marginTop: '-2%',
+              marginTop: '-1%',
               backgroundColor:colors.white,
               paddingVertical:0,
               fontSize: RFValue(13),

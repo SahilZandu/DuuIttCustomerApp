@@ -1,11 +1,11 @@
-import {action, computed, decorate, observable, runInAction} from 'mobx';
-import {agent} from '../api/agent';
-import {rootStore} from './rootStore';
-import {useToast} from '../halpers/useToast';
+import { action, computed, decorate, observable, runInAction } from 'mobx';
+import { agent } from '../api/agent';
+import { rootStore } from './rootStore';
+import { useToast } from '../halpers/useToast';
 
 export default class AuthStore {
 
-  login = async (values, type, navigation, handleLoading,onDeactiveAccount) => {
+  login = async (values, type, navigation, handleLoading, onDeactiveAccount) => {
     handleLoading(true);
     let requestData = {};
     if (type == 'Mobile') {
@@ -26,11 +26,11 @@ export default class AuthStore {
       const res = await agent.login(requestData);
       console.log('Login API Res:', res);
       if (res?.statusCode == 200) {
-        navigation.navigate('verifyOtp', {value: values, loginType: type});
+        navigation.navigate('verifyOtp', { value: values, loginType: type });
         useToast(res.message, 1);
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        if(message == 'Your account is deactivated'){
+        if (message == 'Your account is deactivated') {
           onDeactiveAccount();
         }
         useToast(message, 0);
@@ -39,7 +39,7 @@ export default class AuthStore {
     } catch (error) {
       console.log('error:', error);
       handleLoading(false);
-      if(error?.data?.message == 'Your account is deactivated'){
+      if (error?.data?.message == 'Your account is deactivated') {
         onDeactiveAccount();
       }
       const m = error?.data?.message
@@ -67,7 +67,7 @@ export default class AuthStore {
         otp: Number(otp),
         type: 'customer',
       };
-    } else if(loginType == 'Email') {
+    } else if (loginType == 'Email') {
       requestData = {
         username: value?.email,
         password: value?.password ? value?.password : value?.email,
@@ -75,14 +75,14 @@ export default class AuthStore {
         otp: Number(otp),
         type: 'customer',
       };
-    }else{
+    } else {
       requestData = {
         username: value?.email,
         password: value?.password ? value?.password : value?.email,
         email: value?.email,
         otp: Number(otp),
         type: 'customer',
-        api_type:"update_password",
+        api_type: "update_password",
       };
     }
 
@@ -92,16 +92,23 @@ export default class AuthStore {
     try {
       const res = await agent.verifyOtp(requestData);
       console.log('verifyOtp API Res:', res);
-     
+
       if (res?.statusCode == 200) {
         useToast(res.message, 1);
         if (loginType == 'forgot') {
-          navigation.navigate('setPass', {data:value});
+          navigation.navigate('setPass', { data: value });
         } else {
-          const jwt = res?.data?.access_token;
-          await rootStore.commonStore.setToken(jwt);
-          await rootStore.commonStore.setAppUser(res?.data);
-          navigation.navigate('dashborad', {screen: 'home'});
+          if (res?.data?.name && res?.data?.name?.length > 0) {
+            const jwt = res?.data?.access_token;
+            await rootStore.commonStore.setToken(jwt);
+            await rootStore.commonStore.setAppUser(res?.data);
+            navigation.navigate('dashborad', { screen: 'home' });
+          } else {
+            const jwt = res?.data?.access_token;
+            await rootStore.commonStore.setToken(jwt);
+            await rootStore.commonStore.setAppUser(res?.data);
+            navigation.navigate('personalInfo', { loginType: loginType });
+          }
         }
         onResendClear();
       } else {
@@ -119,7 +126,7 @@ export default class AuthStore {
     }
   };
 
-  resendOtp = async (value, loginType, handleTimer,handleLoading) => {
+  resendOtp = async (value, loginType, handleTimer, handleLoading) => {
     handleLoading(true)
     let requestData = {};
     if (loginType == 'Mobile') {
@@ -169,7 +176,7 @@ export default class AuthStore {
       console.log('forgotPass API Res:', res);
       if (res?.statusCode == 200) {
         useToast(res.message, 1);
-        navigation.navigate('verifyOtp', {value: value, loginType: 'forgot'});
+        navigation.navigate('verifyOtp', { value: value, loginType: 'forgot' });
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
@@ -185,13 +192,13 @@ export default class AuthStore {
     }
   };
 
-  updatePassword = async (data,values,navigation,handleLoading) => {
+  updatePassword = async (data, values, navigation, handleLoading) => {
     handleLoading(true)
-    let requestData =  {
-      confirmPassword:values?.confirm,
-      newPassword:values?.password,
+    let requestData = {
+      confirmPassword: values?.confirm,
+      newPassword: values?.password,
       email: data?.email,
-      };
+    };
     console.log('request Data updatePassword:-', requestData);
     // handleLoading(false)
     // return
@@ -258,7 +265,7 @@ export default class AuthStore {
   // }
 
   getUser = async () => {
-    const {setAppUser} = rootStore.commonStore;
+    const { setAppUser } = rootStore.commonStore;
     try {
       const res = await agent.getUser();
       console.log('getUser API Res:', res);
@@ -304,4 +311,83 @@ export default class AuthStore {
       return [];
     }
   };
+
+
+
+  updateCustomerInfo = async (values, navigation, handleLoading) => {
+    handleLoading(true)
+    let requestData = {
+      name: values?.name,
+      email: values?.email,
+      phone: values?.mobile,
+      date_of_birth: values?.date_of_birth,
+      gender: "male"
+    };
+    console.log('request Data updateCustomerInfo:-', requestData);
+    // return
+    try {
+      const res = await agent.updateCustomerInfo(requestData);
+      console.log('updateCustomerInfo API Res:', res);
+      if (res?.statusCode == 200) {
+        useToast(res.message, 1);
+        await rootStore.commonStore.setAppUser(res?.data);
+        navigation.navigate('dashborad', { screen: 'home' });
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+      handleLoading(false)
+    } catch (error) {
+      console.log('error:updateCustomerInfo', error);
+      handleLoading(false)
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
+
+  userSetUpdatePassword = async (values,type, navigation, handleLoading) => {
+    handleLoading(true);
+    let requestData = {}
+    if (type == "update") {
+      requestData = {
+        oldPassword: values?.oldPassword,
+        confirmPassword: values?.confirm,
+        newPassword: values?.password,
+        email: values?.email,
+      }
+    } else {
+      requestData = {
+        confirmPassword: values?.confirm,
+        newPassword: values?.password,
+        email: values?.email,
+      }
+    }
+
+    console.log('request Data userSetUpdatePassword:-', requestData);
+    // handleLoading(false)
+    // return
+    try {
+      const res = await agent.updatePassword(requestData);
+      console.log('userSetUpdatePassword API Res:', res);
+      if (res?.statusCode == 200) {
+        useToast(res.message, 1);
+        navigation.goBack();
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+      handleLoading(false)
+    } catch (error) {
+      console.log('error:userSetUpdatePassword', error);
+      handleLoading(false)
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
 }

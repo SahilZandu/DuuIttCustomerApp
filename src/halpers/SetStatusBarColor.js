@@ -1,8 +1,8 @@
-import {colors} from '../theme/colors';
+import { colors } from '../theme/colors';
 
 const primaryScreens = ['splash'];
 
-const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test','customerSupport'];
+const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test', 'customerSupport'];
 
 const DashbordScreens = [
   'home',
@@ -53,7 +53,9 @@ const DashbordScreens = [
   'trackingFoodOrderList',
   'settings',
   'orderDetails',
-  'transactionHistory'
+  'transactionHistory',
+  'setUpdatePass',
+  'personalInfo'
 
 ];
 

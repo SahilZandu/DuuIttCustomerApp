@@ -1,27 +1,160 @@
 {
-    "weight": 1,
-    "type": "others",
-    "quantity": 1,
-    "sender_address": {
-        "primary_address": "myaddress",
-        "custom_address": "my custom address",
-        "landmark": "landmark",
-        "name": "sender's name",
-        "phone": 1234567890,
-        "geo_location": {
-            "lat": "1234",
-            "lng": "1234"
-        }
+    "__v": 0,
+    "_id": "67fca0acbcd637cdcd0f5b27",
+    "aadhar": {
+        "aadhar_number": "3244444444444444",
+        "back": "public/uploads/rider/documents/67fca0acbcd637cdcd0f5b27/back-1744609988342-512285832.png",
+        "front": "public/uploads/rider/documents/67fca0acbcd637cdcd0f5b27/front-1744609988160-479027260.png",
+        "status": "pending"
     },
-    "receiver_address": {
-        "primary_address": "myaddress",
-        "custom_address": "my custom address",
-        "landmark": "landmark",
-        "name": "sender's name",
-        "phone": 1234567890,
-        "geo_location": {
-            "lat": "1234",
-            "lng": "1234"
-        }
-    }
+    "addresses": [],
+    "availability_status": "available",
+    "bank_detail": {
+        "account_number": "126367673636363",
+        "bank_name": "Test preet",
+        "ifsc_code": "SBIN0031829",
+        "status": "pending"
+    },
+    "createdAt": "2025-04-14T05:44:12.794Z",
+    "current_location": {
+        "lat": "29.4516528",
+        "lng": "77.5549211"
+    },
+    "date_of_birth": "2005-04-14T00:00:00.000Z",
+    "device_id": "8e0c94cc73df4403",
+    "email": "Test23@gmail.com",
+    "fcm_token": "fa0lkSg0RsSFOnvHVYXRUZ:APA91bF5iajQKXEgM9RZtB08o5dP79D4dlQIWMkXMIN6mdRX_OLbH5LHE3Klc2JsHVm04qbvpLiFdQ2iYhJamYhGmwfQC3mPk5mrKb__g05BN6lt1rBnVPg",
+    "gender": null,
+    "isDeleted": false,
+    "is_deleted": false,
+    "is_online": true,
+    "is_profile_completed": true,
+    "name": "Test",
+    "no_of_tries": 0,
+    "otp": null,
+    "otpExpiresAt": null,
+    "pan": {
+        "back": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/pan/back-1744610042520-108433930.png",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/pan/front-1744610042373-555935025.png",
+        "pan_number": "AALPN1520B",
+        "status": "pending"
+    },
+    "password": "",
+    "pcc": {
+        "expiry_date": "2030-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/pcc/front-1744610111898-934389026.png",
+        "status": "pending"
+    },
+    "phone": 3333333333,
+    "profile_pic": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/profile/front-1744609965868-489452407.png",
+    "rc": {
+        "back": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/rc/back-1744610076719-469527132.png",
+        "expiry_date": "2039-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/rc/front-1744610076545-60742809.png",
+        "status": "pending"
+    },
+    "updatedAt": "2025-04-22T06:28:17.944Z",
+    "vehicle_info": {
+        "status": "pending",
+        "vehicle_number": "Pb11f3454",
+        "vehicle_type": "scooty"
+    },
+    "vehicle_insurance": {
+        "expiry_date": "2057-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/insurance/front-1744610096112-804334875.png",
+        "status": "pending"
+    },
+    "vehicle_license": {
+        "back": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/license/back-1744609949951-209577482.png",
+        "expiry_date": "2038-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/license/front-1744609949749-384505781.png",
+        "license_number": "Dl4353535345",
+        "status": "pending"
+    },
+    "vehicle_number": null,
+    "vehicle_type": null
+} 33bb65fe1ffa7f80344cd205465d6d84:f7b79f6e2640c2f6a62090b4e20c685e2bd73cd080eda7db1366573fbfd08b83a5b6aa53dc2c19f065749d4c606ddb24c1099211b00f3beaaeaf5edc4fc5ef57f5219222d2f201c2c93379f005be113d15d53165dd8e7d025a10650616d17630ce8ce48d0b8726f50ba79b1e0a56c9585ad0df83aca5124b7476a85229c58ce381b11318a4eaf3d685657d301f736db7cec59c5c8ee9cefdb4e15497f454c214e109a849d98e406639e92038025afabfdc66b5c29a453e84925fe250f36d4090829233c2eb9dfc56b280f09251271f3a3fee70f13d7ea84de5a53f4abb31d518495fb58d36cec70cd8e5ab098e9ab9bb4db2a92af8759c0efd11c4e2ea1114ccb73679a669fdbb40e49c2299d5795e2d0ddcf34bbfc2bc9023eaf71aa8ae42fa
+ WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.
+
+
+
+
+ {
+    "__v": 0,
+    "_id": "67fca0acbcd637cdcd0f5b27",
+    "aadhar": {
+        "aadhar_number": "3244444444444444",
+        "back": "public/uploads/rider/documents/67fca0acbcd637cdcd0f5b27/back-1744609988342-512285832.png",
+        "front": "public/uploads/rider/documents/67fca0acbcd637cdcd0f5b27/front-1744609988160-479027260.png",
+        "status": "pending"
+    },
+    "addresses": [],
+    "availability_status": "available",
+    "bank_detail": {
+        "account_number": "126367673636363",
+        "bank_name": "Test preet",
+        "ifsc_code": "SBIN0031829",
+        "status": "pending"
+    },
+    "createdAt": "2025-04-14T05:44:12.794Z",
+    "current_location": {
+        "lat": "29.4515277",
+        "lng": "77.5551185"
+    },
+    "date_of_birth": "2005-04-14T00:00:00.000Z",
+    "device_id": "8e0c94cc73df4403",
+    "email": "Test23@gmail.com",
+    "fcm_token": "fa0lkSg0RsSFOnvHVYXRUZ:APA91bF5iajQKXEgM9RZtB08o5dP79D4dlQIWMkXMIN6mdRX_OLbH5LHE3Klc2JsHVm04qbvpLiFdQ2iYhJamYhGmwfQC3mPk5mrKb__g05BN6lt1rBnVPg",
+    "gender": null,
+    "isDeleted": false,
+    "is_deleted": false,
+    "is_online": true,
+    "is_profile_completed": true,
+    "name": "Test",
+    "no_of_tries": 0,
+    "otp": null,
+    "otpExpiresAt": null,
+    "pan": {
+        "back": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/pan/back-1744610042520-108433930.png",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/pan/front-1744610042373-555935025.png",
+        "pan_number": "AALPN1520B",
+        "status": "pending"
+    },
+    "password": "",
+    "pcc": {
+        "expiry_date": "2030-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/pcc/front-1744610111898-934389026.png",
+        "status": "pending"
+    },
+    "phone": 3333333333,
+    "profile_pic": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/profile/front-1744609965868-489452407.png",
+    "rc": {
+        "back": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/rc/back-1744610076719-469527132.png",
+        "expiry_date": "2039-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/rc/front-1744610076545-60742809.png",
+        "status": "pending"
+    },
+    "updatedAt": "2025-04-22T06:54:17.845Z",
+    "vehicle_info": {
+        "status": "pending",
+        "vehicle_number": "Pb11f3454",
+        "vehicle_type": "scooty"
+    },
+    "vehicle_insurance": {
+        "expiry_date": "2057-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/insurance/front-1744610096112-804334875.png",
+        "status": "pending"
+    },
+    "vehicle_license": {
+        "back": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/license/back-1744609949951-209577482.png",
+        "expiry_date": "2038-04-14",
+        "front": "public/uploads/rider/67fca0acbcd637cdcd0f5b27/documents/license/front-1744609949749-384505781.png",
+        "license_number": "Dl4353535345",
+        "status": "pending"
+    },
+    "vehicle_number": null,
+    "vehicle_type": null
+}
+ LOG  requestData-- {
+    "userId": "67fca0acbcd637cdcd0f5b27"
 }

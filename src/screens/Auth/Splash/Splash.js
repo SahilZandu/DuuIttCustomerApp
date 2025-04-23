@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Image,} from 'react-native';
-import {appImages} from '../../../commons/AppImages';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Image, } from 'react-native';
+import { appImages } from '../../../commons/AppImages';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {rootStore} from '../../../stores/rootStore';
-import notifee, {AuthorizationStatus} from '@notifee/react-native';
+import { rootStore } from '../../../stores/rootStore';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import { setCurrentLocation } from '../../../components/GetAppLocation';
 import { colors } from '../../../theme/colors';
 
 
-export default function Splash({navigation}) {
+export default function Splash({ navigation }) {
 
 
   async function requestUserPermission() {
@@ -29,13 +29,23 @@ export default function Splash({navigation}) {
     requestUserPermission();
     setCurrentLocation()
     setTimeout(() => {
-      const {token, appUser} = rootStore.commonStore;
+      const { token, appUser } = rootStore.commonStore;
       console.log('appUser splash', appUser, token);
       const route = token?.length > 0 ? 'dashborad' : 'auth';
       if (token?.length > 0) {
-        navigation.navigate(route, {screen: 'home'});
+        if (appUser?.name && appUser?.name?.length > 0) {
+          navigation.navigate(route, { screen: 'home' });
+        } else {
+          navigation.navigate('auth', {
+            screen: 'personalInfo',
+            params: {
+              loginType: appUser?.email?.length > 0 ? 'Email' : 'Mobile',
+            }
+          });
+        }
+
       } else {
-        navigation.navigate(route, {screen: 'login'});
+        navigation.navigate(route, { screen: 'login' });
       }
     }, 4000);
 
@@ -45,7 +55,7 @@ export default function Splash({navigation}) {
     <View style={styles.screen}>
       <Image
         resizeMode="contain"
-        style={{width: wp('100%'), height: hp('100%')}}
+        style={{ width: wp('100%'), height: hp('100%') }}
         source={appImages.splashBg}
       />
     </View>
@@ -55,7 +65,7 @@ export default function Splash({navigation}) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor:colors.main,
+    backgroundColor: colors.main,
     justifyContent: 'center',
     alignItems: 'center',
   },

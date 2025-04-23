@@ -1,25 +1,25 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {View, Text, DeviceEventEmitter} from 'react-native';
-import {appImagesSvg} from '../../../../commons/AppImages';
-import {styles} from './styles';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, Text, DeviceEventEmitter } from 'react-native';
+import { appImagesSvg } from '../../../../commons/AppImages';
+import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
-import {rootStore} from '../../../../stores/rootStore';
+import { rootStore } from '../../../../stores/rootStore';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
-import {CommonActions} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import Url from '../../../../api/Url';
 import ReusableSurfaceComp from '../../../../components/ReusableSurfaceComp';
 import TouchTextRightIconComp from '../../../../components/TouchTextRightIconComp';
 import ProfileCompleteIconTextComp from '../../../../components/ProfileCompleteIconTextComp';
 import ProfileUpperShowComp from '../../../../components/ProfileUpperShowComp';
 import Spacer from '../../../../halpers/Spacer';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
 import PopUp from '../../../../components/appPopUp/PopUp';
 
-export default function SideMenu({navigation}) {
-  const {setToken, setAppUser, appUser} = rootStore.commonStore;
+export default function SideMenu({ navigation }) {
+  const { setToken, setAppUser, appUser } = rootStore.commonStore;
   const [initialValues, setInitialValues] = useState({
     image: '',
     name: '',
@@ -31,16 +31,18 @@ export default function SideMenu({navigation}) {
 
   const foodOptions = [
     {
+      id: '1',
       title: 'Your Order',
       onPress: () => {
         // console.log('Order Histroy');
-        navigation.navigate('tab3', {tabText: 'Food'});
+        navigation.navigate('tab3', { tabText: 'Food' });
       },
       icon: appImagesSvg.orderHistory,
       show: true,
       disable: false,
     },
     {
+      id: '2',
       title: 'My Favorite',
       onPress: () => {
         navigation.navigate('favoriteRestaurant');
@@ -52,10 +54,11 @@ export default function SideMenu({navigation}) {
   ];
   const rideOptions = [
     {
+      id: '1',
       title: 'Your Order',
       onPress: () => {
         // console.log('Order Histroy');
-        navigation.navigate('tab3', {tabText: 'Ride'});
+        navigation.navigate('tab3', { tabText: 'Ride' });
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -64,10 +67,11 @@ export default function SideMenu({navigation}) {
   ];
   const parcelOptions = [
     {
+      id: '1',
       title: 'Your Order',
       onPress: () => {
         // console.log('Order Histroy');
-        navigation.navigate('tab3', {tabText: 'Parcel'});
+        navigation.navigate('tab3', { tabText: 'Parcel' });
       },
       icon: appImagesSvg.orderHistory,
       show: true,
@@ -77,6 +81,7 @@ export default function SideMenu({navigation}) {
 
   const moneyOptions = [
     {
+      id: '1',
       title: 'Wallet',
       onPress: () => {
         navigation.navigate('wallet');
@@ -87,6 +92,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '2',
       title: 'Buy  Gift Card',
       onPress: () => {
         // console.log('Buy  Gift Card');
@@ -97,6 +103,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '3',
       title: 'Claim Gift Card',
       onPress: () => {
         // console.log('Claim Gift Card');
@@ -107,6 +114,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '4',
       title: 'Reward Coins',
       onPress: () => {
         navigation.navigate('rewardsStars');
@@ -117,6 +125,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '5',
       title: 'Duuitt Credits',
       onPress: () => {
         navigation.navigate('duuIttCredit');
@@ -127,6 +136,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '6',
       title: 'Payment Settings',
       onPress: () => {
         console.log('Payment Settings');
@@ -139,6 +149,7 @@ export default function SideMenu({navigation}) {
 
   const coupanOptions = [
     {
+      id: '1',
       title: 'Collected Coupons',
       onPress: () => {
         console.log('Collected Coupons');
@@ -150,10 +161,22 @@ export default function SideMenu({navigation}) {
   ];
 
   const moreOptions = [
+
     {
+      id: '1',
+      title: (appUser?.password &&  appUser?.password?.toString()?.length > 0 ) ? "Update Password" : 'Set Password',
+      onPress: () => {
+        navigation.navigate('setUpdatePass');
+      },
+      icon: appImagesSvg.setUpdateIcon,
+      show: (appUser?.email && appUser?.email?.length > 0) ? true : false,
+      disable: false,
+    },
+    {
+      id: '2',
       title: 'My Address',
       onPress: () => {
-        navigation.navigate('myAddress', {screenName: 'home'});
+        navigation.navigate('myAddress', { screenName: 'home' });
         // console.log('My Address');
       },
       icon: appImagesSvg.myAddressSvg,
@@ -170,6 +193,7 @@ export default function SideMenu({navigation}) {
     //   disable: false,
     // },
     {
+      id: '3',
       title: 'Send feedback',
       onPress: () => {
         navigation.navigate('feedback');
@@ -179,6 +203,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '4',
       title: 'Help',
       onPress: () => {
         navigation.navigate('help');
@@ -188,6 +213,7 @@ export default function SideMenu({navigation}) {
       disable: false,
     },
     {
+      id: '5',
       title: 'Settings',
       onPress: () => {
         navigation.navigate('settings');
@@ -199,6 +225,7 @@ export default function SideMenu({navigation}) {
     },
 
     {
+      id: '6',
       title: 'Logout',
       onPress: async () => {
         setIsLogout(true);
@@ -247,7 +274,7 @@ export default function SideMenu({navigation}) {
   };
 
   const onUpdateUserInfo = () => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     console.log('appUser--', appUser);
     setInitialValues({
       image:
@@ -276,7 +303,7 @@ export default function SideMenu({navigation}) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{name: 'auth'}],
+          routes: [{ name: 'auth' }],
         }),
       );
     }, 500);

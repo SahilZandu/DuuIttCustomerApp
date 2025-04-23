@@ -1,42 +1,43 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Text,
   View,
   FlatList,
   ActivityIndicator,
   DeviceEventEmitter,
+  Platform
 } from 'react-native';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
-import {styles} from './styles';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import CardOrder from '../../../../components/CardOrder';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Tabs3 from '../../../../components/Tabs3';
-import {rootStore} from '../../../../stores/rootStore';
+import { rootStore } from '../../../../stores/rootStore';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
-import {colors} from '../../../../theme/colors';
+import { colors } from '../../../../theme/colors';
 
 const tabs = [
-  {text: 'All Orders'},
-  {text: 'Food'},
-  {text: 'Ride'},
-  {text: 'Parcel'},
+  { text: 'All Orders' },
+  { text: 'Food' },
+  { text: 'Ride' },
+  { text: 'Parcel' },
 ];
 
 let defaultType = 'All Orders';
 let perPage = 20;
 
-export default function Orders({navigation, route}) {
-  const {tabText} = route.params;
-  const {parcelsOfUser, getOrderHistorybyFilters, orderHistoryList} =
+export default function Orders({ navigation, route }) {
+  const { tabText } = route.params;
+  const { parcelsOfUser, getOrderHistorybyFilters, orderHistoryList } =
     rootStore.orderStore;
-  const {appUser} = rootStore.commonStore;
+  const { appUser } = rootStore.commonStore;
   const [orderList, setOrderList] = useState(orderHistoryList);
   const [type, setType] = useState('All Orders');
   const [loadingMore, setLoadingMore] = useState(false);
@@ -115,16 +116,16 @@ export default function Orders({navigation, route}) {
 
   const renderFooter = () => {
     return loadingMore ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={colors.main} />
       </View>
     ) : null;
   };
 
-  const renderItem = ({item, i}) => {
+  const renderItem = ({ item, i }) => {
     return (
       <>
-        <CardOrder item={item} index={i} handleDetails={(item)=>{navigation.navigate('orderDetails',{item:item})}} />
+        <CardOrder item={item} index={i} handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
       </>
     );
   };
@@ -157,10 +158,10 @@ export default function Orders({navigation, route}) {
             {loading == true ? (
               <AnimatedLoader type={'orderHistoryLoader'} />
             ) : (
-              <View style={{flex: 0}}>
+              <View style={{ flex: 0 }}>
                 {orderList?.length > 0 ? (
                   <FlatList
-                    contentContainerStyle={{paddingBottom: '30%'}}
+                    contentContainerStyle={{paddingBottom: Platform.OS == 'ios' ? '35%' : '30%' }}
                     scrollEnabled={true}
                     showsVerticalScrollIndicator={false}
                     data={orderList}
