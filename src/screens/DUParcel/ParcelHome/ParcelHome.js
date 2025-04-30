@@ -1,38 +1,38 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {View, Image, DeviceEventEmitter} from 'react-native';
-import {appImages} from '../../../commons/AppImages';
-import {styles} from './styles';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { View, Image, DeviceEventEmitter } from 'react-native';
+import { appImages } from '../../../commons/AppImages';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import {homeParcelCS} from '../../../stores/DummyData/Home';
+import { homeParcelCS } from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
-import {getCurrentLocation} from '../../../components/GetAppLocation';
-import {rootStore} from '../../../stores/rootStore';
+import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { rootStore } from '../../../stores/rootStore';
 import moment from 'moment';
 import TrackingOrderComp from '../../../components/TrackingOrderComp';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
 import socketServices from '../../../socketIo/SocketServices';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
-import MapLocationRoute from '../../../components/MapLocationRoute';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
+import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute';
 
 let geoLocation = {
   lat: null,
   lng: null,
 };
 let ratingData = {};
-export default function ParcelHome({navigation}) {
-  const {appUser} = rootStore.commonStore;
+export default function ParcelHome({ navigation }) {
+  const { appUser } = rootStore.commonStore;
   const {
     // ordersRecentOrder,
     ordersTrackOrder,
@@ -40,9 +40,9 @@ export default function ParcelHome({navigation}) {
     getPendingForCustomer,
     updateOrderStatus,
   } = rootStore.orderStore;
-  const {setAddParcelInfo} = rootStore.parcelStore;
-  const {setSenderAddress, setReceiverAddress} = rootStore.myAddressStore;
-  const {testMessage} = rootStore.dashboardStore;
+  const { setAddParcelInfo } = rootStore.parcelStore;
+  const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
+  const { testMessage } = rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [recentOrder, setRecentOrder] = useState({});
   const [loading, setLoading] = useState(false);
@@ -67,6 +67,7 @@ export default function ParcelHome({navigation}) {
     useCallback(() => {
       // setCurrentLocation();
       setMpaDaltaInitials();
+      checkInternet();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();
       getTrackingOrder();
@@ -84,7 +85,7 @@ export default function ParcelHome({navigation}) {
         setOriginLocation(geoLocation);
         console.log('Updated geoLocation:', geoLocation);
       }, 1500);
-    
+
     }, []),
   );
 
@@ -116,7 +117,7 @@ export default function ParcelHome({navigation}) {
     const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
       console.log('cancel Order data -- ', data);
       if (data?.order_type == 'parcel') {
-      getIncompleteOrder();
+        getIncompleteOrder();
       }
     });
     return () => {
@@ -128,8 +129,8 @@ export default function ParcelHome({navigation}) {
     const subscription = DeviceEventEmitter.addListener('picked', data => {
       console.log('picked data -- ', data);
       if (data?.order_type == 'parcel') {
-      // navigation.navigate('parcel', {screen: 'home'});
-      getTrackingOrder();
+        // navigation.navigate('parcel', {screen: 'home'});
+        getTrackingOrder();
       }
     });
     return () => {
@@ -141,11 +142,11 @@ export default function ParcelHome({navigation}) {
     const subscription = DeviceEventEmitter.addListener('dropped', data => {
       console.log('dropped data --Parcel ', data);
       if (data?.order_type == 'parcel') {
-      ratingData = data;
-      setTimeout(() => {
-        setIsReviewRider(true);
-      }, 300);
-      getTrackingOrder();
+        ratingData = data;
+        setTimeout(() => {
+          setIsReviewRider(true);
+        }, 300);
+        getTrackingOrder();
       }
     });
     return () => {
@@ -209,7 +210,7 @@ export default function ParcelHome({navigation}) {
   // };
 
   const onUpdateUserInfo = () => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     setAppUserInfo(appUser);
   };
 
@@ -274,12 +275,17 @@ export default function ParcelHome({navigation}) {
           <DashboardHeader2
             navigation={navigation}
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate('dashborad', {
+                screen: 'home', params: {
+                  screen: 'tab1',
+                },
+              });
+              // navigation.goBack();
             }}
             appUserInfo={appUserInfo}
           />
-          <MapLocationRoute
-            mapContainerView={{height: hp('25%')}}
+          <MapCurrentLocationRoute
+            mapContainerView={{ height: hp('25%') }}
             origin={geoLocation ?? originLocation}
             isPendingReq={true}
           />
@@ -300,7 +306,7 @@ export default function ParcelHome({navigation}) {
               padding={true}
               Pb={getHeight(trackedArray, incompletedArray)}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{marginTop: '4%', marginHorizontal: 20}}>
+              <View style={{ marginTop: '4%', marginHorizontal: 20 }}>
                 {/* <View>
               <Text
                 style={{
@@ -353,15 +359,15 @@ export default function ParcelHome({navigation}) {
                   }}>
                   <Image
                     resizeMode="contain"
-                    style={{width: wp('90%'), height: hp('18%')}}
+                    style={{ width: wp('90%'), height: hp('18%') }}
                     source={appImages.parcelHomeImage}
                   />
                 </View>
-                <ChangeRoute2
+                {/* <ChangeRoute2
                   data={homeParcelCS}
                   navigation={navigation}
                   route={'PARCEL'}
-                />
+                /> */}
               </View>
               <View style={styles.bottomImageView}>
                 <Image

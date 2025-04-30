@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Platform,
@@ -13,18 +13,18 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import MapRoute from '../../../components/MapRoute';
-import {styles} from './styles';
+import { styles } from './styles';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import CTA from '../../../components/cta/CTA';
 import Spacer from '../../../halpers/Spacer';
 import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGooglePlaceHolder';
 import Header from '../../../components/header/Header';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
-import {screenHeight} from '../../../halpers/matrics';
-import {rootStore} from '../../../stores/rootStore';
-import {appImages} from '../../../commons/AppImages';
-import {getGeoCodes, setMpaDaltaInitials} from '../../../components/GeoCodeAddress';
-import {getCurrentLocation} from '../../../components/GetAppLocation';
+import { screenHeight } from '../../../halpers/matrics';
+import { rootStore } from '../../../stores/rootStore';
+import { appImages } from '../../../commons/AppImages';
+import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
+import { getCurrentLocation } from '../../../components/GetAppLocation';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -33,11 +33,14 @@ let currentLocation = {
   lat: null,
   lng: null,
 };
-const ChooseMapLocation = ({navigation, route}) => {
-  const {setSenderAddress, setReceiverAddress, senderAddress, receiverAddress} =
+
+const ChooseMapLocation = ({ navigation, route }) => {
+  const { setSenderAddress, setReceiverAddress, senderAddress, receiverAddress } =
     rootStore.myAddressStore;
-  const {pickDrop, item} = route.params;
-  console.log('pickDrop--', pickDrop, item);
+
+  const debounceTimeout = useRef(null);
+  const { pickDrop, item } = route.params;
+  console.log('pickDrop--ChooseMapLocation', pickDrop, item);
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
     let d =
@@ -54,23 +57,16 @@ const ChooseMapLocation = ({navigation, route}) => {
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
 
-  const onPressAddress = (data, details) => {
-    console.log('data ,details 333', data, details);
-    setName(details?.name);
-    setAddress(details?.formatted_address);
-    setGeoLocation(details?.geometry?.location);
-  };
-
   useFocusEffect(
-    useCallback(()=>{
+    useCallback(() => {
       handleAndroidBackButton(navigation)
       setMpaDaltaInitials();
-    })
+    }, [])
   )
 
   useEffect(() => {
     setTimeout(() => {
-      if (Object?.keys(item || {})?.length > 0) {
+      if (item?.geo_location?.lat) {
         setGeoLocation(item?.geo_location);
         setAddress(item?.address);
         setName(item?.name);
@@ -84,6 +80,63 @@ const ChooseMapLocation = ({navigation, route}) => {
       lng: getLocation('lng'),
     };
   }, []);
+
+  const mohaliChandigarhBounds = {
+    north: 30.8258,
+    south: 30.6600,
+    west: 76.6600,
+    east: 76.8500,
+  };
+
+  const isWithinBounds = (latitude, longitude) => {
+    return (
+      latitude <= mohaliChandigarhBounds.north &&
+      latitude >= mohaliChandigarhBounds.south &&
+      longitude >= mohaliChandigarhBounds.west &&
+      longitude <= mohaliChandigarhBounds.east
+    );
+  };
+
+  const handleRegionChangeComplete = (region) => {
+    onHandleConfirm()
+    // if (debounceTimeout.current) {
+    //   clearTimeout(debounceTimeout.current);
+    // }
+
+    // debounceTimeout.current = setTimeout(() => {
+    //   if (!isWithinBounds(region.lat, region.lng)) {
+    //     Alert.alert(" ", `Oops! we currently don't service your ${(pickDrop == 'pick' ?"pickup":'drop')} location. Please select different location.`);
+    //   } else {
+    //     if (pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
+    //       if (!isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
+    //         Alert.alert(" ", "Oops! we currently don't service your pickup location. Please select different location.");
+    //       }else {
+    //         onHandleConfirm()
+    //        }
+    //     } else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0) {
+    //       if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng)) {
+    //         Alert.alert(" ", "Oops! we currently don't service your drop location. Please select different location.");
+    //       }
+    //       else {
+    //         onHandleConfirm()
+    //        }
+    //     }
+    //      else {
+    //       onHandleConfirm()
+    //      }
+    //   }
+    // },300); // Delay in milliseconds
+  };
+
+  const onPressAddress = (data, details) => {
+    console.log('data ,details 333', data, details);
+    setName(details?.name);
+    setAddress(details?.formatted_address);
+    setGeoLocation(details?.geometry?.location);
+  };
+
+
+ 
 
   const onHandleConfirm = () => {
     const newItem = {
@@ -132,7 +185,7 @@ const ChooseMapLocation = ({navigation, route}) => {
   };
 
   const handleTouchAddress = async (loaction) => {
-    console.log("loaction---",loaction);
+    console.log("loaction---", loaction);
     const addressData = await getGeoCodes(
       loaction?.latitude,
       loaction?.longitude,
@@ -148,7 +201,7 @@ const ChooseMapLocation = ({navigation, route}) => {
     setAddress(addressData?.address);
     // setGeoLocation(addressData?.geo_location);
     setGeoLocation(newLocation);
-    
+
   };
 
   return (
@@ -160,16 +213,20 @@ const ChooseMapLocation = ({navigation, route}) => {
           navigation.goBack();
         }}
       />
-      <View style={{flex: 1}}>
-      
-      <MapLocationRoute
+      <View style={{ flex: 1 }}>
+
+        <MapLocationRoute
           mapContainerView={
             Platform.OS == 'ios'
-              ? {height: screenHeight(70)}
-              : {height: screenHeight(74)}
+              ? { height: screenHeight(70) }
+              : { height: screenHeight(74) }
           }
           origin={geoLocation}
           onTouchLocation={handleTouchAddress}
+          height={Platform.OS == 'ios'
+            ? screenHeight(70)
+            : screenHeight(74)
+          }
         />
         {/* <MapRoute
           mapContainerView={
@@ -201,21 +258,22 @@ const ChooseMapLocation = ({navigation, route}) => {
       </View>
 
       <View style={styles.bottomPopUpContainer}>
-        <View style={{paddingHorizontal: 30, marginTop: '3%'}}>
+        <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
           {!address?.length > 0 ? (
             <AnimatedLoader type={'addMyAddress'} />
           ) : (
             <>
               <LocationHistoryCard
                 bottomLine={true}
-                item={{name: name, address: address}}
+                item={{ name: name, address: address }}
                 index={0}
-                onPress={() => {}}
+                onPress={() => { }}
               />
               <Spacer space={'12%'} />
               <CTA
                 onPress={() => {
-                  onHandleConfirm();
+                  // onHandleConfirm();
+                  handleRegionChangeComplete(geoLocation);
                 }}
                 title={'Confirm'}
                 textTransform={'capitalize'}

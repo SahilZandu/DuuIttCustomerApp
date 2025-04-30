@@ -1,4 +1,4 @@
-import React, {useState, useRef,useEffect} from 'react';
+import React, {useState, useRef,useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -124,9 +124,9 @@ export default function CartItemUpdate({
   };
 
   useFocusEffect(
-    React.useCallback(() => {
+   useCallback(() => {
       refreshItem();
-    }, [visible == true]),
+    }, [visible == true])
   );
 
   const calculateIcon = icon => {

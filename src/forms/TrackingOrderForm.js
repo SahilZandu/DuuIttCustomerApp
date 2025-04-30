@@ -275,7 +275,7 @@ const TrackingOrderForm = ({navigation}) => {
                       : setTrackImage(item?.order_type),
 
                   name: item?.rider?.name ? item?.rider?.name : 'DuuItt Rider',
-                  rating: '4.5',
+                  rating: '0',
                 }}
                 onMessage={() => {
                   hanldeLinking('email');

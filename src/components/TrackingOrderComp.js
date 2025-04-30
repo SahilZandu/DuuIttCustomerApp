@@ -1,16 +1,16 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import {Surface} from 'react-native-paper';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { Surface } from 'react-native-paper';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 
-const TrackingOrderComp = ({navigation, trackedArray}) => {
+const TrackingOrderComp = ({ navigation, trackedArray }) => {
   const setOrderImage = status => {
     switch (status) {
       case 'food':
@@ -58,9 +58,11 @@ const TrackingOrderComp = ({navigation, trackedArray}) => {
         }}
         activeOpacity={0.9}
         style={styles.moreView}>
-        <Surface elevation={2} style={styles.moreSurface}>
-          <Text style={styles.moreText}> +{trackedArray?.length} more</Text>
-        </Surface>
+        {trackedArray?.length > 1 &&
+          <Surface elevation={2} style={styles.moreSurface}>
+            <Text style={styles.moreText}> +{trackedArray?.length - 1} more</Text>
+          </Surface>
+        }
       </TouchableOpacity>
     </View>
   );
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   main: {
     position: 'absolute',
     alignSelf: 'center',
-    bottom:hp('8.5%'),
+    bottom: hp('8.5%'),
   },
   upperSurfaceView: {
     width: wp('85%'),

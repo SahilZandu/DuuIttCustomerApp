@@ -1,27 +1,27 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import CTA from '../components/cta/CTA';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../halpers/AppInputScroll';
-import {colors} from '../theme/colors';
+import { colors } from '../theme/colors';
 import PickDropLocation from '../components/PickDropLocation';
-import {useFocusEffect} from '@react-navigation/native';
-import {rootStore} from '../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
+import { rootStore } from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
 import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
-import {silderArray} from '../stores/DummyData/Home';
+import { silderArray } from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
 import MapRoute from '../components/MapRoute';
 
-const RidePriceForm = ({navigation}) => {
-  const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
+const RidePriceForm = ({ navigation }) => {
+  const { senderAddress, receiverAddress, setSenderAddress, setReceiverAddress } =
     rootStore.myAddressStore;
-  const {addRequestParcelRide} = rootStore.parcelStore;
-  const {appUser} = rootStore.commonStore;
+  const { addRequestParcelRide } = rootStore.parcelStore;
+  const { appUser } = rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -36,7 +36,7 @@ const RidePriceForm = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       getCheckSenderReceiverData();
-      const {appUser} = rootStore.commonStore;
+      const { appUser } = rootStore.commonStore;
       setAppUserData(appUser);
     }, []),
   );
@@ -44,7 +44,7 @@ const RidePriceForm = ({navigation}) => {
   console.log('appUser ride --', appUser);
 
   const getCheckSenderReceiverData = () => {
-    const {senderAddress, receiverAddress} = rootStore.myAddressStore;
+    const { senderAddress, receiverAddress } = rootStore.myAddressStore;
     console.log(
       'senderAddress,receiverAddress',
       senderAddress,
@@ -53,34 +53,7 @@ const RidePriceForm = ({navigation}) => {
     setPickUpLocation(senderAddress?.address);
     setDropLocation(receiverAddress?.address);
   };
-
-  const handlePrice = async () => {
-    const newdata = {
-      weight: weight,
-      quantity: quantity,
-      type: 'Others',
-      sender_address: senderAddress,
-      receiver_address: receiverAddress,
-      billing_detail: {
-      delivery_fee: 0,
-       distance_fee: 0,
-       discount: 0,
-       platform_fee: 2,
-       gst_fee: 18
-        },
-      isSecure: isSecure,
-      order_type: 'ride',
-    };
-    console.log('newdata--', newdata);
-
-    await addRequestParcelRide(newdata, navigation, handleLoading);
-  };
-
-  const handleLoading = v => {
-    setLoading(v);
-  };
-
-  const FormButton = ({loading, onPress}) => {
+  const FormButton = ({ loading, onPress }) => {
     return (
       <CTA
         title={'Proceed'}
@@ -90,8 +63,36 @@ const RidePriceForm = ({navigation}) => {
         width={'90%'}
         textTransform={'capitalize'}
       />
-    );
+    )
   };
+
+
+  const handlePrice = async () => {
+    const newdata = {
+      weight: weight,
+      quantity: quantity,
+      type: 'Others',
+      sender_address: senderAddress,
+      receiver_address: receiverAddress,
+      billing_detail: {
+        delivery_fee: 0,
+        distance_fee: 0,
+        discount: 0,
+        platform_fee: 2,
+        gst_fee: 18
+      },
+      isSecure:isSecure,
+      order_type: 'ride',
+    };
+    console.log('newdata--', newdata);
+
+    await addRequestParcelRide(newdata, navigation, handleLoading)
+  };
+
+  const handleLoading = (v) => {
+    setLoading(v)
+  }
+
 
   const onPressPickLocation = () => {
     navigation.navigate('chooseMapLocation', {
@@ -128,10 +129,10 @@ const RidePriceForm = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <>
         <KeyboardAvoidingView
-          style={{flex: 1}}
+          style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <AppInputScroll
             Pb={'15%'}
@@ -140,9 +141,9 @@ const RidePriceForm = ({navigation}) => {
             <MapRoute
               origin={senderAddress?.geo_location}
               destination={receiverAddress?.geo_location}
-              mapContainerView={{height:Platform.OS == 'ios' ? hp('28%') : hp('28%')}}
+              mapContainerView={{ height: Platform.OS == 'ios' ? hp('28%') : hp('28%') }}
             />
-            <View style={{flex: 1, marginHorizontal: 20}}>
+            <View style={{ flex: 1, marginHorizontal: 20 }}>
               <PickDropLocation
                 pickUpLocation={pickUpLocation}
                 dropLocation={dropLocation}
@@ -155,34 +156,34 @@ const RidePriceForm = ({navigation}) => {
                 drop={'Dropped location'}
               />
             </View>
-            <View style={{marginHorizontal: 10}}>
+            <View style={{ marginHorizontal: 10 }}>
               <HomeSlider data={sliderItems} />
             </View>
           </AppInputScroll>
         </KeyboardAvoidingView>
 
-        <View style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
+        <View style={{ backgroundColor: colors.appBackground, height: hp('9%') }}>
           <FormButton loading={loading} onPress={handlePrice} />
         </View>
       </>
 
       {(appUserData?.profile_pic == null ||
         appUserData?.profile_pic?.length === 0) && (
-        <IncompletedAppRule
-          title={'App Confirmation'}
-          message={'Please complete your profile first.'}
-          onHanlde={() =>
-            navigation.navigate('profile', {screenName: 'rideRoute'})
-          }
-        />
-      )}
+          <IncompletedAppRule
+            title={'App Confirmation'}
+            message={'Please complete your profile first.'}
+            onHanlde={() =>
+              navigation.navigate('profile', { screenName: 'rideRoute' })
+            }
+          />
+        )}
 
       <ModalPopUp
         isVisible={isAddressModal}
         onClose={() => {
           setIsAddressModal(false);
         }}>
-        <View style={{height: hp('58%'), backgroundColor: colors.white}}>
+        <View style={{ height: hp('58%'), backgroundColor: colors.white }}>
           <SenderReceiverForm
             navigation={navigation}
             pickDrop={isStatus}
@@ -199,4 +200,3 @@ const RidePriceForm = ({navigation}) => {
 
 export default RidePriceForm;
 
-const styles = StyleSheet.create({});

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,15 +6,17 @@ import {
   Platform,
   Dimensions,
   Text,
+  Alert,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages} from '../commons/AppImages';
-import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import { appImages } from '../commons/AppImages';
+import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
-import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
+import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
+import { colors } from '../theme/colors';
 
 let currentLocation = {};
 
@@ -26,17 +28,72 @@ const MapLocationRoute = ({
   height,
 }) => {
   const mapRef = useRef(null);
+  const debounceTimeout = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat ? Number(origin?.lat) : 30.7076,
-    longitude: origin?.lng ? Number(origin?.lng) : 76.715126,
+    latitude: origin?.lat ? Number(origin?.lat) : 30.7400,
+    longitude: origin?.lng ? Number(origin?.lng) : 76.7900,
     latitudeDelta: getMpaDalta().latitudeDelta,
     longitudeDelta: getMpaDalta().longitudeDelta,
   });
   const [isMapReady, setIsMapReady] = useState(
-    currentLocation?.lat?.toString()?.length > 0 ? true : false,
+    false
+    // currentLocation?.lat?.toString()?.length > 0 ? true : false,
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMapReady(currentLocation?.lat?.toString()?.length > 0 ? true : false)
+    }, 300)
+  }, [currentLocation])
+
   console.log('origin---11', origin, mapRegion);
+  const mohaliChandigarhBounds = {
+    north: 30.8258,
+    south: 30.6600,
+    west: 76.6600,
+    east: 76.8500,
+  };
+
+  const isWithinBounds = (latitude, longitude) => {
+    return (
+      latitude <= mohaliChandigarhBounds.north &&
+      latitude >= mohaliChandigarhBounds.south &&
+      longitude >= mohaliChandigarhBounds.west &&
+      longitude <= mohaliChandigarhBounds.east
+    );
+  };
+
+  const handleRegionChangeComplete = (region) => {
+    console.log('Updated region:', region);
+    // if (!isWithinBounds(region.latitude, region.longitude)) {
+    //   // Recenter map if user tries to go out of bounds
+    // mapRef.current?.animateToRegion({
+    //   latitude: Number(mapRegion?.latitude) ?? 30.7400,
+    //   longitude: Number(mapRegion?.longitude) ?? 76.7900,
+    //   latitudeDelta: getMpaDalta().latitudeDelta,
+    //   longitudeDelta: getMpaDalta().longitudeDelta,
+    // });
+    //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+    // }
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      if (!isWithinBounds(region.latitude, region.longitude)) {
+        mapRef.current?.animateToRegion({
+          latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
+          longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
+          latitudeDelta: getMpaDalta().latitudeDelta,
+          longitudeDelta: getMpaDalta().longitudeDelta,
+        });
+        Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+      }
+    },2000); // Delay in milliseconds
+
+
+  };
 
   // Update region when origin changes
   useEffect(() => {
@@ -54,11 +111,44 @@ const MapLocationRoute = ({
         longitudeDelta: getMpaDalta().longitudeDelta,
       }));
     }
-  }, [origin, isMapReady]);
+  }, [origin,isMapReady]);
+
+  // const onTouchLocationData = useCallback(
+  //   coordinate => {
+  //     // console.log('coordinate---', coordinate);
+  //     if (debounceTimeout.current) {
+  //       clearTimeout(debounceTimeout.current);
+  //     }
+  //     debounceTimeout.current = setTimeout(() => {
+  //       if (!isWithinBounds(coordinate.latitude, coordinate.longitude)) {
+  //         mapRef.current?.animateToRegion({
+  //           latitude: Number(30.7400 ?? coordinate?.latitude) ?? 30.7400,
+  //           longitude: Number(76.7900 ?? coordinate?.longitude) ?? 76.7900,
+  //           latitudeDelta: getMpaDalta().latitudeDelta,
+  //           longitudeDelta: getMpaDalta().longitudeDelta,
+  //         });
+  //         Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+  //       } else {
+  //         setMapRegion(prev => ({
+  //           ...prev,
+  //           latitude: Number(coordinate?.latitude),
+  //           longitude: Number(coordinate?.longitude),
+  //           latitudeDelta: getMpaDalta().latitudeDelta,
+  //           longitudeDelta: getMpaDalta().longitudeDelta,
+  //         }));
+  //         // handleRegionChangeComplete(coordinate)
+  //         onTouchLocation(coordinate);
+  //       }
+  //     }, 50); // Delay in milliseconds
+
+  //   },
+  //   [onTouchLocation],
+  // );
 
   const onTouchLocationData = useCallback(
     coordinate => {
-      // console.log('coordinate---', coordinate);
+      // console.log('coordinate---', coordinate)
+
       setMapRegion(prev => ({
         ...prev,
         latitude: Number(coordinate?.latitude),
@@ -66,7 +156,9 @@ const MapLocationRoute = ({
         latitudeDelta: getMpaDalta().latitudeDelta,
         longitudeDelta: getMpaDalta().longitudeDelta,
       }));
+      // handleRegionChangeComplete(coordinate)
       onTouchLocation(coordinate);
+
     },
     [onTouchLocation],
   );
@@ -93,6 +185,8 @@ const MapLocationRoute = ({
         onRegionChange={e => {
           setMpaDalta(e);
           // console.log('e---onRegionChange', e);
+          // handleRegionChangeComplete(e)
+
         }}
         ref={mapRef}
         style={[styles.mapContainer, mapContainerView]}
@@ -116,8 +210,8 @@ const MapLocationRoute = ({
                 latitude: Number(mapRegion?.latitude),
                 longitude: Number(mapRegion?.longitude),
               }}
-              // tracksViewChanges={!isMapReady}
-              useLegacyPinView={true}>
+              tracksViewChanges={!isMapReady}
+              >
               <Image
                 resizeMode="contain"
                 source={appImages.markerImage}
@@ -125,6 +219,29 @@ const MapLocationRoute = ({
               />
             </Marker>
           )}
+        {/* <Polygon
+          coordinates={[
+            // { latitude: 30.8258, longitude: 76.6600 }, // NW
+            // { latitude: 30.8258, longitude: 76.8500 }, // NE
+            // { latitude: 30.6600, longitude: 76.8500 }, // SE
+            // { latitude: 30.6600, longitude: 76.6600 }, // SW
+            { latitude: 30.8258, longitude: 76.7550 }, // top center
+            { latitude: 30.8100, longitude: 76.8050 },
+            { latitude: 30.7900, longitude: 76.8350 },
+            { latitude: 30.7550, longitude: 76.8500 }, // mid-right
+            { latitude: 30.7200, longitude: 76.8350 },
+            { latitude: 30.6900, longitude: 76.8050 },
+            { latitude: 30.6600, longitude: 76.7550 }, // bottom center
+            { latitude: 30.6750, longitude: 76.7100 },
+            { latitude: 30.7000, longitude: 76.6800 },
+            { latitude: 30.7400, longitude: 76.6600 }, // mid-left
+            { latitude: 30.7800, longitude: 76.6800 },
+            { latitude: 30.8050, longitude: 76.7100 },
+          ]}
+          strokeColor={colors.black}
+          fillColor="rgba(0, 150, 255, 0)"
+          strokeWidth={2}
+        /> */}
       </MapView>
       {isMapReady == false && (
         // <View style={{position: 'absolute'}}>
@@ -139,7 +256,7 @@ const MapLocationRoute = ({
   );
 };
 
-export default React.memo(MapLocationRoute);
+export default MapLocationRoute;
 
 const styles = StyleSheet.create({
   homeSubContainer: {
@@ -147,7 +264,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     shadowRadius: 1,
-    shadowOffset: {height: 2, width: 0},
+    shadowOffset: { height: 2, width: 0 },
   },
   mapContainer: {
     alignSelf: 'center',

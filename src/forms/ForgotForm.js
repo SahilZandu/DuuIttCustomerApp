@@ -52,6 +52,7 @@ const ForgotForm = ({navigation}) => {
       validationSchema={forgotValidations()}>
       <View style={{width: wp('85%'), alignSelf: 'center'}}>
         <InputField
+          autoCapitalize={'none'}
           textColor={'#000000'}
           keyboardType="email-address"
           name={'email'}

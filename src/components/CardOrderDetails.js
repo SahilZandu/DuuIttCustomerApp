@@ -187,7 +187,7 @@ const CardOrderDetails = ({item}) => {
             </View>
             <View style={styles.trackTextView}>
               <Text numberOfLines={1} style={styles.trackIdText}>
-                {item?.name ? item?.name : `ID:${item?._id}`}
+                {item?.name ? item?.name : `ID:${item?.order_id}`}
               </Text>
               <Text style={styles.dateText}>
                 {dateTimeFormat(item?.createdAt)}
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
   },
   trackTextView: {flex: 1, flexDirection: 'column', marginLeft: '2.5%'},
   trackIdText: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(13),
     fontFamily: fonts.medium,
     color: colors.black,
   },

@@ -1,10 +1,10 @@
 
 import React from 'react';
-import {Pressable, View,Text} from 'react-native';
-import {TextInput} from 'react-native-paper';
-import {useFormikContext} from 'formik';
-import {colors} from '../theme/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { Pressable, View, Text } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useFormikContext } from 'formik';
+import { colors } from '../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 import FieldErrorMessage from './FieldErrorMessage';
 import { heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
 import { fonts } from '../theme/fonts/fonts';
@@ -57,7 +57,7 @@ function InputField({
               fontSize: RFValue(13),
               fontFamily: fonts.regular,
               color: '#8F8F8F',
-              marginLeft:'2%'
+              marginLeft: '2%'
             }}>
             {inputLabel}
           </Text>
@@ -72,18 +72,30 @@ function InputField({
             activeOutlineColor={colors.color95}
             editable={editable}
             keyboardType={keyboardType}
+            scrollEnabled={false}
+            dense={true}
+            textAlignVertical="center"
+            multiline={false}          // <-- ADD THIS
+            numberOfLines={1}           // <-- ADD THIS
             style={{
               paddingLeft: prefix ? '10%' : '2%',
-              marginTop: '-1%',
-              backgroundColor:colors.white,
-              paddingVertical:0,
+              marginTop: '1%',
+              backgroundColor: colors.appBackground,
+              paddingVertical: 0,
               fontSize: RFValue(13),
-              height:hp('5.8%'),
-              fontWeight:'500',
-              textAlign: 'left', 
-              textAlignVertical:'center',
+              height: hp('3.8%'),
+              fontWeight: '500',
+              textAlign: 'left',
+              textAlignVertical: 'center',
             }}
-            theme={{roundness: 50}}
+            contentStyle={{
+              height: hp('5.8%'), // same as style.height
+              textAlignVertical: 'center',
+              paddingVertical: 0,
+              marginVertical: 0,
+              fontSize: RFValue(13),
+            }}
+            theme={{ roundness: 50 }}
             left={
               (leftIconName && (
                 <TextInput.Icon
@@ -120,7 +132,7 @@ function InputField({
                     icon={rightIconName}
                     size={24}
                     iconColor={'#8F8F8F'}
-                    style={{marginLeft:'4%'}}
+                    style={{ marginLeft: '4%', bottom: hp('-1%'), alignSelf: 'center' }}
                   />
                 )
               ) : null
@@ -130,10 +142,10 @@ function InputField({
             onBlur={() => (onBlur ? onBlur() : setFieldTouched(name))}
             onChangeText={t => {
               // handleChange(name)
-              if(onChange){
+              if (onChange) {
                 onChange(true)
               }
-             ;
+              ;
               setFieldValue(name, t);
             }}
             {...otherProps}
@@ -145,15 +157,15 @@ function InputField({
               position: 'absolute',
               left: 10,
               fontSize: RFValue(13),
-              color:colors.black,
+              color: colors.black,
               textAlign: 'center',
-              top:'27%'
+              top: '27%'
             }}>
             {prefix}
           </Text>
         )}
       </View>
-      <FieldErrorMessage errorStyle={{marginTop:0}}  error={errors[name]} visible={touched[name]} />
+      <FieldErrorMessage errorStyle={{ marginTop: 0 }} error={errors[name]} visible={touched[name]} />
     </>
   );
 }

@@ -58,8 +58,21 @@ const AutoCompleteGooglePlaceHolder = ({onPressAddress,address}) => {
         key: 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA',
         language: 'en',
         type: ['geocode', 'hotel'],
-        components: 'country:ind',
+        location: '30.7400,76.7900', // Central point between Mohali & Chandigarh
+        radius: 15000, // Covers both cities
+        components: 'country:ind',// Optional: limit to India
+        // strictbounds: true,
       }}
+      // locationBias={{
+      //   southwest: {
+      //     latitude: 30.6196,
+      //     longitude: 76.6010,
+      //   },
+      //   northeast: {
+      //     latitude: 30.8501,
+      //     longitude: 76.9058,
+      //   },
+      // }}
       returnKeyType={'search'}
     //   predefinedPlaces={getRestuarant}
       listEmptyComponent={() => (

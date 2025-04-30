@@ -1,4 +1,4 @@
-import {rootStore} from '../stores/rootStore';
+import { rootStore } from '../stores/rootStore';
 
 const myApiKey = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
 
@@ -9,15 +9,15 @@ let dalta = {
 
 export const getGeoCodes = (latitude, longitude) => {
   console.log('latitude, longitude', latitude, longitude);
-  const {setCurrentAddress} = rootStore.myAddressStore;
+  const { setCurrentAddress } = rootStore.myAddressStore;
   return new Promise((resolve, reject) => {
     fetch(
       'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-        latitude +
-        ',' +
-        longitude +
-        '&key=' +
-        myApiKey,
+      latitude +
+      ',' +
+      longitude +
+      '&key=' +
+      myApiKey,
     )
       .then(response => response.json())
       .then(responseJson => {
@@ -49,12 +49,15 @@ export function getMpaDalta() {
 
 export function setMpaDalta(data) {
   let a = dalta;
-  (dalta.latitudeDelta = data.latitudeDelta),
-    (dalta.longitudeDelta = data.longitudeDelta);
-  dalta = a;
+  // if (data.latitudeDelta <= 0.0602 && data.longitudeDelta <= 0.0501) {
+    (dalta.latitudeDelta = data.latitudeDelta),
+      (dalta.longitudeDelta = data.longitudeDelta);
+    dalta = a;
+  // }
+
 }
 
 export function setMpaDaltaInitials() {
-  let a = {latitudeDelta: 0.0322, longitudeDelta: 0.0321};
+  let a = { latitudeDelta: 0.0322, longitudeDelta: 0.0321 };
   dalta = a;
 }

@@ -1,34 +1,34 @@
-import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages} from '../../../commons/AppImages';
+import { appImages } from '../../../commons/AppImages';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import CTA from '../../../components/cta/CTA';
-import {getGeoCodes} from '../../../components/GeoCodeAddress';
-import {getCurrentLocation} from '../../../components/GetAppLocation';
+import { getGeoCodes } from '../../../components/GeoCodeAddress';
+import { getCurrentLocation } from '../../../components/GetAppLocation';
 import Header from '../../../components/header/Header';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import Spacer from '../../../halpers/Spacer';
-import {pickUpHistory} from '../../../stores/DummyData/Home';
-import {rootStore} from '../../../stores/rootStore';
-import {colors} from '../../../theme/colors';
-import {fonts} from '../../../theme/fonts/fonts';
-import {styles} from './styles';
+import { pickUpHistory } from '../../../stores/DummyData/Home';
+import { rootStore } from '../../../stores/rootStore';
+import { colors } from '../../../theme/colors';
+import { fonts } from '../../../theme/fonts/fonts';
+import { styles } from './styles';
 
-let geoLocation ={
-      lat:null,
-    lng:null,
+let geoLocation = {
+  lat: null,
+  lng: null,
 }
 
-const SetLocationHistory = ({navigation}) => {
+const SetLocationHistory = ({ navigation }) => {
   const {
     getMyAddress,
     getAddress,
@@ -46,6 +46,7 @@ const SetLocationHistory = ({navigation}) => {
 
     return d ? d : '';
   };
+  const debounceTimeout = useRef(null);
   const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
   const [pickDrop, setPickDrop] = useState('pick');
   const [pickUpLocation, setPickUpLocation] = useState('');
@@ -53,10 +54,10 @@ const SetLocationHistory = ({navigation}) => {
   // const [lat, setlat] = useState(30.7076);
   // const [long, setlong] = useState(76.715126);
   const [myAddress, setMyAddress] = useState(getAddress);
-  // const [geoLocation, setGeoLocation] = useState({
-  //   lat: getLocation('lat'),
-  //   lng: getLocation('lng'),
-  // });
+  const [geoLocation1, setGeoLocation] = useState({
+    lat: getLocation('lat'),
+    lng: getLocation('lng'),
+  });
   const [currentAddress, setCurrentAddress] = useState('');
   const [name, setName] = useState('');
 
@@ -68,12 +69,12 @@ const SetLocationHistory = ({navigation}) => {
     }, []),
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     getCheckSenderReciever();
-  },[senderAddress ,receiverAddress])
+  }, [senderAddress, receiverAddress])
 
   useEffect(() => {
-    geoLocation ={
+    geoLocation = {
       lat: getLocation('lat'),
       lng: getLocation('lng'),
     };
@@ -84,7 +85,7 @@ const SetLocationHistory = ({navigation}) => {
   }, []);
 
   const getCheckSenderReciever = () => {
-    const {senderAddress, receiverAddress} = rootStore.myAddressStore;
+    const { senderAddress, receiverAddress } = rootStore.myAddressStore;
     console.log(
       'senderAddress,receiverAddress--',
       senderAddress,
@@ -113,6 +114,58 @@ const SetLocationHistory = ({navigation}) => {
     setLoading(false);
   };
 
+  const mohaliChandigarhBounds = {
+    north: 30.8258,
+    south: 30.6600,
+    west: 76.6600,
+    east: 76.8500,
+  };
+
+  const isWithinBounds = (latitude, longitude) => {
+    return (
+      Number(latitude) <= mohaliChandigarhBounds.north &&
+      Number(latitude) >= mohaliChandigarhBounds.south &&
+      Number(longitude) >= mohaliChandigarhBounds.west &&
+      Number(longitude) <= mohaliChandigarhBounds.east
+    );
+  };
+
+  const handleRegionChangeComplete = (region) => {
+    // console.log('region--', region);
+    onPressTouch(region)
+    // if (debounceTimeout.current) {
+    //   clearTimeout(debounceTimeout.current);
+    // }
+    // debounceTimeout.current = setTimeout(() => {
+    //   if (!isWithinBounds(region?.geo_location?.lat, region?.geo_location?.lng)) {
+    //     Alert.alert(" ", `Oops! we currently don't service your ${(pickDrop == 'pick' ? "pickup" : 'drop')} location. Please select different location.`);
+    //   } else {
+    //     if (pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
+    //       if (!isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
+    //         Alert.alert(" ", "Oops! we currently don't service your pickup location. Please select different location.");
+    //       } else {
+    //         onPressTouch(region)
+    //       }
+    //     } else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0) {
+    //       if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng)) {
+    //         Alert.alert(" ", "Oops! we currently don't service your drop location. Please select different location.");
+    //       }
+    //       else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0 || pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
+    //         if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng) && !isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
+    //           Alert.alert(" ", "Oops! we currently don't service your pickup and drop location. Please select different location.");
+    //         }
+    //       } else {
+    //         onPressTouch(region)
+    //       }
+    //     }
+    //     else {
+    //       onPressTouch(region)
+    //     }
+    //   }
+    // }, 300); // Delay in milliseconds
+
+  };
+
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
     // console.log('addressData', addressData);
@@ -120,7 +173,7 @@ const SetLocationHistory = ({navigation}) => {
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setCurrentAddress(addressData?.address);
-    geoLocation =(addressData?.geo_location)
+    geoLocation = (addressData?.geo_location)
     if (pickDrop == 'pick') {
       const newData = {
         address: addressData?.address,
@@ -142,32 +195,54 @@ const SetLocationHistory = ({navigation}) => {
     }
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <>
         <LocationHistoryCard
           item={item}
           index={index}
           onPress={() => {
-            if (pickDrop == 'pick') {
-              setPickUpLocation(item?.address);
-              setSenderAddress(item);
-              setPickDrop('drop');
-              if (receiverAddress?.address?.length > 0) {
-                navigation.navigate('priceDetails');
-              }
-            } else {
-              setDropLocation(item?.address);
-              setReceiverAddress(item);
-              if (senderAddress?.address?.length > 0) {
-                navigation.navigate('priceDetails');
-              }
-            }
+            handleRegionChangeComplete(item)
+            // if (pickDrop == 'pick') {
+            //   setPickUpLocation(item?.address);
+            //   setSenderAddress(item);
+            //   setPickDrop('drop');
+            //   if (receiverAddress?.address?.length > 0) {
+            //     navigation.navigate('priceDetails');
+            //   }
+            // } else {
+            //   setDropLocation(item?.address);
+            //   setReceiverAddress(item);
+            //   if (senderAddress?.address?.length > 0) {
+            //     navigation.navigate('priceDetails');
+            //   }
+            // }
           }}
         />
       </>
     );
   };
+
+  const onPressTouch = (item) => {
+    // console.log("item---",item);
+
+    if (pickDrop == 'pick') {
+      setPickUpLocation(item?.address);
+      setSenderAddress(item);
+      setGeoLocation(item?.geo_location)
+      setPickDrop('drop');
+      if (receiverAddress?.address?.length > 0) {
+        navigation.navigate('priceDetails');
+      }
+    } else {
+      setDropLocation(item?.address);
+      setReceiverAddress(item);
+      setGeoLocation(item?.geo_location)
+      if (senderAddress?.address?.length > 0) {
+        navigation.navigate('priceDetails');
+      }
+    }
+  }
 
   const onPressPickLocation = () => {
     // const newItem = {
@@ -187,7 +262,7 @@ const SetLocationHistory = ({navigation}) => {
       item: {
         name: name,
         address: pickUpLocation ? pickUpLocation : currentAddress,
-        geo_location: geoLocation,
+        geo_location: senderAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
       },
     });
     // alert('pick')
@@ -208,7 +283,7 @@ const SetLocationHistory = ({navigation}) => {
       item: {
         name: name,
         address: dropLocation ? dropLocation : currentAddress,
-        geo_location: geoLocation,
+        geo_location: receiverAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
       },
     });
     // alert('drop')
@@ -227,24 +302,24 @@ const SetLocationHistory = ({navigation}) => {
     // });
     navigation.navigate('chooseMapLocation', {
       pickDrop: pickDrop,
-      item: {name: name, address: currentAddress, geo_location: geoLocation},
+      item: { name: name, address: currentAddress, geo_location: geoLocation },
     });
   };
 
-  const onChangePress=()=>{
-    if(senderAddress?.address?.length > 0 && receiverAddress?.address?.length> 0){
+  const onChangePress = () => {
+    if (senderAddress?.address?.length > 0 && receiverAddress?.address?.length > 0) {
       setPickDrop('drop');
       setSenderAddress(receiverAddress);
       setPickUpLocation(receiverAddress?.address);
       setReceiverAddress(senderAddress);
       setDropLocation(senderAddress?.address);
       setPickDrop('pick');
-    } else if(senderAddress?.address?.length > 0 ){
+    } else if (senderAddress?.address?.length > 0) {
       setReceiverAddress(senderAddress);
       setDropLocation(senderAddress?.address);
       setPickDrop('pick');
       setSenderAddress({})
-    } else if(receiverAddress?.address?.length> 0){
+    } else if (receiverAddress?.address?.length > 0) {
       setSenderAddress(receiverAddress);
       setPickUpLocation(receiverAddress?.address);
       setPickDrop('drop');
@@ -261,7 +336,7 @@ const SetLocationHistory = ({navigation}) => {
           navigation.goBack();
         }}
       />
-      <View style={{flex: 1, marginHorizontal: 20}}>
+      <View style={{ flex: 1, marginHorizontal: 20 }}>
         <PickDropLocation
           pickUpLocation={pickUpLocation}
           dropLocation={dropLocation}
@@ -273,7 +348,7 @@ const SetLocationHistory = ({navigation}) => {
           }}
           onPressPickLocation={onPressPickLocation}
           onPressDropLocation={onPressDropLocation}
-          onChangePress={()=>{onChangePress()}}
+          onChangePress={() => { onChangePress() }}
         />
 
         {/* <View style={styles.currentLocView}>
@@ -296,12 +371,12 @@ const SetLocationHistory = ({navigation}) => {
         {loading == true ? (
           <AnimatedLoader type={'locationHistory'} />
         ) : (
-          <View style={{marginTop: '1%'}}>
+          <View style={{ marginTop: '1%' }}>
             {myAddress?.length > 0 ? (
               <FlatList
                 bounces={false}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{paddingBottom: '70%'}}
+                contentContainerStyle={{ paddingBottom: '70%' }}
                 data={myAddress}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
@@ -324,17 +399,17 @@ const SetLocationHistory = ({navigation}) => {
               </View>
             )}
           </View>
-         
+
         )}
       </View>
       {(senderAddress?.address?.length > 0 &&
-       receiverAddress?.address?.length > 0) &&
-       <View style={{backgroundColor:colors.appBackground,height:hp("8%")}}>
-        <Spacer space={'5%'}/>
-       <CTA title={'continue'}
-       onPress={()=>{ navigation.navigate('priceDetails')}}
-       />
-      </View>}
+        receiverAddress?.address?.length > 0) &&
+        <View style={{ backgroundColor: colors.appBackground, height: hp("8%") }}>
+          <Spacer space={'5%'} />
+          <CTA title={'continue'}
+            onPress={() => { navigation.navigate('priceDetails') }}
+          />
+        </View>}
     </View>
   );
 };

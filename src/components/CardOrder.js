@@ -25,9 +25,13 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import { rootStore } from '../stores/rootStore';
 
-const CardOrder = ({item, index, handleDetails}) => {
+const CardOrder = ({item, index, handleDetails,navigation}) => {
   // console.log('item -- ', item);
+   const {addReOrderRequestParcelRide} = rootStore.parcelStore;
+   const [selectedId,setSelectedId]=useState('')
+ 
 
   const setDetailsBtn = status => {
     switch (status) {
@@ -80,6 +84,34 @@ const CardOrder = ({item, index, handleDetails}) => {
     }
   };
 
+
+  const handleReOrder = async (item) => {
+    console.log('item--handleReOrder',item);
+    const newdata = {
+      weight: item?.weight,
+      quantity: item?.quantity ?? 1,
+      type: 'Others',
+      sender_address: item?.sender_address,
+      receiver_address: item?.receiver_address,
+      // billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
+      billing_detail:item?.billing_detail,
+      isSecure: item?.secure ?? false,
+      order_type: item?.order_type,
+    };
+    console.log('newdata--', newdata);
+
+    await addReOrderRequestParcelRide(newdata, navigation, handleLoading);
+    setSelectedId('')
+    // navigation.navigate('priceConfirmed',{item:newdata});
+  };
+
+  handleLoading = v => {
+    if (v==false) {
+      setSelectedId('')
+    }
+   
+  }
+
   return (
     <Surface elevation={2} style={styles.container}>
       <TouchableOpacity
@@ -101,7 +133,7 @@ const CardOrder = ({item, index, handleDetails}) => {
           </View>
           <View style={styles.nameDateView}>
             <Text numberOfLines={1} style={styles.nameText}>
-              {item?.name ? item?.name : `ID:${item?._id}`}
+              {item?.name ? item?.name : `ID:${item?.order_id}`}
             </Text>
             <Text style={styles.dateText}>
               {dateTimeFormat(item?.createdAt)}
@@ -202,10 +234,12 @@ const CardOrder = ({item, index, handleDetails}) => {
             />
 
             <BTN
+             loading={selectedId == item?._id}
               width={screenWidth(38)}
               title={setProgressBtn(item?.order_type)}
               onPress={() => {
-                // handleVerify(otp);
+                setSelectedId(item?._id),
+                handleReOrder(item)
               }}
               bottomCheck={15}
               textTransform={'capitalize'}
@@ -256,7 +290,7 @@ const styles = StyleSheet.create({
     marginLeft: '2.5%',
   },
   nameText: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(13),
     fontFamily: fonts.medium,
     color: colors.black,
   },

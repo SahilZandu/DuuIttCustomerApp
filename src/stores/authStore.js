@@ -2,6 +2,7 @@ import { action, computed, decorate, observable, runInAction } from 'mobx';
 import { agent } from '../api/agent';
 import { rootStore } from './rootStore';
 import { useToast } from '../halpers/useToast';
+import { getUniqueId } from 'react-native-device-info';
 
 export default class AuthStore {
 
@@ -15,7 +16,7 @@ export default class AuthStore {
       };
     } else {
       requestData = {
-        email: values?.email,
+        email: values?.email?.toLowerCase(),
         password: values?.password,
       };
     }
@@ -57,6 +58,7 @@ export default class AuthStore {
     handleLoading,
     onResendClear,
   ) => {
+    const deviceId = await getUniqueId();
     handleLoading(true);
     let requestData = {};
     if (loginType == 'Mobile') {
@@ -66,20 +68,22 @@ export default class AuthStore {
         phone: value?.mobile,
         otp: Number(otp),
         type: 'customer',
+        device_id: deviceId,
       };
     } else if (loginType == 'Email') {
       requestData = {
         username: value?.email,
         password: value?.password ? value?.password : value?.email,
-        email: value?.email,
+        email: value?.email?.toLowerCase(),
         otp: Number(otp),
         type: 'customer',
+        device_id: deviceId,
       };
     } else {
       requestData = {
         username: value?.email,
         password: value?.password ? value?.password : value?.email,
-        email: value?.email,
+        email: value?.email?.toLowerCase(),
         otp: Number(otp),
         type: 'customer',
         api_type: "update_password",
@@ -135,7 +139,7 @@ export default class AuthStore {
       };
     } else {
       requestData = {
-        email: value?.email,
+        email: value?.email?.toLowerCase(),
       };
     }
 
@@ -165,7 +169,7 @@ export default class AuthStore {
   forgotPass = async (value, navigation, handleLoading) => {
     handleLoading(true);
     let requestData = {
-      email: value?.email,
+      email: value?.email?.toLowerCase(),
     };
 
     console.log('request Data forgotPass:-', requestData);
@@ -197,7 +201,7 @@ export default class AuthStore {
     let requestData = {
       confirmPassword: values?.confirm,
       newPassword: values?.password,
-      email: data?.email,
+      email: data?.email?.toLowerCase(),
     };
     console.log('request Data updatePassword:-', requestData);
     // handleLoading(false)
@@ -318,7 +322,7 @@ export default class AuthStore {
     handleLoading(true)
     let requestData = {
       name: values?.name,
-      email: values?.email,
+      email: values?.email?.toLowerCase(),
       phone: values?.mobile,
       date_of_birth: values?.date_of_birth,
       gender: "male"
@@ -348,21 +352,21 @@ export default class AuthStore {
   };
 
 
-  userSetUpdatePassword = async (values,type, navigation, handleLoading) => {
+  userSetUpdatePassword = async (values, type, navigation, handleLoading) => {
     handleLoading(true);
     let requestData = {}
     if (type == "update") {
       requestData = {
-        oldPassword: values?.oldPassword,
-        confirmPassword: values?.confirm,
-        newPassword: values?.password,
-        email: values?.email,
+        // oldPassword: values?.oldPassword,
+        confirmPassword: values?.confirmPassword,
+        newPassword: values?.newPassword,
+        email: values?.email?.toLowerCase(),
       }
     } else {
       requestData = {
         confirmPassword: values?.confirm,
         newPassword: values?.password,
-        email: values?.email,
+        email: values?.email?.toLowerCase(),
       }
     }
 
@@ -374,6 +378,7 @@ export default class AuthStore {
       console.log('userSetUpdatePassword API Res:', res);
       if (res?.statusCode == 200) {
         useToast(res.message, 1);
+        await rootStore.commonStore.setAppUser(res?.data);
         navigation.goBack();
       } else {
         const message = res?.message ? res?.message : res?.data?.message;

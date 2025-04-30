@@ -1,31 +1,31 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {View, Image, DeviceEventEmitter} from 'react-native';
-import {appImages} from '../../../commons/AppImages';
-import {styles} from './styles';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Image, DeviceEventEmitter } from 'react-native';
+import { appImages } from '../../../commons/AppImages';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
-import {homeRideCS} from '../../../stores/DummyData/Home';
+import { homeRideCS } from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
 import {
   getCurrentLocation,
   setCurrentLocation,
 } from '../../../components/GetAppLocation';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import IncompleteCartComp from '../../../components/IncompleteCartComp';
 import socketServices from '../../../socketIo/SocketServices';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import PopUp from '../../../components/appPopUp/PopUp';
-import MapLocationRoute from '../../../components/MapLocationRoute';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
+import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute';
 
 let geoLocation = {
   lat: null,
@@ -34,11 +34,11 @@ let geoLocation = {
 
 let ratingData = {};
 
-export default function RideHome({navigation}) {
-  const {appUser} = rootStore.commonStore;
-  const {getPendingForCustomer, updateOrderStatus} = rootStore.orderStore;
-  const {setAddParcelInfo} = rootStore.parcelStore;
-  const {setSenderAddress, setReceiverAddress} = rootStore.myAddressStore;
+export default function RideHome({ navigation }) {
+  const { appUser } = rootStore.commonStore;
+  const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
+  const { setAddParcelInfo } = rootStore.parcelStore;
+  const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [trackedArray, setTrackedArray] = useState([]);
   const [incompletedArray, setIncompletedArray] = useState([]);
@@ -110,7 +110,7 @@ export default function RideHome({navigation}) {
       console.log('dropped data --Ride ', data);
       if (data?.order_type == 'ride') {
         ratingData = data;
-        console.log('ratingData----1', ratingData,data,ratingData = data);
+        console.log('ratingData----1', ratingData, data, ratingData = data);
         setTimeout(() => {
           setIsReviewRider(true);
         }, 300);
@@ -156,7 +156,7 @@ export default function RideHome({navigation}) {
   };
 
   const onUpdateUserInfo = () => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     setAppUserInfo(appUser);
   };
 
@@ -215,13 +215,18 @@ export default function RideHome({navigation}) {
           <DashboardHeader2
             navigation={navigation}
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate('dashborad', {
+                screen: 'home', params: {
+                  screen: 'tab1',
+                },
+              });
+              // navigation.goBack();
             }}
             appUserInfo={appUserInfo}
           />
 
-          <MapLocationRoute
-            mapContainerView={{height: hp('25%')}}
+          <MapCurrentLocationRoute
+            mapContainerView={{ height: hp('25%') }}
             origin={geoLocation ?? originLocation}
             isPendingReq={true}
           />
@@ -243,7 +248,7 @@ export default function RideHome({navigation}) {
               padding={true}
               Pb={getHeight(trackedArray, incompletedArray)}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{marginTop: '4%', marginHorizontal: 20}}>
+              <View style={{ marginTop: '4%', marginHorizontal: 20 }}>
                 <View
                   style={{
                     justifyContent: 'center',
@@ -251,15 +256,15 @@ export default function RideHome({navigation}) {
                   }}>
                   <Image
                     resizeMode="contain"
-                    style={{width: wp('90%'), height: hp('18%')}}
+                    style={{ width: wp('90%'), height: hp('18%') }}
                     source={appImages.rideHomeImage}
                   />
                 </View>
-                <ChangeRoute2
+                {/* <ChangeRoute2
                   data={homeRideCS}
                   navigation={navigation}
                   route={'RIDE'}
-                />
+                /> */}
               </View>
               <View style={styles.bottomImageView}>
                 <Image

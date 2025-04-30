@@ -76,30 +76,30 @@ export default function Settings({navigation}) {
         padding={true}
         keyboardShouldPersistTaps={'handled'}>
         <View style={{marginHorizontal: 20, justifyContent: 'center'}}>
-          <TouchableTextSwitch
+          {/* <TouchableTextSwitch
             toggle={true}
             activateSwitch={activateSwitch}
             onTogglePress={onTogglePress}
             title={'Notification Settings'}
             text={'Define what alerts and notifications you want to see'}
-          />
+          /> */}
 
           <TouchableTextSwitch
             toggle={false}
-            title={'Account Settings'}
+            title={'Delete Account'}
             text={'Delete your account'}
             onPress={() => {
               setIsDelete(true);
             }}
           />
 
-          <TouchableTextSwitch
+          {/* <TouchableTextSwitch
             toggle={true}
             activateSwitch={switchWallet}
             onTogglePress={onToggleWallet}
             title={'Wallet Settings'}
             text={'Show/Hide your wallet on home'}
-          />
+          /> */}
         </View>
         <PopUp
           visible={isDelete}

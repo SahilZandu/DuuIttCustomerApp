@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,34 +8,34 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
+import { colors } from '../../../theme/colors';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../../components/header/Header';
 import MapRouteMarker from '../../../components/MapRouteMarker';
 import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGooglePlaceHolder';
-import {Formik, useFormikContext} from 'formik';
+import { Formik, useFormikContext } from 'formik';
 import FieldInput from '../../../components/FieldInput';
 import Spacer from '../../../halpers/Spacer';
 import CTA from '../../../components/cta/CTA';
-import {Strings} from '../../../translates/strings';
-import {addMyAddressValidations} from '../../../forms/formsValidation/addMyAddressValidations';
+import { Strings } from '../../../translates/strings';
+import { addMyAddressValidations } from '../../../forms/formsValidation/addMyAddressValidations';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
-import {getCurrentLocation} from '../../../components/GetAppLocation';
-import {getGeoCodes, setMpaDaltaInitials} from '../../../components/GeoCodeAddress';
-import {appImages} from '../../../commons/AppImages';
+import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
+import { appImages } from '../../../commons/AppImages';
 import Modal from 'react-native-modal';
 import Tabs2 from '../../../components/Tabs2';
-import {Surface} from 'react-native-paper';
-import {rootStore} from '../../../stores/rootStore';
+import { Surface } from 'react-native-paper';
+import { rootStore } from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
@@ -44,10 +44,10 @@ let currentLocation = {
   lat: null,
   lng: null,
 };
-export default function AddMyAddress({navigation, route}) {
-  const {type, data, screenName} = route.params;
+export default function AddMyAddress({ navigation, route }) {
+  const { type, data, screenName } = route.params;
 
-  const {myAddress} = rootStore.myAddressStore;
+  const { myAddress } = rootStore.myAddressStore;
 
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
@@ -70,10 +70,13 @@ export default function AddMyAddress({navigation, route}) {
   const [title, setTitle] = useState('Home');
 
   const [initialValues, setInitialValues] = useState({
+    changeAdress: address ?? '',
+    changeTitle: 'Home',
     name: '',
     phone: '',
     house: '',
     landmark: '',
+    id:data?._id,
   });
   const [loadingAddress, setLoadingAddress] = useState(true);
 
@@ -88,17 +91,14 @@ export default function AddMyAddress({navigation, route}) {
   );
 
   const tabs = [
-    {id: 0, text: 'Home', icon: appImages.homeLocation},
-    {id: 1, text: 'Work', icon: appImages.workLocation},
-    {id: 2, text: 'Hotel', icon: appImages.hotelLocation},
-    {id: 3, text: 'Other', icon: appImages.addressLocation},
+    { id: 0, text: 'Home', icon: appImages.homeLocation },
+    { id: 1, text: 'Work', icon: appImages.workLocation },
+    { id: 2, text: 'Hotel', icon: appImages.hotelLocation },
+    { id: 3, text: 'Other', icon: appImages.addressLocation },
   ];
 
   useEffect(() => {
-    setGeoLocation({
-      lat: getLocation('lat'),
-      lng: getLocation('lng'),
-    });
+
     if (data) {
       console.log('data---', data);
       const nameData = data?.address?.split(',');
@@ -112,6 +112,13 @@ export default function AddMyAddress({navigation, route}) {
         phone: data?.phone?.toString(),
         house: data?.address_detail,
         landmark: data?.landmark,
+        id:data?._id,
+      });
+    }
+    else {
+      setGeoLocation({
+        lat: getLocation('lat'),
+        lng: getLocation('lng'),
       });
     }
   }, [data]);
@@ -120,7 +127,7 @@ export default function AddMyAddress({navigation, route}) {
     currentLocation = {
       lat: getLocation('lat'),
       lng: getLocation('lng'),
-    };
+    }
   }, []);
 
   useEffect(() => {
@@ -144,8 +151,8 @@ export default function AddMyAddress({navigation, route}) {
     setGeoLocation(addressData?.geo_location);
   };
 
-  const FormButton = ({loading, onPress}) => {
-    const {dirty, isValid, values} = useFormikContext();
+  const FormButton = ({ loading, onPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
     return (
       <CTA
         width={wp('90%')}
@@ -181,7 +188,7 @@ export default function AddMyAddress({navigation, route}) {
       if (screenName == 'home' || screenName == 'cart') {
         navigation.goBack();
       } else {
-        navigation.navigate(screenName, {screen: 'home'});
+        navigation.navigate(screenName, { screen: 'home' });
       }
     }, 300);
   };
@@ -198,17 +205,49 @@ export default function AddMyAddress({navigation, route}) {
     setVisible(true);
   };
 
-  const handleTabPress = async text => {
-    console.log('text--', text);
+ 
+const TabsWithFormik = ({ tabs }) => {
+  const { setFieldValue, values } = useFormikContext();
+  const handleTabPress = (text) => {
+    console.log('Selected Tab:', text);
+    setFieldValue('changeTitle', text);
     setTitle(text);
   };
 
+  return (
+    <Tabs2
+      tabs={tabs}
+      tabPress={handleTabPress}
+      title={title}
+    />
+  );
+};
+  
+
+  // const handleTabPress = async text => {
+  //   const {
+  //       setFieldTouched,
+  //       handleChange,
+  //       values,
+  //       errors,
+  //       touched,
+  //       isValid,
+  //       dirty,
+  //       setFieldValue,
+  //     } = useFormikContext();
+  //   console.log('text--', text);
+  //   setFieldValue('changeTitle', text);
+  //   setTitle(text);
+
+  // };
+
   const OpenDetails = () => {
+
     return (
       <Formik
         initialValues={initialValues}
         validationSchema={addMyAddressValidations()}>
-        <View style={{marginTop: '2%', justifyContent: 'center'}}>
+        <View style={{ marginTop: '2%', justifyContent: 'center' }}>
           <Text
             style={{
               fontSize: RFValue(17),
@@ -219,7 +258,8 @@ export default function AddMyAddress({navigation, route}) {
             Add New Address
           </Text>
           <Spacer space={'2%'} />
-          <Tabs2 tabs={tabs} tabPress={handleTabPress} title={title} />
+          {/* <Tabs2 tabs={tabs} tabPress={handleTabPress} title={title} /> */}
+          {<TabsWithFormik tabs={tabs}/>}
           <Surface
             elevation={3}
             style={{
@@ -231,7 +271,7 @@ export default function AddMyAddress({navigation, route}) {
               marginTop: '5%',
               marginHorizontal: 20,
             }}>
-            <View style={{flexDirection: 'row', marginHorizontal: 15}}>
+            <View style={{ flexDirection: 'row', marginHorizontal: 15 }}>
               <Text
                 style={{
                   width: wp('66%'),
@@ -247,7 +287,7 @@ export default function AddMyAddress({navigation, route}) {
                 onPress={() => {
                   setVisible(false);
                 }}
-                style={{justifyContent: 'center', marginLeft: '1%'}}>
+                style={{ justifyContent: 'center', marginLeft: '1%' }}>
                 <Text
                   style={{
                     fontSize: RFValue(14),
@@ -259,24 +299,27 @@ export default function AddMyAddress({navigation, route}) {
               </TouchableOpacity>
             </View>
           </Surface>
-          <View style={{marginHorizontal: 20}}>
+          <View style={{ marginHorizontal: 20 }}>
             <InputFieldLabel
               borderWidth={1}
               inputLabel={'Flat / House no / Floor / Building'}
               name={'house'}
               placeholder={'e.g. #109'}
+              maxLength={100}
             />
             <InputFieldLabel
               borderWidth={1}
               inputLabel={'Nearby landmark (Optional)'}
               name={'landmark'}
               placeholder={'e.g. Bidu biotique'}
+              maxLength={100}
             />
             <InputFieldLabel
               borderWidth={1}
               inputLabel={'User Name'}
               name={'name'}
               placeholder={'Enter your name'}
+              maxLength={50}
             />
             <InputFieldLabel
               keyboardType={'phone-pad'}
@@ -294,6 +337,148 @@ export default function AddMyAddress({navigation, route}) {
       </Formik>
     );
   };
+
+  // const OpenDetails = () => {
+  //   const [visible, setVisible] = useState(false);
+  //   const [loading, setLoading] = useState(false);
+
+  //   // const initialValues = {
+  //   //   title: '',         // For Tabs2 selected value
+  //   //   address: '',       // For address
+  //   //   house: '',
+  //   //   landmark: '',
+  //   //   name: '',
+  //   //   phone: '',
+  //   // };
+
+  //   const handleSave = (values) => {
+  //     console.log('Form submitted values:', values);
+  //     // Submit your form logic here
+  //   };
+
+  //   return (
+  //     <Formik
+  //       initialValues={initialValues}
+  //       validationSchema={addMyAddressValidations()}
+  //       onSubmit={handleSave}
+  //       enableReinitialize
+  //     >
+  //       {({ handleSubmit, setFieldValue, values }) => (
+          
+  //         <View style={{ marginTop: '2%', justifyContent: 'center'}}>
+  //           <Text
+  //             style={{
+  //               fontSize: RFValue(17),
+  //               fontFamily: fonts.semiBold,
+  //               color: colors.black,
+  //               marginHorizontal: 20,
+  //             }}
+  //           >
+  //             Add New Address
+  //           </Text>
+
+  //           <Spacer space={'2%'} />
+
+  //           {/* Tabs2 with Formik update */}
+  //           <Tabs2
+  //             tabs={tabs}
+  //             tabPress={(selectedTab) => {handleTabPress(selectedTab), setFieldValue('changeTitle', selectedTab) }}
+  //             title={values.title}
+  //           />
+
+  //           {/* Address Surface */}
+  //           <Surface
+  //             elevation={3}
+  //             style={{
+  //               shadowColor: colors.black50,
+  //               backgroundColor: colors.white,
+  //               borderRadius: 10,
+  //               height: hp('11%'),
+  //               justifyContent: 'center',
+  //               marginTop: '5%',
+  //               marginHorizontal: 20,
+  //             }}
+  //           >
+  //             <View style={{ flexDirection: 'row', marginHorizontal: 15 }}>
+  //               <Text
+  //                onPressIn={()=> {setFieldValue('changeAdress', address)}}
+  //                 style={{
+  //                   width: wp('66%'),
+  //                   fontSize: RFValue(12),
+  //                   fontFamily: fonts.medium,
+  //                   color: colors.color95,
+  //                   lineHeight: 22,
+  //                 }}
+  //                 > {address ? address : 'Select address'}
+  //               </Text>
+
+  //               <TouchableOpacity
+  //                 activeOpacity={0.8}
+  //                 onPress={() => {
+  //                   setVisible(false)  // open address picker modal
+  //                 }}
+  //                 style={{ justifyContent: 'center', marginLeft: '1%' }}
+  //               >
+  //                 <Text
+  //                   style={{
+  //                     fontSize: RFValue(14),
+  //                     fontFamily: fonts.semiBold,
+  //                     color: '#E70000',
+  //                   }}
+  //                 >
+  //                   Change
+  //                 </Text>
+  //               </TouchableOpacity>
+  //             </View>
+  //           </Surface>
+
+  //           <View style={{ marginHorizontal: 20 }}>
+  //             <InputFieldLabel
+  //               borderWidth={1}
+  //               inputLabel={'Flat / House no / Floor / Building'}
+  //               name={'house'}
+  //               placeholder={'e.g. #109'}
+  //               maxLength={100}
+  //             />
+
+  //             <InputFieldLabel
+  //               borderWidth={1}
+  //               inputLabel={'Nearby landmark (Optional)'}
+  //               name={'landmark'}
+  //               placeholder={'e.g. Bidu biotique'}
+  //               maxLength={100}
+  //             />
+
+  //             <InputFieldLabel
+  //               borderWidth={1}
+  //               inputLabel={'User Name'}
+  //               name={'name'}
+  //               placeholder={'Enter your name'}
+  //               maxLength={50}
+  //             />
+
+  //             <InputFieldLabel
+  //               keyboardType={'phone-pad'}
+  //               borderWidth={1}
+  //               inputLabel={'User Phone Number'}
+  //               name={'phone'}
+  //               placeholder={'Enter your phone number'}
+  //               maxLength={10}
+  //             />
+  //           </View>
+
+  //           <Spacer space={'10%'} />
+
+  //           {/* Submit button */}
+  //           <FormButton loading={loading} onPress={handleSubmit} />
+  //         </View>
+  //       )}
+  //     </Formik>
+  //   );
+  // };
+
+
+
 
   const handleCurrentAddress = async () => {
     const addressData = await getGeoCodes(
@@ -392,7 +577,7 @@ export default function AddMyAddress({navigation, route}) {
                   address: address,
                 }}
                 index={0}
-                onPress={() => {}}
+                onPress={() => { }}
               />
               <Spacer space={hp('3.5%')} />
               <CTA
@@ -414,16 +599,16 @@ export default function AddMyAddress({navigation, route}) {
           // swipeDirection="down"
           animationIn="fadeIn"
           animationOut="fadeOut"
-          style={{justifyContent: 'flex-end', margin: 0}}>
+          style={{ justifyContent: 'flex-end', margin: 0 }}>
           <TouchableOpacity
             onPress={() => {
               setVisible(false);
             }}
             activeOpacity={0.8}
-            style={{alignSelf: 'center'}}>
+            style={{ alignSelf: 'center' }}>
             <Image
               resizeMode="contain"
-              style={{height: 45, width: 45}}
+              style={{ height: 45, width: 45 }}
               source={appImages.crossClose} // Your icon image
             />
           </TouchableOpacity>
@@ -444,7 +629,7 @@ export default function AddMyAddress({navigation, route}) {
               }}>
               <Spacer space={'2%'} />
               <KeyboardAvoidingView
-                style={{flex: 1}}
+                style={{ flex: 1 }}
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust if needed
                 behavior={Platform.OS === 'ios' ? 'padding' : null}>
                 <AppInputScroll

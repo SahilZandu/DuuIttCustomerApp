@@ -1,4 +1,4 @@
-import react, {useState, useRef, useEffect} from 'react';
+import react, { useState, useRef, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,17 +8,17 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {screenHeight, screenWidth} from '../halpers/matrics';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { SvgXml } from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { screenHeight, screenWidth } from '../halpers/matrics';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 
 const size = Dimensions.get('window').height;
 
@@ -43,13 +43,14 @@ export default function Tabs3({
     // if (type == 'All Orders') {
     //   setSelectedIndex(0);
     // }
-    if (type == 'Food') {
+    if (type == 'Ride') {
       setSelectedIndex(1);
-    } else if (type == 'Ride') {
-      setSelectedIndex(2);
     } else if (type == 'Parcel') {
+      setSelectedIndex(2);
+    } else if (type == 'Food') {
       setSelectedIndex(3);
-    } else {
+    }
+    else {
       setSelectedIndex(0);
     }
   }, [type]);
@@ -122,13 +123,13 @@ export default function Tabs3({
 
   return (
     <View
-      style={{backgroundColor: colors.appBackground, justifyContent: 'center'}}>
+      style={{ backgroundColor: colors.appBackground, justifyContent: 'center' }}>
       <ScrollView
         bounces={false}
         ref={scrollViewRef}
-        style={{alignSelf: 'center', height: screenHeight(6)}}
+        style={{ alignSelf: 'center', height: screenHeight(6) }}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{minWidth: screenWidth(90)}}
+        contentContainerStyle={{ minWidth: screenWidth(90) }}
         horizontal>
         {tabs?.map((tab, idx) => (
           <TabButton

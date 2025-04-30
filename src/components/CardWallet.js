@@ -149,7 +149,7 @@ const CardWallet = ({item, index}) => {
         <View style={styles.imageTextView}>
           <View style={styles.innerMainView}>
             <Text numberOfLines={1} style={styles.itemPaymentId}>
-              PaymentID : {item?.payment_id}
+              PID : {item?.payment_id}
             </Text>
             <Text
               numberOfLines={1}

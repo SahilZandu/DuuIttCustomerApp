@@ -148,7 +148,7 @@
 //   }),
 // });
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -185,11 +185,20 @@ const PickDropLocation = ({
   pick,
   drop,
 }) => {
+  // const [topHp, setTopHp] = useState('1%');
+  // useEffect(() => {
+  //   if (pick?.length < 80) {
+  //     setTopHp('-10%');
+  //   } else {
+  //     setTopHp('1%');
+  //   }x
+  // }, [pick]);
   return (
     <View>
       <Surface elevation={3} style={styles.container}>
         <View>
           <TouchableOpacity
+            hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
             onPress={onPressPickLocation}
             activeOpacity={0.8}
             style={styles.mainTouch}>
@@ -209,8 +218,10 @@ const PickDropLocation = ({
                     <Text style={styles.addOnText}>Add</Text>
                   </TouchableOpacity>
                 )}
+               
               </View>
               <Text
+              onPress={onPressPickLocation}
                 numberOfLines={2}
                 style={[styles.pickedText, {marginTop: hp('4%')}]}>
                 {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
@@ -235,13 +246,14 @@ const PickDropLocation = ({
               return (
                 <View style={{justifyContent: 'center', position: 'relative'}}>
                   <View style={styles.dottedView} />
-                  {item == 3 && <View style={styles.dottedWithLine} />}
+                  {item == 3 && <View style={[styles.dottedWithLine]} />}
                 </View>
               );
             })}
           </View>
 
           <TouchableOpacity
+            hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
             onPress={onPressDropLocation}
             activeOpacity={0.8}
             // disabled={pickUpLocation == '' ? true : false}
@@ -340,7 +352,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black,
     marginTop: '1%',
-    height: '100%',
+    height:hp('5%'),
+    // backgroundColor:'red'
   },
   dottedView: {
     height: 9,
@@ -351,11 +364,11 @@ const styles = StyleSheet.create({
   },
   dottedWithLine: {
     height: 2,
-    width: wp('72%'),
+    width: wp('74%'),
     backgroundColor: colors.colorD1,
     alignSelf: 'center',
-    marginLeft: wp('8%'),
-    top: hp('0.4%'),
+    marginLeft: wp('6%'),
+    // top: hp('0.4%'),
   },
   dropTouch: pickUpLocation => ({
     flexDirection: 'row',

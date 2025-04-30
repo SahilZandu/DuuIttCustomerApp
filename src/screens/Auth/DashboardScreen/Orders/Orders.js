@@ -25,9 +25,9 @@ import { colors } from '../../../../theme/colors';
 
 const tabs = [
   { text: 'All Orders' },
-  { text: 'Food' },
   { text: 'Ride' },
   { text: 'Parcel' },
+  // { text: 'Food' },
 ];
 
 let defaultType = 'All Orders';
@@ -125,7 +125,9 @@ export default function Orders({ navigation, route }) {
   const renderItem = ({ item, i }) => {
     return (
       <>
-        <CardOrder item={item} index={i} handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
+        <CardOrder item={item} index={i} 
+        navigation={navigation}
+        handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
       </>
     );
   };

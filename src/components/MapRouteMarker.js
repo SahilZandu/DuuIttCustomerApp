@@ -1,26 +1,67 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Image, Platform, Dimensions, Alert } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages} from '../commons/AppImages';
+import { appImages } from '../commons/AppImages';
 import MapView, {
   Marker,
   Callout,
   PROVIDER_GOOGLE,
   Polyline,
 } from 'react-native-maps';
-import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
+import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 
-const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
+const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRideParcel }) => {
   // console.log('markerArray--', markerArray);
   const mapRef = useRef(null);
-  const [lat, setLat] = useState(Number(origin?.lat));
-  const [long, setLong] = useState(Number(origin?.lng));
+  const debounceTimeout = useRef(null);
+  const [lat, setLat] = useState(Number(origin?.lat) ?? 30.7400);
+  const [long, setLong] = useState(Number(origin?.lng) ?? 76.7900);
+
+  const mohaliChandigarhBounds = {
+    north: 30.8258,
+    south: 30.6600,
+    west: 76.6600,
+    east: 76.8500,
+  };
+
+  const isWithinBounds = (latitude, longitude) => {
+    return (
+      latitude <= mohaliChandigarhBounds.north &&
+      latitude >= mohaliChandigarhBounds.south &&
+      longitude >= mohaliChandigarhBounds.west &&
+      longitude <= mohaliChandigarhBounds.east
+    );
+  };
+
+
+  const handleRegionChangeComplete = (region) => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      if (!isWithinBounds(region.latitude, region.longitude)) {
+        mapRef.current?.animateToRegion({
+          latitude: Number(30.7400 ?? lat) ?? 30.7400,
+          longitude: Number(76.7900 ?? long) ?? 76.7900,
+          latitudeDelta: getMpaDalta().latitudeDelta,
+          longitudeDelta: getMpaDalta().longitudeDelta,
+        });
+        Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+      }
+    }, 50); // Delay in milliseconds
+
+
+  };
+
 
   useEffect(() => {
-    if (Object?.keys(origin || {})?.length > 0) {
+    if (markerArray?.length > 0 ||
+      Object?.keys(origin || {})?.length > 0
+    ) {
       setLat(
         markerArray?.length > 0
           ? Number(markerArray[0]?.geo_location?.lat)
@@ -39,6 +80,7 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
       <MapView
         onRegionChange={e => {
           setMpaDalta(e);
+          // handleRegionChangeComplete(e)
         }}
         provider={PROVIDER_GOOGLE}
         ref={mapRef}
@@ -68,26 +110,27 @@ const MapRouteMarker = ({mapContainerView, origin, markerArray}) => {
           markerArray?.map((marker, index) => (
             <Marker
               key={index}
-              useLegacyPinView={true}
               coordinate={{
                 latitude: Number(marker?.geo_location?.lat),
                 longitude: Number(marker?.geo_location?.lng),
               }}>
               <Image
                 resizeMode="contain"
-                source={appImages.markerImage}
-                style={styles.markerImage}
+                source={searchingRideParcel
+                  // source={appImages.searchingParcel}
+                  // source={appImages.searchingRide}
+                }
+                style={styles.markerRiderImage}
               />
             </Marker>
           ))
         ) : (
           <Marker
-            useLegacyPinView={true}
-            coordinate={{latitude: lat, longitude: long}}>
+            coordinate={{ latitude: lat, longitude: long }}>
             <Image
               resizeMode="contain"
-              source={appImages.searchingRide}
-              style={styles.markerRiderImage}
+              source={appImages.markerImage}
+              style={styles.markerImage}
             />
           </Marker>
         )}
@@ -104,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     shadowRadius: 1,
-    shadowOffset: {height: 2, width: 0},
+    shadowOffset: { height: 2, width: 0 },
   },
   mapContainer: {
     alignSelf: 'center',

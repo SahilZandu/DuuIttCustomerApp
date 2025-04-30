@@ -33,7 +33,7 @@ const ImageNameRatingComp = ({parcelInfo}) => {
         <Text numberOfLines={2} style={styles.nameText}>
           {parcelInfo?.rider?.name}
         </Text>
-        <Rating rating={'4.5'} />
+        <Rating rating={'0'} />
       </View>
       <View style={styles.bottomLine} />
     </View>

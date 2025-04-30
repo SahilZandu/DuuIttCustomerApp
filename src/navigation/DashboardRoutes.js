@@ -25,6 +25,7 @@ import Settings from '../screens/Auth/DashboardScreen/Settings/Settings';
 import OrderDetails from '../screens/Auth/DashboardScreen/OrderDetails/OrderDetails';
 import TransactionHistory from '../screens/Auth/DashboardScreen/TransationHistory/TransationHistory';
 import SetUpdatePass from '../screens/Auth/DashboardScreen/SetUpdatePassword/SetUpdatePassword';
+import CustomerSupport from '../screens/CommonScreens/CustomerSupport/CustomerSupport';
 
 
 const Stack = createNativeStackNavigator();
@@ -64,6 +65,7 @@ export default function DashboardRoutes(props) {
        <Stack.Screen name="orderDetails" component={OrderDetails} />  
        <Stack.Screen name="transactionHistory" component={TransactionHistory} />
        <Stack.Screen name="setUpdatePass" component={SetUpdatePass} />
+       <Stack.Screen name="customerSupport" component={CustomerSupport} /> 
        
        
   

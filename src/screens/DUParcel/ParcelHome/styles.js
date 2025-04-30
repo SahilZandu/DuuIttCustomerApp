@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     marginTop: '0.5%',
   },
   bottomImageView:{
-    marginTop: '0.1%'
+    marginTop: '-5.1%',
   },
   bottomImage:{
     height: hp('30%'), width: wp('100%')

@@ -36,6 +36,7 @@ const ChooseMapLocation = ({navigation, route}) => {
   const {setSenderAddress, setReceiverAddress, senderAddress, receiverAddress} =
     rootStore.myAddressStore;
   const {pickDrop, item} = route.params;
+   const debounceTimeout = useRef(null);
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
     let d =
@@ -59,11 +60,59 @@ const ChooseMapLocation = ({navigation, route}) => {
     setAddress(details?.formatted_address);
     setGeoLocation(details?.geometry?.location);
   };
+
+const mohaliChandigarhBounds = {
+    north: 30.8258,
+    south: 30.6600,
+    west: 76.6600,
+    east: 76.8500,
+  };
+
+  const isWithinBounds = (latitude, longitude) => {
+    return (
+      latitude <= mohaliChandigarhBounds.north &&
+      latitude >= mohaliChandigarhBounds.south &&
+      longitude >= mohaliChandigarhBounds.west &&
+      longitude <= mohaliChandigarhBounds.east
+    );
+  };
+
+  const handleRegionChangeComplete = (region) => {
+    onHandleConfirm();
+    // if (debounceTimeout.current) {
+    //   clearTimeout(debounceTimeout.current);
+    // }
+
+    // debounceTimeout.current = setTimeout(() => {
+    //   if (!isWithinBounds(region.lat, region.lng)) {
+    //     Alert.alert(" ", `Oops! we currently don't service your ${(pickDrop == 'pick' ?"pickup":'drop')} location. Please select different location.`);
+    //   } else {
+    //     if (pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
+    //       if (!isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
+    //         Alert.alert(" ", "Oops! we currently don't service your pickup location. Please select different location.");
+    //       }else {
+    //         onHandleConfirm()
+    //        }
+    //     } else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0) {
+    //       if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng)) {
+    //         Alert.alert(" ", "Oops! we currently don't service your drop location. Please select different location.");
+    //       }
+    //       else {
+    //         onHandleConfirm()
+    //        }
+    //     }
+    //      else {
+    //       onHandleConfirm()
+    //      }
+    //   }
+    // },300); // Delay in milliseconds
+  };
+
   useFocusEffect(
     useCallback(()=>{
       handleAndroidBackButton(navigation)
       setMpaDaltaInitials();
-    })
+    },[])
   )
 
   useEffect(() => {
@@ -167,6 +216,9 @@ const ChooseMapLocation = ({navigation, route}) => {
           }
           origin={geoLocation}
           onTouchLocation={handleTouchAddress}
+          height={Platform.OS == 'ios'
+            ? screenHeight(70)
+            : screenHeight(74)}
         />
         {/* <MapRoute
           mapContainerView={
@@ -211,7 +263,8 @@ const ChooseMapLocation = ({navigation, route}) => {
               <Spacer space={'12%'} />
               <CTA
                 onPress={() => {
-                  onHandleConfirm();
+                  // onHandleConfirm();
+                  handleRegionChangeComplete(geoLocation);
                 }}
                 title={'Confirm'}
                 textTransform={'capitalize'}

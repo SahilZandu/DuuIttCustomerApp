@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: 'center',
+    right:2
   },
   rate: {
     fontSize: RFValue(12),

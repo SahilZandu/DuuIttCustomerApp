@@ -19,6 +19,7 @@ import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import {personalInfoValidations} from './formsValidation/personalInfoValidations';
 import FieldInputText from '../components/FieldInputText';
+import InputFieldLabel from '../components/InputFieldLabel';
 
 let dateStart = new Date();
 
@@ -119,16 +120,11 @@ const PersonalInfoForm = ({navigation, route}) => {
           placeholder={'Enter your name'}
           maxLength={50}
         />
-        {/* <InputField
-          textColor={'#000000'}
-          name={'lastName'}
-          label={''}
-          placeholder={'Enter last name'}
-        /> */}
 
         <InputField
           autoCapitalize={'none'}
           editable={loginType == 'Email' ? false : true}
+          isBlur={loginType == 'Email' ? true : false}
           textColor={colors.black}
           keyboardType="email-address"
           name={'email'}
@@ -138,6 +134,7 @@ const PersonalInfoForm = ({navigation, route}) => {
 
         <InputField
           editable={loginType == 'Mobile' ? false : true}
+          isBlur={loginType == 'Mobile' ? true : false}
           textColor={colors.black}
           keyboardType="number-pad"
           maxLength={10}

@@ -238,6 +238,7 @@ const ProfileForm = ({navigation, screenName}) => {
                   placeholder={'Enter full name'}
                 />
                 <InputFieldLabel
+                  autoCapitalize={'none'}
                   borderWidth={1}
                   inputLabel={'Email Address'}
                   keyboardType="email-address"

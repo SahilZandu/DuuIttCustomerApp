@@ -161,10 +161,22 @@ export default function SideMenu({ navigation }) {
   ];
 
   const moreOptions = [
+    {
+      id: '8',
+      title: 'Wallet',
+      onPress: () => {
+        navigation.navigate('wallet');
+      },
+      icon: appImagesSvg.walletSvg,
+      show: true,
+      disable: false,
+    },
 
     {
       id: '1',
-      title: (appUser?.password &&  appUser?.password?.toString()?.length > 0 ) ? "Update Password" : 'Set Password',
+      title: (appUser?.password && 
+        appUser?.password?.toString()?.length > 0) 
+      ? "Update Password" : 'Set Password',
       onPress: () => {
         navigation.navigate('setUpdatePass');
       },
@@ -214,6 +226,17 @@ export default function SideMenu({ navigation }) {
     },
     {
       id: '5',
+      title: 'Customer Support',
+      onPress: () => {
+        navigation.navigate('customerSupport');
+      },
+      icon: appImagesSvg.customerSupport,
+      show: true,
+      disable: false,
+    },
+
+    {
+      id: '6',
       title: 'Settings',
       onPress: () => {
         navigation.navigate('settings');
@@ -225,7 +248,7 @@ export default function SideMenu({ navigation }) {
     },
 
     {
-      id: '6',
+      id: '7',
       title: 'Logout',
       onPress: async () => {
         setIsLogout(true);
@@ -329,9 +352,9 @@ export default function SideMenu({ navigation }) {
               navigation={navigation}
               appUser={appUser}
             />
-            <ReusableSurfaceComp title={'Food'}>
+            {/* <ReusableSurfaceComp title={'Food'}>
               <TouchTextRightIconComp firstIcon={true} data={foodOptions} />
-            </ReusableSurfaceComp>
+            </ReusableSurfaceComp> */}
 
             <ReusableSurfaceComp title={'Ride'}>
               <TouchTextRightIconComp firstIcon={true} data={rideOptions} />

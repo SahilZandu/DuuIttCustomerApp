@@ -68,6 +68,7 @@ const LoginForm = ({navigation, type}) => {
       <View style={styles.main}>
         {type == 'Email' ? (
           <InputField
+            autoCapitalize={'none'}
             textColor={'#000000'}
             keyboardType="email-address"
             name={'email'}

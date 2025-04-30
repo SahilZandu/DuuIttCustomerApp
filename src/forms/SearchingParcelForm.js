@@ -484,6 +484,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 <AnimatedLoader type="multipleRiderLoader" />
               ) : (
                 <MapRouteMarker
+                  searchingRideParcel={appImages.searchingParcel}
                   origin={senderLocation}
                   markerArray={nearbyRider}
                   mapContainerView={{
@@ -518,7 +519,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 }
               />
               {/* ) : null} */}
-              {parcelInfo?.status == 'picked' && (
+              {/* {parcelInfo?.status == 'picked' && (
                 <TouchableOpacity
                   onPress={async () => {
                     const destination =
@@ -536,7 +537,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                     source={appImages?.googleMapsIcon}
                   />
                 </TouchableOpacity>
-              )}
+              )} */}
             </>
           )}
         </View>
@@ -565,7 +566,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                           styles.bikeImage,
                           {marginLeft: rideProgessImage},
                         ]}
-                        source={appImages.searchingRide}
+                        source={appImages.searchingParcel}
                       />
                       <Progress.Bar
                         indeterminate={searching}
@@ -590,7 +591,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
             ) : (
               <RiderNotAvailableComp
                 onRefershFindRiders={() => {
-                  setRideProgessImage(hp('1%'));
+                  setRideProgessImage(hp('0%'));
                   setRideProgess(0.2);
                   refershFindRidersData();
                 }}
@@ -607,7 +608,10 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
               <View style={styles.topLineView} />
               <View style={{marginHorizontal: 20}}>
                 <MeetingPickupComp
-                  firstText={'Meet at your pickup stop'}
+                  // firstText={'Meet at your pickup stop'}
+                  firstText={parcelInfo?.status == 'picked' 
+                    ? 'Drop you off at location' 
+                    : 'Meet at your pickup stop'}
                   secondText={'Ride Details'}
                   onPressDot={() => {
                     onDotPress();

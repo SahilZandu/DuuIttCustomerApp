@@ -6,50 +6,83 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';
+import { StyleSheet, View, Image, Platform, Dimensions, Alert } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages} from '../commons/AppImages';
-import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import { appImages } from '../commons/AppImages';
+import MapView, { Marker, AnimatedRegion, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import PolylineDecoder from '@mapbox/polyline';
-import {colors} from '../theme/colors';
-import {getMpaDalta, setMpaDalta} from './GeoCodeAddress';
+import { colors } from '../theme/colors';
+import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
-const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
+const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
   const mapRef = useRef(null);
   const bearingRef = useRef(0);
-  const [lat, setLat] = useState(origin?.lat ? Number(origin?.lat) : null);
-  const [long, setLong] = useState(origin?.lng ? Number(origin?.lng) : null);
+  const debounceTimeout = useRef(null);
   const [destinationLocation, setDestinationLocation] = useState({
     lat: null,
     lng: null,
   });
   const [coords, setCoords] = useState([]);
-  const [region, setRegion] = useState({
-    latitude: Number(origin?.lat) ? Number(origin?.lat) : lat,
-    longitude: Number(origin?.lng) ? Number(origin?.lng) : long,
+  // const [region, setRegion] = useState({
+  const [mapRegion, setMapRegion] = useState({
+    latitude: Number(origin?.lat) ? Number(origin?.lat) : null,
+    longitude: Number(origin?.lng) ? Number(origin?.lng) : null,
     latitudeDelta: getMpaDalta().latitudeDelta,
     longitudeDelta: getMpaDalta().longitudeDelta,
   });
   const [isMapReady, setIsMapReady] = useState(false);
+  const mohaliChandigarhBounds = {
+    north: 30.8258,
+    south: 30.6600,
+    west: 76.6600,
+    east: 76.8500,
+  };
+
+  const isWithinBounds = (latitude, longitude) => {
+    return (
+      latitude <= mohaliChandigarhBounds.north &&
+      latitude >= mohaliChandigarhBounds.south &&
+      longitude >= mohaliChandigarhBounds.west &&
+      longitude <= mohaliChandigarhBounds.east
+    );
+  };
+
+  const handleRegionChangeComplete = (region) => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      if (!isWithinBounds(region.latitude, region.longitude)) {
+        mapRef.current?.animateToRegion({
+          latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
+          longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
+          latitudeDelta: getMpaDalta().latitudeDelta,
+          longitudeDelta: getMpaDalta().longitudeDelta,
+        });
+        Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+      }
+    }, 50); // Delay in milliseconds
+
+
+  };
 
   // Update latitude and longitude based on origin
   useEffect(() => {
     // console.log('origin--', origin, destination);
     if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
-      setLat(Number(origin?.lat));
-      setLong(Number(origin?.lng));
       const newRegion = {
-        latitude: Number(origin?.lat) ? Number(origin?.lat) : lat,
-        longitude: Number(origin?.lng) ? Number(origin?.lng) : long,
+        latitude: Number(origin?.lat) ? Number(origin?.lat) : null,
+        longitude: Number(origin?.lng) ? Number(origin?.lng) : null,
         latitudeDelta: getMpaDalta().latitudeDelta,
         longitudeDelta: getMpaDalta().longitudeDelta,
       };
-      setRegion(newRegion);
+      setMapRegion(newRegion);
       // if (mapRef.current) {
       //   mapRef?.current?.animateToRegion(newRegion, 1000);
       //   }
@@ -58,10 +91,10 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
 
   const originMarker = useMemo(
     () => ({
-      latitude: lat,
-      longitude: long,
+      latitude:Number(origin?.lat),
+      longitude:Number(origin?.lng),
     }),
-    [lat, long],
+    [origin],
   );
 
   const destinationMarker = useMemo(
@@ -76,7 +109,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     // console.log('Map is ready');
     if (
       destinationLocation?.lat?.toString()?.length > 0 &&
-      lat?.toString()?.length > 0
+      originMarker?.latitude?.toString()?.length > 0
     ) {
       setTimeout(() => {
         setIsMapReady(true);
@@ -116,7 +149,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     // If any value is NaN, don't proceed
     if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
     const timeout = setInterval(() => {
-      const bearing = getBearing({lat, lng}, {lat: destLat, lng: destLng});
+      const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
 
       const camera = {
         center: {
@@ -130,9 +163,9 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         altitude: 300,
       };
       if (mapRef.current) {
-        mapRef.current.animateCamera(camera, {duration: 1000});
+        mapRef.current.animateCamera(camera, { duration: 1000 });
       }
-    }, 2000);
+    }, 4000);
 
     return () => clearInterval(timeout);
   }, [origin, destination]);
@@ -190,8 +223,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   const fetchRoute = async (origin, destination) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${
-          origin?.lat
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat
         },${origin?.lng}&destination=${Number(destination?.lat)},${Number(
           destination?.lng,
         )}&key=${API_KEY}`,
@@ -213,6 +245,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
     }
   };
 
+
   return (
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
@@ -222,6 +255,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         onRegionChange={e => {
           setMpaDalta(e);
           // console.log('e---onRegionChange', e);
+          // handleRegionChangeComplete(e)
         }}
         ref={mapRef}
         style={[styles.mapContainer, mapContainerView]}
@@ -229,8 +263,8 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         scrollEnabled={true}
         showsScale={true}
         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        // region={region}
-        initialRegion={region}
+        region={mapRegion}
+        // initialRegion={mapRegion}
         zoomTapEnabled={true}
         rotateEnabled={true}
         loadingEnabled={true}
@@ -240,8 +274,11 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
         showsUserLocation={false}
         onMapReady={handleMapReady}>
         {/* Origin Marker */}
-        {lat && long && (
-          <Marker coordinate={originMarker} useLegacyPinView={true}>
+        {originMarker?.latitude && originMarker?.longitude && (
+          <Marker 
+          // tracksViewChanges={!isMapReady}
+          coordinate={originMarker} 
+          >
             <Image
               resizeMode="cover"
               source={appImages.markerRideImage}
@@ -255,7 +292,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
           <Marker
             coordinate={destinationMarker}
             tracksViewChanges={!isMapReady}
-            useLegacyPinView={true}>
+            >
             <Image
               resizeMode="contain"
               source={appImages.markerImage}
@@ -277,7 +314,7 @@ const MapRoute = ({mapContainerView, origin, destination, isPendingReq}) => {
   );
 };
 
-export default memo(MapRoute);
+export default MapRoute;
 
 const styles = StyleSheet.create({
   homeSubContainer: {
@@ -285,7 +322,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     shadowRadius: 1,
-    shadowOffset: {height: 2, width: 0},
+    shadowOffset: { height: 2, width: 0 },
   },
   mapContainer: {
     alignSelf: 'center',
@@ -304,6 +341,242 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
+
+
+
+
+
+// import React, {
+//   memo,
+//   useCallback,
+//   useEffect,
+//   useMemo,
+//   useRef,
+//   useState,
+// } from 'react';
+// import {
+//   StyleSheet,
+//   View,
+//   Image,
+//   Platform,
+//   Alert,
+//   Animated,
+// } from 'react-native';
+// import MapView, {
+//   Marker,
+//   Polyline,
+//   PROVIDER_GOOGLE,
+//   AnimatedRegion,
+// } from 'react-native-maps';
+// import PolylineDecoder from '@mapbox/polyline';
+// import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+// import { appImages } from '../commons/AppImages';
+// import { colors } from '../theme/colors';
+// import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
+
+// const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
+
+// const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
+//   const mapRef = useRef(null);
+//   const debounceTimeout = useRef(null);
+
+//   const [destinationLocation, setDestinationLocation] = useState({
+//     lat: null,
+//     lng: null,
+//   });
+
+//   const [coords, setCoords] = useState([]);
+//   const [isMapReady, setIsMapReady] = useState(false);
+
+//   const animatedMarkerRef = useRef(null);
+//   const [animatedRegion, setAnimatedRegion] = useState(
+//     new AnimatedRegion({
+//       latitude: Number(origin?.lat),
+//       longitude: Number(origin?.lng),
+//       latitudeDelta: getMpaDalta().latitudeDelta,
+//       longitudeDelta: getMpaDalta().longitudeDelta,
+//     })
+//   );
+
+//   const mapRegion = useMemo(() => ({
+//     latitude: Number(origin?.lat),
+//     longitude: Number(origin?.lng),
+//     latitudeDelta: getMpaDalta().latitudeDelta,
+//     longitudeDelta: getMpaDalta().longitudeDelta,
+//   }), [origin]);
+
+//   const mohaliChandigarhBounds = {
+//     north: 30.8258,
+//     south: 30.6600,
+//     west: 76.6600,
+//     east: 76.8500,
+//   };
+
+//   const isWithinBounds = (latitude, longitude) => {
+//     return (
+//       latitude <= mohaliChandigarhBounds.north &&
+//       latitude >= mohaliChandigarhBounds.south &&
+//       longitude >= mohaliChandigarhBounds.west &&
+//       longitude <= mohaliChandigarhBounds.east
+//     );
+//   };
+
+//   const handleRegionChangeComplete = (region) => {
+//     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+
+//     debounceTimeout.current = setTimeout(() => {
+//       if (!isWithinBounds(region.latitude, region.longitude)) {
+//         mapRef.current?.animateToRegion({
+//           latitude: 30.7400,
+//           longitude: 76.7900,
+//           latitudeDelta: getMpaDalta().latitudeDelta,
+//           longitudeDelta: getMpaDalta().longitudeDelta,
+//         });
+//         Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+//       }
+//     }, 50);
+//   };
+
+//   const getBearing = (start, end) => {
+//     const lat1 = (start.lat * Math.PI) / 180;
+//     const lon1 = (start.lng * Math.PI) / 180;
+//     const lat2 = (end.lat * Math.PI) / 180;
+//     const lon2 = (end.lng * Math.PI) / 180;
+//     const dLon = lon2 - lon1;
+//     const y = Math.sin(dLon) * Math.cos(lat2);
+//     const x =
+//       Math.cos(lat1) * Math.sin(lat2) -
+//       Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+//     const bearing = Math.atan2(y, x);
+//     const bearingDeg = (bearing * 180) / Math.PI;
+//     return (bearingDeg + 360) % 360;
+//   };
+
+//   // Animate camera and marker on origin update
+//   useEffect(() => {
+//     if (!origin || !destination || !mapRef.current) return;
+
+//     const lat = Number(origin?.lat);
+//     const lng = Number(origin?.lng);
+//     const destLat = Number(destination?.lat);
+//     const destLng = Number(destination?.lng);
+
+//     if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
+
+//     const newCoord = { latitude: lat, longitude: lng };
+
+//     animatedRegion.timing({ ...newCoord, duration: 1000, useNativeDriver: false }).start();
+
+//     const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
+
+//     const camera = {
+//       center: newCoord,
+//       heading: bearing,
+//       pitch: 30,
+//       zoom: 17,
+//       altitude: 300,
+//     };
+
+//     mapRef.current.animateCamera(camera, { duration: 1000 });
+//   }, [origin]);
+
+//   // Fetch route
+//   useEffect(() => {
+//     if (origin?.lat && origin?.lng && destination?.lat && destination?.lng) {
+//       setDestinationLocation(destination);
+//       fetchRoute(origin, destination);
+//     }
+//   }, [origin, destination]);
+
+//   const fetchRoute = async (origin, destination) => {
+//     try {
+//       const response = await fetch(
+//         `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat},${origin?.lng}&destination=${destination?.lat},${destination?.lng}&key=${API_KEY}`,
+//       );
+//       const json = await response.json();
+
+//       if (json.routes?.length) {
+//         const points = PolylineDecoder.decode(
+//           json.routes[0].overview_polyline.points
+//         );
+//         const routeCoords = points.map(point => ({
+//           latitude: point[0],
+//           longitude: point[1],
+//         }));
+//         setCoords(routeCoords);
+//       }
+//     } catch (error) {
+//       console.log('Error fetching route:', error);
+//     }
+//   };
+
+//   const destinationMarker = useMemo(() => ({
+//     latitude: Number(destinationLocation?.lat),
+//     longitude: Number(destinationLocation?.lng),
+//   }), [destinationLocation]);
+
+//   return (
+//     <View
+//       pointerEvents={isPendingReq ? 'none' : 'auto'}
+//       style={styles.homeSubContainer}>
+//       <MapView
+//         provider={PROVIDER_GOOGLE}
+//         ref={mapRef}
+//         style={[styles.mapContainer, mapContainerView]}
+//         initialRegion={mapRegion}
+//         onRegionChangeComplete={handleRegionChangeComplete}
+//         onRegionChange={setMpaDalta}
+//         zoomEnabled
+//         scrollEnabled
+//         showsCompass
+//         showsScale
+//         loadingEnabled
+//         showsUserLocation={false}
+//         rotateEnabled
+//         mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+//         onMapReady={() => setIsMapReady(true)}>
+
+//         {/* 🚗 Animated Origin Marker */}
+//         <Marker.Animated
+//           ref={animatedMarkerRef}
+//           coordinate={animatedRegion}>
+//           <Image
+//             resizeMode="cover"
+//             source={appImages.markerRideImage}
+//             style={styles.markerBikeImage}
+//           />
+//         </Marker.Animated>
+
+//         {/* 📍 Destination Marker */}
+//         {destinationLocation?.lat && destinationLocation?.lng && (
+//           <Marker
+//             coordinate={destinationMarker}
+//             tracksViewChanges={!isMapReady}>
+//             <Image
+//               resizeMode="contain"
+//               source={appImages.markerImage}
+//               style={styles.markerImage}
+//             />
+//           </Marker>
+//         )}
+
+//         {/* 📍 Polyline */}
+//         {coords?.length > 0 && (
+//           <Polyline
+//             coordinates={coords}
+//             strokeWidth={4}
+//             strokeColor={colors.main}
+//           />
+//         )}
+//       </MapView>
+//     </View>
+//   );
+// };
+
+// export default memo(MapRoute);
+
+
 
 // import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 // import {StyleSheet, View, Image, Platform, Dimensions} from 'react-native';

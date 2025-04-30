@@ -20,7 +20,22 @@ export default class MyAddressStore {
     handleLoading,
   ) => {
     handleLoading(true);
-    let requestData = {
+    let requestData = {}
+    if(type == 'add') {
+    requestData = {
+        title: title,
+      name: values?.name,
+      phone: Number(values?.phone),
+      address: address,
+      address_detail: values?.house,
+      geo_location: geoLocation,
+      location_id: loactionId,
+      landmark: values?.landmark,
+      type: type,
+    };
+  }else{
+    requestData = {
+      _id: values?.id,
       title: title,
       name: values?.name,
       phone: Number(values?.phone),
@@ -31,6 +46,7 @@ export default class MyAddressStore {
       landmark: values?.landmark,
       type: type,
     };
+  }
 
     console.log('requestData:-', requestData);
     try {

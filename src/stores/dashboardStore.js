@@ -14,7 +14,7 @@ export default class DashboardStore {
     handleLoading(true);
     var request = new FormData();
     request.append('name', values?.name);
-    request.append('email', values?.email);
+    request.append('email', values?.email?.toLowerCase());
     request.append('phone', Number(values?.mobile));
     request.append('gender', values?.gender);
     request.append('date_of_birth', values?.date_of_birth);
@@ -53,7 +53,6 @@ export default class DashboardStore {
 
   saveFcmToken = async fcm => {
     const deviceId = await getUniqueId();
-
     let requestData = {
       device_id: deviceId,
       fcm_token: fcm,

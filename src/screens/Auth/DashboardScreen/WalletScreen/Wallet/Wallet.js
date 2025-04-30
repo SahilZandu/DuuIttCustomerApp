@@ -297,7 +297,7 @@ const Wallet = ({navigation}) => {
               </View>
             </View> */}
 
-            <View>
+            {/* <View>
               <Text style={styles.giftCartText}>Gift Cards</Text>
               <Surface elevation={2} style={styles.giftCardSurfaceView}>
                 <TouchTextRightIconComp
@@ -305,7 +305,7 @@ const Wallet = ({navigation}) => {
                   data={giftCardOptions}
                 />
               </Surface>
-            </View>
+            </View> */}
           </View>
         </AppInputScroll>
       </KeyboardAvoidingView>)}
