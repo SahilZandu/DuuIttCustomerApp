@@ -1,6 +1,6 @@
 import Url from './Url';
 import axios from 'axios';
-import {rootStore} from '../stores/rootStore';
+import { rootStore } from '../stores/rootStore';
 import RNRestart from 'react-native-restart';
 
 const Base_Url = Url.Base_Url;
@@ -109,6 +109,7 @@ export const agent = {
   myAddress: body => requests.post(Url.myAddress, body),
   getMyAddress: () => requests.get(Url.getMyAddress),
   parcelsRides: body => requests.post(Url.parcelsRides, body),
+  editParcelsRides: (body,orderId) => requests.post(`${Url.editParcelsRides}/${orderId?.order_id}`, body),
   parcels_Cancel: body => requests.post(Url.parcels_Cancel, body),
   parcels_find_rider: body => requests.post(Url.parcels_find_rider, body),
   updateProfile: body => requests.postForm(Url.updateProfile, body),
@@ -162,8 +163,10 @@ export const agent = {
   paymentsVerify: body => requests.post(Url.paymentsVerify, body),
   deleteAccount: body =>
     requests.delete(`${Url.deleteAccount}/${body?.userId}`),
-    adminInfo: () => requests.get(Url.adminInfo),
-    updateCustomerInfo: body => requests.post(Url.updateCustomerInfo, body),
+  adminInfo: () => requests.get(Url.adminInfo),
+  updateCustomerInfo: body => requests.post(Url.updateCustomerInfo, body),
+  checkDeviceId: body => requests.post(Url.checkDeviceId, body),
+
 };
 
 const requests = {
@@ -175,7 +178,7 @@ const requests = {
   postForm: (url, formData) => {
     return axios
       .post(url, formData, {
-        headers: {'content-type': 'multipart/form-data'},
+        headers: { 'content-type': 'multipart/form-data' },
       })
       .then(responseBody);
   },

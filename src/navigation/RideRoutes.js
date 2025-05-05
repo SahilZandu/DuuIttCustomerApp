@@ -12,6 +12,7 @@ import Feedback from '../screens/Auth/DashboardScreen/Feedback/Feedback';
 import Help from '../screens/Auth/DashboardScreen/Help/Help';
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
+import EditOrderLocation from '../screens/DURide/EditOrderLocation/EditOrderLocation';
 
 
 
@@ -40,6 +41,8 @@ export default function RideRoutes(props) {
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
        <Stack.Screen name="feedback" component={Feedback} />
        <Stack.Screen name="help" component={Help} />
+       <Stack.Screen name="editOrderLocation" component={EditOrderLocation} />
+       
   
     </Stack.Navigator>
   );

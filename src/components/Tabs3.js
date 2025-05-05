@@ -40,9 +40,6 @@ export default function Tabs3({
   };
 
   useEffect(() => {
-    // if (type == 'All Orders') {
-    //   setSelectedIndex(0);
-    // }
     if (type == 'Ride') {
       setSelectedIndex(1);
     } else if (type == 'Parcel') {
@@ -60,13 +57,13 @@ export default function Tabs3({
   const onSetImage = index => {
     switch (index) {
       case 1:
-        return appImages.foodTab;
-      case 2:
         return appImages.rideTab;
-      case 3:
+      case 2:
         return appImages.parcelTab;
-      default:
+        case 3:
         return appImages.foodTab;
+      default:
+        return appImages.rideTab;
     }
   };
 

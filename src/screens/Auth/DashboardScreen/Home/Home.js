@@ -26,22 +26,29 @@ import { useNotifications } from '../../../../halpers/useNotifications';
 import socketServices from '../../../../socketIo/SocketServices';
 import NoInternet from '../../../../components/NoInternet';
 import messaging from '@react-native-firebase/messaging';
+import { getUniqueId } from 'react-native-device-info';
 
 
 
 export default function Home({navigation}) {
   const {appUser} = rootStore.commonStore;
-  const {saveFcmToken} = rootStore.dashboardStore;
+  const {saveFcmToken,getCheckDeviceId} = rootStore.dashboardStore;
   useNotifications(navigation);
   const [internet, setInternet] = useState(true);
   useFocusEffect(
     useCallback(() => {
+      getCheckDevice();
       requestNotificationPermission();
       handleAndroidBackButton();
       setCurrentLocation()
       checkInternet()
     }, []),
   );
+
+  const getCheckDevice = async () => {
+    const deviceId = await getUniqueId();
+   await getCheckDeviceId(deviceId)
+  }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab1', event => {

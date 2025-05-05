@@ -42,7 +42,7 @@ export default function ParcelHome({ navigation }) {
   } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
-  const { testMessage } = rootStore.dashboardStore;
+  const {getCheckDeviceId,testMessage} = rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [recentOrder, setRecentOrder] = useState({});
   const [loading, setLoading] = useState(false);
@@ -66,6 +66,7 @@ export default function ParcelHome({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       // setCurrentLocation();
+      getCheckDevice();
       setMpaDaltaInitials();
       checkInternet();
       handleAndroidBackButton(navigation);
@@ -88,6 +89,9 @@ export default function ParcelHome({ navigation }) {
 
     }, []),
   );
+  const getCheckDevice = async () => {
+    await getCheckDeviceId();
+   }
 
   // useEffect(() => {
   //   const subscription = DeviceEventEmitter.addListener('dropped', data => {
@@ -285,7 +289,7 @@ export default function ParcelHome({ navigation }) {
             appUserInfo={appUserInfo}
           />
           <MapCurrentLocationRoute
-            mapContainerView={{ height: hp('25%') }}
+            mapContainerView={{ height: hp('30%') }}
             origin={geoLocation ?? originLocation}
             isPendingReq={true}
           />

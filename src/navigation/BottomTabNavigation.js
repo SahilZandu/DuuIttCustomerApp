@@ -154,7 +154,7 @@ export function DashboardBottomNavigator() {
             navigation.navigate('tab3', { tabText: 'All Orders' }); // Force re-render with new params
           },
           })}
-        initialParams={{tabText:'All Orders'}} // Pass initial params
+         initialParams={{tabText:'All Orders'}} // Pass initial params
       />
       <Tab.Screen
         name="tab4"

@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     marginHorizontal:10
   },
   bottomImageView:{
-    marginTop: '1%'
+    marginTop:Platform.OS === 'ios'? '0.1%': '2%'
   },
   bottomImage:{
     height: hp('30%'),

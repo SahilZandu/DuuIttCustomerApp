@@ -15,7 +15,7 @@ const RenderOffer = ({data}) => {
       {data?.map((item, i) => {
         return (
           <View style={styles.renderView}>
-            <Surface elevation={3} style={styles.surfaceView}>
+            <Surface elevation={2} style={styles.surfaceView}>
               <TouchableOpacity
                 style={styles.touchView}
                 key={i}
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     width: wp('89%'),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '5%',
+    marginTop: '5.5%',
   },
   touchView: {
     justifyContent: 'center',

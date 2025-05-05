@@ -28,6 +28,7 @@ import TwoTextSlider from '../../../../components/slider/twoTextSlider';
 
 export default function Offers({navigation}) {
   const {appUser} = rootStore.commonStore;
+   const {getCheckDeviceId} = rootStore.dashboardStore;
   const [internet, setInternet] = useState(true);
   const [exploreArray, setExploreArray] = useState(offerExplore);
   const [promotionArray, setPromotionArray] = useState(offerPromotion);
@@ -35,10 +36,14 @@ export default function Offers({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
+      getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation);
     }, []),
   );
+  const getCheckDevice = async () => {
+    await getCheckDeviceId()
+   }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab2', event => {

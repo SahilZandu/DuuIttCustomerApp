@@ -30,8 +30,8 @@ const MapLocationRoute = ({
   const mapRef = useRef(null);
   const debounceTimeout = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat ? Number(origin?.lat) : 30.7400,
-    longitude: origin?.lng ? Number(origin?.lng) : 76.7900,
+    latitude: origin?.lat ? Number(origin?.lat) : null,
+    longitude: origin?.lng ? Number(origin?.lng) : null,
     latitudeDelta: getMpaDalta().latitudeDelta,
     longitudeDelta: getMpaDalta().longitudeDelta,
   });

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -8,19 +8,19 @@ import {
   Text,
   Platform,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 import CTA from './cta/CTA';
-import {currencyFormat} from '../halpers/currencyFormat';
-import {Surface} from 'react-native-paper';
+import { currencyFormat } from '../halpers/currencyFormat';
+import { Surface } from 'react-native-paper';
 import BTN from './cta/BTN';
 import PickDropComp from './PickDropComp';
 import moment from 'moment';
 import Url from '../api/Url';
-import {screenWidth} from '../halpers/matrics';
+import { screenWidth } from '../halpers/matrics';
 import AppInputScroll from '../halpers/AppInputScroll';
 import {
   heightPercentageToDP as hp,
@@ -29,7 +29,7 @@ import {
 import TextRender from './TextRender';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 
-const CardOrderDetails = ({item}) => {
+const CardOrderDetails = ({ item }) => {
   // console.log('item -- ', item);
 
   const setStatusData = status => {
@@ -53,18 +53,19 @@ const CardOrderDetails = ({item}) => {
         return 'Ride Amount';
     }
   };
-
-  //   billing_detail:
+  // billing_detail:
   // delivery_fee: 7
   // discount: 0
   // distance_fee: 27
   // gst_fee: 6.2496
   // platform_fee: 1.5
+  let disFare = item?.total_amount - (item?.billing_detail?.delivery_fee + item?.billing_detail?.platform_fee + item?.billing_detail?.gst_fee);
+
   const billDetails = [
     {
       id: '1',
       name: 'Distance Fee',
-      price: item?.billing_detail?.distance_fee ?? 0,
+      price: disFare ? disFare : item?.billing_detail?.distance_fee ?? 0,
       coupanCode: '',
       // bottomLine: item?.order_type !== 'food' ? true : false,
       bottomLine: false,
@@ -171,7 +172,7 @@ const CardOrderDetails = ({item}) => {
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} Pb={hp('25%')}>
-        <TouchableOpacity style={{flex: 1}} activeOpacity={0.8}>
+        <TouchableOpacity style={{ flex: 1 }} activeOpacity={0.8}>
           <View style={styles.imageDateView}>
             <View style={styles.imageView}>
               <Image
@@ -180,7 +181,7 @@ const CardOrderDetails = ({item}) => {
                 source={
                   // setImageIcon(item?.order_type)
                   item?.rider?.profile_pic?.length > 0
-                    ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                    ? { uri: Url.Image_Url + item?.rider?.profile_pic }
                     : setImageIcon(item?.order_type)
                 }
               />
@@ -218,12 +219,12 @@ const CardOrderDetails = ({item}) => {
               </View>
             </View>
           </View>
-          <View style={{marginTop: '3%'}}>
-            <View style={{flexDirection: 'row'}}>
+          <View style={{ marginTop: '3%' }}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={styles.riderNameText}>{'Rider'}:</Text>
               <Text
                 numberOfLines={1}
-                style={[styles.riderNameText, {color: colors.black}]}>
+                style={[styles.riderNameText, { color: colors.black }]}>
                 {' '}
                 {item?.rider?.name ?? 'No Rider'}{' '}
               </Text>
@@ -296,8 +297,8 @@ const CardOrderDetails = ({item}) => {
                               item?.coupanCode?.length > 0
                                 ? colors.main
                                 : item?.name == 'Total'
-                                ? colors.black
-                                : colors.color64,
+                                  ? colors.black
+                                  : colors.color64,
                           },
                         ]}
                         valueStyle={[
@@ -307,8 +308,8 @@ const CardOrderDetails = ({item}) => {
                               item?.coupanCode?.length > 0
                                 ? colors.main
                                 : item?.name == 'Total'
-                                ? colors.black
-                                : colors.color64,
+                                  ? colors.black
+                                  : colors.color64,
                           },
                         ]}
                         title={
@@ -374,7 +375,7 @@ const styles = StyleSheet.create({
     height: 75,
     borderRadius: 10,
   },
-  trackTextView: {flex: 1, flexDirection: 'column', marginLeft: '2.5%'},
+  trackTextView: { flex: 1, flexDirection: 'column', marginLeft: '2.5%' },
   trackIdText: {
     fontSize: RFValue(13),
     fontFamily: fonts.medium,

@@ -8,6 +8,13 @@ let loc = {
    longitude: null,
 };
 
+let liv = {
+   latitude: null,
+   longitude: null,
+};
+
+let watchId = null;
+
 export const setCurrentLocation = async () => {
   if (Platform.OS == 'ios') {
     setPostion();
@@ -57,3 +64,47 @@ const setPostion = () => {
 export const getCurrentLocation = () => {
   return loc;
 };
+
+
+
+export const startWatchingPosition = async () => {
+  if (Platform.OS === 'android') {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) return;
+  }
+
+  watchId = Geolocation.watchPosition(
+    position => {
+      liv = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
+      console.log('Updated location:', loc);
+    },
+    error => {
+      console.log('WatchPosition error:', error);
+    },
+    {
+      enableHighAccuracy: true,
+      distanceFilter: 5, // meters
+      interval: 4000,
+      fastestInterval: 2000,
+    }
+  );
+};
+
+export const stopWatchingPosition = () => {
+  if (watchId !== null) {
+    Geolocation.clearWatch(watchId);
+    watchId = null;
+  }
+};
+
+
+export const getLiveLocation = () => {
+  return liv;
+};
+
+

@@ -1,13 +1,13 @@
-import {action, computed, decorate, observable, runInAction} from 'mobx';
-import {agent} from '../api/agent';
-import {rootStore} from './rootStore';
-import {useToast} from '../halpers/useToast';
-import {getUniqueId} from 'react-native-device-info';
+import { action, computed, decorate, observable, runInAction } from 'mobx';
+import { agent } from '../api/agent';
+import { rootStore } from './rootStore';
+import { useToast } from '../halpers/useToast';
+import { getUniqueId } from 'react-native-device-info';
 
 export default class DashboardStore {
   restaurentOfferCoupan = [];
-  welletBalance ={}
-  transactionList=[]
+  welletBalance = {}
+  transactionList = []
 
 
   updateProfile = async (values, handleLoading, onSuccess) => {
@@ -209,7 +209,7 @@ export default class DashboardStore {
     }
   };
 
-  appFeedback = async (values,handleLoading,navigation) => {
+  appFeedback = async (values, handleLoading, navigation) => {
     handleLoading(true);
     let requestData = {
       feedback: values?.feedback,
@@ -269,15 +269,15 @@ export default class DashboardStore {
     }
   };
 
-  getTransactionHistory = async (appUser,limit,range, handleLoading) => {
+  getTransactionHistory = async (appUser, limit, range, handleLoading) => {
     const requestData = {
       userId: appUser?._id,
       transaction: true,
       page: 1,
-      limit:limit,
-      range:range?.toLowerCase()
+      limit: limit,
+      range: range?.toLowerCase()
     };
-    console.log("requestData--=",requestData);
+    console.log("requestData--=", requestData);
     try {
       const res = await agent.transactionHistory(requestData);
       console.log('get getTransactionHistory Res : ', res);
@@ -314,7 +314,7 @@ export default class DashboardStore {
   ) => {
     const requestData = {
       created_by: appUser?._id,
-      user_type:"customer",
+      user_type: "customer",
       amount: Number(amount),
       payment_id: paymentId,
       type: 'credit',
@@ -322,7 +322,7 @@ export default class DashboardStore {
       reason: 'Recharge',
     };
 
-    console.log("requestData addWalletBalance--",requestData);
+    console.log("requestData addWalletBalance--", requestData);
     try {
       const res = await agent.walletUpdateBalance(requestData);
       console.log('add walletUpdateBalance Res : ', res);
@@ -350,8 +350,8 @@ export default class DashboardStore {
   paymentsCreateOrder = async (amount) => {
     // handleLoading(true);
     let requestData = {
-      amount : Number(amount),
-      currency : "INR",
+      amount: Number(amount),
+      currency: "INR",
       status: true
     };
 
@@ -370,7 +370,7 @@ export default class DashboardStore {
         // handleLoading(false);
         return res
       }
-   
+
     } catch (error) {
       // handleLoading(false);
       const m = error?.data?.message
@@ -385,9 +385,9 @@ export default class DashboardStore {
 
   paymentsVerify = async (data) => {
     let requestData = {
-      order_id:data?.razorpay_order_id,
-      razorpay_payment_id:data?.razorpay_payment_id,
-      razorpay_signature:data?.razorpay_signature,
+      order_id: data?.razorpay_order_id,
+      razorpay_payment_id: data?.razorpay_payment_id,
+      razorpay_signature: data?.razorpay_signature,
     };
 
     console.log('paymentsVerify requestData', requestData);
@@ -414,9 +414,9 @@ export default class DashboardStore {
   };
 
 
-  deleteAccount = async (appUser,handleLoading) => {
+  deleteAccount = async (appUser, handleLoading) => {
     let requestData = {
-      userId:appUser?._id
+      userId: appUser?._id
     };
 
     console.log('deleteAccount requestData', requestData);
@@ -446,6 +446,32 @@ export default class DashboardStore {
     }
   };
 
-  
+  getCheckDeviceId = async () => {
+    const deviceId = await getUniqueId();
+    let requestData = {
+      device_id: deviceId,
+    };
+
+    console.log('checkDeviceId requestData', requestData);
+
+    try {
+      const res = await agent.checkDeviceId(requestData);
+      console.log('checkDeviceId Res :', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+    } catch (error) {
+      console.log('error checkDeviceId:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+    }
+  };
+
+
 
 }

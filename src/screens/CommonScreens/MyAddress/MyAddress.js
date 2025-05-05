@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -6,28 +6,29 @@ import {
   FlatList,
   DeviceEventEmitter,
 } from 'react-native';
-import {appImagesSvg} from '../../../commons/AppImages';
-import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
+import { appImagesSvg } from '../../../commons/AppImages';
+import { styles } from './styles';
+import { SvgXml } from 'react-native-svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../../components/header/Header';
 import AddressCard from '../../../components/AddressCard';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import PopUp from '../../../components/appPopUp/PopUp';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 
-export default function MyAddress({navigation, route}) {
-  const {screenName} = route.params || {};
+export default function MyAddress({ navigation, route }) {
+  const { screenName } = route.params || {};
   console.log('screenName---', screenName);
-  const {getMyAddress, getAddress, deleteMyAddress} = rootStore.myAddressStore;
-  const {setSelectedAddress}=rootStore.cartStore;
+  const { getMyAddress, getAddress, deleteMyAddress } = rootStore.myAddressStore;
+  const { setSelectedAddress } = rootStore.cartStore;
+  const { getCheckDeviceId } = rootStore.dashboardStore;
   const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
   const [myAddress, setMyAddress] = useState(getAddress);
   const [isDelete, setIsDelete] = useState(false);
@@ -37,11 +38,15 @@ export default function MyAddress({navigation, route}) {
 
   useFocusEffect(
     useCallback(() => {
+      getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation);
       getAddressDetails();
     }, []),
   );
+  const getCheckDevice = async () => {
+    await getCheckDeviceId();
+  }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab2', event => {
@@ -80,20 +85,20 @@ export default function MyAddress({navigation, route}) {
     setIsDelete(v);
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <AddressCard
         item={item}
         index={index}
         onPress={() => {
-          if(screenName === 'cart'){
+          if (screenName === 'cart') {
             navigation.goBack();
             setSelectedAddress(item)
           }
         }}
         onPressDelete={() => {
           setIsDelete(true);
-           setIsDeleteIndex(index);
+          setIsDeleteIndex(index);
           setIsDeleteItem(item);
         }}
         onPressEdit={() => {
@@ -127,7 +132,7 @@ export default function MyAddress({navigation, route}) {
               <View style={styles.main}>
                 {myAddress?.length > 0 ? (
                   <FlatList
-                    contentContainerStyle={{paddingBottom: '30%'}}
+                    contentContainerStyle={{ paddingBottom: '30%' }}
                     showsVerticalScrollIndicator={false}
                     data={myAddress}
                     renderItem={renderItem}

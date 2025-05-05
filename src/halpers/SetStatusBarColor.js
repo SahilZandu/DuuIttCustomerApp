@@ -55,7 +55,9 @@ const DashbordScreens = [
   'orderDetails',
   'transactionHistory',
   'setUpdatePass',
-  'personalInfo'
+  'personalInfo',
+  "editOrderLocation",
+  "chat",
 
 ];
 

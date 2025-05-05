@@ -19,10 +19,11 @@ import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
-const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
+const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const mapRef = useRef(null);
   const bearingRef = useRef(0);
   const debounceTimeout = useRef(null);
+  const markerRef = useRef(null);
   const [destinationLocation, setDestinationLocation] = useState({
     lat: null,
     lng: null,
@@ -36,6 +37,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
     longitudeDelta: getMpaDalta().longitudeDelta,
   });
   const [isMapReady, setIsMapReady] = useState(false);
+  const [animatedCoordinate] = useState(
+    new AnimatedRegion({
+      latitude: Number(origin?.lat) || null,
+      longitude: Number(origin?.lng) || null,
+      latitudeDelta: getMpaDalta().latitudeDelta,
+      longitudeDelta: getMpaDalta().longitudeDelta,
+    })
+  );
   const mohaliChandigarhBounds = {
     north: 30.8258,
     south: 30.6600,
@@ -74,7 +83,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
 
   // Update latitude and longitude based on origin
   useEffect(() => {
-    // console.log('origin--', origin, destination);
+    console.log('origin--MapRoute', origin, destination);
     if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
       const newRegion = {
         latitude: Number(origin?.lat) ? Number(origin?.lat) : null,
@@ -91,8 +100,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
 
   const originMarker = useMemo(
     () => ({
-      latitude:Number(origin?.lat),
-      longitude:Number(origin?.lng),
+      latitude: Number(origin?.lat),
+      longitude: Number(origin?.lng),
     }),
     [origin],
   );
@@ -145,6 +154,22 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
     const lng = Number(origin?.lng);
     const destLat = Number(destination?.lat);
     const destLng = Number(destination?.lng);
+
+    const newCoord = { latitude: lat, longitude: lng };
+    animatedCoordinate.timing({
+      ...newCoord,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    
+
+    setTimeout(() => {
+      mapRef.current?.animateToRegion({
+        ...newCoord,
+        latitudeDelta: 0.0322,
+        longitudeDelta: 0.0321,
+      }, 500);
+    }, Platform.OS === 'ios' ? 100 : 0);
 
     // If any value is NaN, don't proceed
     if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
@@ -272,9 +297,23 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
         cacheEnabled={false}
         followsUserLocation={false}
         showsUserLocation={false}
-        onMapReady={handleMapReady}>
+        onMapReady={handleMapReady}
+      >
         {/* Origin Marker */}
-        {originMarker?.latitude && originMarker?.longitude && (
+        {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
+          <Marker.Animated
+            ref={markerRef}
+            coordinate={animatedCoordinate}
+            tracksViewChanges={!isMapReady}
+          >
+            <Image
+              resizeMode="cover"
+              source={appImages.markerRideImage}
+              style={styles.markerBikeImage}
+            />
+          </Marker.Animated>
+        )}
+        {/* {originMarker?.latitude && originMarker?.longitude && (
           <Marker 
           // tracksViewChanges={!isMapReady}
           coordinate={originMarker} 
@@ -285,14 +324,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq}) => {
               style={styles.markerBikeImage}
             />
           </Marker>
-        )}
+        )} */}
 
         {/* Destination Marker */}
         {destinationLocation?.lat && destinationLocation?.lng && (
           <Marker
             coordinate={destinationMarker}
             tracksViewChanges={!isMapReady}
-            >
+          >
             <Image
               resizeMode="contain"
               source={appImages.markerImage}

@@ -129,7 +129,7 @@ function FieldInputText({
           />
         )}
       </View>
-      <View style={{marginHorizontal: 10}}>
+      <View style={{justifyContent:'center'}}>
         <FieldErrorMessage
           error={errors[name]}
           visible={rightIcon ? true : touched[name]}

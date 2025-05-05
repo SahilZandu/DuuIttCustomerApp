@@ -9,6 +9,7 @@ export default  {
     myAddress:'customers/address',
     getMyAddress:'customers/detail',
     parcelsRides:'orders',
+    editParcelsRides: "orders/update-order-details",
     parcels_Cancel:'orders/cancel',
     parcels_find_rider:'orders/find-rider',
     updateProfile:'customers/update-profile',
@@ -51,7 +52,8 @@ export default  {
     paymentsVerify:'payments/verify',
     deleteAccount:'customers/info',
     adminInfo:'admin/info',
-   updateCustomerInfo :'customers/update-customer-info'
+   updateCustomerInfo :'customers/update-customer-info',
+   checkDeviceId :"customers/check-device-info"
 
     
 

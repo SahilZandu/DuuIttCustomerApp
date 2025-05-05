@@ -21,6 +21,6 @@ export const styles = StyleSheet.create({
     marginTop: '-5.1%',
   },
   bottomImage:{
-    height: hp('30%'), width: wp('100%')
+    height: hp('35%'), width: wp('100%')
   }
 });

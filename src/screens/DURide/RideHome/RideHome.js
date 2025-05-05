@@ -26,6 +26,7 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute';
+import PopUpDontService from '../../../components/PopUpDontService';
 
 let geoLocation = {
   lat: null,
@@ -39,6 +40,7 @@ export default function RideHome({ navigation }) {
   const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
+  const {getCheckDeviceId} = rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [trackedArray, setTrackedArray] = useState([]);
   const [incompletedArray, setIncompletedArray] = useState([]);
@@ -47,6 +49,7 @@ export default function RideHome({ navigation }) {
   const [originLocation, setOriginLocation] = useState({});
   const [isReviewRider, setIsReviewRider] = useState(false);
   const [loadingRating, setLoadingRating] = useState(false);
+  const [cancelVisible, setCancelVisible] = useState(false);
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -58,6 +61,7 @@ export default function RideHome({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      getCheckDevice();
       setMpaDaltaInitials();
       checkInternet();
       handleAndroidBackButton(navigation);
@@ -79,6 +83,11 @@ export default function RideHome({ navigation }) {
       }, 1500);
     }, []),
   );
+
+  const getCheckDevice = async () => {
+    await getCheckDeviceId()
+   }
+
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -226,7 +235,7 @@ export default function RideHome({ navigation }) {
           />
 
           <MapCurrentLocationRoute
-            mapContainerView={{ height: hp('25%') }}
+            mapContainerView={{ height: hp('30%') }}
             origin={geoLocation ?? originLocation}
             isPendingReq={true}
           />
@@ -313,6 +322,17 @@ export default function RideHome({ navigation }) {
             loading={loadingRating}
             onHandleLoading={v => {
               setLoadingRating(v);
+            }}
+          />
+          <PopUpDontService
+            isVisible={cancelVisible}
+            onClose={() => {
+              setCancelVisible(false);
+            }}
+            // title={"Oops! We currently don't service your location"}
+            title={"Oops! we currently don't service your pickup location. Please select different location."}
+            onHandle={() => {
+              setCancelVisible(false);
             }}
           />
         </>

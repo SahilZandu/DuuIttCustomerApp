@@ -45,6 +45,43 @@ export default class ParcelStore {
   };
 
 
+  editParcelsRides = async (value, navigation, handleLoading) => {
+    handleLoading(true);
+    let requestData = {
+      weight: Number(value?.weight),
+      order_type: value?.order_type,
+      sender_address: value?.sender_address,
+      receiver_address: value?.receiver_address,
+      billing_detail: value?.billing_detail,
+      secure: value?.isSecure,
+    };
+    let orderId = { order_id: value?.order_id };
+    console.log('requestData:-editParcelsRides', requestData, orderId);
+    try {
+      const res = await agent.editParcelsRides(requestData, orderId);
+      console.log('editParcelsRides API Res:', res);
+      if (res?.statusCode == 200) {
+        handleLoading(false);
+        this.addParcelInfo = res?.data;
+        navigation.navigate('priceConfirmed', { item: res?.data });
+        // navigation.goBack();
+        useToast(res.message, 1);
+      } else {
+        handleLoading(false);
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+    } catch (error) {
+      console.log('error:editParcelsRides', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
+
   addReOrderRequestParcelRide = async (value, navigation, handleLoading) => {
     const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
     handleLoading(true);

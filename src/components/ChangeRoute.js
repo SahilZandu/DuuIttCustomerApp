@@ -117,7 +117,7 @@
 
 // export default ChangeRoute;
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Pressable,
   Text,
@@ -127,36 +127,36 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
-import {Strings} from '../translates/strings';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
+import { Strings } from '../translates/strings';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {screenHeight} from '../halpers/matrics';
-import {Surface} from 'react-native-paper';
+import { screenHeight } from '../halpers/matrics';
+import { Surface } from 'react-native-paper';
 
-const ChangeRoute = ({data, navigation}) => {
+const ChangeRoute = ({ data, navigation }) => {
   const onRoutePress = item => {
     if (item?.name == 'FOOD') {
-      navigation.navigate('food', {screen: 'home'});
+      navigation.navigate('food', { screen: 'home' });
     } else if (item?.name == 'RIDE') {
-      navigation.navigate('ride', {screen: 'home'});
+      navigation.navigate('ride', { screen: 'home' });
     } else if (item?.name == 'PARCEL') {
-      navigation.navigate('parcel', {screen: 'home'});
+      navigation.navigate('parcel', { screen: 'home' });
     } else {
-      navigation.navigate('dashborad', {screen: 'home'});
+      navigation.navigate('dashborad', { screen: 'home' });
     }
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <>
         <Surface
-          elevation={2}
+          elevation={1}
           style={{
             shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
             backgroundColor: colors.white,
@@ -164,7 +164,7 @@ const ChangeRoute = ({data, navigation}) => {
             borderRadius: 10,
             height: hp('14%'),
             width: wp('88%'),
-            marginTop: '5%',
+            marginTop: '7%',
             // paddingVertical: '5%',
           }}>
           {index % 2 == 0 ? (
@@ -185,7 +185,7 @@ const ChangeRoute = ({data, navigation}) => {
                 // marginTop: '5%',
               }}>
               <View
-                style={{flex: 1, marginLeft: wp('5%'), marginTop: hp('2%')}}>
+                style={{ flex: 1, marginLeft: wp('5%'), marginTop: hp('2%') }}>
                 <SvgXml xml={item?.duIcon} />
                 <Text
                   style={{
@@ -262,7 +262,11 @@ const ChangeRoute = ({data, navigation}) => {
                   source={item?.image}
                 />
               </View>
-              <View style={{marginLeft: wp('8%'), marginTop: hp('2%')}}>
+              <View style={{
+                marginLeft:
+                  Platform.OS === 'ios' ? wp('5%')
+                    : wp('7%'), marginTop: hp('2%')
+              }}>
                 <SvgXml xml={item?.duIcon} />
                 <Text
                   style={{
@@ -315,12 +319,12 @@ const ChangeRoute = ({data, navigation}) => {
           nestedScrollEnabled={true}
           scrollEnabled={false}
           bounces={false}
-          contentContainerStyle={{paddingBottom: '1%'}}
+          contentContainerStyle={{ paddingBottom: '1%' }}
           showsVerticalScrollIndicator={false}
           data={data}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-          // numColumns={3} // Set number of columns
+        // numColumns={3} // Set number of columns
         />
       </View>
     </View>

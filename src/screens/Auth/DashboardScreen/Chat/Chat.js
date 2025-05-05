@@ -119,6 +119,7 @@ export default function Chat({navigation}) {
           hanldeLinking();
         }}
       />
+    
        <View style={{flex:1,}}>
         <GiftedChat
           messages={messages}
@@ -253,6 +254,7 @@ export default function Chat({navigation}) {
           )}
         />
         </View>
+        
       <MikePopUp
         visible={visible}
         title={'Sorry! Didn’t hear that'}

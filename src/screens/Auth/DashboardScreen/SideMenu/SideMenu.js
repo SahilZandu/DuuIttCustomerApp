@@ -20,6 +20,7 @@ import PopUp from '../../../../components/appPopUp/PopUp';
 
 export default function SideMenu({ navigation }) {
   const { setToken, setAppUser, appUser } = rootStore.commonStore;
+   const {getCheckDeviceId} = rootStore.dashboardStore;
   const [initialValues, setInitialValues] = useState({
     image: '',
     name: '',
@@ -162,7 +163,7 @@ export default function SideMenu({ navigation }) {
 
   const moreOptions = [
     {
-      id: '8',
+      id: '0',
       title: 'Wallet',
       onPress: () => {
         navigation.navigate('wallet');
@@ -174,9 +175,9 @@ export default function SideMenu({ navigation }) {
 
     {
       id: '1',
-      title: (appUser?.password && 
-        appUser?.password?.toString()?.length > 0) 
-      ? "Update Password" : 'Set Password',
+      title: (appUser?.password &&
+        appUser?.password?.toString()?.length > 0)
+        ? "Update Password" : 'Set Password',
       onPress: () => {
         navigation.navigate('setUpdatePass');
       },
@@ -270,16 +271,30 @@ export default function SideMenu({ navigation }) {
       show: true,
       disable: false,
     },
+    {
+      id: '8',
+      title: 'Chat',
+      onPress: () => {
+        navigation.navigate('chat');
+      },
+      icon: appImagesSvg.walletSvg,
+      show: true,
+      disable: false,
+    },
   ];
 
   useFocusEffect(
     useCallback(() => {
+      getCheckDevice();
       socketServices.initailizeSocket();
       checkInternet();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();
     }, []),
   );
+  const getCheckDevice = async () => {
+    await getCheckDeviceId()
+   }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab4', event => {

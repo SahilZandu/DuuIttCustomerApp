@@ -673,6 +673,22 @@ export default function PriceConfirmed({navigation, route}) {
     );
   };
 
+  const onPressPickLocation = () => {
+    navigation.navigate('editOrderLocation', {
+      pickDrop:'pick',
+      item: item?.sender_address,
+      orderItem:item,
+    });
+  };
+
+  const onPressDropLocation = () => {
+    navigation.navigate('editOrderLocation', {
+      pickDrop:'drop',
+      item:item?.receiver_address,
+      orderItem:item,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <MapRoute
@@ -696,6 +712,8 @@ export default function PriceConfirmed({navigation, route}) {
                   dropLocation={dropLocation}
                   pick={'Pickup location'}
                   drop={'Drop location'}
+                  onPressPickLocation={onPressPickLocation}
+                  onPressDropLocation={onPressDropLocation}
                 />
                 <View>
                   <Surface elevation={3} style={styles.rateSurfaceView}>

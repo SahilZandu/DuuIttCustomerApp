@@ -2,8 +2,11 @@ import React from 'react';
 import {BackHandler,Alert} from 'react-native';
 
 
-function handleAndroidBackButton(navigation) {
+function handleAndroidBackButton(navigation,tab) {
   const onBackPress = () => {
+    if(tab && tab !== "All Orders"){
+      navigation.navigate('tab4')
+    }else{
     if (navigation) {
       navigation.goBack();
     } else {
@@ -20,8 +23,9 @@ function handleAndroidBackButton(navigation) {
       //       }, ], {
       //           cancelable: false
       //       }
-      //    )
+      //)
     }
+  }
     return true;
   };
 

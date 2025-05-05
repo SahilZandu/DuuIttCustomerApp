@@ -38,6 +38,7 @@ export default function Orders({ navigation, route }) {
   const { parcelsOfUser, getOrderHistorybyFilters, orderHistoryList } =
     rootStore.orderStore;
   const { appUser } = rootStore.commonStore;
+  const {getCheckDeviceId} = rootStore.dashboardStore;
   const [orderList, setOrderList] = useState(orderHistoryList);
   const [type, setType] = useState('All Orders');
   const [loadingMore, setLoadingMore] = useState(false);
@@ -50,8 +51,9 @@ export default function Orders({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
+      getCheckDevice();
       checkInternet();
-      handleAndroidBackButton(navigation);
+        handleAndroidBackButton(navigation,tabText);
       if (tabText == 'Food') {
         defaultType = 'Food';
         setType('Food');
@@ -71,6 +73,10 @@ export default function Orders({ navigation, route }) {
       }, 5000);
     }, [tabText]),
   );
+
+    const getCheckDevice = async () => {
+     await getCheckDeviceId();
+    }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab3', event => {
