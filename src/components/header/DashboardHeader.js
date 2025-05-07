@@ -245,6 +245,7 @@
 
 import React, { useRef } from 'react';
 import {
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -274,7 +275,7 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
           backgroundColor: colors.appBackground,
           alignItems: 'center',
           paddingBottom: '2.5%',
-          marginTop: '4%',
+           marginTop:Platform.OS == 'ios' ? '1%':'4%',
           paddingHorizontal: 20,
           borderBottomColor:colors.colorD9,
           borderBottomWidth:1

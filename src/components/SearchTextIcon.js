@@ -20,8 +20,8 @@ const SearchTextIcon = ({title,onPress}) => {
 
         <Text style={styles.title}>{title}</Text>
         <SvgXml
-          width={20}
-          height={20}
+          width={16}
+          height={16}
           xml={appImagesSvg.searchIcon}
           style={{right: wp('4%')}}
         />

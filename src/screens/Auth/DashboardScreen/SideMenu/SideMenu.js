@@ -271,16 +271,16 @@ export default function SideMenu({ navigation }) {
       show: true,
       disable: false,
     },
-    {
-      id: '8',
-      title: 'Chat',
-      onPress: () => {
-        navigation.navigate('chat');
-      },
-      icon: appImagesSvg.walletSvg,
-      show: true,
-      disable: false,
-    },
+    // {
+    //   id: '8',
+    //   title: 'Chat',
+    //   onPress: () => {
+    //     navigation.navigate('chat');
+    //   },
+    //   icon: appImagesSvg.walletSvg,
+    //   show: true,
+    //   disable: false,
+    // },
   ];
 
   useFocusEffect(

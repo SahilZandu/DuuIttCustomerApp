@@ -706,7 +706,7 @@ export default function PriceConfirmed({navigation, route}) {
               Pb={hp('25%')}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{marginHorizontal: 20}}>
+              <View style={{marginHorizontal: 20,marginTop:'3%'}}>
                 <PickDropLocation
                   pickUpLocation={pickUpLocation}
                   dropLocation={dropLocation}

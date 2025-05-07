@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {View, ActivityIndicator} from 'react-native';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {WebView} from 'react-native-webview';
+import React, { useState, useEffect } from 'react';
+import { View, ActivityIndicator, Platform } from 'react-native';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { WebView } from 'react-native-webview';
 import {
   termsAndConditionsLink,
   privacyPolicyLink,
@@ -9,10 +9,13 @@ import {
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import Header from '../../../components/header/Header';
 import { colors } from '../../../theme/colors';
+import { styles } from './styles';
 
-export default function MyWebComponent({navigation, route}) {
+
+
+export default function MyWebComponent({ navigation, route }) {
   const [loading, setLoading] = useState(true);
-  const {type} = route?.params;
+  const { type } = route?.params;
 
   const link = type == 'policy' ? privacyPolicyLink : termsAndConditionsLink;
 
@@ -21,7 +24,7 @@ export default function MyWebComponent({navigation, route}) {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor:colors.appBackground,}}>
+    <View style={styles.container}>
       <Header
         onPress={() => {
           navigation.goBack();
@@ -31,18 +34,18 @@ export default function MyWebComponent({navigation, route}) {
       />
       {loading && (
         <View
-          style={{
-            height: hp('100%'),
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <ActivityIndicator size="large" color="#00ff00" />
+          style={styles.loaderView}>
+          <ActivityIndicator style={{
+            marginTop:
+              Platform.OS === 'ios' ?
+                hp('-20%') : hp('-10%')
+          }} size="large" color={colors.main} />
         </View>
       )}
-      <View style={{flex: 1,}}>
+      <View style={styles.webMainView}>
         <WebView
-          style={{flex: 1}}
-          source={{uri: link}}
+          style={{ flex: 1 }}
+          source={{ uri: link }}
           onLoadStart={item => {
             setLoading(true);
           }}

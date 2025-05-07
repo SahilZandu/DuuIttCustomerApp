@@ -225,6 +225,9 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     }, 2000);
     return () => {
       clearTimeout(timeoutId);
+      socketServices.removeListener('getremainingdistance');
+      socketServices.removeListener('testevent');
+      socketServices.removeListener('near-by-riders');
     };
   }, []);
 

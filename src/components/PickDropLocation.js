@@ -158,17 +158,17 @@ import {
   Pressable,
   Platform,
 } from 'react-native';
-import {Surface} from 'react-native-paper';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { Surface } from 'react-native-paper';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {screenHeight} from '../halpers/matrics';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { SvgXml } from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { screenHeight } from '../halpers/matrics';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 
 const dotLineArray = [1, 2, 3, 4, 5, 6];
 
@@ -198,17 +198,17 @@ const PickDropLocation = ({
       <Surface elevation={3} style={styles.container}>
         <View>
           <TouchableOpacity
-            hitSlop={{top: 20, bottom: 20, right: 20, left: 20}}
+            hitSlop={{ top: 20, bottom: 20, right: 20, left: 20 }}
             onPress={onPressPickLocation}
             activeOpacity={0.8}
             style={styles.mainTouch}>
             <Image
-              style={{width: 25, height: 25, marginTop: '2%'}}
+              style={{ width: 25, height: 25, }}
               source={appImages.pickIconSet}
             />
-            <View style={{flexDirection: 'column'}}>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={[styles.senderText, {flex: 1, top: hp('4%')}]}>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[styles.senderText, { flex: 1, top: hp('4%') }]}>
                   {pick ? pick : 'Sender location'}
                 </Text>
                 {addOnPick && (
@@ -218,12 +218,12 @@ const PickDropLocation = ({
                     <Text style={styles.addOnText}>Add</Text>
                   </TouchableOpacity>
                 )}
-               
+
               </View>
               <Text
-              onPress={onPressPickLocation}
+                onPress={onPressPickLocation}
                 numberOfLines={2}
-                style={[styles.pickedText, {marginTop: hp('4%')}]}>
+                style={[styles.pickedText, { marginTop: hp('4%') }]}>
                 {pickUpLocation == '' ? 'Set pick up location' : pickUpLocation}
               </Text>
             </View>
@@ -231,8 +231,8 @@ const PickDropLocation = ({
               <>
                 {pickUpLocation != '' && (
                   <Pressable
-                    hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
-                    style={{padding: 5, top: '4%'}}
+                    hitSlop={{ top: 15, bottom: 15, right: 15, left: 15 }}
+                    style={{ padding: 5, top: '4%' }}
                     onPress={cancelPickUp}>
                     <SvgXml xml={appImagesSvg.crossBlackIcon} />
                   </Pressable>
@@ -241,10 +241,10 @@ const PickDropLocation = ({
             )}
           </TouchableOpacity>
 
-          <View style={{marginHorizontal: '7%'}}>
+          <View style={{ marginHorizontal: wp('6%'), marginTop: hp('-0.4%') }}>
             {dotLineArray?.map((item, i) => {
               return (
-                <View style={{justifyContent: 'center', position: 'relative'}}>
+                <View style={{ justifyContent: 'center', position: 'relative' }}>
                   <View style={styles.dottedView} />
                   {item == 3 && <View style={[styles.dottedWithLine]} />}
                 </View>
@@ -253,18 +253,18 @@ const PickDropLocation = ({
           </View>
 
           <TouchableOpacity
-            hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
+            hitSlop={{ top: 15, bottom: 15, right: 15, left: 15 }}
             onPress={onPressDropLocation}
             activeOpacity={0.8}
             // disabled={pickUpLocation == '' ? true : false}
             style={styles.dropTouch(pickUpLocation)}>
             <Image
-              style={{width: 25, height: 25, top: hp('-0.3%')}}
+              style={{ width: 25, height: 25, top: hp('-0.3%') }}
               source={appImages.dropIconSet}
             />
-            <View style={{flexDirection: 'column'}}>
-              <View style={{flexDirection: 'row', top: hp('-4%')}}>
-                <Text style={[styles.reciverText, {flex: 1}]}>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={{ flexDirection: 'row', top: dropLocation?.length > 0 ? hp('-4%') : hp('-1%') }}>
+                <Text style={[styles.reciverText, { flex: 1 }]}>
                   {drop ? drop : 'Receiver location'}{' '}
                 </Text>
                 {addOnDrop && (
@@ -279,7 +279,7 @@ const PickDropLocation = ({
                 numberOfLines={2}
                 style={[
                   styles.dropText(pickUpLocation),
-                  {marginTop: hp('-4%')},
+                  { marginTop: dropLocation?.length > 0 ? hp('-4%') : hp('-1%') },
                 ]}>
                 {dropLocation == '' ? 'Set drop location' : dropLocation}
               </Text>
@@ -288,8 +288,8 @@ const PickDropLocation = ({
               <>
                 {dropLocation != '' && (
                   <Pressable
-                    style={{padding: 5}}
-                    hitSlop={{top: 15, bottom: 15, right: 15, left: 15}}
+                    style={{ padding: 5 }}
+                    hitSlop={{ top: 15, bottom: 15, right: 15, left: 15 }}
                     onPress={cancelDrop}>
                     <SvgXml xml={appImagesSvg.crossBlackIcon} />
                   </Pressable>
@@ -302,7 +302,7 @@ const PickDropLocation = ({
       {onChangePress && (
         <View style={styles.swipeView}>
           <TouchableOpacity
-            hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
             onPress={onChangePress}
             activeOpacity={0.8}
             style={styles.swipeTouch}>
@@ -326,10 +326,9 @@ const styles = StyleSheet.create({
     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 10,
     height: hp('20%'),
-    marginTop: hp('1%'),
+    // marginTop: hp('1%'),
   },
   mainTouch: {
     flexDirection: 'row',
@@ -347,28 +346,27 @@ const styles = StyleSheet.create({
   },
   pickedText: {
     marginLeft: '3%',
-    width: wp('72%'),
+    width: wp('68%'),
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
     marginTop: '1%',
-    height:hp('5%'),
-    // backgroundColor:'red'
+    height: hp('5%'),
   },
   dottedView: {
-    height: 9,
-    width: 3,
+    height: 7,
+    width: 1.5,
     backgroundColor: colors.color95,
-    marginTop: '1%',
-    marginLeft: '0.2%',
+    marginTop: '1.5%',
+    marginLeft: '0.4%',
   },
   dottedWithLine: {
     height: 2,
-    width: wp('74%'),
+    width: wp('68%'),
     backgroundColor: colors.colorD1,
     alignSelf: 'center',
-    marginLeft: wp('6%'),
-    // top: hp('0.4%'),
+    // marginLeft: wp('2%'),
+    top: hp('0.3%'),
   },
   dropTouch: pickUpLocation => ({
     flexDirection: 'row',
@@ -386,7 +384,7 @@ const styles = StyleSheet.create({
   },
   dropText: pickUpLocation => ({
     marginLeft: '3%',
-    width: wp('72%'),
+    width: wp('68%'),
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,

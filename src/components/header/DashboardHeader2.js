@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Alert,
   Image,
+  Platform,
   Pressable,
   Text,
   TextInput,
@@ -118,7 +119,7 @@ const DashboardHeader2 = ({
         backgroundColor: colors.appBackground,
         justifyContent: 'center',
         paddingBottom: '3%',
-        marginTop: '4%',
+         marginTop:Platform.OS == 'ios' ? '1%':'4%',
         paddingHorizontal: 20,
         borderBottomColor: colors.colorD9,
         borderBottomWidth: 1

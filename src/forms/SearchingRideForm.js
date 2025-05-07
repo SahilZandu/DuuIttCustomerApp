@@ -821,7 +821,6 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       socketServices.on('testevent', data => {
         console.log('test event', data);
       });
-
       socketServices.on('near-by-riders', data => {
         console.log('near-by-riders data--:', data, data?.data);
         if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
@@ -833,6 +832,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     }, 2000);
     return () => {
       clearTimeout(timeoutId);
+      socketServices.removeListener('getremainingdistance')
+      socketServices.removeListener('testevent')
+      socketServices.removeListener('near-by-riders')
     };
   }, []);
 
@@ -1217,8 +1219,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
               <View style={{ marginHorizontal: 20 }}>
                 <MeetingPickupComp
                   // firstText={'Meet at your pickup stop'}
-                  firstText={parcelInfo?.status == 'picked' 
-                    ? 'Drop you off at location' 
+                  firstText={parcelInfo?.status == 'picked'
+                    ? 'Drop you off at location'
                     : 'Meet at your pickup stop'}
                   secondText={'Ride Details'}
                   onPressDot={() => {

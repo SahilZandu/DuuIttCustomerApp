@@ -30,7 +30,7 @@ import TextRender from './TextRender';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 
 const CardOrderDetails = ({ item }) => {
-  // console.log('item -- ', item);
+  console.log('item -- ', item);
 
   const setStatusData = status => {
     switch (status) {
@@ -179,10 +179,10 @@ const CardOrderDetails = ({ item }) => {
                 resizeMode="cover"
                 style={styles.image}
                 source={
-                  // setImageIcon(item?.order_type)
-                  item?.rider?.profile_pic?.length > 0
-                    ? { uri: Url.Image_Url + item?.rider?.profile_pic }
-                    : setImageIcon(item?.order_type)
+                  setImageIcon(item?.order_type)
+                  // item?.rider?.profile_pic?.length > 0
+                  //   ? { uri: Url.Image_Url + item?.rider?.profile_pic }
+                  //   : setImageIcon(item?.order_type)
                 }
               />
             </View>
@@ -221,13 +221,21 @@ const CardOrderDetails = ({ item }) => {
           </View>
           <View style={{ marginTop: '3%' }}>
             <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.riderNameText}>{'Rider'}:</Text>
+              {/* <Text style={styles.riderNameText}>{'Rider'}:</Text>
               <Text
                 numberOfLines={1}
                 style={[styles.riderNameText, { color: colors.black }]}>
                 {' '}
                 {item?.rider?.name ?? 'No Rider'}{' '}
+              </Text> */}
+              <Text style={styles.riderNameText}>{'Distance'}:</Text>
+              <Text
+                numberOfLines={1}
+                style={[styles.riderNameText, { color: colors.black }]}>
+                {' '}
+                {item?.distance?.toFixed(2) ?? 0}{' '}
               </Text>
+              
             </View>
             {item?.order_type !== 'food' ? (
               <PickDropComp

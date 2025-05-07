@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -8,30 +8,30 @@ import {
   Text,
   Platform,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 import CTA from './cta/CTA';
-import {currencyFormat} from '../halpers/currencyFormat';
-import {Surface} from 'react-native-paper';
+import { currencyFormat } from '../halpers/currencyFormat';
+import { Surface } from 'react-native-paper';
 import BTN from './cta/BTN';
 import PickDropComp from './PickDropComp';
 import moment from 'moment';
 import Url from '../api/Url';
-import {screenWidth} from '../halpers/matrics';
+import { screenWidth } from '../halpers/matrics';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import { rootStore } from '../stores/rootStore';
 
-const CardOrder = ({item, index, handleDetails,navigation}) => {
+const CardOrder = ({ item, index, handleDetails, navigation }) => {
   // console.log('item -- ', item);
-   const {addReOrderRequestParcelRide} = rootStore.parcelStore;
-   const [selectedId,setSelectedId]=useState('')
- 
+  const { addReOrderRequestParcelRide } = rootStore.parcelStore;
+  const [selectedId, setSelectedId] = useState('')
+
 
   const setDetailsBtn = status => {
     switch (status) {
@@ -86,7 +86,7 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
 
 
   const handleReOrder = async (item) => {
-    console.log('item--handleReOrder',item);
+    console.log('item--handleReOrder', item);
     const newdata = {
       weight: item?.weight,
       quantity: item?.quantity ?? 1,
@@ -94,7 +94,7 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
       sender_address: item?.sender_address,
       receiver_address: item?.receiver_address,
       // billing_detail: {delivery_fee: 9, discount: 0, platform_fee: 10, gst: 18},
-      billing_detail:item?.billing_detail,
+      billing_detail: item?.billing_detail,
       isSecure: item?.secure ?? false,
       order_type: item?.order_type,
     };
@@ -106,10 +106,10 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
   };
 
   handleLoading = v => {
-    if (v==false) {
+    if (v == false) {
       setSelectedId('')
     }
-   
+
   }
 
   return (
@@ -124,10 +124,10 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
               resizeMode="cover"
               style={styles.image}
               source={
-                // setImageIcon(item?.order_type)
-                item?.rider?.profile_pic?.length > 0
-                  ? {uri: Url.Image_Url + item?.rider?.profile_pic}
-                  : setImageIcon(item?.order_type)
+                setImageIcon(item?.order_type)
+                // item?.rider?.profile_pic?.length > 0
+                //   ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                //   : setImageIcon(item?.order_type)
               }
             />
           </View>
@@ -148,7 +148,7 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
                 ]}>
                 {setStatusData(item?.status)}
               </Text>
-              <View style={{flex: 1, marginLeft: '2%'}}>
+              <View style={{ flex: 1, marginLeft: '2%' }}>
                 <SvgXml
                   xml={
                     item?.status == 'cancelled'
@@ -165,14 +165,21 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
         </View>
 
         <View style={styles.orderItemView}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.riderNameText}>{'Rider'}:</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.riderNameText}>{'Distance'}:</Text>
+            <Text
+              numberOfLines={1}
+              style={[styles.riderNameText, { color: colors.black }]}>
+              {' '}
+              {item?.distance?.toFixed(2) ?? 0}{' '}
+            </Text>
+            {/* <Text style={styles.riderNameText}>{'Rider'}:</Text>
             <Text
               numberOfLines={1}
               style={[styles.riderNameText, {color: colors.black}]}>
               {' '}
               {item?.rider?.name ?? 'No Rider'}{' '}
-            </Text>
+            </Text> */}
           </View>
           {item?.order_type !== 'food' ? (
             <PickDropComp
@@ -234,12 +241,12 @@ const CardOrder = ({item, index, handleDetails,navigation}) => {
             />
 
             <BTN
-             loading={selectedId == item?._id}
+              loading={selectedId == item?._id}
               width={screenWidth(38)}
               title={setProgressBtn(item?.order_type)}
               onPress={() => {
                 setSelectedId(item?._id),
-                handleReOrder(item)
+                  handleReOrder(item)
               }}
               bottomCheck={15}
               textTransform={'capitalize'}

@@ -161,13 +161,13 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       duration: 500,
       useNativeDriver: false,
     }).start();
-    
+
 
     setTimeout(() => {
       mapRef.current?.animateToRegion({
         ...newCoord,
-        latitudeDelta: 0.0322,
-        longitudeDelta: 0.0321,
+        // latitudeDelta: 0.0322,
+        // longitudeDelta: 0.0321,
       }, 500);
     }, Platform.OS === 'ios' ? 100 : 0);
 
@@ -190,7 +190,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       if (mapRef.current) {
         mapRef.current.animateCamera(camera, { duration: 1000 });
       }
-    }, 4000);
+    }, 15000);
 
     return () => clearInterval(timeout);
   }, [origin, destination]);

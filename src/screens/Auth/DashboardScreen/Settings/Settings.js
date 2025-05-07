@@ -1,18 +1,18 @@
-import React, {useCallback, useState} from 'react';
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import Header from '../../../../components/header/Header';
-import {useFocusEffect, CommonActions} from '@react-navigation/native';
+import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import {styles} from '../Help/styles';
+import { styles } from '../Help/styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import TouchableTextSwitch from '../../../../components/TouchableTextSwitch';
 import PopUp from '../../../../components/appPopUp/PopUp';
-import {rootStore} from '../../../../stores/rootStore';
+import { rootStore } from '../../../../stores/rootStore';
 import socketServices from '../../../../socketIo/SocketServices';
 
-export default function Settings({navigation}) {
-  const {deleteAccount} = rootStore.dashboardStore;
-  const {appUser, setToken, setAppUser} = rootStore.commonStore;
+export default function Settings({ navigation }) {
+  const { deleteAccount } = rootStore.dashboardStore;
+  const { appUser, setToken, setAppUser } = rootStore.commonStore;
   const [activateSwitch, setActivateSwitch] = useState(true);
   const [switchWallet, setSwitchWallet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
@@ -47,7 +47,7 @@ export default function Settings({navigation}) {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{name: 'auth'}],
+            routes: [{ name: 'auth' }],
           }),
         );
       }, 500);
@@ -75,7 +75,7 @@ export default function Settings({navigation}) {
         Pb={'20%'}
         padding={true}
         keyboardShouldPersistTaps={'handled'}>
-        <View style={{marginHorizontal: 20, justifyContent: 'center'}}>
+        <View style={{ marginHorizontal: 20, justifyContent: 'center' }}>
           {/* <TouchableTextSwitch
             toggle={true}
             activateSwitch={activateSwitch}
@@ -100,6 +100,26 @@ export default function Settings({navigation}) {
             title={'Wallet Settings'}
             text={'Show/Hide your wallet on home'}
           /> */}
+          <TouchableTextSwitch
+            toggle={false}
+            title={'Terms and Conditions'}
+            text={'You must agree to the Terms & Conditions.'}
+            onPress={() => {
+              navigation.navigate('myWebComponent', {
+                type: 'terms',
+              });
+            }}
+          />
+          <TouchableTextSwitch
+            toggle={false}
+            title={'Privacy Policy'}
+            text={'You must agree to the Privacy Policy.'}
+            onPress={() => {
+              navigation.navigate('myWebComponent', {
+                type: 'policy',
+              });
+            }}
+          />
         </View>
         <PopUp
           visible={isDelete}
