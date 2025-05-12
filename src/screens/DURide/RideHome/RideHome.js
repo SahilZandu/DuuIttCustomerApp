@@ -40,7 +40,7 @@ export default function RideHome({ navigation }) {
   const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
-  const {getCheckDeviceId} = rootStore.dashboardStore;
+  const { getCheckDeviceId } = rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [trackedArray, setTrackedArray] = useState([]);
   const [incompletedArray, setIncompletedArray] = useState([]);
@@ -86,7 +86,7 @@ export default function RideHome({ navigation }) {
 
   const getCheckDevice = async () => {
     await getCheckDeviceId()
-   }
+  }
 
 
   useEffect(() => {
@@ -137,21 +137,26 @@ export default function RideHome({ navigation }) {
     const resIncompleteOrder = await getPendingForCustomer('ride');
     console.log('resIncompleteOrder ride--', resIncompleteOrder);
     setIncompletedArray(resIncompleteOrder);
-    if (resIncompleteOrder?.length > 0) {
+    if (resIncompleteOrder[0]?.status == 'pending') {
+      deleteIncompleteOrder(resIncompleteOrder);
+    }
+    if (resIncompleteOrder?.length > 0 && resIncompleteOrder[0]?.status !== 'pending') {
       setAddParcelInfo(resIncompleteOrder[0]);
     }
   };
 
-  const deleteIncompleteOrder = async () => {
-    const parcelId = incompletedArray[0]?._id;
+  const deleteIncompleteOrder = async (data) => {
+    const parcelId = data[0]?._id;
     console.log('Item parcelId--', parcelId);
-    await updateOrderStatus(
-      parcelId,
-      'deleted',
-      handleDeleteLoading,
-      onDeleteSuccess,
-      true,
-    );
+    if (data[0]?.status === 'pending') {
+      await updateOrderStatus(
+        parcelId,
+        'deleted',
+        handleDeleteLoading,
+        onDeleteSuccess,
+        false,
+      );
+    }
   };
 
   const handleDeleteLoading = v => {
@@ -293,13 +298,13 @@ export default function RideHome({ navigation }) {
               onPressComplete={() => {
                 onPressInCompleteOrder();
               }}
-              onDeleteRequest={() => {
-                setIsDelete(true);
-              }}
+              // onDeleteRequest={() => {
+              //   setIsDelete(true);
+              // }}
               title={'Complete your ride'}
             />
           )}
-          <PopUp
+          {/* <PopUp
             visible={isDelete}
             type={'delete'}
             onClose={() => setIsDelete(false)}
@@ -308,7 +313,7 @@ export default function RideHome({ navigation }) {
               'This will delete your order request from the pending order.Are your sure?'
             }
             onDelete={deleteIncompleteOrder}
-          />
+          /> */}
           <ReviewsRatingComp
             //  data={{}}
             data={ratingData}

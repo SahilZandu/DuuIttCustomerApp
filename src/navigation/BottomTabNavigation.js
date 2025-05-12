@@ -75,7 +75,9 @@ export function DashboardBottomNavigator() {
                   style={styles.animatedView}
                   duration={800}
                   animation={'pulse'}
-                  iterationCount={1}></Animatable.View>
+                  iterationCount={1}>
+
+                  </Animatable.View>
               )}
               <SvgXml 
               // height={20} width={20} 
@@ -108,13 +110,13 @@ export function DashboardBottomNavigator() {
                 // marginTop:hp('-4%'),
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('1.2%'),
+                bottom: hp('1.7%'),
               }}>
               <Text
                 style={{
                   textAlign: 'center',
                   color: focused ? colors.main : colors.colorAF,
-                  fontSize: RFValue(9),
+                  fontSize: RFValue(7.5),
                   fontWeight: focused ? '600' : '500',
                   textTransform: 'uppercase',
                 }}>
@@ -249,13 +251,13 @@ export function RideBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.9%'),
+                bottom: hp('1.3%'),
               }}>
               <Text
                 style={{
                   textAlign: 'center',
                   color: focused ? colors.main : colors.colorAF,
-                  fontSize: RFValue(10),
+                  fontSize: RFValue(9),
                   fontWeight: focused ? '600' : '500',
                   textTransform: 'uppercase',
                 }}>
@@ -388,13 +390,13 @@ export function FoodBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.9%'),
+                bottom: hp('1.3%'),
               }}>
               <Text
                 style={{
                   textAlign: 'center',
                   color: focused ? colors.main : colors.colorAF,
-                  fontSize: RFValue(10),
+                  fontSize: RFValue(9),
                   fontWeight: focused ? '600' : '500',
                   textTransform: 'uppercase',
                 }}>
@@ -525,13 +527,13 @@ export function ParcelBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('0.9%'),
+                bottom: hp('1.3%'),
               }}>
               <Text
                 style={{
                   textAlign: 'center',
                   color: focused ? colors.main : colors.colorAF,
-                  fontSize: RFValue(10),
+                  fontSize: RFValue(9),
                   fontWeight: focused ? '600' : '500',
                   textTransform: 'uppercase',
                 }}>
@@ -592,7 +594,7 @@ const styles = {
     width: wp('20%'),
     position: 'absolute',
     // top: '10%',
-    top: '12%',
+    top: '11%',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
@@ -600,7 +602,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: hp('-1%'),
+    marginTop: hp('-1.5%'),
     width: wp('20%'),
     borderTopWidth: Platform.OS == 'android' ? 0.1 : 0.1,
     height: hp('8%'),

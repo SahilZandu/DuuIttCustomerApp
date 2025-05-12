@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
         borderBottomRightRadius: 10,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 0,
-        marginBottom: hp('2%')
+        marginBottom: hp('2%'),
     },
     toolBarView: {
         borderTopWidth: 0,

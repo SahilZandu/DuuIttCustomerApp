@@ -98,14 +98,14 @@
 // });
 
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet, View, Text } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 
 const PickDropComp = ({
   item,
@@ -114,7 +114,8 @@ const PickDropComp = ({
   dropTextStyle,
   upperCircleColor,
   lineColor,
-  bottomCircleColor
+  bottomCircleColor,
+  numOfLine
 }) => {
   return (
     <View style={styles.container}>
@@ -127,10 +128,10 @@ const PickDropComp = ({
         <Text numberOfLines={1} style={styles.pickupPointText}>
           Pickup location{' '}
         </Text>
-        <Text numberOfLines={3} style={[styles.pickUpText, pickUpTextStyle]}>
+        <Text numberOfLines={numOfLine ? numOfLine : 3} style={[styles.pickUpText, pickUpTextStyle]}>
           {item?.pickup}
         </Text>
-        <Text numberOfLines={3} style={[styles.dropText, dropTextStyle]}>
+        <Text numberOfLines={numOfLine ? numOfLine : 3} style={[styles.dropText, dropTextStyle]}>
           {item?.drop}
         </Text>
       </View>
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
     width: 2.5,
     backgroundColor: lineColor ? lineColor : colors.main,
   }),
-  bottomCircle:(bottomCircleColor) => ({
+  bottomCircle: (bottomCircleColor) => ({
     height: 13,
     width: 13,
     backgroundColor: bottomCircleColor ? bottomCircleColor : colors.main,
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     color: colors.color83,
     marginTop: '1%',
     width: wp('75%'),
-    textAlign:'left'
+    textAlign: 'left'
   },
   dropText: {
     fontSize: RFValue(12),
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: wp('75%'),
     marginTop: '2%',
-    textAlign:'left'
+    textAlign: 'left'
   },
 });
 

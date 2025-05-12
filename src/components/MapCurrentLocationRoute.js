@@ -84,11 +84,11 @@ const MapCurrentLocationRoute = ({
     if (origin?.lat?.toString()?.length > 0) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 5000);
+      }, 2000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 12000);
+      }, 5000);
     }
   };
 

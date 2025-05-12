@@ -58,7 +58,7 @@ const IncompleteCartComp = ({
               style={styles.completeBtnView}>
               <Text style={styles.completeBtnText}>{title}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+           {onDeleteRequest && <TouchableOpacity
               disabled={
                 incompletedArray[0]?.status == 'accepted' ? true : false
               }
@@ -71,7 +71,7 @@ const IncompleteCartComp = ({
                 height={35}
                 xml={appImagesSvg.deleteIconSvg}
               />
-            </TouchableOpacity>
+            </TouchableOpacity>}
           </View>
         </View>
       </Surface>
@@ -113,13 +113,13 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
-    width: screenWidth(41),
+    width: screenWidth(50),
   },
   proceedText: {
     fontSize: RFValue(10),
     fontFamily: fonts.medium,
     color: colors.black65,
-    width: screenWidth(41),
+    width: screenWidth(50),
     marginTop: '2%',
   },
   completeDeleteView: {

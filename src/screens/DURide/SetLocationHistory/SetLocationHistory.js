@@ -218,7 +218,20 @@ const SetLocationHistory = ({ navigation }) => {
   };
 
   const onPressTouch = (item) => {
-    console.log("item---onPressTouch",item);
+    // console.log("item---onPressTouch", item);
+    const isSameLocation =
+      item?.location_id &&
+      ((pickDrop === 'pick' && item?.location_id === receiverAddress?.location_id) ||
+        (parseFloat(item?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+          parseFloat(item?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
+        (pickDrop !== 'pick' && item?.location_id === senderAddress?.location_id) ||
+        (parseFloat(item?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+          parseFloat(item?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
+
+    if (isSameLocation) {
+      alert("You can't choose the same location. Please choose another location.");
+      return;
+    }
 
     if (pickDrop == 'pick') {
       setPickUpLocation(item?.address);
@@ -256,7 +269,7 @@ const SetLocationHistory = ({ navigation }) => {
       item: {
         name: name,
         address: pickUpLocation ? pickUpLocation : currentAddress,
-        geo_location:senderAddress?.address?.length > 0 ? geoLocation1:geoLocation,
+        geo_location: senderAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
       },
     });
     // alert('pick')
@@ -277,7 +290,7 @@ const SetLocationHistory = ({ navigation }) => {
       item: {
         name: name,
         address: dropLocation ? dropLocation : currentAddress,
-        geo_location:receiverAddress?.address?.length > 0 ? geoLocation1:geoLocation,
+        geo_location: receiverAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
       },
     });
     // alert('drop')

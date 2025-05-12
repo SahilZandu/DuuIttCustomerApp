@@ -225,6 +225,19 @@ const SetLocationHistory = ({ navigation }) => {
 
   const onPressTouch = (item) => {
     // console.log("item---",item);
+    const isSameLocation =
+    item?.location_id &&
+    ((pickDrop === 'pick' && item?.location_id === receiverAddress?.location_id) ||
+      (parseFloat(item?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+        parseFloat(item?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
+      (pickDrop !== 'pick' && item?.location_id === senderAddress?.location_id) ||
+      (parseFloat(item?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+        parseFloat(item?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
+
+  if (isSameLocation) {
+    alert("You can't choose the same location. Please choose another location.");
+    return;
+  }
 
     if (pickDrop == 'pick') {
       setPickUpLocation(item?.address);

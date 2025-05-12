@@ -53,12 +53,14 @@ const ChooseMapLocation = ({navigation, route}) => {
   });
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
+  const [LocationId, setLocationId] = useState('')
 
   const onPressAddress = (data, details) => {
     console.log('data ,details 333', data, details);
     setName(details?.name);
     setAddress(details?.formatted_address);
     setGeoLocation(details?.geometry?.location);
+    setLocationId(details?.place_id)
   };
 
 const mohaliChandigarhBounds = {
@@ -121,6 +123,7 @@ const mohaliChandigarhBounds = {
         setGeoLocation(item?.geo_location);
         setAddress(item?.address);
         setName(item?.name);
+        setLocationId(item?.location_id)
       }
     }, 1000);
   }, [item]);
@@ -137,8 +140,28 @@ const mohaliChandigarhBounds = {
       ...item,
       address: address,
       geo_location: geoLocation,
+      location_id: LocationId
     };
-    console.log('newItem---', newItem, pickDrop);
+    // console.log('newItem---', newItem, pickDrop);
+
+     // console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
+
+     const isSameLocation =
+     newItem?.location_id &&
+     ((pickDrop === 'pick' && newItem?.location_id === receiverAddress?.location_id) ||
+       (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+         parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
+       (pickDrop !== 'pick' && newItem?.location_id === senderAddress?.location_id) ||
+       (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+         parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
+
+
+   // console.log("isSameLocation--", isSameLocation);
+
+   if (isSameLocation) {
+     alert("You can't choose the same location. Please choose another location.");
+     return;
+   }
 
     // navigation.navigate('senderReceiverDetails', {
     //   pickDrop: pickDrop,
@@ -173,10 +196,10 @@ const mohaliChandigarhBounds = {
     // console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);
-
     setName(nameData[0]);
     setAddress(addressData?.address);
     setGeoLocation(addressData?.geo_location);
+    setLocationId(addressData?.place_Id)
   };
 
   const handleTouchAddress = async loaction => {
@@ -196,6 +219,7 @@ const mohaliChandigarhBounds = {
     setAddress(addressData?.address);
     // setGeoLocation(addressData?.geo_location);
     setGeoLocation(newLocation);
+    setLocationId(addressData?.place_Id)
   };
 
   return (

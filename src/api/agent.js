@@ -109,7 +109,7 @@ export const agent = {
   myAddress: body => requests.post(Url.myAddress, body),
   getMyAddress: () => requests.get(Url.getMyAddress),
   parcelsRides: body => requests.post(Url.parcelsRides, body),
-  editParcelsRides: (body,orderId) => requests.post(`${Url.editParcelsRides}/${orderId?.order_id}`, body),
+  editParcelsRides: (body, orderId) => requests.post(`${Url.editParcelsRides}/${orderId?.order_id}`, body),
   parcels_Cancel: body => requests.post(Url.parcels_Cancel, body),
   parcels_find_rider: body => requests.post(Url.parcels_find_rider, body),
   updateProfile: body => requests.postForm(Url.updateProfile, body),
@@ -166,6 +166,10 @@ export const agent = {
   adminInfo: () => requests.get(Url.adminInfo),
   updateCustomerInfo: body => requests.post(Url.updateCustomerInfo, body),
   checkDeviceId: body => requests.post(Url.checkDeviceId, body),
+
+  sendMessage: body => requests.post(Url.sendMessage, body),
+  markSeen: body => requests.post(Url.markSeen, body),
+  chatOrderId: body => requests.get(`${Url.chatOrderId}/${body?.orderId}`),
 
 };
 

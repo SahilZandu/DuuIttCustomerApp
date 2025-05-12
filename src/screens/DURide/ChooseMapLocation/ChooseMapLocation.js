@@ -56,6 +56,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   });
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
+  const [LocationId, setLocationId] = useState('')
 
   useFocusEffect(
     useCallback(() => {
@@ -70,6 +71,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
         setGeoLocation(item?.geo_location);
         setAddress(item?.address);
         setName(item?.name);
+        setLocationId(item?.location_id)
       }
     }, 1000);
   }, [item]);
@@ -129,47 +131,102 @@ const ChooseMapLocation = ({ navigation, route }) => {
   };
 
   const onPressAddress = (data, details) => {
-    console.log('data ,details 333', data, details);
+    // console.log('data ,details 333', data, "----------------", details);
     setName(details?.name);
     setAddress(details?.formatted_address);
     setGeoLocation(details?.geometry?.location);
+    setLocationId(details?.place_id)
   };
-
-
- 
 
   const onHandleConfirm = () => {
     const newItem = {
       ...item,
       address: address,
       geo_location: geoLocation,
+      location_id: LocationId
     };
-    console.log('newItem---', newItem, pickDrop);
 
-    // navigation.navigate('senderReceiverDetails', {
-    //   pickDrop: pickDrop,
-    //   item: newItem,
-    // });
-    if (pickDrop == 'pick') {
+    // console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
+
+    const isSameLocation =
+      newItem?.location_id &&
+      ((pickDrop === 'pick' && newItem?.location_id === receiverAddress?.location_id) ||
+        (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+          parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
+        (pickDrop !== 'pick' && newItem?.location_id === senderAddress?.location_id) ||
+        (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+          parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
+
+
+    // console.log("isSameLocation--", isSameLocation);
+
+    if (isSameLocation) {
+      alert("You can't choose the same location. Please choose another location.");
+      return;
+    }
+
+    if (pickDrop === 'pick') {
       setSenderAddress(newItem);
-      setTimeout(() => {
-        if (receiverAddress?.address?.length > 0) {
-          navigation.navigate('priceDetails');
-        } else {
-          navigation.navigate('setLocationHistory');
-        }
-      }, 200);
     } else {
       setReceiverAddress(newItem);
-      setTimeout(() => {
-        if (senderAddress?.address?.length > 0) {
-          navigation.navigate('priceDetails');
-        } else {
-          navigation.navigate('setLocationHistory');
-        }
-      }, 200);
     }
+
+    setTimeout(() => {
+      const senderSet = pickDrop === 'pick' ? newItem : senderAddress;
+      const receiverSet = pickDrop === 'drop' ? newItem : receiverAddress;
+
+      if (senderSet?.address?.length > 0 && receiverSet?.address?.length > 0) {
+        navigation.navigate('priceDetails');
+      } else {
+        navigation.navigate('setLocationHistory');
+      }
+    }, 200);
   };
+
+
+
+  // const onHandleConfirm = () => {
+  //   const newItem = {
+  //     ...item,
+  //     address: address,
+  //     geo_location: geoLocation,
+  //   };
+  //   console.log('newItem---', newItem, pickDrop);
+
+  //   // navigation.navigate('senderReceiverDetails', {
+  //   //   pickDrop: pickDrop,
+  //   //   item: newItem,
+  //   // });
+  //   const isSameLocation =
+  //   newItem?.location_id &&
+  //   ((pickDrop === 'pick' && newItem.location_id === receiverAddress?.location_id) ||
+  //    (pickDrop !== 'pick' && newItem.location_id === senderAddress?.location_id));
+
+  // if (isSameLocation) {
+  //   alert("You can't choose the same location. Please choose another location.");
+  //   return;
+  // }
+
+  //   if (pickDrop == 'pick') {
+  //     setSenderAddress(newItem);
+  //     setTimeout(() => {
+  //       if (receiverAddress?.address?.length > 0) {
+  //         navigation.navigate('priceDetails');
+  //       } else {
+  //         navigation.navigate('setLocationHistory');
+  //       }
+  //     }, 200);
+  //   } else {
+  //     setReceiverAddress(newItem);
+  //     setTimeout(() => {
+  //       if (senderAddress?.address?.length > 0) {
+  //         navigation.navigate('priceDetails');
+  //       } else {
+  //         navigation.navigate('setLocationHistory');
+  //       }
+  //     }, 200);
+  //   }
+  // };
 
   const handleCurrentAddress = async () => {
     const addressData = await getGeoCodes(
@@ -182,6 +239,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setName(nameData[0]);
     setAddress(addressData?.address);
     setGeoLocation(addressData?.geo_location);
+    setLocationId(addressData?.place_Id)
   };
 
   const handleTouchAddress = async (loaction) => {
@@ -190,7 +248,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       loaction?.latitude,
       loaction?.longitude,
     );
-    // console.log('addressData', addressData);
+    console.log('addressData handleTouchAddress', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);
     let newLocation = {
@@ -201,6 +259,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setAddress(addressData?.address);
     // setGeoLocation(addressData?.geo_location);
     setGeoLocation(newLocation);
+    setLocationId(addressData?.place_Id)
 
   };
 

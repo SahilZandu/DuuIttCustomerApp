@@ -53,7 +53,11 @@ export default  {
     deleteAccount:'customers/info',
     adminInfo:'admin/info',
    updateCustomerInfo :'customers/update-customer-info',
-   checkDeviceId :"customers/check-device-info"
+   checkDeviceId :"customers/check-device-info",
+   
+   sendMessage:"chat/send-message",
+   markSeen:"chat/mark-seen",
+   chatOrderId:"chat"
 
     
 

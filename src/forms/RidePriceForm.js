@@ -16,6 +16,7 @@ import SenderReceiverForm from './SenderReceiverForm';
 import { silderArray } from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
 import MapRoute from '../components/MapRoute';
+import Spacer from '../halpers/Spacer';
 
 const RidePriceForm = ({ navigation }) => {
   const { senderAddress, receiverAddress, setSenderAddress, setReceiverAddress } =
@@ -143,7 +144,8 @@ const RidePriceForm = ({ navigation }) => {
               destination={receiverAddress?.geo_location}
               mapContainerView={{ height: Platform.OS == 'ios' ? hp('28%') : hp('28%') }}
             />
-            <View style={{ flex: 1, marginHorizontal: 20 }}>
+             <Spacer space={hp('2%')}/>
+            <View style={{ flex: 1, marginHorizontal: 20, }}>
               <PickDropLocation
                 pickUpLocation={pickUpLocation}
                 dropLocation={dropLocation}

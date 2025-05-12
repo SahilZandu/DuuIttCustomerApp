@@ -8,6 +8,7 @@ import OrderStore from './orderStore';
 import cartStore from './cartStore';
 import CartStore from './cartStore';
 import FoodDashStore from './foodDashStore'; 
+import ChatStore from './chatStore';
 // import FoodDashboardStore from './foodDashBoardStore';
 
 export const rootStore = {
@@ -19,5 +20,6 @@ export const rootStore = {
   dashboardStore :new DashboardStore(),
   orderStore : new OrderStore(),
   foodDashboardStore : new FoodDashStore(),
+  chatStore : new ChatStore(),
 };
 export const RootStoreContext = createContext(rootStore);

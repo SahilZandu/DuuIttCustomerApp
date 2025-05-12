@@ -24,6 +24,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const bearingRef = useRef(0);
   const debounceTimeout = useRef(null);
   const markerRef = useRef(null);
+  const markerDesRef = useRef(null);
+
   const [destinationLocation, setDestinationLocation] = useState({
     lat: null,
     lng: null,
@@ -41,6 +43,15 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     new AnimatedRegion({
       latitude: Number(origin?.lat) || null,
       longitude: Number(origin?.lng) || null,
+      latitudeDelta: getMpaDalta().latitudeDelta,
+      longitudeDelta: getMpaDalta().longitudeDelta,
+    })
+  );
+
+  const [animatedDesCoordinate] = useState(
+    new AnimatedRegion({
+      latitude: Number(destination?.lat) || null,
+      longitude: Number(destination?.lng) || null,
       latitudeDelta: getMpaDalta().latitudeDelta,
       longitudeDelta: getMpaDalta().longitudeDelta,
     })
@@ -98,35 +109,35 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     }
   }, [origin]);
 
-  const originMarker = useMemo(
-    () => ({
-      latitude: Number(origin?.lat),
-      longitude: Number(origin?.lng),
-    }),
-    [origin],
-  );
+  // const originMarker = useMemo(
+  //   () => ({
+  //     latitude: Number(origin?.lat),
+  //     longitude: Number(origin?.lng),
+  //   }),
+  //   [origin],
+  // );
 
-  const destinationMarker = useMemo(
-    () => ({
-      latitude: Number(destinationLocation?.lat),
-      longitude: Number(destinationLocation?.lng),
-    }),
-    [destinationLocation],
-  );
+  // const destinationMarker = useMemo(
+  //   () => ({
+  //     latitude: Number(destinationLocation?.lat),
+  //     longitude: Number(destinationLocation?.lng),
+  //   }),
+  //   [destinationLocation],
+  // );
 
   const handleMapReady = () => {
     // console.log('Map is ready');
     if (
-      destinationLocation?.lat?.toString()?.length > 0 &&
-      originMarker?.latitude?.toString()?.length > 0
+      animatedDesCoordinate?.latitude?.toString()?.length > 0 &&
+      animatedCoordinate?.latitude?.toString()?.length > 0
     ) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 5000);
+      }, 2000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 12000);
+      }, 5000);
     }
   };
 
@@ -156,8 +167,16 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     const destLng = Number(destination?.lng);
 
     const newCoord = { latitude: lat, longitude: lng };
+    const newDesCoord = { latitude: destLat, longitude: destLng };
     animatedCoordinate.timing({
       ...newCoord,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+
+
+    animatedDesCoordinate.timing({
+      ...newDesCoord,
       duration: 500,
       useNativeDriver: false,
     }).start();
@@ -190,7 +209,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       if (mapRef.current) {
         mapRef.current.animateCamera(camera, { duration: 1000 });
       }
-    }, 15000);
+    }, 10000);
 
     return () => clearInterval(timeout);
   }, [origin, destination]);
@@ -327,7 +346,20 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         )} */}
 
         {/* Destination Marker */}
-        {destinationLocation?.lat && destinationLocation?.lng && (
+        {animatedDesCoordinate?.latitude && animatedDesCoordinate?.longitude && (
+          <Marker.Animated
+            ref={markerDesRef}
+            coordinate={animatedDesCoordinate}
+            tracksViewChanges={!isMapReady}
+          >
+            <Image
+              resizeMode="contain"
+              source={appImages.markerImage}
+              style={styles.markerImage}
+            />
+          </Marker.Animated>
+        )}
+        {/* {destinationLocation?.lat && destinationLocation?.lng && ( 
           <Marker
             coordinate={destinationMarker}
             tracksViewChanges={!isMapReady}
@@ -338,7 +370,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
               style={styles.markerImage}
             />
           </Marker>
-        )}
+        )} */}
 
         {/* Polyline for the Route */}
         {coords?.length > 0 && (

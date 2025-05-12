@@ -20,7 +20,7 @@ import PopUp from '../../../../components/appPopUp/PopUp';
 
 export default function SideMenu({ navigation }) {
   const { setToken, setAppUser, appUser } = rootStore.commonStore;
-   const {getCheckDeviceId} = rootStore.dashboardStore;
+  const { getCheckDeviceId } = rootStore.dashboardStore;
   const [initialValues, setInitialValues] = useState({
     image: '',
     name: '',
@@ -294,7 +294,7 @@ export default function SideMenu({ navigation }) {
   );
   const getCheckDevice = async () => {
     await getCheckDeviceId()
-   }
+  }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab4', event => {

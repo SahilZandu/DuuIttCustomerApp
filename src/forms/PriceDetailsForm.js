@@ -247,6 +247,7 @@ const PriceDetailsForm = ({navigation}) => {
                   height: Platform.OS == 'ios' ? hp('25%') : hp('25%'),
                 }}
               />
+               <Spacer space={hp('2%')}/>
               <View style={{flex: 1, marginHorizontal: 20}}>
                 <PickDropLocation
                   pickUpLocation={pickUpLocation}

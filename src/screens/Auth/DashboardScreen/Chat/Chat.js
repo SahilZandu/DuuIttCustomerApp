@@ -13,16 +13,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import InputScrollView from 'react-native-input-scroll-view';
 import { SvgXml } from 'react-native-svg';
 import Header from '../../../../components/header/Header';
-import { fonts } from '../../../../theme/fonts/fonts';
-import Spacer from '../../../../halpers/Spacer';
 import { colors } from '../../../../theme/colors';
 import {
   GiftedChat,
@@ -32,19 +24,28 @@ import {
   Send,
   Avatar,
 } from 'react-native-gifted-chat';
-import Url from '../../../../api/Url';
 import { rootStore } from '../../../../stores/rootStore';
-import { appImages, appImagesSvg } from '../../../../commons/AppImages';
+import { appImagesSvg } from '../../../../commons/AppImages';
 import MikePopUp from '../../../../components/MikePopUp';
 import { styles } from './styles';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 
 export default function Chat({ navigation }) {
   const { appUser } = rootStore.commonStore;
+  const { sendMessage, getChatData, markSeen } = rootStore.chatStore;
   const [messages, setMessages] = useState([]);
   const [visible, setVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [inputText, setInputText] = useState('');
+
+  console.log("messages----", messages);
+
 
 
   const hanldeLinking = () => {
@@ -65,29 +66,135 @@ export default function Chat({ navigation }) {
   }, []);
 
 
+  useFocusEffect(
+    useCallback(() => {
+      handleAndroidBackButton(navigation)
+      getChatList();
+    }, [])
+  )
 
   useEffect(() => {
-    setTimeout(() => {
-      const { appUser } = rootStore.commonStore;
-      setMessages([
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          // avatar: Url?.Image_Url + appUser?.profile_pic,
-          // avatar:'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-          user: {
-            _id: 2,
-            name: 'React Native',
-            // avatar:'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-            // avatar: Url?.Image_Url + appUser?.profile_pic,
-          },
-        },
-      ]);
+    setInterval(() => {
+      getChatList();
+    }, 60000);
 
-    }, 1000)
+    // setTimeout(() => {
+    //   // const { appUser } = rootStore.commonStore;
+    //   // const apiMessages = [
+    //   //   {
+    //   //     message: "Hi, thanks for accepting the order! Please call me if you need directions.",
+    //   //     senderRole: "customer",
+    //   //     seen: true,
+    //   //     timestamp: "2025-05-07T08:17:32.991Z",
+    //   //     _id: "681b171cdd236caa8bd21fa4"
+    //   //   },
+    //   //   {
+    //   //     message: "Sure! I will be there in 15 minutes.",
+    //   //     senderRole: "rider",
+    //   //     seen: true,
+    //   //     timestamp: "2025-05-07T08:17:56.655Z",
+    //   //     _id: "681b1734dd236caa8bd21fa7"
+    //   //   },
+    //   //   {
+    //   //     message: "Sure! I will be there in 15 minutes.",
+    //   //     senderRole: "riders",
+    //   //     seen: false,
+    //   //     timestamp: "2025-05-07T09:08:34.860Z",
+    //   //     _id: "681b2312da849df7f4637216"
+    //   //   },
+    //   //   {
+    //   //     message: "ok.",
+    //   //     senderRole: "customer",
+    //   //     seen: false,
+    //   //     timestamp: "2025-05-07T09:12:39.103Z",
+    //   //     _id: "681b24074b6564da76eca2be"
+    //   //   }
+    //   // ];
 
+    //   // const mappedMessages = apiMessages.map((item, index) => {
+    //   //   let userId = item.senderRole === 'customer' ? 1 : 2;
+    //   //   let userName = item.senderRole === 'customer' ? "Customer" : "Rider";
+
+    //   //   return {
+    //   //     _id: index + 1, // or item._id if you prefer
+    //   //     createdAt: new Date(item.timestamp),
+    //   //     text: item.message,
+    //   //     sentBy: userId,
+    //   //     sentTo: userId === 1 ? 2 : 1,
+    //   //     user: {
+    //   //       _id: userId,
+    //   //       name: userName
+    //   //     }
+    //   //   };
+    //   // });
+
+    //   // console.log(mappedMessages);
+
+    //   // setMessages(mappedMessages)
+
+    //   setMessages([
+    //     {
+    //       _id: 1,
+    //       text: 'Hello developer',
+    //       createdAt: new Date(),
+    //       // avatar: Url?.Image_Url + appUser?.profile_pic,
+    //       // avatar:'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+    //       user: {
+    //         _id: 2,
+    //         name: 'React Native',
+    //         // avatar:'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+    //         // avatar: Url?.Image_Url + appUser?.profile_pic,
+    //       },
+    //     },
+    //   ]);
+
+    // }, 1000)
   }, []);
+
+  const getChatList = async () => {
+    let data = {
+      orderId: "681de2449aff5de4db76318a"
+    }
+    const resList = await getChatData(data, handleLoading);
+    console.log('resList----', resList, resList?.data[0]?.messages);
+    if(resList?.data[0]?.messages?.length > 0){
+    let chatArray = resList?.data[0]?.messages;
+    const mappedMessages = chatArray?.map((item, index) => {
+      let userId = item.senderRole === 'customer' ? 1 : 2;
+      let userName = item.senderRole === 'customer' ? "Customer" : "Rider";
+
+      return {
+        _id: index + 1, // or item._id if you prefer
+        createdAt: new Date(item.timestamp),
+        text: item.message,
+        sentBy: userId,
+        sentTo: userId === 1 ? 2 : 1,
+        user: {
+          _id: userId,
+          name: userName
+        }
+      };
+    });
+
+    let req = {
+      orderId:"681de2449aff5de4db76318a",
+      senderRole: 'rider',
+    }
+
+    await markSeen(req)
+
+    console.log(mappedMessages);
+
+    setMessages(mappedMessages)
+  }else{
+    setMessages([])
+  }
+
+  }
+
+  const handleLoading = (v) => {
+    console.log("v----", v);
+  }
 
   // const onSend = useCallback((messages = []) => {
   //   const msg = messages[0];
@@ -110,7 +217,7 @@ export default function Chat({ navigation }) {
 
 
 
-  const onSend = useCallback((messages = []) => {
+  const onSend = useCallback(async (messages = []) => {
     const msg = messages[0];
     const myMsg = {
       ...msg,
@@ -118,8 +225,17 @@ export default function Chat({ navigation }) {
       sentTo: 1,
       createdAt: new Date(),
     };
+    let data = {
+      orderId: "681de2449aff5de4db76318a",
+      senderRole: 'customer',
+      message: msg?.text,
+      riderId: "6810a4b37d14572e56d6013d",
+      customerId: appUser?._id
+    }
+   
     setInputText(''); // Clear input after sending
     setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
+    await sendMessage(data);
     // const docId = appUser?._id > item?._id ? appUser?._id + "-" +item?._id: item?._id + "-" +appUser?._id ;
   }, [appUser]);
 
@@ -195,15 +311,16 @@ export default function Chat({ navigation }) {
       >
         <TouchableWithoutFeedback
           onPress={Keyboard.dismiss} accessible={false}>
-          <View style={{ flex: 1, }}>
+          <View style={{ flex: 1, marginTop: hp('6%') }}>
             <GiftedChat
-              renderAvatar={renderAvatar}
+              // renderAvatar={renderAvatar}
+              renderAvatar={null}
               messages={messages}
-              onSend={messages => onSend(messages)}
+              // onSend={messages => onSend(messages)}
               user={{
                 _id: 1,
               }}
-              renderMessageImage={renderMessageImage}
+              // renderMessageImage={renderMessageImage}
               renderBubble={props => {
                 return (
                   <Bubble
@@ -250,11 +367,11 @@ export default function Chat({ navigation }) {
                           onPress={() => {
                             if (inputText?.trim()?.length > 0) {
                               const newMessage = {
-                                _id: 2,
+                                _id: messages?.length + 1,
                                 text: inputText.trim(),
                                 user: {
                                   _id: 1,
-                                  name: 'Hello developer',
+                                  name: 'Customer',
                                 },
                                 createdAt: new Date(),
                               };
