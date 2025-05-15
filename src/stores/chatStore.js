@@ -4,9 +4,9 @@ import { rootStore } from './rootStore';
 import { useToast } from '../halpers/useToast';
 
 export default class ChatStore {
+    chatingData = []
 
-
-    sendMessage = async (data) => {
+    sendMessage = async (data,handleErrorMsg) => {
         let requestData = {
             orderId: data?.orderId,
             senderRole: data?.senderRole,
@@ -20,17 +20,19 @@ export default class ChatStore {
             const res = await agent.sendMessage(requestData);
             console.log('sendMessage API Res:', res);
             if (res?.statusCode == 200) {
-                useToast(res.message, 1);
+                // useToast(res.message, 1);
             } else {
                 const message = res?.message ? res?.message : res?.data?.message;
-                useToast(message, 0);
+                // useToast(message, 0);
+                handleErrorMsg();
             }
         } catch (error) {
             console.log('error:', error);
+            handleErrorMsg();
             const m = error?.data?.message
                 ? error?.data?.message
                 : 'Something went wrong';
-            useToast(m, 0);
+            // useToast(m, 0);
         }
     };
 
@@ -73,12 +75,12 @@ export default class ChatStore {
             if (res?.statusCode == 200) {
                 handleLoading(false);
                 // useToast(res.message, 1);
-                return res ;
+                return res;
             } else {
                 handleLoading(false);
                 const message = res?.message ? res?.message : res?.data?.message;
                 useToast(message, 0);
-                return res ;
+                return res;
             }
         } catch (error) {
             console.log('error:getChatData', error);
@@ -89,6 +91,40 @@ export default class ChatStore {
             useToast(m, 0);
         }
     };
+
+
+    unseenMessages = async (data) => {
+        let requestData = {
+            orderId: data?.orderId,
+            senderRole: data?.senderRole,
+        };
+
+        console.log('requestData unseenMessages:-', requestData);
+        try {
+            const res = await agent.unseenMessages(requestData);
+            console.log('unseenMessages API Res:', res);
+            if (res?.statusCode == 200) {
+                // useToast(res.message, 1);
+                return res
+            } else {
+                const message = res?.message ? res?.message : res?.data?.message;
+                // useToast(message, 0);
+                return res
+            }
+        } catch (error) {
+            console.log('error:unseenMessages', error);
+            const m = error?.data?.message
+                ? error?.data?.message
+                : 'Something went wrong';
+            // useToast(m, 0);
+            return res
+        }
+    };
+
+
+    setChatData = async (data) => {
+        this.chatingData = data;
+    }
 
 
 }

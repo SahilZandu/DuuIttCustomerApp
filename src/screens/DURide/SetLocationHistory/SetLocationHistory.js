@@ -59,6 +59,7 @@ const SetLocationHistory = ({ navigation }) => {
     lat: getLocation('lat'),
     lng: getLocation('lng'),
   });
+  const [locationId, setLocationId] = useState('')
   const [currentAddress, setCurrentAddress] = useState('');
   const [name, setName] = useState('');
 
@@ -123,10 +124,13 @@ const SetLocationHistory = ({ navigation }) => {
     setName(nameData[0]);
     setCurrentAddress(addressData?.address);
     geoLocation = (addressData?.geo_location)
+    setLocationId(addressData?.place_Id)
     if (pickDrop == 'pick') {
       const newData = {
         address: addressData?.address,
         geo_location: geoLocation,
+        address: addressData?.address,
+        location_id: addressData?.place_Id
       };
       console.log('newData--', newData);
       setSenderAddress(newData);
@@ -136,6 +140,7 @@ const SetLocationHistory = ({ navigation }) => {
       const newData = {
         address: addressData?.address,
         geo_location: geoLocation,
+        location_id: addressData?.place_Id
       };
       console.log('newData--', newData);
       setReceiverAddress(newData);
@@ -220,7 +225,7 @@ const SetLocationHistory = ({ navigation }) => {
   const onPressTouch = (item) => {
     // console.log("item---onPressTouch", item);
     const isSameLocation =
-      item?.location_id &&
+      (item?.location_id || item?.geo_location) &&
       ((pickDrop === 'pick' && item?.location_id === receiverAddress?.location_id) ||
         (parseFloat(item?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
           parseFloat(item?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
@@ -270,6 +275,7 @@ const SetLocationHistory = ({ navigation }) => {
         name: name,
         address: pickUpLocation ? pickUpLocation : currentAddress,
         geo_location: senderAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
+        location_id: senderAddress?.location_id?.length > 0 ? senderAddress?.location_id : locationId,
       },
     });
     // alert('pick')
@@ -291,6 +297,7 @@ const SetLocationHistory = ({ navigation }) => {
         name: name,
         address: dropLocation ? dropLocation : currentAddress,
         geo_location: receiverAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
+        location_id: receiverAddress?.location_id?.length > 0 ? receiverAddress?.location_id : locationId,
       },
     });
     // alert('drop')

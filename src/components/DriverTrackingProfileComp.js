@@ -18,7 +18,7 @@ import {fonts} from '../theme/fonts/fonts';
 import Rating from './Rating';
 import Url from '../api/Url';
 
-const DriverTrackingProfileComp = ({topLine, item, onMessage, onCall}) => {
+const DriverTrackingProfileComp = ({topLine, item, onMessage, onCall,unReadMsg}) => {
   // console.log('Driver--', item);
 
   return (
@@ -45,7 +45,7 @@ const DriverTrackingProfileComp = ({topLine, item, onMessage, onCall}) => {
             <Image
               resizeMode="contain"
               style={styles.image}
-              source={appImages.messageImage}
+              source={ unReadMsg ? appImages.messageUnreadImg :appImages.messageImage}
             />
           </TouchableOpacity>
           <Text>{'    '}</Text>

@@ -170,6 +170,7 @@ export const agent = {
   sendMessage: body => requests.post(Url.sendMessage, body),
   markSeen: body => requests.post(Url.markSeen, body),
   chatOrderId: body => requests.get(`${Url.chatOrderId}/${body?.orderId}`),
+  unseenMessages: body => requests.post(Url.unseenMessages, body),
 
 };
 

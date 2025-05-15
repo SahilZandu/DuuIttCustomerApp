@@ -34,22 +34,27 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import socketServices from '../../../../socketIo/SocketServices';
+import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
+import Spacer from '../../../../halpers/Spacer';
 
-
-export default function Chat({ navigation }) {
+// let item ={}
+export default function Chat({ navigation, route }) {
   const { appUser } = rootStore.commonStore;
-  const { sendMessage, getChatData, markSeen } = rootStore.chatStore;
-  const [messages, setMessages] = useState([]);
+  const { item } = route.params;
+  const { sendMessage, getChatData, markSeen, setChatData, chatingData } = rootStore.chatStore;
+  const [messages, setMessages] = useState(chatingData ?? []);
   const [visible, setVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [loading, setLoading] = useState(chatingData?.length > 0 ? false : true)
 
   console.log("messages----", messages);
 
 
 
   const hanldeLinking = () => {
-    Linking.openURL(`tel:${'1234567890'}`);
+    Linking.openURL(`tel:${item?.rider?.phone?.toString() ?? '1234567890'}`);
   };
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -68,132 +73,68 @@ export default function Chat({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      // socketServices.initailizeSocket();
       handleAndroidBackButton(navigation)
       getChatList();
+      setTimeout(() => {
+        let Payload = {
+          roomId: `${item?._id}-${item?.rider?._id}-${item?.customer?._id}`
+          // roomId:`6821a769260e070d22d9e503-6810a4b37d14572e56d6013d-674004448c0213057bd1519c`
+        }
+        socketServices.emit('roomId', Payload)
+      }, 1000)
     }, [])
   )
 
-  useEffect(() => {
-    setInterval(() => {
-      getChatList();
-    }, 60000);
 
-    // setTimeout(() => {
-    //   // const { appUser } = rootStore.commonStore;
-    //   // const apiMessages = [
-    //   //   {
-    //   //     message: "Hi, thanks for accepting the order! Please call me if you need directions.",
-    //   //     senderRole: "customer",
-    //   //     seen: true,
-    //   //     timestamp: "2025-05-07T08:17:32.991Z",
-    //   //     _id: "681b171cdd236caa8bd21fa4"
-    //   //   },
-    //   //   {
-    //   //     message: "Sure! I will be there in 15 minutes.",
-    //   //     senderRole: "rider",
-    //   //     seen: true,
-    //   //     timestamp: "2025-05-07T08:17:56.655Z",
-    //   //     _id: "681b1734dd236caa8bd21fa7"
-    //   //   },
-    //   //   {
-    //   //     message: "Sure! I will be there in 15 minutes.",
-    //   //     senderRole: "riders",
-    //   //     seen: false,
-    //   //     timestamp: "2025-05-07T09:08:34.860Z",
-    //   //     _id: "681b2312da849df7f4637216"
-    //   //   },
-    //   //   {
-    //   //     message: "ok.",
-    //   //     senderRole: "customer",
-    //   //     seen: false,
-    //   //     timestamp: "2025-05-07T09:12:39.103Z",
-    //   //     _id: "681b24074b6564da76eca2be"
-    //   //   }
-    //   // ];
-
-    //   // const mappedMessages = apiMessages.map((item, index) => {
-    //   //   let userId = item.senderRole === 'customer' ? 1 : 2;
-    //   //   let userName = item.senderRole === 'customer' ? "Customer" : "Rider";
-
-    //   //   return {
-    //   //     _id: index + 1, // or item._id if you prefer
-    //   //     createdAt: new Date(item.timestamp),
-    //   //     text: item.message,
-    //   //     sentBy: userId,
-    //   //     sentTo: userId === 1 ? 2 : 1,
-    //   //     user: {
-    //   //       _id: userId,
-    //   //       name: userName
-    //   //     }
-    //   //   };
-    //   // });
-
-    //   // console.log(mappedMessages);
-
-    //   // setMessages(mappedMessages)
-
-    //   setMessages([
-    //     {
-    //       _id: 1,
-    //       text: 'Hello developer',
-    //       createdAt: new Date(),
-    //       // avatar: Url?.Image_Url + appUser?.profile_pic,
-    //       // avatar:'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-    //       user: {
-    //         _id: 2,
-    //         name: 'React Native',
-    //         // avatar:'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-    //         // avatar: Url?.Image_Url + appUser?.profile_pic,
-    //       },
-    //     },
-    //   ]);
-
-    // }, 1000)
-  }, []);
 
   const getChatList = async () => {
     let data = {
-      orderId: "681de2449aff5de4db76318a"
+      orderId: item?._id
     }
     const resList = await getChatData(data, handleLoading);
     console.log('resList----', resList, resList?.data[0]?.messages);
-    if(resList?.data[0]?.messages?.length > 0){
-    let chatArray = resList?.data[0]?.messages;
-    const mappedMessages = chatArray?.map((item, index) => {
-      let userId = item.senderRole === 'customer' ? 1 : 2;
-      let userName = item.senderRole === 'customer' ? "Customer" : "Rider";
+    if (resList?.data[0]?.messages?.length > 0) {
+      let chatArray = resList?.data[0]?.messages;
+      const mappedMessages = chatArray?.map((item, index) => {
+        let userId = item?.senderRole === 'customer' ? 1 : 2;
+        let userName = item?.senderRole === 'customer' ? "Customer" : "Rider";
 
-      return {
-        _id: index + 1, // or item._id if you prefer
-        createdAt: new Date(item.timestamp),
-        text: item.message,
-        sentBy: userId,
-        sentTo: userId === 1 ? 2 : 1,
-        user: {
-          _id: userId,
-          name: userName
-        }
-      };
-    });
+        return {
+          _id: index + 1, // or item._id if you prefer
+          createdAt: new Date(item?.timestamp),
+          text: item?.message,
+          sentBy: userId,
+          sentTo: userId === 1 ? 2 : 1,
+          user: {
+            _id: userId,
+            name: userName
+          }
+        };
+      });
 
-    let req = {
-      orderId:"681de2449aff5de4db76318a",
-      senderRole: 'rider',
+      let req = {
+        orderId: item?._id,
+        senderRole: 'customer',
+      }
+
+      await markSeen(req)
+
+      console.log(mappedMessages);
+      setChatData(mappedMessages)
+      setMessages(mappedMessages)
+      setLoading(false)
     }
-
-    await markSeen(req)
-
-    console.log(mappedMessages);
-
-    setMessages(mappedMessages)
-  }else{
-    setMessages([])
-  }
+    else {
+      setLoading(false)
+      setMessages([])
+    }
 
   }
 
   const handleLoading = (v) => {
     console.log("v----", v);
+    setLoading(v)
   }
 
   // const onSend = useCallback((messages = []) => {
@@ -204,7 +145,6 @@ export default function Chat({ navigation }) {
   //     sentTo: 1,
   //     createdAt: new Date(),
   //   };
-
   //   setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
   //   // const docId = appUser?._id > item?._id ? appUser?._id + "-" +item?._id: item?._id + "-" +appUser?._id ;
   // }, []);
@@ -216,29 +156,102 @@ export default function Chat({ navigation }) {
   // };
 
 
+  // useEffect(() => {
+  //   socketServices.on('chat-message', (data) => {
+  //     console.log('Received message:Rider', data);
+  //     if (data?.message && data?.senderRole === "rider") {
+  //       console.log("messages---------chat-message",messages);
+  //       let userId = data?.senderRole === 'customer' ? 1 : 2;
+  //       let userName = data?.senderRole === 'customer' ? "Customer" : "Rider";
+  //       let newMsg = {
+  //         _id: messages?.length + 1,
+  //         createdAt: new Date(),
+  //         text: data?.message,
+  //         sentBy: userId,
+  //         sentTo: userId === 1 ? 2 : 1,
+  //         user: {
+  //           _id: userId,
+  //           name: userName
+  //         }
+  //       };
+  //       // console.log("messages---------",messages,[...messages, newMsg]);
+  //       setMessages(previousMessages => GiftedChat.append(previousMessages, newMsg));
+  //       // setMessages([...messages, newMsg]);
+  //     }
+  //   })
+  // }, []);
+
+  useEffect(() => {
+    const handleMessage = async (data) => {
+      console.log('Received message:Customer', data);
+
+      if (data?.message && data?.senderRole === "rider") {
+        let userId = data?.senderRole === 'customer' ? 1 : 2;
+        let userName = data?.senderRole === 'customer' ? "Customer" : "Rider";
+        const newMsg = {
+          _id: Math.round(Math.random() * 1000000),
+          createdAt: new Date(),
+          text: data?.message,
+          sentBy: userId,
+          sentTo: userId === 1 ? 2 : 1,
+          user: {
+            _id: userId,
+            name: userName
+          }
+        };
+
+        let req = {
+          orderId: item?._id,
+          senderRole: 'customer',
+        }
+
+        await markSeen(req)
+
+        setMessages(prevMessages => {
+          const alreadyExists = prevMessages.some(
+            msg => msg?.text === data?.message && msg?.user?._id === userId
+          );
+          if (alreadyExists) return prevMessages;
+          return GiftedChat.append(prevMessages, newMsg);
+        });
+      }
+    };
+
+    // Prevent duplicate listeners
+    socketServices.off?.('chat-message', handleMessage);
+    socketServices.on('chat-message', handleMessage);
+
+    return () => {
+      socketServices.off?.('chat-message', handleMessage);
+    };
+  }, []);
+
 
   const onSend = useCallback(async (messages = []) => {
     const msg = messages[0];
     const myMsg = {
       ...msg,
-      sentBy: 2,
-      sentTo: 1,
+      // sentBy: 2,
+      // sentTo: 1,
       createdAt: new Date(),
     };
     let data = {
-      orderId: "681de2449aff5de4db76318a",
+      orderId: item?._id,
       senderRole: 'customer',
       message: msg?.text,
-      riderId: "6810a4b37d14572e56d6013d",
+      riderId: item?.rider?._id,
       customerId: appUser?._id
     }
-   
+    socketServices.emit('chat-message', data)
+    sendMessage(data,handleErrorMsg);
     setInputText(''); // Clear input after sending
     setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
-    await sendMessage(data);
     // const docId = appUser?._id > item?._id ? appUser?._id + "-" +item?._id: item?._id + "-" +appUser?._id ;
   }, [appUser]);
 
+  const handleErrorMsg =()=>{
+    getChatList();
+  }
 
   const onSuccessResult = item => {
     console.log('item=== onSuccessResult', item);
@@ -290,27 +303,34 @@ export default function Chat({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.haederView}>
-        <Header
-          onPress={() => {
-            navigation.goBack();
-          }}
-          title={'Chat'}
-          backArrow={true}
-          onPressPhone={() => {
-            hanldeLinking();
-          }}
-        />
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? undefined : 'height'}
-        style={{ flex: 1 }} // Adjust paddingTop to header height
-        keyboardVerticalOffset={Platform.OS === 'ios'
-          ? keyboardVisible ? 0 : 0
-          : keyboardVisible ? 40 : 0}
-      >
-        <TouchableWithoutFeedback
-          onPress={Keyboard.dismiss} accessible={false}>
+      {(loading == true) &&
+        <>
+          <Spacer space={hp("7%")} />
+          <AnimatedLoader type={'chatLoader'} />
+        </>}
+      <>
+        <View style={styles.haederView}>
+          <Header
+            onPress={() => {
+              navigation.goBack();
+            }}
+            title={'Chat'}
+            backArrow={true}
+            onPressPhone={() => {
+              hanldeLinking();
+            }}
+          />
+        </View>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? undefined : 'height'}
+          style={{ flex: 1 }} // Adjust paddingTop to header height
+          keyboardVerticalOffset={Platform.OS === 'ios'
+            ? keyboardVisible ? 0 : 0
+            : keyboardVisible ? 40 : 0}
+        >
+          {/* <TouchableWithoutFeedback
+          onPress={Keyboard.dismiss} accessible={false}> */}
           <View style={{ flex: 1, marginTop: hp('6%') }}>
             <GiftedChat
               // renderAvatar={renderAvatar}
@@ -444,9 +464,9 @@ export default function Chat({ navigation }) {
               )}
             />
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-
+          {/* </TouchableWithoutFeedback> */}
+        </KeyboardAvoidingView>
+      </>
       <MikePopUp
         visible={visible}
         title={'Sorry! Didn’t hear that'}

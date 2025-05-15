@@ -16,7 +16,7 @@ import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const DriverArrivingComp = ({topLine, title, onMessage, onCall}) => {
+const DriverArrivingComp = ({topLine, title, onMessage, onCall,unReadMsg}) => {
   return (
     <View>
       {topLine && <View style={styles.topLineView} />}
@@ -27,7 +27,7 @@ const DriverArrivingComp = ({topLine, title, onMessage, onCall}) => {
             <Image
               resizeMode="contain"
               style={styles.image}
-              source={appImages.messageImage}
+              source={unReadMsg ? appImages.messageUnreadImg : appImages.messageImage}
             />
           </TouchableOpacity>
           <Text>{'    '}</Text>

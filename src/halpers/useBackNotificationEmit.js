@@ -1,9 +1,9 @@
 import React from 'react';
-import {DeviceEventEmitter, Platform} from 'react-native';
-import {rootStore} from '../stores/rootStore';
+import { DeviceEventEmitter, Platform } from 'react-native';
+import { rootStore } from '../stores/rootStore';
 
 function handleBackNotification(remoteMessage) {
-  const {setAddParcelInfo} = rootStore.parcelStore;
+  const { setAddParcelInfo } = rootStore.parcelStore;
   console.log('remoteMessage--==--', remoteMessage);
   if (remoteMessage?.data?.route == 'searchingRide') {
     let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data);
@@ -30,6 +30,11 @@ function handleBackNotification(remoteMessage) {
     let droppedDetails = JSON.parse(remoteMessage?.data?.notification_data);
     console.log('JSON.parse notification', droppedDetails);
     DeviceEventEmitter.emit('dropped', droppedDetails);
+  }
+  if (remoteMessage?.data?.route == 'chat') {
+    let chatData = JSON.parse(remoteMessage?.data?.notification_data);
+    console.log('chatData notification', chatData);
+    DeviceEventEmitter.emit('chatData', chatData);
   }
 }
 

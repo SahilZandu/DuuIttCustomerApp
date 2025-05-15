@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Image,
@@ -12,18 +12,18 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import MapRoute from '../../../components/MapRoute';
-import {styles} from './styles';
+import { styles } from './styles';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import CTA from '../../../components/cta/CTA';
 import Spacer from '../../../halpers/Spacer';
 import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGooglePlaceHolder';
 import Header from '../../../components/header/Header';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
-import {screenHeight} from '../../../halpers/matrics';
-import {rootStore} from '../../../stores/rootStore';
-import {appImages} from '../../../commons/AppImages';
-import {getCurrentLocation} from '../../../components/GetAppLocation';
-import {getGeoCodes, setMpaDaltaInitials} from '../../../components/GeoCodeAddress';
+import { screenHeight } from '../../../halpers/matrics';
+import { rootStore } from '../../../stores/rootStore';
+import { appImages } from '../../../commons/AppImages';
+import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -32,11 +32,11 @@ let currentLocation = {
   lat: null,
   lng: null,
 };
-const ChooseMapLocation = ({navigation, route}) => {
-  const {setSenderAddress, setReceiverAddress, senderAddress, receiverAddress} =
+const ChooseMapLocation = ({ navigation, route }) => {
+  const { setSenderAddress, setReceiverAddress, senderAddress, receiverAddress } =
     rootStore.myAddressStore;
-  const {pickDrop, item} = route.params;
-   const debounceTimeout = useRef(null);
+  const { pickDrop, item } = route.params;
+  const debounceTimeout = useRef(null);
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
     let d =
@@ -63,7 +63,7 @@ const ChooseMapLocation = ({navigation, route}) => {
     setLocationId(details?.place_id)
   };
 
-const mohaliChandigarhBounds = {
+  const mohaliChandigarhBounds = {
     north: 30.8258,
     south: 30.6600,
     west: 76.6600,
@@ -111,19 +111,21 @@ const mohaliChandigarhBounds = {
   };
 
   useFocusEffect(
-    useCallback(()=>{
+    useCallback(() => {
       handleAndroidBackButton(navigation)
       setMpaDaltaInitials();
-    },[])
+    }, [])
   )
 
   useEffect(() => {
     setTimeout(() => {
       if (Object?.keys(item || {})?.length > 0) {
         setGeoLocation(item?.geo_location);
-        setAddress(item?.address);
-        setName(item?.name);
-        setLocationId(item?.location_id)
+        if (pickDrop == 'pick') {
+          setAddress(item?.address);
+          setName(item?.name);
+          setLocationId(item?.location_id)
+        }
       }
     }, 1000);
   }, [item]);
@@ -144,24 +146,24 @@ const mohaliChandigarhBounds = {
     };
     // console.log('newItem---', newItem, pickDrop);
 
-     // console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
+    // console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
 
-     const isSameLocation =
-     newItem?.location_id &&
-     ((pickDrop === 'pick' && newItem?.location_id === receiverAddress?.location_id) ||
-       (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
-         parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
-       (pickDrop !== 'pick' && newItem?.location_id === senderAddress?.location_id) ||
-       (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
-         parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
+    const isSameLocation =
+      (newItem?.location_id || newItem?.geo_location) &&
+      ((pickDrop === 'pick' && newItem?.location_id === receiverAddress?.location_id) ||
+        (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+          parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
+        (pickDrop !== 'pick' && newItem?.location_id === senderAddress?.location_id) ||
+        (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+          parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
 
 
-   // console.log("isSameLocation--", isSameLocation);
+    // console.log("isSameLocation--", isSameLocation);
 
-   if (isSameLocation) {
-     alert("You can't choose the same location. Please choose another location.");
-     return;
-   }
+    if (isSameLocation) {
+      alert("You can't choose the same location. Please choose another location.");
+      return;
+    }
 
     // navigation.navigate('senderReceiverDetails', {
     //   pickDrop: pickDrop,
@@ -231,12 +233,12 @@ const mohaliChandigarhBounds = {
           navigation.goBack();
         }}
       />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <MapLocationRoute
           mapContainerView={
             Platform.OS == 'ios'
-              ? {height: screenHeight(70)}
-              : {height: screenHeight(74)}
+              ? { height: screenHeight(70) }
+              : { height: screenHeight(74) }
           }
           origin={geoLocation}
           onTouchLocation={handleTouchAddress}
@@ -273,16 +275,16 @@ const mohaliChandigarhBounds = {
         </TouchableOpacity>
       </View>
       <View style={styles.bottomPopUpContainer}>
-        <View style={{paddingHorizontal: 30, marginTop: '3%'}}>
+        <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
           {!address?.length > 0 ? (
             <AnimatedLoader type={'addMyAddress'} />
           ) : (
             <>
               <LocationHistoryCard
                 bottomLine={true}
-                item={{name: name, address: address}}
+                item={{ name: name, address: address }}
                 index={0}
-                onPress={() => {}}
+                onPress={() => { }}
               />
               <Spacer space={'12%'} />
               <CTA

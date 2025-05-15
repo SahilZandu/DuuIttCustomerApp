@@ -50,6 +50,7 @@ import {
 import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import {silderArray} from '../stores/DummyData/Home';
+import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 
 const SearchingParcelForm = ({navigation, route, screenName}) => {
   const {addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider} =
@@ -57,6 +58,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   const intervalRef = useRef(null);
   const {appUser} = rootStore.commonStore;
   const {updateOrderStatus} = rootStore.orderStore;
+  const {unseenMessages} = rootStore.chatStore;
   const {paymentMethod, totalAmount} = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
@@ -77,6 +79,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   const [minMaxHp, setMinMaxHp] = useState(screenHeight(69));
   const [rideProgess, setRideProgess] = useState(0.2);
   const [rideProgessImage, setRideProgessImage] = useState(hp('1%'));
+    const [readMsg, setReadMsg] = useState(false)
 
   const getLocation = type => {
     let d =
@@ -166,10 +169,36 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     };
   }, []);
 
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatData', data => {
+      console.log('chatData Order data -- ', data);
+      if(data?.order_type == 'parcel'){
+      checkUnseenMsg();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatPage', data => {
+      console.log('chatPagedata -- ', data);
+      if(data?.order_type == 'parcel'){
+        onChat();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   useEffect(() => {
     socketServices.initailizeSocket();
     // ridePickupParcel()
   }, []);
+
 
   useEffect(() => {
     if (Object?.keys(parcelInfo)?.length > 0) {
@@ -233,6 +262,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
 
   useFocusEffect(
     useCallback(() => {
+        checkUnseenMsg();
+        handleAndroidBackButton();
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
         const intervalId = setInterval(() => {
           setCurrentLocation();
@@ -285,6 +316,21 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
       };
     }
   }, [parcelInfo, searchingFind]);
+
+  const checkUnseenMsg = async () => {
+    let req = {
+      orderId: addParcelInfo?._id ?? parcelInfo?._id,
+      senderRole: 'customer'
+    }
+    const res = await unseenMessages(req);
+    console.log("res unseenMessages", res);
+    if (res?.statusCode == 200 && res?.data?.length > 0) {
+      setReadMsg(true)
+    }else{
+      setReadMsg(false)
+    }
+
+  }
 
   const handleDeleteLoading = v => {
     console.log('vvvv--', v);
@@ -386,6 +432,10 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
       }
     }
   };
+
+  const onChat =()=>{
+    navigation.navigate("chat",{item:parcelInfo})
+  }
 
   const openMap = (riderDest, destination, label) => {
     const latLng = `${riderDest?.lat},${riderDest?.lng}`;
@@ -625,10 +675,12 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                     <ImageNameRatingComp parcelInfo={parcelInfo} />
 
                     <DriverArrivingComp
+                      unReadMsg={readMsg}
                       topLine={false}
                       title={'Pickup in 10 minutes'}
                       onMessage={() => {
-                        hanldeLinking('email');
+                        onChat()
+                        // hanldeLinking('email');
                       }}
                       onCall={() => {
                         hanldeLinking('call');

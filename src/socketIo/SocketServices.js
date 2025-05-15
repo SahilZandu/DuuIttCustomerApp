@@ -66,6 +66,15 @@ class WSServices {
     }
   }
 
+  off(event, cb) {
+    if (this.socket) {
+      this.socket.off(event, cb); // Correcting to use 'on' for listening
+      console.log(`Listening for event: ${event}`);
+    } else {
+      console.log(`Socket is not connected, cannot listen to event: ${event}`);
+    }
+  }
+
   // Remove a specific event listener
   removeListener(listenerName) {
     if (this.socket) {

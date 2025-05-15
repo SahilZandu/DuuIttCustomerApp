@@ -21,6 +21,7 @@ import WalletLoader from './WalletLoader';
 import TransactionHistoryLoader from './TransactionHistoryLoader';
 import HomeMapLoader from './HomeMapLoader';
 import SelectedRiderLoader from './SelectedRiderLoader';
+import ChatLoader from './ChatLoader';
 
 const AnimatedLoader = ({type,absolute,height}) => {
   return (
@@ -42,6 +43,8 @@ const AnimatedLoader = ({type,absolute,height}) => {
       {type == 'transactionHistoryLoader' && <TransactionHistoryLoader/>}
       {type == 'homeMapLoader' && <HomeMapLoader height={height}/>}
       {type == 'selectedRiderLoader' && <SelectedRiderLoader/>}
+      {type == 'chatLoader' && <ChatLoader/>}
+      
       
       
       

@@ -34,6 +34,7 @@ let currentLocation = {
   lng: null,
 };
 
+
 const ChooseMapLocation = ({ navigation, route }) => {
   const { setSenderAddress, setReceiverAddress, senderAddress, receiverAddress } =
     rootStore.myAddressStore;
@@ -69,9 +70,11 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setTimeout(() => {
       if (item?.geo_location?.lat) {
         setGeoLocation(item?.geo_location);
+        if(pickDrop =='pick'){
         setAddress(item?.address);
         setName(item?.name);
-        setLocationId(item?.location_id)
+        setLocationId(item?.location_id ?? "")
+        }
       }
     }, 1000);
   }, [item]);
@@ -131,7 +134,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   };
 
   const onPressAddress = (data, details) => {
-    // console.log('data ,details 333', data, "----------------", details);
+    console.log('data ,details 333', data, "----------------", details);
     setName(details?.name);
     setAddress(details?.formatted_address);
     setGeoLocation(details?.geometry?.location);
@@ -146,10 +149,10 @@ const ChooseMapLocation = ({ navigation, route }) => {
       location_id: LocationId
     };
 
-    // console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
+    console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
 
     const isSameLocation =
-      newItem?.location_id &&
+     (newItem?.location_id || newItem?.geo_location) &&
       ((pickDrop === 'pick' && newItem?.location_id === receiverAddress?.location_id) ||
         (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
           parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
@@ -158,12 +161,14 @@ const ChooseMapLocation = ({ navigation, route }) => {
           parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
 
 
-    // console.log("isSameLocation--", isSameLocation);
+    console.log("isSameLocation--", isSameLocation);
 
     if (isSameLocation) {
       alert("You can't choose the same location. Please choose another location.");
       return;
     }
+
+    // return;
 
     if (pickDrop === 'pick') {
       setSenderAddress(newItem);
@@ -233,13 +238,14 @@ const ChooseMapLocation = ({ navigation, route }) => {
       currentLocation?.lat,
       currentLocation?.lng,
     );
-    // console.log('addressData', addressData);
+    console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);
     setName(nameData[0]);
     setAddress(addressData?.address);
     setGeoLocation(addressData?.geo_location);
     setLocationId(addressData?.place_Id)
+    
   };
 
   const handleTouchAddress = async (loaction) => {
@@ -260,7 +266,6 @@ const ChooseMapLocation = ({ navigation, route }) => {
     // setGeoLocation(addressData?.geo_location);
     setGeoLocation(newLocation);
     setLocationId(addressData?.place_Id)
-
   };
 
   return (

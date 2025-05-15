@@ -193,6 +193,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     // If any value is NaN, don't proceed
     if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
     const timeout = setInterval(() => {
+      // const timeout = setTimeout(() => {
       const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
 
       const camera = {
@@ -212,6 +213,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     }, 10000);
 
     return () => clearInterval(timeout);
+    // return () => clearTimeout(timeout);
+
   }, [origin, destination]);
 
   // useEffect(() => {

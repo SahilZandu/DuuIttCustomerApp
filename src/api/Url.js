@@ -57,7 +57,8 @@ export default  {
    
    sendMessage:"chat/send-message",
    markSeen:"chat/mark-seen",
-   chatOrderId:"chat"
+   chatOrderId:"chat",
+   unseenMessages :'chat/unseen-messages'
 
     
 

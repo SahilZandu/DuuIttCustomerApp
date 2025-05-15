@@ -275,7 +275,7 @@ export default function SideMenu({ navigation }) {
     //   id: '8',
     //   title: 'Chat',
     //   onPress: () => {
-    //     navigation.navigate('chat');
+    //     navigation.navigate('chat',{item:{}});
     //   },
     //   icon: appImagesSvg.walletSvg,
     //   show: true,

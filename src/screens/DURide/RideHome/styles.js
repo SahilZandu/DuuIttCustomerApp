@@ -17,8 +17,16 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginTop: '0.5%',
   },
+  imageMainView:{
+    marginTop: '1%',
+     marginHorizontal: 20 
+  },
+  imageView:{
+    justifyContent: 'center',
+     alignItems: 'center',
+  },
   bottomImageView:{
-    marginTop: '-5.1%',
+    marginTop: '-8%',
   },
   bottomImage:{
     height: hp('35%'), width: wp('100%')

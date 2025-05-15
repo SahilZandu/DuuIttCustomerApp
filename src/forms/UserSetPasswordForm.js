@@ -31,7 +31,7 @@ const FormButton = ({ loading, onPress }) => {
 
 const UserSetPasswordForm = ({ navigation }) => {
     const { userSetUpdatePassword } = rootStore.authStore
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     const [loading, setLoading] = useState(false);
     const [secureTextEntry, setsecureTextEntry] = useState(true);
     const [secureTextEntry2, setsecureTextEntry2] = useState(true);
@@ -46,7 +46,7 @@ const UserSetPasswordForm = ({ navigation }) => {
     const handleUserSetPass = async (values) => {
         console.log('values', values);
 
-        await userSetUpdatePassword(values,'set',navigation,handleLoading)
+        await userSetUpdatePassword(values, 'set', navigation, handleLoading)
 
     };
 
@@ -56,17 +56,19 @@ const UserSetPasswordForm = ({ navigation }) => {
 
     useFocusEffect(
         useCallback(() => {
-          handleAndroidBackButton(navigation);
+            handleAndroidBackButton(navigation);
         }, []),
-      );
+    );
 
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={userSetPassValidations()}>
             <View style={{ width: wp('85%'), alignSelf: 'center' }}>
-                <InputField
-                   textColor={colors.black}
+
+                {/* <InputField
+                    isBlur={ture}
+                    textColor={colors.black}
                     autoCapitalize={'none'}
                     name={'email'}
                     label={''}
@@ -74,8 +76,8 @@ const UserSetPasswordForm = ({ navigation }) => {
                     placeholder={'Enter your email'}
                     editable={false}
                     keyboardType={'email-address'}
+                /> */}
 
-                />
                 <InputField
                     textColor={colors.black}
                     autoCapitalize={'none'}
@@ -88,7 +90,7 @@ const UserSetPasswordForm = ({ navigation }) => {
                     rightIconName={!secureTextEntry ? 'eye' : 'eye-off'}
                 />
                 <InputField
-                   textColor={colors.black}
+                    textColor={colors.black}
                     autoCapitalize={'none'}
                     name={'confirm'}
                     label={''}

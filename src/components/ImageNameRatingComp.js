@@ -1,19 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, Dimensions, TouchableOpacity, View, Text} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Dimensions, TouchableOpacity, View, Text } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { SvgXml } from 'react-native-svg';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 import FastImage from 'react-native-fast-image';
 import Url from '../api/Url';
-import {appImages} from '../commons/AppImages';
+import { appImages } from '../commons/AppImages';
 import Rating from './Rating';
 
-const ImageNameRatingComp = ({parcelInfo}) => {
+const ImageNameRatingComp = ({ parcelInfo }) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerView}>
@@ -22,9 +22,9 @@ const ImageNameRatingComp = ({parcelInfo}) => {
           source={
             parcelInfo?.rider?.profile_pic?.length > 0
               ? {
-                  uri: Url?.Image_Url + parcelInfo?.rider?.profile_pic,
-                  priority: FastImage.priority.high,
-                }
+                uri: Url?.Image_Url + parcelInfo?.rider?.profile_pic,
+                priority: FastImage.priority.high,
+              }
               : appImages.avtarImage
           }
           resizeMode={FastImage.resizeMode.stretch}
@@ -33,7 +33,7 @@ const ImageNameRatingComp = ({parcelInfo}) => {
         <Text numberOfLines={2} style={styles.nameText}>
           {parcelInfo?.rider?.name}
         </Text>
-        <Rating rating={'0'} />
+        <Rating rating={parcelInfo?.rider?.average_rating?.toString() ?? '4.2'} />
       </View>
       <View style={styles.bottomLine} />
     </View>

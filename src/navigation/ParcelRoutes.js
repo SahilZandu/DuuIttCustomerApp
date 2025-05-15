@@ -15,6 +15,7 @@ import PickSuccessfully from '../screens/DUParcel/PickSuccessfully.js/PickSucces
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
 import AddMyAddress from '../screens/CommonScreens/AddMyAddress/AddMyAddress';
 import EditOrderLocation from '../screens/DUParcel/EditOrderLocation/EditOrderLocation';
+import Chat from '../screens/Auth/DashboardScreen/Chat/Chat';
 
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +45,7 @@ export default function ParcelRoutes(props) {
        <Stack.Screen name="trackingOrder" component={TrackingOrder} />
        <Stack.Screen name="pickSuccessfully" component={PickSuccessfully} />
        <Stack.Screen name="editOrderLocation" component={EditOrderLocation} />
+        <Stack.Screen name="chat" component={Chat} /> 
        
   
     </Stack.Navigator>

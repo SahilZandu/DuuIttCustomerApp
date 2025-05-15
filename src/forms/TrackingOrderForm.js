@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -13,21 +13,21 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
-import {Surface} from 'react-native-paper';
-import {colors} from '../theme/colors';
-import {appImages, appImagesSvg} from '../commons/AppImages';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../theme/fonts/fonts';
+import { Surface } from 'react-native-paper';
+import { colors } from '../theme/colors';
+import { appImages, appImagesSvg } from '../commons/AppImages';
 import DriverTrackingProfileComp from '../components/DriverTrackingProfileComp';
 import DriverTrackingComp from '../components/DriverTrackingComp';
 import TextRender from '../components/TextRender';
-import {currencyFormat} from '../halpers/currencyFormat';
-import {FlatList} from 'react-native-gesture-handler';
-import {rootStore} from '../stores/rootStore';
+import { currencyFormat } from '../halpers/currencyFormat';
+import { FlatList } from 'react-native-gesture-handler';
+import { rootStore } from '../stores/rootStore';
 import TrackingDetailsComp from '../components/TrackingDetailsComp';
 import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import OtpShowComp from '../components/OtpShowComp';
 import ModalPopUp from '../components/ModalPopUp';
 import MapRoute from '../components/MapRoute';
@@ -60,15 +60,17 @@ const trackArray = [
   },
 ];
 
-const TrackingOrderForm = ({navigation}) => {
-  const {ordersTrackOrder, orderTrackingList} = rootStore.orderStore;
-  const {appUser} = rootStore.commonStore;
+const TrackingOrderForm = ({ navigation }) => {
+  const { ordersTrackOrder, orderTrackingList } = rootStore.orderStore;
+  const { appUser } = rootStore.commonStore;
+  const { unseenMessages } = rootStore.chatStore;
   const [loading, setLoading] = useState(
     orderTrackingList?.length?.length > 0 ? false : true,
   );
   const [isSelected, setIsSelected] = useState(0);
   const [trackedArray, setTrackedArray] = useState(orderTrackingList);
   const [trackingArray, setTrackingArray] = useState(trackArray);
+  const [checkChatMsg, setCheckChatMsg] = useState([])
   const [isModalTrack, setIsModalTrack] = useState(false);
   const [trackItem, setTrackItem] = useState({});
   const [origin, setOrigin] = useState({});
@@ -139,7 +141,7 @@ const TrackingOrderForm = ({navigation}) => {
 
   const getSocketLocation = async (socketServices, trackItem) => {
     console.log('trackItem---', trackItem);
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     let query = {
       lat: getLocation('lat')?.toString(),
       lng: getLocation('lng')?.toString(),
@@ -170,6 +172,59 @@ const TrackingOrderForm = ({navigation}) => {
       if (data?.order_type == 'parcel' || data?.order_type == 'food') {
         getTrackingOrder();
         setIsModalTrack(false);
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const checkUnseenMsg = async (data) => {
+    let req = {
+      orderId: data?._id,
+      senderRole: 'rider'
+    }
+    const res = await unseenMessages(req);
+    console.log("res unseenMessages", res);
+
+  }
+
+  const onChat = (data) => {
+    let newCheckMsg = [...checkChatMsg]
+    const filterCheckMsg = newCheckMsg?.filter((item, i) => {
+      return item?._id !== data?._id
+    })
+    setCheckChatMsg(filterCheckMsg);
+
+    navigation.navigate("chat", { item: data })
+  }
+
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatData', data => {
+      console.log('chatData Order data -- ', data);
+      if (data?.order_type == 'parcel') {
+        let newMsg = [...checkChatMsg]
+        const checkMsg = newMsg?.find(item => item?.rider?._id === data?.rider?._id);
+        if ((checkMsg && checkMsg?.rider)) {
+          setCheckChatMsg(newMsg)
+        } else {
+          newMsg.push(data)
+          setCheckChatMsg(newMsg)
+        }
+        // checkUnseenMsg(data);
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatPage', data => {
+      console.log('chatPagedata -- ', data);
+      if (data?.order_type == 'parcel') {
+        onChat(data);
       }
     });
     return () => {
@@ -220,9 +275,9 @@ const TrackingOrderForm = ({navigation}) => {
     // console.log('res--', res);
     const updatedTrackArray = trackingArray?.map((item, i) => {
       if (i <= res) {
-        return {...item, status: 'completed'};
+        return { ...item, status: 'completed' };
       } else {
-        return {...item, status: 'pending'};
+        return { ...item, status: 'pending' };
       }
     });
 
@@ -240,15 +295,16 @@ const TrackingOrderForm = ({navigation}) => {
     }
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     console.log('item--', item, index);
     if (index == 0) {
       setTrackItem(item);
       setOrigin(item?.sender_address?.geo_location);
     }
+    const checkMsg = checkChatMsg?.find(data => data?.rider?._id === item?.rider?._id);
 
     return (
-      <View style={{marginHorizontal: 20}}>
+      <View style={{ marginHorizontal: 20 }}>
         <TrackingDetailsComp
           onViewDetails={onViewDetails}
           item={item}
@@ -264,10 +320,11 @@ const TrackingOrderForm = ({navigation}) => {
             elevation={3}
             style={[
               styles.trackingSurfaceView,
-              {height: item?.secure ? hp('62%') : hp('54.5%')},
+              { height: item?.secure ? hp('62%') : hp('54.5%') },
             ]}>
             <View style={styles.innerTrackingView}>
               <DriverTrackingProfileComp
+                unReadMsg={(checkMsg && checkMsg?.rider) ? true : false}
                 item={{
                   image:
                     item?.rider?.profile_pic?.length > 0
@@ -275,10 +332,11 @@ const TrackingOrderForm = ({navigation}) => {
                       : setTrackImage(item?.order_type),
 
                   name: item?.rider?.name ? item?.rider?.name : 'DuuItt Rider',
-                  rating: '0',
+                  rating: item?.rider?.average_rating?.toString() ?? '0',
                 }}
                 onMessage={() => {
-                  hanldeLinking('email');
+                  onChat(item)
+                  // hanldeLinking('email');
                 }}
                 onCall={() => {
                   hanldeLinking('call');
@@ -288,7 +346,7 @@ const TrackingOrderForm = ({navigation}) => {
               <DriverTrackingComp
                 data={trackingArray}
                 image={appImages.packetImage}
-                //   bottomLine={true}
+              //   bottomLine={true}
               />
               <View style={styles.lineView} />
               <TextRender
@@ -339,7 +397,7 @@ const TrackingOrderForm = ({navigation}) => {
       {loading == true && trackedArray?.length == 0 ? (
         <AnimatedLoader type={'trackingOrderLoader'} />
       ) : (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           {trackedArray?.length > 0 ? (
             <FlatList
               initialNumToRender={20}
@@ -347,7 +405,7 @@ const TrackingOrderForm = ({navigation}) => {
               renderItem={renderItem}
               keyExtractor={item => item?._id?.toString()}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom: hp('10%')}}
+              contentContainerStyle={{ paddingBottom: hp('10%') }}
             />
           ) : (
             <View style={styles.noDataView}>
@@ -367,7 +425,7 @@ const TrackingOrderForm = ({navigation}) => {
             <MapRoute
               origin={origin}
               destination={trackItem?.receiver_address?.geo_location}
-              mapContainerView={{height: hp('60%')}}
+              mapContainerView={{ height: hp('60%') }}
             />
           </View>
         </View>

@@ -36,7 +36,8 @@ export const styles = StyleSheet.create({
         borderBottomRightRadius: 0,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
-        marginBottom: hp('2%')
+        marginBottom: hp('2%'),
+        marginRight:wp("2%")
     },
     leftBoxView: {
         backgroundColor: colors.white,
@@ -47,6 +48,7 @@ export const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 0,
         marginBottom: hp('2%'),
+        marginLeft:wp("2%")
     },
     toolBarView: {
         borderTopWidth: 0,

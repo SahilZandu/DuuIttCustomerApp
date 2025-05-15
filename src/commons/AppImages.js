@@ -824,6 +824,7 @@ export const appImages = {
   markerRideImage: require('../assets/markerRideImage.png'),
   callImage: require('../assets/callImage.png'),
   messageImage: require('../assets/messageImage.png'),
+  messageUnreadImg: require('../assets/message_unreadImg.png'),
   packetImage: require('../assets/packetImage.png'),
   packetRideImage: require('../assets/packetRideImage.png'),
   crossClose: require('../assets/crossClose.png'),

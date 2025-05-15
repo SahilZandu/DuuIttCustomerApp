@@ -639,6 +639,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   const intervalRef = useRef(null);
   const { appUser } = rootStore.commonStore;
   const { updateOrderStatus } = rootStore.orderStore;
+  const { unseenMessages } = rootStore.chatStore;
   const { paymentMethod, totalAmount } = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
@@ -659,6 +660,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   const [minMaxHp, setMinMaxHp] = useState(screenHeight(69));
   const [rideProgess, setRideProgess] = useState(0.2);
   const [rideProgessImage, setRideProgessImage] = useState(hp('1%'));
+  const [readMsg, setReadMsg] = useState(false)
 
   const getLocation = type => {
     let d =
@@ -670,6 +672,10 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   };
 
   console.log('paymentMethod--', paymentMethod, addParcelInfo, parcelInfo);
+  useEffect(() => {
+    socketServices.initailizeSocket();
+    // ridePickupParcel()
+  }, []);
 
   useEffect(() => {
     setRideProgessImage(hp('1%'));
@@ -684,6 +690,24 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       clearInterval(intervalRef.current);
     };
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      checkUnseenMsg();
+      if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
+        const intervalId = setInterval(() => {
+          setCurrentLocation();
+          setTimeout(() => {
+            getSocketLocation(socketServices);
+          }, 1500);
+        }, 20000);
+        return () => {
+          // This will run when the screen is unfocused
+          clearInterval(intervalId);
+        };
+      }
+    }, [parcelInfo]),
+  );
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -747,10 +771,46 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     };
   }, []);
 
+
+  const checkUnseenMsg = async () => {
+    let req = {
+      orderId: addParcelInfo?._id ?? parcelInfo?._id,
+      senderRole: 'customer'
+    }
+    const res = await unseenMessages(req);
+    console.log("res unseenMessages", res);
+    if (res?.statusCode == 200 && res?.data?.length > 0) {
+      setReadMsg(true)
+    }else{
+      setReadMsg(false)
+    }
+
+  }
+
   useEffect(() => {
-    socketServices.initailizeSocket();
-    // ridePickupParcel()
+    const subscription = DeviceEventEmitter.addListener('chatData', data => {
+      console.log('chatData Order data -- ', data);
+      if (data?.order_type == 'ride') {
+        checkUnseenMsg();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
   }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatPage', data => {
+      console.log('chatPagedata -- ', data);
+      if (data?.order_type == 'ride') {
+        onChat();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
 
   // useEffect(() => {
   //   const {addParcelInfo} = rootStore.parcelStore;
@@ -776,6 +836,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   //     }, 1000);
   //   }
   // }, [addParcelInfo,parcelInfo]);
+
 
   useEffect(() => {
     if (Object?.keys(parcelInfo)?.length > 0) {
@@ -838,22 +899,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     };
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
-        const intervalId = setInterval(() => {
-          setCurrentLocation();
-          setTimeout(() => {
-            getSocketLocation(socketServices);
-          }, 1500);
-        }, 20000);
-        return () => {
-          // This will run when the screen is unfocused
-          clearInterval(intervalId);
-        };
-      }
-    }, [parcelInfo]),
-  );
+
 
   useEffect(() => {
     if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
@@ -994,6 +1040,10 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       }
     }
   };
+
+  const onChat = () => {
+    navigation.navigate("chat", { item: parcelInfo })
+  }
 
   const openMap = (riderDest, destination, label) => {
     const latLng = `${riderDest?.lat},${riderDest?.lng}`;
@@ -1232,10 +1282,12 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                     <ImageNameRatingComp parcelInfo={parcelInfo} />
 
                     <DriverArrivingComp
+                      unReadMsg={readMsg}
                       topLine={false}
                       title={'Pickup in 10 minutes'}
                       onMessage={() => {
-                        hanldeLinking('email');
+                        onChat()
+                        // hanldeLinking('email');
                       }}
                       onCall={() => {
                         hanldeLinking('call');

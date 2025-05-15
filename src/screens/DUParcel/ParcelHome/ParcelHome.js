@@ -25,6 +25,7 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute';
+import Spacer from '../../../halpers/Spacer';
 
 let geoLocation = {
   lat: null,
@@ -33,6 +34,7 @@ let geoLocation = {
 let ratingData = {};
 export default function ParcelHome({ navigation }) {
   const { appUser } = rootStore.commonStore;
+  const {setChatData} =rootStore.chatStore;
   const {
     // ordersRecentOrder,
     ordersTrackOrder,
@@ -66,6 +68,7 @@ export default function ParcelHome({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       // setCurrentLocation();
+      setChatData([])
       getCheckDevice();
       setMpaDaltaInitials();
       checkInternet();
@@ -313,11 +316,12 @@ export default function ParcelHome({ navigation }) {
             }}
           />
           <View style={styles.outerScrollView}>
+             <Spacer space={hp('1%')} />
             <AppInputScroll
               padding={true}
               Pb={getHeight(trackedArray, incompletedArray)}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{ marginTop: '4%', marginHorizontal: 20 }}>
+              <View style={styles.imageMainView}>
                 {/* <View>
               <Text
                 style={{
@@ -364,10 +368,7 @@ export default function ParcelHome({ navigation }) {
               )}
             </View> */}
                 <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
+                  style={styles.imageView}>
                   <Image
                     resizeMode="contain"
                     style={{ width: wp('90%'), height: hp('18%') }}
