@@ -63,7 +63,7 @@ const SetPassForm = ({navigation, route}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={setPassValidations()}>
-      <View style={{width: wp('85%'), alignSelf: 'center'}}>
+      <View pointerEvents={loading ?"none" :'auto'} style={{width: wp('85%'), alignSelf: 'center'}}>
         <InputField
           textColor={colors.black}
           autoCapitalize={'none'}

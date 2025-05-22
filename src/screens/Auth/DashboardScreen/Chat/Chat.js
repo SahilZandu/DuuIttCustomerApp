@@ -42,7 +42,7 @@ import Spacer from '../../../../halpers/Spacer';
 export default function Chat({ navigation, route }) {
   const { appUser } = rootStore.commonStore;
   const { item } = route.params;
-  const { sendMessage, getChatData, markSeen, setChatData, chatingData } = rootStore.chatStore;
+  const { sendMessage, getChatData, markSeen, setChatData, chatingData,setChatNotificationStatus } = rootStore.chatStore;
   const [messages, setMessages] = useState(chatingData ?? []);
   const [visible, setVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -74,6 +74,7 @@ export default function Chat({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       // socketServices.initailizeSocket();
+      setChatNotificationStatus(false);
       handleAndroidBackButton(navigation)
       getChatList();
       setTimeout(() => {

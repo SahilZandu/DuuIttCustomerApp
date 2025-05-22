@@ -96,6 +96,7 @@ const PriceDetailsForm = ({navigation}) => {
   };
 
   const handlePrice = async values => {
+     Keyboard.dismiss();
     let newReceiverAddress = {...receiverAddress};
     if (isSecure == true && values?.phone) {
       newReceiverAddress = {
@@ -156,6 +157,7 @@ const PriceDetailsForm = ({navigation}) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'pick',
       item: senderAddress,
+      screenName:'priceDetails'
     });
   };
 
@@ -163,6 +165,7 @@ const PriceDetailsForm = ({navigation}) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'drop',
       item: receiverAddress,
+      screenName:'priceDetails'
     });
   };
 

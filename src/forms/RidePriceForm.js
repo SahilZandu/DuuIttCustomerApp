@@ -99,6 +99,7 @@ const RidePriceForm = ({ navigation }) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'pick',
       item: senderAddress,
+      screenName:'priceDetails'
     });
   };
 
@@ -106,6 +107,7 @@ const RidePriceForm = ({ navigation }) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'drop',
       item: receiverAddress,
+      screenName:'priceDetails'
     });
   };
 

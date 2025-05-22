@@ -122,13 +122,12 @@ const EditOrderLocation = ({ navigation, route }) => {
         console.log('newItem---', newItem, pickDrop);
         const isSameLocation =
             newItem?.location_id &&
-            ((pickDrop === 'pick' && newItem?.location_id === receiverAddress?.location_id) ||
-                (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
-                    parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
-                (pickDrop !== 'pick' && newItem?.location_id === senderAddress?.location_id) ||
-                (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
-                    parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
-
+            ((pickDrop === 'pick') &&
+                (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
+                    parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)) ||
+                (pickDrop !== 'pick') &&
+                (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
+                    parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)));
 
         // console.log("isSameLocation--", isSameLocation);
 

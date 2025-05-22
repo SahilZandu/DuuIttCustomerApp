@@ -18,7 +18,10 @@ import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 import { colors } from '../theme/colors';
 
-let currentLocation = {};
+let currentLocation = {
+  lat: 30.7400,
+  lng: 76.7900,
+};
 
 const MapCurrentLocationRoute = ({
   mapContainerView,
@@ -30,8 +33,8 @@ const MapCurrentLocationRoute = ({
   const mapRef = useRef(null);
   const debounceTimeout = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat ? Number(origin?.lat) : 30.7400,
-    longitude: origin?.lng ? Number(origin?.lng) : 76.7900,
+    latitude: origin?.lat ? Number(origin?.lat) : Number(currentLocation?.lat),
+    longitude: origin?.lng ? Number(origin?.lng) : Number(currentLocation?.lng),
     latitudeDelta: getMpaDalta().latitudeDelta,
     longitudeDelta: getMpaDalta().longitudeDelta,
   });
@@ -41,7 +44,7 @@ const MapCurrentLocationRoute = ({
   useEffect(() => {
     setTimeout(() => {
       setIsMapReady(currentLocation?.lat?.toString()?.length > 0 ? true : false)
-    },300)
+    }, 300)
   }, [currentLocation])
 
   // Update region when origin changes
@@ -59,6 +62,14 @@ const MapCurrentLocationRoute = ({
         latitudeDelta: getMpaDalta().latitudeDelta,
         longitudeDelta: getMpaDalta().longitudeDelta,
       }));
+      if (mapRef?.current) {
+        mapRef?.current.animateToRegion({
+          latitude: Number(origin?.lat),
+          longitude: Number(origin?.lng),
+          latitudeDelta: getMpaDalta().latitudeDelta,
+          longitudeDelta: getMpaDalta().longitudeDelta,
+        }, 500); // smooth zoom
+      }
     }
   }, [origin, isMapReady]);
 

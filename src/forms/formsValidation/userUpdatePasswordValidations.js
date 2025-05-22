@@ -2,10 +2,10 @@ import * as Yup from 'yup';
 
 export const userUpdatePasswordValidations = () => {
     return Yup.object().shape({
-        // ['oldPassword']: Yup.string('Enter your old password')
-        //     .trim()
-        //     .required('Enter your old password')
-        //     .min(8, 'Old password must be at least 8 characters'),
+        ['oldPassword']: Yup.string('Enter your old password')
+            .trim()
+            .required('Enter your old password')
+            .min(8, 'Old password must be at least 8 characters'),
         ['newPassword']: Yup.string('Enter your new password')
             .trim()
             .required('Enter your new password')

@@ -168,13 +168,14 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import { senderReceiverValidations } from './formsValidation/senderReceiverValidations';
 
 const FormButton = ({loading, onPress}) => {
   const {dirty, isValid, values} = useFormikContext();
 
   return (
     <CTA
-      // disable={!(isValid && dirty)}
+      disable={!(isValid && dirty)}
       title={'Proceed'}
       onPress={() => onPress(values)}
       loading={loading}
@@ -229,7 +230,7 @@ const SenderReceiverForm = ({navigation, pickDrop, item,onClose}) => {
     return (
       <Formik
         initialValues={initialValues}
-        // validationSchema={senderReceiverValidations()}
+        validationSchema={senderReceiverValidations()}
         >
         <View style={{flex: 1}}>
           <View style={styles.main}>

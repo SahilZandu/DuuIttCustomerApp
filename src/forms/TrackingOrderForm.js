@@ -63,7 +63,7 @@ const trackArray = [
 const TrackingOrderForm = ({ navigation }) => {
   const { ordersTrackOrder, orderTrackingList } = rootStore.orderStore;
   const { appUser } = rootStore.commonStore;
-  const { unseenMessages } = rootStore.chatStore;
+  const { unseenMessages, setChatNotificationStatus } = rootStore.chatStore;
   const [loading, setLoading] = useState(
     orderTrackingList?.length?.length > 0 ? false : true,
   );
@@ -86,6 +86,7 @@ const TrackingOrderForm = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      setChatNotificationStatus(true)
       handleAndroidBackButton(navigation);
       getTrackingOrder();
       socketServices.initailizeSocket();
@@ -335,7 +336,7 @@ const TrackingOrderForm = ({ navigation }) => {
                   rating: item?.rider?.average_rating?.toString() ?? '0',
                 }}
                 onMessage={() => {
-                  onChat(item)
+                  onChat(item);
                   // hanldeLinking('email');
                 }}
                 onCall={() => {

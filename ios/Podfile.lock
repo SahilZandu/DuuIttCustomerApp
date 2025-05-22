@@ -1114,6 +1114,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-background-timer (2.4.1):
+    - React-Core
   - react-native-date-picker (5.0.4):
     - React-Core
   - react-native-geolocation-service (5.3.1):
@@ -1148,6 +1150,8 @@ PODS:
   - react-native-maps (1.18.0):
     - React-Core
   - react-native-netinfo (11.3.2):
+    - React-Core
+  - react-native-notifications (5.1.0):
     - React-Core
   - react-native-otp-verify (1.1.8):
     - React-Core
@@ -1684,6 +1688,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-audio-waveform (from `../node_modules/@simform_solutions/react-native-audio-waveform`)"
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
@@ -1691,6 +1696,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-razorpay (from `../node_modules/react-native-razorpay`)
   - react-native-restart (from `../node_modules/react-native-restart`)
@@ -1828,6 +1834,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-audio-waveform:
     :path: "../node_modules/@simform_solutions/react-native-audio-waveform"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-geolocation-service:
@@ -1842,6 +1850,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-notifications:
+    :path: "../node_modules/react-native-notifications"
   react-native-otp-verify:
     :path: "../node_modules/react-native-otp-verify"
   react-native-razorpay:
@@ -1988,6 +1998,7 @@ SPEC CHECKSUMS:
   React-logger: fa92ba4d3a5d39ac450f59be2a3cec7b099f0304
   React-Mapbuffer: 9f68550e7c6839d01411ac8896aea5c868eff63a
   react-native-audio-waveform: 8998480697963c9bf2699e5dede94c00c31ed246
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-date-picker: 6891317e850deae5b53d51355226e07a495aba61
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
@@ -1995,6 +2006,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: bae6d745724336b1716c41ce02bdebd62c7d9dc6
   react-native-maps: 2e6e9896195781327ee15b33e3e84bf73c08207a
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
+  react-native-notifications: 4601a5a8db4ced6ae7cfc43b44d35fe437ac50c4
   react-native-otp-verify: b524a7f44b691644bea08376d6a4782a2df57e09
   react-native-razorpay: 0272dd684bc9148828c54a72e05059e3e2e8b813
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162

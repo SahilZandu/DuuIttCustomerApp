@@ -4,7 +4,8 @@ import { rootStore } from './rootStore';
 import { useToast } from '../halpers/useToast';
 
 export default class ChatStore {
-    chatingData = []
+    chatingData = [];
+    chatNotificationStatus= true;
 
     sendMessage = async (data,handleErrorMsg) => {
         let requestData = {
@@ -117,7 +118,7 @@ export default class ChatStore {
                 ? error?.data?.message
                 : 'Something went wrong';
             // useToast(m, 0);
-            return res
+            return error;
         }
     };
 
@@ -126,5 +127,8 @@ export default class ChatStore {
         this.chatingData = data;
     }
 
+    setChatNotificationStatus = async (data)=>{
+        this.chatNotificationStatus = data;
+     }
 
 }

@@ -35,7 +35,7 @@ let currentLocation = {
 const ChooseMapLocation = ({ navigation, route }) => {
   const { setSenderAddress, setReceiverAddress, senderAddress, receiverAddress } =
     rootStore.myAddressStore;
-  const { pickDrop, item } = route.params;
+  const { pickDrop, item, screenName } = route.params;
   const debounceTimeout = useRef(null);
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
@@ -121,7 +121,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setTimeout(() => {
       if (Object?.keys(item || {})?.length > 0) {
         setGeoLocation(item?.geo_location);
-        if (pickDrop == 'pick') {
+        if (pickDrop == 'pick' || screenName == "priceDetails") {
           setAddress(item?.address);
           setName(item?.name);
           setLocationId(item?.location_id)
@@ -237,14 +237,14 @@ const ChooseMapLocation = ({ navigation, route }) => {
         <MapLocationRoute
           mapContainerView={
             Platform.OS == 'ios'
-              ? { height: screenHeight(70) }
-              : { height: screenHeight(74) }
+              ? { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100) }
+              : { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100) }
           }
           origin={geoLocation}
           onTouchLocation={handleTouchAddress}
           height={Platform.OS == 'ios'
-            ? screenHeight(70)
-            : screenHeight(74)}
+            ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
+            : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)}
         />
         {/* <MapRoute
           mapContainerView={
@@ -263,7 +263,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
           onPress={() => {
             handleCurrentAddress();
           }}
-          style={styles.currentLocTouch}>
+          style={[styles.currentLocTouch, { bottom: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? hp('24%') : hp('4%') }]}>
           <View style={styles.currentLocView}>
             <Image
               resizeMode="contain"
@@ -274,32 +274,35 @@ const ChooseMapLocation = ({ navigation, route }) => {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={styles.bottomPopUpContainer}>
-        <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
-          {!address?.length > 0 ? (
-            <AnimatedLoader type={'addMyAddress'} />
-          ) : (
-            <>
-              <LocationHistoryCard
-                bottomLine={true}
-                item={{ name: name, address: address }}
-                index={0}
-                onPress={() => { }}
-              />
-              <Spacer space={'12%'} />
-              <CTA
-                onPress={() => {
-                  // onHandleConfirm();
-                  handleRegionChangeComplete(geoLocation);
-                }}
-                title={'Confirm'}
-                textTransform={'capitalize'}
-                bottomCheck={10}
-              />
-            </>
-          )}
+      {(pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) &&
+        <View style={styles.bottomPopUpContainer}>
+          <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
+            {!address?.length > 0 ? (
+              <AnimatedLoader type={'addMyAddress'} />
+            ) : (
+              <>
+
+                <LocationHistoryCard
+                  bottomLine={true}
+                  item={{ name: name, address: address }}
+                  index={0}
+                  onPress={() => { }}
+                />
+                <Spacer space={'12%'} />
+                <CTA
+                  onPress={() => {
+                    // onHandleConfirm();
+                    handleRegionChangeComplete(geoLocation);
+                  }}
+                  title={'Confirm'}
+                  textTransform={'capitalize'}
+                  bottomCheck={10}
+                />
+              </>
+            )}
+          </View>
         </View>
-      </View>
+      }
     </View>
   );
 };

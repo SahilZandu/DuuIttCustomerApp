@@ -65,7 +65,7 @@ const LoginForm = ({navigation, type}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={loginValidations(type)}>
-      <View style={styles.main}>
+      <View pointerEvents={loading ? 'none' :'auto'}  style={styles.main}>
         {type == 'Email' ? (
           <InputField
             autoCapitalize={'none'}

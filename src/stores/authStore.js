@@ -268,16 +268,16 @@ export default class AuthStore {
 
   // }
 
-  getUser = async () => {
+  getAppUser = async () => {
     const { setAppUser } = rootStore.commonStore;
     try {
-      const res = await agent.getUser();
+      const res = await agent.getAppUser();
       console.log('getUser API Res:', res);
-      if (res?.data?.status == 'success') {
-        setAppUser(res?.data?.data?.user);
-        return res?.data?.data?.user;
+      if (res?.statusCode == 200) {
+        setAppUser(res?.data);
+        return res?.data;
       } else {
-        setAppUser(null);
+        // setAppUser(null);
         return {};
       }
     } catch (error) {
@@ -357,7 +357,7 @@ export default class AuthStore {
     let requestData = {}
     if (type == "update") {
       requestData = {
-        // oldPassword: values?.oldPassword,
+        old_password: values?.oldPassword,
         confirmPassword: values?.confirmPassword,
         newPassword: values?.newPassword,
         email: values?.email?.toLowerCase(),

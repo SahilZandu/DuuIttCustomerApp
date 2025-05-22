@@ -139,12 +139,12 @@ export default function RideHome({ navigation }) {
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
     console.log('resIncompleteOrder ride--', resIncompleteOrder);
-    setIncompletedArray(resIncompleteOrder);
     if (resIncompleteOrder[0]?.status == 'pending') {
       deleteIncompleteOrder(resIncompleteOrder);
     }
-    if (resIncompleteOrder?.length > 0 && resIncompleteOrder[0]?.status !== 'pending') {
+    else if (resIncompleteOrder?.length > 0 && resIncompleteOrder[0]?.status !== 'pending') {
       setAddParcelInfo(resIncompleteOrder[0]);
+      setIncompletedArray(resIncompleteOrder);
     }
   };
 

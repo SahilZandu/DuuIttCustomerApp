@@ -39,7 +39,7 @@ const UserUpdatePasswordForm = ({ navigation }) => {
     const [initialValues, setInitialValues] = useState(
         {
             email: appUser?.email ? appUser?.email : '',
-            // oldPassword: '',
+            oldPassword: '',
             newPassword: '',
             confirmPassword: '',
         }
@@ -64,8 +64,8 @@ const UserUpdatePasswordForm = ({ navigation }) => {
         <Formik
             initialValues={initialValues}
             validationSchema={userUpdatePasswordValidations()}>
-            <View style={{ width: wp('85%'), alignSelf: 'center' }}>
-                {/* <InputField
+            <View pointerEvents={loading ?"none" :'auto'} style={{ width: wp('85%'), alignSelf: 'center' }}>
+                <InputField
                     textColor={colors.black}
                     autoCapitalize={'none'}
                     name={'oldPassword'}
@@ -75,7 +75,7 @@ const UserUpdatePasswordForm = ({ navigation }) => {
                     secureTextEntry={secureTextEntry}
                     onPressEye={() => setsecureTextEntry(!secureTextEntry)}
                     rightIconName={!secureTextEntry ? 'eye' : 'eye-off'}
-                /> */}
+                />
                 <InputField
                     textColor={colors.black}
                     autoCapitalize={'none'}

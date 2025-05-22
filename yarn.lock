@@ -4499,6 +4499,7 @@ __metadata:
     react-native: 0.74.3
     react-native-audio-record: ^0.2.2
     react-native-audio-recorder-player: 3.6.10
+    react-native-background-timer: ^2.4.1
     react-native-date-picker: ^5.0.4
     react-native-device-info: ^14.0.0
     react-native-fast-image: ^8.6.3
@@ -4515,6 +4516,7 @@ __metadata:
     react-native-maps: ^1.18.0
     react-native-modal: ^13.0.1
     react-native-new-snap-carousel: ^3.9.3
+    react-native-notifications: ^5.1.0
     react-native-notifier: ^2.0.0
     react-native-otp-entry: ^1.7.0
     react-native-otp-verify: latest
@@ -10607,6 +10609,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-background-timer@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "react-native-background-timer@npm:2.4.1"
+  peerDependencies:
+    react-native: ">=0.47.0"
+  checksum: 635feb23bfdc8c43b8ee85dc85a5eb83f85aa9c285ce92ac329946ac83864121ae66bfb64fefa21e2a10462d094e03c17ff87eeb5d7e6349bc8e72d941f12754
+  languageName: node
+  linkType: hard
+
 "react-native-communications@npm:2.2.1":
   version: 2.2.1
   resolution: "react-native-communications@npm:2.2.1"
@@ -10809,6 +10820,16 @@ __metadata:
     react: ">=15.0.0"
     react-native: "*"
   checksum: e70d4255e518e66e7654262f22fbf7c84ee485e95087ba2832adae770e8247c0263cd9e8583867d3998e03e6ed7b4eb8e3e3b4aee9979da2e402e1952f39e759
+  languageName: node
+  linkType: hard
+
+"react-native-notifications@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "react-native-notifications@npm:5.1.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 27a201942fcb9e12c4d96ad9b0cb53f547da833e5864193285c68e2dcf03808601d396ea8292e13f7608228784ca70eb34447a13564758d8b7725492a59fc975
   languageName: node
   linkType: hard
 

@@ -112,7 +112,7 @@ const PersonalInfoForm = ({navigation, route}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={personalInfoValidations()}>
-      <View style={styles.main}>
+      <View pointerEvents={loading ?"none" :'auto'} style={styles.main}>
         <InputField
           textColor={colors.black}
           name={'name'}

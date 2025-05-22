@@ -64,7 +64,7 @@ const UserSetPasswordForm = ({ navigation }) => {
         <Formik
             initialValues={initialValues}
             validationSchema={userSetPassValidations()}>
-            <View style={{ width: wp('85%'), alignSelf: 'center' }}>
+            <View pointerEvents={loading ?"none" :'auto'} style={{ width: wp('85%'), alignSelf: 'center' }}>
 
                 {/* <InputField
                     isBlur={ture}

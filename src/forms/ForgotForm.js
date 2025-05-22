@@ -50,7 +50,7 @@ const ForgotForm = ({navigation}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={forgotValidations()}>
-      <View style={{width: wp('85%'), alignSelf: 'center'}}>
+      <View pointerEvents={loading ?"none" :'auto'} style={{width: wp('85%'), alignSelf: 'center'}}>
         <InputField
           autoCapitalize={'none'}
           textColor={'#000000'}

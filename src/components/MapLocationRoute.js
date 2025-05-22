@@ -17,8 +17,12 @@ import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-nativ
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 import { colors } from '../theme/colors';
+import { useFocusEffect } from '@react-navigation/native';
 
-let currentLocation = {};
+let currentLocation = {
+  lat: 30.7400,
+  lng: 76.7900,
+};
 
 const MapLocationRoute = ({
   mapContainerView,
@@ -30,8 +34,8 @@ const MapLocationRoute = ({
   const mapRef = useRef(null);
   const debounceTimeout = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat ? Number(origin?.lat) : null,
-    longitude: origin?.lng ? Number(origin?.lng) : null,
+    latitude: origin?.lat ? Number(origin?.lat) : Number(currentLocation?.lat),
+    longitude: origin?.lng ? Number(origin?.lng) : Number(currentLocation?.lng),
     latitudeDelta: getMpaDalta().latitudeDelta,
     longitudeDelta: getMpaDalta().longitudeDelta,
   });
@@ -90,14 +94,16 @@ const MapLocationRoute = ({
         });
         Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
       }
-    },2000); // Delay in milliseconds
+    }, 2000); // Delay in milliseconds
 
 
   };
 
   // Update region when origin changes
+
+
   useEffect(() => {
-    if (origin) {
+    if (origin?.lat?.toString()?.length > 0) {
       currentLocation = origin;
       setMapRegion(prev => ({
         ...prev,
@@ -110,8 +116,16 @@ const MapLocationRoute = ({
         latitudeDelta: getMpaDalta().latitudeDelta,
         longitudeDelta: getMpaDalta().longitudeDelta,
       }));
+      if (mapRef?.current) {
+          mapRef?.current.animateToRegion({
+          latitude: Number(origin?.lat),
+          longitude: Number(origin?.lng),
+          latitudeDelta: getMpaDalta().latitudeDelta,
+          longitudeDelta: getMpaDalta().longitudeDelta,
+        },500); // smooth zoom
+      }
     }
-  }, [origin,isMapReady]);
+  }, [origin, isMapReady]);
 
   // const onTouchLocationData = useCallback(
   //   coordinate => {
@@ -203,15 +217,15 @@ const MapLocationRoute = ({
         onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
         showsCompass
         onMapReady={handleMapReady}>
-        {mapRegion?.latitude?.toString()?.length > 0 &&
-          mapRegion?.longitude?.toString()?.length > 0 && (
+        {(mapRegion?.latitude?.toString()?.length > 0 &&
+          mapRegion?.longitude?.toString()?.length > 0) && (
             <Marker
               coordinate={{
                 latitude: Number(mapRegion?.latitude),
                 longitude: Number(mapRegion?.longitude),
               }}
               tracksViewChanges={!isMapReady}
-              >
+            >
               <Image
                 resizeMode="contain"
                 source={appImages.markerImage}

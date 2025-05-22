@@ -51,6 +51,9 @@ import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import {silderArray} from '../stores/DummyData/Home';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
+import BackgroundTimer from 'react-native-background-timer';
+
+
 
 const SearchingParcelForm = ({navigation, route, screenName}) => {
   const {addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider} =
@@ -58,7 +61,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   const intervalRef = useRef(null);
   const {appUser} = rootStore.commonStore;
   const {updateOrderStatus} = rootStore.orderStore;
-  const {unseenMessages} = rootStore.chatStore;
+  const {unseenMessages,setChatNotificationStatus} = rootStore.chatStore;
   const {paymentMethod, totalAmount} = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
@@ -263,6 +266,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   useFocusEffect(
     useCallback(() => {
         checkUnseenMsg();
+        setChatNotificationStatus(true);
         handleAndroidBackButton();
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
         const intervalId = setInterval(() => {
@@ -298,25 +302,73 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     }
   }, [parcelInfo, nearbyRider, searchingFind]);
 
-  useEffect(() => {
-    if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
-      const refershFindRiders = setTimeout(async () => {
-        setSearchingFind('refresh');
-        await updateOrderStatus(
-          parcelInfo?._id,
-          'pending',
-          handleDeleteLoading,
-          onDeleteSuccess,
-          false,
-        );
-      }, 60000);
-      return () => {
-        // This will run when the screen is unfocused
-        clearTimeout(refershFindRiders);
-      };
-    }
-  }, [parcelInfo, searchingFind]);
+  // useEffect(() => {
+  //   if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
+  //     const refershFindRiders = setTimeout(async () => {
+  //       setSearchingFind('refresh');
+  //       await updateOrderStatus(
+  //         parcelInfo?._id,
+  //         'pending',
+  //         handleDeleteLoading,
+  //         onDeleteSuccess,
+  //         false,
+  //       );
+  //     }, 60000);
+  //     return () => {
+  //       // This will run when the screen is unfocused
+  //       clearTimeout(refershFindRiders);
+  //     };
+  //   }
+  // }, [parcelInfo, searchingFind]);
 
+  
+   useEffect(() => {
+      let intervalId;
+    
+      if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
+        intervalId = setInterval(async () => {
+          console.log('⏱️ Refreshing find rider...');
+          setSearchingFind('refresh');
+          await updateOrderStatus(
+            parcelInfo?._id,
+            'pending',
+            handleDeleteLoading,
+            onDeleteSuccess,
+            false
+          );
+        }, 60000); // every 60 seconds
+      }
+    
+      return () => {
+        clearInterval(intervalId); // Clear when screen unmounts or deps change
+      };
+    }, [parcelInfo?.status, searchingFind]);
+  
+    
+    useEffect(() => {
+      let intervalId;
+    
+      if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
+        intervalId = BackgroundTimer.setInterval(async () => {
+          console.log('⏱️ (BG) Refreshing find rider...');
+          setSearchingFind('refresh');
+          await updateOrderStatus(
+            parcelInfo?._id,
+            'pending',
+            handleDeleteLoading,
+            onDeleteSuccess,
+            false
+          );
+        }, 60000); // every 60 seconds
+      }
+    
+      return () => {
+        BackgroundTimer.clearInterval(intervalId);
+      };
+    }, [parcelInfo?.status, searchingFind]);
+  
+  
+  
   const checkUnseenMsg = async () => {
     let req = {
       orderId: addParcelInfo?._id ?? parcelInfo?._id,
@@ -353,6 +405,27 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     navigation.navigate(screenName, {screen: 'home'});
     setSearchArrive('search');
   };
+
+  const onCancelOrderRequest = async () => {
+    await updateOrderStatus(
+      parcelInfo?._id,
+      'deleted',
+      handleOrderDeleteLoading,
+      onOrderDeleteSuccess,
+      false,
+    );
+  }
+
+  const handleOrderDeleteLoading = () => {
+    console.log('handleOrderDeleteLoading');
+  }
+
+  const onOrderDeleteSuccess = () => {
+    console.log('onDeleteSuccess--');
+    backToHome();
+  }
+
+
 
   const getSocketLocation = async socketServices => {
     const {appUser} = rootStore.commonStore;
@@ -650,6 +723,9 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 }}
                 onBackToHome={() => {
                   backToHome();
+                }}
+                onCancelOrder={() => {
+                  onCancelOrderRequest()
                 }}
               />
             )}

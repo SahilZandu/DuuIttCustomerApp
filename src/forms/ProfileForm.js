@@ -199,7 +199,7 @@ const ProfileForm = ({navigation, screenName}) => {
       <Formik
         initialValues={initialValues}
         validationSchema={updateProfileValidations()}>
-        <View style={{flex: 1}}>
+        <View  pointerEvents={loading ?"none" :'auto'} style={{flex: 1}}>
           <KeyboardAvoidingView
             style={{flex: 1}}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   View,
   Image,
@@ -6,17 +6,17 @@ import {
   Platform,
   DeviceEventEmitter,
 } from 'react-native';
-import {appImages} from '../../../../commons/AppImages';
+import { appImages } from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
-import {styles} from './styles';
-import {homeCS} from '../../../../stores/DummyData/Home';
+import { styles } from './styles';
+import { homeCS } from '../../../../stores/DummyData/Home';
 import ChangeRoute from '../../../../components/ChangeRoute';
-import {mainArray} from '../../../../stores/DummyData/Home';
+import { mainArray } from '../../../../stores/DummyData/Home';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import RenderOffer from '../../../../components/RenderOffer';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
-import {rootStore} from '../../../../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
+import { rootStore } from '../../../../stores/rootStore';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -27,12 +27,13 @@ import socketServices from '../../../../socketIo/SocketServices';
 import NoInternet from '../../../../components/NoInternet';
 import messaging from '@react-native-firebase/messaging';
 import { getUniqueId } from 'react-native-device-info';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 
 
 
-export default function Home({navigation}) {
-  const {appUser} = rootStore.commonStore;
-  const {saveFcmToken,getCheckDeviceId} = rootStore.dashboardStore;
+export default function Home({ navigation }) {
+  const { appUser } = rootStore.commonStore;
+  const { saveFcmToken, getCheckDeviceId } = rootStore.dashboardStore;
   useNotifications(navigation);
   const [internet, setInternet] = useState(true);
   useFocusEffect(
@@ -42,12 +43,17 @@ export default function Home({navigation}) {
       handleAndroidBackButton();
       setCurrentLocation()
       checkInternet()
+      checkNotificationPer()
     }, []),
   );
 
+  const checkNotificationPer = () => {
+    notifee.setBadgeCount(0).then(() => console.log('Badge count removed'));
+  };
+
   const getCheckDevice = async () => {
     const deviceId = await getUniqueId();
-   await getCheckDeviceId(deviceId)
+    await getCheckDeviceId(deviceId)
   }
 
   useEffect(() => {

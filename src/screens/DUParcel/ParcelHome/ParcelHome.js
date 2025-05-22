@@ -34,7 +34,7 @@ let geoLocation = {
 let ratingData = {};
 export default function ParcelHome({ navigation }) {
   const { appUser } = rootStore.commonStore;
-  const {setChatData} =rootStore.chatStore;
+  const { setChatData } = rootStore.chatStore;
   const {
     // ordersRecentOrder,
     ordersTrackOrder,
@@ -170,12 +170,13 @@ export default function ParcelHome({ navigation }) {
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('parcel');
     console.log('resIncompleteOrder parcel--', resIncompleteOrder);
-    setIncompletedArray(resIncompleteOrder);
+
     if (resIncompleteOrder[0]?.status == 'pending') {
       deleteIncompleteOrder(resIncompleteOrder);
     }
-    if (resIncompleteOrder?.length > 0 && resIncompleteOrder[0]?.status !== 'pending') {
+    else if (resIncompleteOrder?.length > 0 && resIncompleteOrder[0]?.status !== 'pending') {
       setAddParcelInfo(resIncompleteOrder[0]);
+      setIncompletedArray(resIncompleteOrder);
     }
   };
 
@@ -316,7 +317,7 @@ export default function ParcelHome({ navigation }) {
             }}
           />
           <View style={styles.outerScrollView}>
-             <Spacer space={hp('1%')} />
+            <Spacer space={hp('1%')} />
             <AppInputScroll
               padding={true}
               Pb={getHeight(trackedArray, incompletedArray)}

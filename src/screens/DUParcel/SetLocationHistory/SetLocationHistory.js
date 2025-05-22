@@ -280,6 +280,7 @@ const SetLocationHistory = ({ navigation }) => {
         geo_location: senderAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
         location_id: senderAddress?.location_id?.length > 0 ? senderAddress?.location_id : locationId,
       },
+      screenName: senderAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'
     });
     // alert('pick')
   };
@@ -302,26 +303,11 @@ const SetLocationHistory = ({ navigation }) => {
         geo_location: receiverAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
         location_id: receiverAddress?.location_id?.length > 0 ? receiverAddress?.location_id : locationId,
       },
+      screenName: receiverAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'
     });
     // alert('drop')
   };
 
-  const onCurrentPress = () => {
-    if (pickDrop == 'pick') {
-      setPickUpLocation(currentAddress);
-      setPickDrop('drop');
-    } else {
-      setDropLocation(currentAddress);
-    }
-    // navigation.navigate('senderReceiverDetails', {
-    //   pickDrop: pickDrop,
-    //   item: {name: name, address: currentAddress, geo_location: geoLocation},
-    // });
-    navigation.navigate('chooseMapLocation', {
-      pickDrop: pickDrop,
-      item: { name: name, address: currentAddress, geo_location: geoLocation },
-    });
-  };
 
   const onChangePress = () => {
     if (senderAddress?.address?.length > 0 && receiverAddress?.address?.length > 0) {

@@ -12,7 +12,7 @@ export const addMyAddressValidations = () => {
     .required('Enter your phone number')
     .min(10 ,"Phone number should be 10 digits")
     .matches(
-      /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+      /^(?:\+91|91)?[6-9]\d{9}$/,
       'Number not valid',
     )
     .min(10 ,"Phone number should be 10 digits")

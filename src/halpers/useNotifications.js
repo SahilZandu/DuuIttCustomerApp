@@ -8,14 +8,18 @@ import messaging from '@react-native-firebase/messaging';
 // import RNRestart from 'react-native-restart';
 import { Alert, DeviceEventEmitter, AppState } from 'react-native';
 import { rootStore } from '../stores/rootStore';
+import { Notifications } from 'react-native-notifications';
 
 let data = {};
 
 export function useNotifications(navigation) {
   const { setAddParcelInfo } = rootStore.parcelStore;
+  const {chatNotificationStatus}=rootStore.chatStore;
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
+      const {chatNotificationStatus}=rootStore.chatStore;
+      console.log('forground notification:', remoteMessage);
       const channelId = await notifee.createChannel({
         id: 'duuittcustomer.com',
         name: 'duuitt',
@@ -28,8 +32,16 @@ export function useNotifications(navigation) {
         smallIcon: 'ic_launcher', // Uses the app icon
         largeIcon: 'ic_launcher', // Uses the app icon
         // color: '#FFFFFF', // Optional: Sets the accent color
-      }),
-        console.log('forground notification:', remoteMessage);
+      });
+      // const androidNotification = {
+      //   ...remoteMessage.notification,
+      //   android: {
+      //     channelId: channelId,
+      //     smallIcon: 'ic_launcher',
+      //     largeIcon: 'ic_launcher',
+      //   },
+      // };
+        
       const newa = remoteMessage.notification;
 
       data = remoteMessage?.data;
@@ -38,6 +50,9 @@ export function useNotifications(navigation) {
         let chatData = JSON.parse(remoteMessage?.data?.notification_data);
         console.log('chatData notification', chatData);
         DeviceEventEmitter.emit('chatData', chatData);
+        if(chatNotificationStatus === true){
+          await notifee.displayNotification(newa);
+         }
       } else {
         // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
         await notifee.displayNotification(newa);
@@ -125,65 +140,65 @@ export function useNotifications(navigation) {
   //   return unsubscribe;
   // }, []);
 
-  useEffect(() => {
-    const unsubscribe = notifee.onBackgroundEvent(async ({ type, detail }) => {
-      console.log('User pressed notification', detail.notification);
-      // console.log('User pressed notification', detail.notification,type,EventType.PRESS);
-      if (type === EventType.PRESS) {
-        console.log('User pressed notification', detail.notification);
-        detail.notification.data = data;
-        const route = data?.order_type == 'parcel' ? 'parcel' : "ride"
-        if (detail?.notification?.data?.route == "searchingRide") {
-          let acceptedDetails = JSON.parse(detail.notification?.data?.notification_data)
-          setAddParcelInfo(acceptedDetails)
-          console.log('searchingRide notification newOrder', acceptedDetails);
-          navigation.navigate(route, { screen: 'searchingRide' })
-          DeviceEventEmitter.emit('newOrder', acceptedDetails)
-        }
+  // useEffect(() => {
+  //   const unsubscribe = notifee.onBackgroundEvent(async ({ type, detail }) => {
+  //     console.log('User pressed notification', detail.notification);
+  //     // console.log('User pressed notification', detail.notification,type,EventType.PRESS);
+  //     if (type === EventType.PRESS) {
+  //       console.log('User pressed notification', detail.notification);
+  //       detail.notification.data = data;
+  //       const route = data?.order_type == 'parcel' ? 'parcel' : "ride"
+  //       if (detail?.notification?.data?.route == "searchingRide") {
+  //         let acceptedDetails = JSON.parse(detail.notification?.data?.notification_data)
+  //         setAddParcelInfo(acceptedDetails)
+  //         console.log('searchingRide notification newOrder', acceptedDetails);
+  //         navigation.navigate(route, { screen: 'searchingRide' })
+  //         DeviceEventEmitter.emit('newOrder', acceptedDetails)
+  //       }
 
-        if (detail?.notification?.data?.route == "home") {
-          let cancelDetails = JSON.parse(detail.notification?.data?.notification_data)
-          setAddParcelInfo(cancelDetails)
-          console.log('cancelDetails notification cancelOrder', cancelDetails);
-          navigation.navigate(route, { screen: 'home' });
-          DeviceEventEmitter.emit('cancelOrder', cancelDetails)
-        }
-        if (detail?.notification?.data?.route == "picked") {
-          let pickedDetails = JSON.parse(detail.notification?.data?.notification_data)
-          setAddParcelInfo(pickedDetails)
-          console.log('picked notification picked', pickedDetails);
-          if (route == "ride") {
-            navigation.navigate(route, { screen: 'searchingRide' });
-          } else {
-            navigation.navigate(route, { screen: 'trackingOrder' });
-          }
-          DeviceEventEmitter.emit('picked', pickedDetails)
-        }
+  //       if (detail?.notification?.data?.route == "home") {
+  //         let cancelDetails = JSON.parse(detail.notification?.data?.notification_data)
+  //         setAddParcelInfo(cancelDetails)
+  //         console.log('cancelDetails notification cancelOrder', cancelDetails);
+  //         navigation.navigate(route, { screen: 'home' });
+  //         DeviceEventEmitter.emit('cancelOrder', cancelDetails)
+  //       }
+  //       if (detail?.notification?.data?.route == "picked") {
+  //         let pickedDetails = JSON.parse(detail.notification?.data?.notification_data)
+  //         setAddParcelInfo(pickedDetails)
+  //         console.log('picked notification picked', pickedDetails);
+  //         if (route == "ride") {
+  //           navigation.navigate(route, { screen: 'searchingRide' });
+  //         } else {
+  //           navigation.navigate(route, { screen: 'trackingOrder' });
+  //         }
+  //         DeviceEventEmitter.emit('picked', pickedDetails)
+  //       }
 
-        if (detail?.notification?.data?.route == "dropped") {
-          let droppedDetails = JSON.parse(detail.notification?.data?.notification_data)
-          //  setAddParcelInfo({})
-          console.log('notification dropped', droppedDetails);
-          navigation.navigate(route, { screen: 'home' });
-          DeviceEventEmitter.emit('dropped', droppedDetails)
-        }
+  //       if (detail?.notification?.data?.route == "dropped") {
+  //         let droppedDetails = JSON.parse(detail.notification?.data?.notification_data)
+  //         //  setAddParcelInfo({})
+  //         console.log('notification dropped', droppedDetails);
+  //         navigation.navigate(route, { screen: 'home' });
+  //         DeviceEventEmitter.emit('dropped', droppedDetails)
+  //       }
 
-        if (detail?.notification?.data?.route == 'chat') {
-          let chatData = JSON.parse(detail.notification?.data?.notification_data);
-          setAddParcelInfo(chatData)
-          console.log('chatPage notification', chatData);
-          if (route == "ride") {
-            navigation.navigate(route, { screen: 'searchingRide' });
-          } else {
-            navigation.navigate(route, { screen: 'trackingOrder' });
-          }
-          DeviceEventEmitter.emit('chatPage', chatData);
-        }
+  //       if (detail?.notification?.data?.route == 'chat') {
+  //         let chatData = JSON.parse(detail.notification?.data?.notification_data);
+  //         setAddParcelInfo(chatData)
+  //         console.log('chatPage notification', chatData);
+  //         if (route == "ride") {
+  //           navigation.navigate(route, { screen: 'searchingRide' });
+  //         } else {
+  //           navigation.navigate(route, { screen: 'trackingOrder' });
+  //         }
+  //         DeviceEventEmitter.emit('chatPage', chatData);
+  //       }
 
-      }
-    });
-    return unsubscribe;
-  }, []);
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
 
   useEffect(() => {
@@ -222,9 +237,10 @@ export function useNotifications(navigation) {
 
         if (detail?.notification?.data?.route == "dropped") {
           let droppedDetails = JSON.parse(detail.notification?.data?.notification_data)
-          //  setAddParcelInfo({})
+           setAddParcelInfo({})
           console.log('notification dropped', droppedDetails);
-          navigation.navigate(route, { screen: 'home' });
+          // navigation.navigate(route, { screen: 'home' });
+          navigation.navigate('dashborad', { screen: 'tab3', params: {tabText: 'All Orders'}});
           DeviceEventEmitter.emit('dropped', droppedDetails)
         }
         if (detail?.notification?.data?.route == 'chat') {
@@ -242,6 +258,89 @@ export function useNotifications(navigation) {
     });
     return unsubscribe;
   }, []);
+
+
+  // ✅ Handle Background & Killed App Touch Event
+
+  useEffect(() => {
+    const backgroundNotificationListener = Notifications.events().registerNotificationOpened((notification, completion) => {
+      console.log("🔔 Notification Tapped (Foreground/Background):", notification);
+      handleNotificationTap(notification, navigation);
+      completion();
+    });
+
+    // 🔹 2. Handle notifications when the app is COMPLETELY CLOSED (killed)
+    Notifications.getInitialNotification()
+      .then(notification => {
+        if (notification) {
+          console.log("📩 App Launched from Notification (Killed State):", notification);
+          handleNotificationTap(notification, navigation);
+        }
+      })
+      .catch(err => console.error("Error getting initial notification:", err));
+
+    return () => backgroundNotificationListener.remove(); // Cleanup
+  }, []);
+
+  // ✅ Notification Tap Handler
+
+  const handleNotificationTap = (notification, navigation) => {
+    console.log("route---", notification,);
+    const routeType = notification?.payload?.route;
+    // console.log("route---", route);
+
+    const route = notification?.payload?.notification_data?.order_type == 'parcel' ? 'parcel' : "ride"
+    if (routeType === "searchingRide") {
+      let acceptedDetails = JSON.parse(notification?.payload?.notification_data)
+      setAddParcelInfo(acceptedDetails)
+      console.log('searchingRide notification newOrder', acceptedDetails);
+      navigation.navigate(route, { screen: 'searchingRide' })
+      DeviceEventEmitter.emit('newOrder', acceptedDetails)
+    }
+
+    if (routeType === "home") {
+      let cancelDetails = JSON.parse(notification?.payload?.notification_data)
+      setAddParcelInfo(cancelDetails)
+      console.log('cancelDetails notification cancelOrder', cancelDetails);
+      navigation.navigate(route, { screen: 'home' });
+      DeviceEventEmitter.emit('cancelOrder', cancelDetails)
+    }
+    if (routeType === "picked") {
+      let pickedDetails = JSON.parse(notification?.payload?.notification_data)
+      setAddParcelInfo(pickedDetails)
+      console.log('picked notification picked', pickedDetails);
+      if (route == "ride") {
+        navigation.navigate(route, { screen: 'searchingRide' });
+      } else {
+        navigation.navigate(route, { screen: 'trackingOrder' });
+      }
+      DeviceEventEmitter.emit('picked', pickedDetails)
+    }
+
+    if (routeType === "dropped") {
+      let droppedDetails = JSON.parse(notification?.payload?.notification_data)
+      //  setAddParcelInfo({})
+      console.log('notification dropped', droppedDetails);
+      // navigation.navigate(route, { screen: 'home' });
+      navigation.navigate('dashborad', { screen: 'tab3', params: {tabText: 'All Orders'}});
+      DeviceEventEmitter.emit('dropped', droppedDetails)
+    }
+
+    if (routeType === 'chat') {
+      let chatData = JSON.parse(notification?.payload?.notification_data);
+      setAddParcelInfo(chatData)
+      console.log('chatPage notification', chatData);
+      if (route == "ride") {
+        navigation.navigate(route, { screen: 'searchingRide' });
+      } else {
+        navigation.navigate(route, { screen: 'trackingOrder' });
+      }
+      DeviceEventEmitter.emit('chatPage', chatData);
+    }
+
+
+
+  }
 
   return 'register Notification';
 }

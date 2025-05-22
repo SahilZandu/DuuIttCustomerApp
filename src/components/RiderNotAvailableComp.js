@@ -10,7 +10,8 @@ import { appImagesSvg } from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const RiderNotAvailableComp = ({onRefershFindRiders, onBackToHome}) => {
+const RiderNotAvailableComp = ({onRefershFindRiders, onBackToHome,onCancelOrder}) => {
+
   return (
     <View style={styles.container}>
       <Text style={styles.noRidersText}>
@@ -22,6 +23,15 @@ const RiderNotAvailableComp = ({onRefershFindRiders, onBackToHome}) => {
         style={styles.btnTouch}>
         <SvgXml height={50} width={50} xml={appImagesSvg.refershIcon} />
       </TouchableOpacity>
+      <View style={{justifyContent:"space-between",
+        flexDirection:'row',alignItems:'center',marginHorizontal:wp('10%')}}>
+      <TouchableOpacity
+        onPress={onCancelOrder}
+        activeOpacity={0.8}
+        style={styles.cancelOrderTouch}>
+        <Text style={styles.cancelText}>Cancel Order</Text>
+        <View style={[styles.bottomLine,{backgroundColor:colors.red}]} />
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={onBackToHome}
         activeOpacity={0.8}
@@ -29,6 +39,7 @@ const RiderNotAvailableComp = ({onRefershFindRiders, onBackToHome}) => {
         <Text style={styles.backHomeText}>Back to home</Text>
         <View style={styles.bottomLine} />
       </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -53,11 +64,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 100,
   },
+  cancelOrderTouch: {
+    marginTop: hp('2%'),
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+  },
   backHomeTouch: {
     marginTop: hp('2%'),
     alignSelf: 'center',
     alignItems: 'center',
     borderRadius: 100,
+  },
+  cancelText: {
+    fontSize: RFValue(14),
+    fontFamily: fonts.medium,
+    color: colors.red,
   },
   backHomeText: {
     fontSize: RFValue(14),

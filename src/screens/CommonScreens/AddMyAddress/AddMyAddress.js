@@ -47,6 +47,8 @@ let currentLocation = {
 export default function AddMyAddress({ navigation, route }) {
   const { type, data, screenName } = route.params;
 
+  console.log("type, data, screenName", type, data, screenName);
+
   const { myAddress } = rootStore.myAddressStore;
 
   const getLocation = type => {
@@ -76,7 +78,7 @@ export default function AddMyAddress({ navigation, route }) {
     phone: '',
     house: '',
     landmark: '',
-    id:data?._id,
+    id: data?._id,
   });
   const [loadingAddress, setLoadingAddress] = useState(true);
 
@@ -112,7 +114,7 @@ export default function AddMyAddress({ navigation, route }) {
         phone: data?.phone?.toString(),
         house: data?.address_detail,
         landmark: data?.landmark,
-        id:data?._id,
+        id: data?._id,
       });
     }
     else {
@@ -141,7 +143,7 @@ export default function AddMyAddress({ navigation, route }) {
   }, [address]);
 
   const getCurrentAddress = async () => {
-    const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
+    const addressData = await getGeoCodes(geoLocation?.lat?.toString(), geoLocation?.lng?.toString());
     // console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);
@@ -205,24 +207,24 @@ export default function AddMyAddress({ navigation, route }) {
     setVisible(true);
   };
 
- 
-const TabsWithFormik = ({ tabs }) => {
-  const { setFieldValue, values } = useFormikContext();
-  const handleTabPress = (text) => {
-    console.log('Selected Tab:', text);
-    setFieldValue('changeTitle', text);
-    setTitle(text);
+
+  const TabsWithFormik = ({ tabs }) => {
+    const { setFieldValue, values } = useFormikContext();
+    const handleTabPress = (text) => {
+      console.log('Selected Tab:', text);
+      setFieldValue('changeTitle', text);
+      setTitle(text);
+    };
+
+    return (
+      <Tabs2
+        tabs={tabs}
+        tabPress={handleTabPress}
+        title={title}
+      />
+    );
   };
 
-  return (
-    <Tabs2
-      tabs={tabs}
-      tabPress={handleTabPress}
-      title={title}
-    />
-  );
-};
-  
 
   // const handleTabPress = async text => {
   //   const {
@@ -259,7 +261,7 @@ const TabsWithFormik = ({ tabs }) => {
           </Text>
           <Spacer space={'2%'} />
           {/* <Tabs2 tabs={tabs} tabPress={handleTabPress} title={title} /> */}
-          {<TabsWithFormik tabs={tabs}/>}
+          {<TabsWithFormik tabs={tabs} />}
           <Surface
             elevation={3}
             style={{
@@ -364,7 +366,7 @@ const TabsWithFormik = ({ tabs }) => {
   //       enableReinitialize
   //     >
   //       {({ handleSubmit, setFieldValue, values }) => (
-          
+
   //         <View style={{ marginTop: '2%', justifyContent: 'center'}}>
   //           <Text
   //             style={{
@@ -530,18 +532,22 @@ const TabsWithFormik = ({ tabs }) => {
           }}
           origin={geoLocation}
         /> */}
-        <MapLocationRoute
-          mapContainerView={{
-            height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
-          }}
-          origin={geoLocation}
-          onTouchLocation={handleTouchAddress}
-          height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
-        />
-        <AutoCompleteGooglePlaceHolder
-          onPressAddress={onPressAddress}
-          address={address}
-        />
+        {(geoLocation?.lat && geoLocation?.lng) &&
+          <>
+            <MapLocationRoute
+              mapContainerView={{
+                height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
+              }}
+              origin={geoLocation}
+              onTouchLocation={handleTouchAddress}
+              height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
+            />
+
+            <AutoCompleteGooglePlaceHolder
+              onPressAddress={onPressAddress}
+              address={address}
+            />
+          </>}
 
         <TouchableOpacity
           activeOpacity={0.8}
