@@ -194,6 +194,7 @@ const MapLocationRoute = ({
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}>
+    {mapRegion?.latitude?.toString()?.length > 0 &&
       <MapView
         provider={PROVIDER_GOOGLE}
         onRegionChange={e => {
@@ -257,6 +258,7 @@ const MapLocationRoute = ({
           strokeWidth={2}
         /> */}
       </MapView>
+      }
       {isMapReady == false && (
         // <View style={{position: 'absolute'}}>
         <AnimatedLoader

@@ -21,7 +21,7 @@ const Rating = ({rating}) => {
   return (
     <View style={styles.main}>
       <SvgXml style={styles.image} xml={appImagesSvg.whiteStar} />
-      <Text style={styles.rate}> {rating}</Text>
+      <Text style={styles.rate}>{rating}</Text>
     </View>
   );
 };

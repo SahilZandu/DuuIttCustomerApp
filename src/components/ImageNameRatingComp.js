@@ -33,7 +33,9 @@ const ImageNameRatingComp = ({ parcelInfo }) => {
         <Text numberOfLines={2} style={styles.nameText}>
           {parcelInfo?.rider?.name}
         </Text>
-        <Rating rating={parcelInfo?.rider?.average_rating?.toString() ?? '4.2'} />
+        <Rating rating={parcelInfo?.rider?.average_rating !== undefined
+          ? Number(parcelInfo?.rider?.average_rating)?.toFixed(1)?.toString()
+          : '0.0'} />
       </View>
       <View style={styles.bottomLine} />
     </View>

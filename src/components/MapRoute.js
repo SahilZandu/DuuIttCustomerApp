@@ -297,6 +297,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}>
+    {mapRegion?.latitude?.toString()?.length > 0 &&
       <MapView
         provider={PROVIDER_GOOGLE}
         onRegionChange={e => {
@@ -384,6 +385,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           />
         )}
       </MapView>
+}
     </View>
   );
 };

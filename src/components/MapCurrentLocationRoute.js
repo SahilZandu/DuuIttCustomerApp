@@ -107,43 +107,44 @@ const MapCurrentLocationRoute = ({
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        // onRegionChange={e => {
-        //   setMpaDalta(e);
-        //   // console.log('e---onRegionChange', e);
-        // }}
-        ref={mapRef}
-        style={[styles.mapContainer, mapContainerView]}
-        zoomEnabled
-        scrollEnabled={true}
-        showsScale
-        mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        region={mapRegion}
-        // initialRegion={mapRegion}
-        zoomTapEnabled
-        rotateEnabled
-        loadingEnabled
-        onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
-        onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
-        showsCompass
-        onMapReady={handleMapReady}>
-        {mapRegion?.latitude?.toString()?.length > 0 &&
-          mapRegion?.longitude?.toString()?.length > 0 && (
-            <Marker
-              coordinate={{
-                latitude: Number(mapRegion?.latitude),
-                longitude: Number(mapRegion?.longitude),
-              }}
-              tracksViewChanges={!isMapReady}>
-              <Image
-                resizeMode="contain"
-                source={appImages.markerImage}
-                style={styles.markerImage}
-              />
-            </Marker>
-          )}
-      </MapView>
+      {mapRegion?.latitude?.toString()?.length > 0 &&
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          // onRegionChange={e => {
+          //   setMpaDalta(e);
+          //   // console.log('e---onRegionChange', e);
+          // }}
+          ref={mapRef}
+          style={[styles.mapContainer, mapContainerView]}
+          zoomEnabled
+          scrollEnabled={true}
+          showsScale
+          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+          region={mapRegion}
+          // initialRegion={mapRegion}
+          zoomTapEnabled
+          rotateEnabled
+          loadingEnabled
+          onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
+          onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
+          showsCompass
+          onMapReady={handleMapReady}>
+          {mapRegion?.latitude?.toString()?.length > 0 &&
+            mapRegion?.longitude?.toString()?.length > 0 && (
+              <Marker
+                coordinate={{
+                  latitude: Number(mapRegion?.latitude),
+                  longitude: Number(mapRegion?.longitude),
+                }}
+                tracksViewChanges={!isMapReady}>
+                <Image
+                  resizeMode="contain"
+                  source={appImages.markerImage}
+                  style={styles.markerImage}
+                />
+              </Marker>
+            )}
+        </MapView>}
       {isMapReady == false && (
         // <View style={{position: 'absolute'}}>
         <AnimatedLoader

@@ -664,6 +664,10 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   const [rideProgess, setRideProgess] = useState(0.2);
   const [rideProgessImage, setRideProgessImage] = useState(hp('1%'));
   const [readMsg, setReadMsg] = useState(false)
+  const [kms, setKms] = useState({
+    distance_km:0,
+    eta:'0m 0s'
+  });
 
   const getLocation = type => {
     let d =
@@ -884,8 +888,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       });
 
       socketServices.on('getEtaToCustomer', (data) => {
-        console.log('Distance (km):', data.distance_km);
+        console.log('Distance (km):',data, data.distance_km);
         console.log('ETA:', data.eta);
+        setKms(data)
       });
 
       socketServices.on('testevent', data => {
@@ -1364,7 +1369,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                     <DriverArrivingComp
                       unReadMsg={readMsg}
                       topLine={false}
-                      title={'Pickup in 10 minutes'}
+                      title={`${kms?.distance_km ?? 0} km Pickup in ${kms?.eta ?? '0m 0s'}`}
                       onMessage={() => {
                         onChat()
                         // hanldeLinking('email');

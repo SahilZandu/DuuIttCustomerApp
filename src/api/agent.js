@@ -156,7 +156,7 @@ export const agent = {
   walletUpdateBalance: body => requests.patch(Url.walletUpdateBalance, body),
   transactionHistory: body =>
     requests.get(
-      `${Url.wallet}/${body?.userId}?transaction_history=${body?.transaction}&page=${body?.page}&limit=${body?.limit}&range=${body?.range}`,
+      `${Url.wallet}/${body?.userId}?transaction_history=${body?.transaction}&page=${body?.page}&limit=${body?.limit}&range=${body?.range}&status=${body?.status}`,
     ),
 
   paymentsCreateOrder: body => requests.post(Url.paymentsCreateOrder, body),

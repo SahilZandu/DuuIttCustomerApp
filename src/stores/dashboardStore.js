@@ -275,7 +275,8 @@ export default class DashboardStore {
       transaction: true,
       page: 1,
       limit: limit,
-      range: range?.toLowerCase()
+      range: range?.toLowerCase() ?? 'all',
+      status:'all',
     };
     console.log("requestData--=", requestData);
     try {
