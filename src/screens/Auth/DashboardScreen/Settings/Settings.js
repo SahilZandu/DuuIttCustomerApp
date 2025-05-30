@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Platform, DeviceEventEmitter } from 'react-native';
 import Header from '../../../../components/header/Header';
 import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
@@ -9,19 +9,130 @@ import TouchableTextSwitch from '../../../../components/TouchableTextSwitch';
 import PopUp from '../../../../components/appPopUp/PopUp';
 import { rootStore } from '../../../../stores/rootStore';
 import socketServices from '../../../../socketIo/SocketServices';
+import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 
 export default function Settings({ navigation }) {
   const { deleteAccount } = rootStore.dashboardStore;
   const { appUser, setToken, setAppUser } = rootStore.commonStore;
+  const {
+    ordersTrackOrder,
+    orderTrackingList,
+    getPendingForCustomer,
+  } = rootStore.orderStore;
   const [activateSwitch, setActivateSwitch] = useState(true);
   const [switchWallet, setSwitchWallet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
+  const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
+  const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
+  const [trackedParcelOrder, setTrackedParcelOrder] = useState( orderTrackingList ?? [])
+  const [isProgrss, setIsProgress] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
     }, []),
   );
+
+
+   useEffect(() => {
+      const fetchData = async () => {
+        try {
+          await Promise.all([
+            getIncompleteParcelOrder(),
+            getTrackingParcelOrder(),
+            getIncompleteRideOrder()
+          ]);
+        } catch (error) {
+          console.error('Error fetching orders:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
+
+
+  const getIncompleteParcelOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+
+    if ((resIncompleteOrder[0]?.status == 'pending'
+      || resIncompleteOrder[0]?.status == 'find-rider')) {
+      // deleteIncompleteOrder(resIncompleteOrder);
+    }
+    else if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending'
+        || resIncompleteOrder[0]?.status !== 'find-rider')
+    ) {
+      setIncompletedParcelOrder(resIncompleteOrder);
+    }
+  };
+
+  const getIncompleteRideOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('ride');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+
+    if ((resIncompleteOrder[0]?.status == 'pending'
+      || resIncompleteOrder[0]?.status == 'find-rider')) {
+      // deleteIncompleteOrder(resIncompleteOrder);
+    }
+    else if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending'
+        || resIncompleteOrder[0]?.status !== 'find-rider')
+    ) {
+      setIncompletedRideOrder(resIncompleteOrder);
+    }
+  };
+
+  const getTrackingParcelOrder = async () => {
+    const resTrack = await ordersTrackOrder(handleLoadingTrack);
+    setTrackedParcelOrder(resTrack);
+  };
+
+  const handleLoadingTrack = v => {
+    console.log('Track...', v);
+  };
+
+
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
+      console.log('cancel Order data -- ', data);
+      if (data) {
+        getIncompleteParcelOrder();
+        getIncompleteRideOrder();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data --Parcel ', data);
+      if (data) {
+        getIncompleteParcelOrder();
+        getTrackingParcelOrder();
+        getIncompleteRideOrder();
+      }
+
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('picked', data => {
+      console.log('picked data -- ', data);
+      if (data?.order_type == 'parcel') {
+        getTrackingParcelOrder();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const onTogglePress = async () => {
     setActivateSwitch(!activateSwitch);
@@ -89,7 +200,14 @@ export default function Settings({ navigation }) {
             title={'Delete Account'}
             text={'Delete your account'}
             onPress={() => {
-              setIsDelete(true);
+              if (incompletedParcelOrder?.length > 0
+                || incompletedRideOrder?.length > 0
+                || trackedParcelOrder?.length > 0) {
+                setIsProgress(true)
+              } else {
+                setIsDelete(true);
+              }
+
             }}
           />
 
@@ -131,6 +249,16 @@ export default function Settings({ navigation }) {
           }
           onDelete={handleDelete}
         />
+         <PopUpInProgess
+              CTATitle={'Cancel'}
+              visible={isProgrss}
+              type={'warning'}
+              onClose={() => setIsProgress(false)}
+              title={'You cannot delete account'}
+              text={
+                "You cannot delete your account while your order is being processed."
+               }
+            />
       </AppInputScroll>
     </View>
   );

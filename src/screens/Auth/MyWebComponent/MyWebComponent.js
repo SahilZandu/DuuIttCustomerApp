@@ -46,10 +46,10 @@ export default function MyWebComponent({ navigation, route }) {
         <WebView
           style={{ flex: 1 }}
           source={{ uri: link }}
-          onLoadStart={item => {
+          onLoadStart={() => {
             setLoading(true);
           }}
-          onLoadEnd={item => {
+          onLoadEnd={() => {
             setLoading(false);
           }}
         />
@@ -57,3 +57,5 @@ export default function MyWebComponent({ navigation, route }) {
     </View>
   );
 }
+
+

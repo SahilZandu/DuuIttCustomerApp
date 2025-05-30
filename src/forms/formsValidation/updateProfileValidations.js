@@ -2,9 +2,9 @@ import * as Yup from 'yup';
 
 export const updateProfileValidations = () => {
   return Yup.object().shape({
-    ['image']: Yup.string('Profile picture is required')
-      .trim()
-      .required('Profile picture is required'),
+    // ['image']: Yup.string('Profile picture is required')
+    //   .trim()
+    //   .required('Profile picture is required'),
     // ['name']: Yup.string('Enter your name')
     // .trim()
     // .required('Name is required')

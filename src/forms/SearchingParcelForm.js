@@ -683,7 +683,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 {parcelInfo?.status === 'find-rider' ||
                 parcelInfo?.status === 'pending' ? (
                   <View style={styles.innerSearchingView}>
-                    <View style={styles.textMainView}>
+                    {/* <View style={styles.textMainView}>
                       <Text style={styles.searchingPartnerText}>
                         {screenName == 'parcel'
                           ? 'Searching Delivery Partner'
@@ -692,8 +692,17 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                       <Text style={styles.findNearbyText}>
                         Finding drivers nearby
                       </Text>
-                    </View>
-                    <View style={{marginTop: '4%'}}>
+                    </View> */}
+                    <MeetingPickupComp
+                      firstText={screenName == 'parcel'
+                        ? 'Searching Delivery Partner'
+                        : 'Searching Ride'}
+                      secondText={'Finding drivers nearby'}
+                      onPressDot={() => {
+                        onDotPress();
+                      }}
+                    />
+                    <View style={{marginTop: hp('2%')}}>
                       <Image
                         resizeMode="contain"
                         // style={styles.bikeImage}
@@ -734,7 +743,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                   backToHome();
                 }}
                 onCancelOrder={() => {
-                  onCancelOrderRequest()
+                  onDotPress();
+                  // onCancelOrderRequest();
                 }}
               />
             )}
@@ -899,7 +909,7 @@ const styles = StyleSheet.create({
   },
   innerSearchingView: {
     paddingHorizontal: 30,
-    marginTop: '3%',
+    marginTop: '0.5%',
   },
   textMainView: {
     justifyContent: 'center',

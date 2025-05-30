@@ -7,6 +7,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from 'react-native';
 import { styles } from './styles';
 import {
@@ -29,7 +30,7 @@ import CTA from '../../../components/cta/CTA';
 import { Strings } from '../../../translates/strings';
 import { addMyAddressValidations } from '../../../forms/formsValidation/addMyAddressValidations';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
-import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import { appImages } from '../../../commons/AppImages';
 import Modal from 'react-native-modal';
@@ -84,6 +85,7 @@ export default function AddMyAddress({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
+      setCurrentLocation();
       setMpaDaltaInitials();
       handleAndroidBackButton(navigation);
       if (type == 'add') {
@@ -100,7 +102,6 @@ export default function AddMyAddress({ navigation, route }) {
   ];
 
   useEffect(() => {
-
     if (data) {
       console.log('data---', data);
       const nameData = data?.address?.split(',');
@@ -116,6 +117,7 @@ export default function AddMyAddress({ navigation, route }) {
         landmark: data?.landmark,
         id: data?._id,
       });
+      setVisible(true)
     }
     else {
       setGeoLocation({
@@ -168,6 +170,7 @@ export default function AddMyAddress({ navigation, route }) {
 
   const handleSvae = async values => {
     // console.log('values--', values,address ,title,geoLocation);
+    Keyboard.dismiss();
     await myAddress(
       type,
       values,
@@ -304,33 +307,34 @@ export default function AddMyAddress({ navigation, route }) {
           <View style={{ marginHorizontal: 20 }}>
             <InputFieldLabel
               borderWidth={1}
-              inputLabel={'Flat / House no / Floor / Building'}
+              inputLabel={'Flat / House no / Floor / Building *'}
               name={'house'}
               placeholder={'e.g. #109'}
               maxLength={100}
             />
             <InputFieldLabel
+              keyboardType={'phone-pad'}
+              borderWidth={1}
+              inputLabel={'User Phone Number *'}
+              name={'phone'}
+              placeholder={'Enter your phone number'}
+              maxLength={10}
+            />
+            <InputFieldLabel
+              borderWidth={1}
+              inputLabel={'User Name (Optional)'}
+              name={'name'}
+              placeholder={'Enter your name'}
+              maxLength={50}
+            />
+             <InputFieldLabel
               borderWidth={1}
               inputLabel={'Nearby landmark (Optional)'}
               name={'landmark'}
               placeholder={'e.g. Bidu biotique'}
               maxLength={100}
             />
-            <InputFieldLabel
-              borderWidth={1}
-              inputLabel={'User Name'}
-              name={'name'}
-              placeholder={'Enter your name'}
-              maxLength={50}
-            />
-            <InputFieldLabel
-              keyboardType={'phone-pad'}
-              borderWidth={1}
-              inputLabel={'User Phone Number'}
-              name={'phone'}
-              placeholder={'Enter your phone number'}
-              maxLength={10}
-            />
+
           </View>
 
           <Spacer space={'10%'} />
@@ -483,6 +487,7 @@ export default function AddMyAddress({ navigation, route }) {
 
 
   const handleCurrentAddress = async () => {
+    setCurrentLocation();
     const addressData = await getGeoCodes(
       currentLocation?.lat,
       currentLocation?.lng,
@@ -532,23 +537,24 @@ export default function AddMyAddress({ navigation, route }) {
           }}
           origin={geoLocation}
         /> */}
-        {(geoLocation?.lat && geoLocation?.lng) &&
-          <>
-            <MapLocationRoute
-              mapContainerView={{
-                height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
-              }}
-              origin={geoLocation}
-              onTouchLocation={handleTouchAddress}
-              height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
-            />
+        <View style={{ height: Platform.OS == 'ios' ? hp('66%') : hp('74%'), }}>
+          {(geoLocation?.lat && geoLocation?.lng) &&
+            <>
+              <MapLocationRoute
+                mapContainerView={{
+                  height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
+                }}
+                origin={geoLocation}
+                onTouchLocation={handleTouchAddress}
+                height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
+              />
+            </>}
 
-            <AutoCompleteGooglePlaceHolder
-              onPressAddress={onPressAddress}
-              address={address}
-            />
-          </>}
-
+          <AutoCompleteGooglePlaceHolder
+            onPressAddress={onPressAddress}
+            address={address}
+          />
+        </View>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {

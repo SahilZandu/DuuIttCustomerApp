@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     color: colors.color72,
     textAlign: 'center',
     marginTop: '1%',
+    textDecorationLine: 'underline',
   },
   touchView: {
     marginTop: '3%',
@@ -61,6 +62,7 @@ export const styles = StyleSheet.create({
     fontSize: RFValue(13),
     fontFamily: fonts.bold,
     color: colors.main,
+    textDecorationLine: 'underline',
   },
   andText: {
     fontSize: RFValue(12),
@@ -71,5 +73,6 @@ export const styles = StyleSheet.create({
     fontSize: RFValue(13),
     fontFamily: fonts.bold,
     color: colors.main,
+    textDecorationLine: 'underline',
   },
 });

@@ -2,11 +2,11 @@ import * as Yup from 'yup';
 
 export const addMyAddressValidations = () => {
   return Yup.object().shape({
-    ['name']: Yup.string('Enter your name')
-    .trim()
-    .required('Name is required')
-    .min(2,"Name should be 2 character")
-    .max(50,"Name should not be greater than 50 character"),
+    // ['name']: Yup.string('Enter your name')
+    // .trim()
+    // .required('Name is required')
+    // .min(2,"Name should be 2 character")
+    // .max(50,"Name should not be greater than 50 character"),
     ['phone']: Yup.string('Enter your phone number')
     .trim()
     .required('Enter your phone number')
@@ -22,7 +22,5 @@ export const addMyAddressValidations = () => {
     .required('Flat/House No is required')
     .min(2,"Flat/House No should be 2 character")
     .max(100,"Flat/House No should not be greater than 100 character"),
-  
-      
   });
 };

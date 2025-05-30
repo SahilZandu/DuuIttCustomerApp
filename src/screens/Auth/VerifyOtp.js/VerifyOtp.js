@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Text, View, KeyboardAvoidingView, Keyboard} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -23,6 +23,8 @@ import {
   removeListener,
   useOtpVerify,
 } from 'react-native-otp-verify';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 
 
 
@@ -45,6 +47,14 @@ export default function VerifyOtp({navigation, route}) {
       setMobileEmail(value);
     }
   }, [value]);
+
+
+  useFocusEffect(
+    useCallback(() => {
+     handleAndroidBackButton(navigation);
+    }
+    , [])
+  )
 
   
    // using methods only for android

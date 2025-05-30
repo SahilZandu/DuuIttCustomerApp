@@ -417,7 +417,6 @@ export default class CartStore {
       const res = await agent.deleteCart(requestData);
       console.log('deleteCart Res : ', res);
       if (res?.statusCode == 200) {
-
        if(showPopUp){ useToast(res?.message, 1)};
         return res?.data;
       } else {

@@ -17,10 +17,16 @@ import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
 import PopUp from '../../../../components/appPopUp/PopUp';
+import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 
 export default function SideMenu({ navigation }) {
   const { setToken, setAppUser, appUser } = rootStore.commonStore;
   const { getCheckDeviceId } = rootStore.dashboardStore;
+  const {
+    ordersTrackOrder,
+    orderTrackingList,
+    getPendingForCustomer,
+  } = rootStore.orderStore;
   const [initialValues, setInitialValues] = useState({
     image: '',
     name: '',
@@ -29,6 +35,10 @@ export default function SideMenu({ navigation }) {
   });
   const [internet, setInternet] = useState(true);
   const [isLogout, setIsLogout] = useState(false);
+  const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
+  const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
+  const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
+  const [isProgrss, setIsProgress] = useState(false);
 
   const foodOptions = [
     {
@@ -252,7 +262,13 @@ export default function SideMenu({ navigation }) {
       id: '7',
       title: 'Logout',
       onPress: async () => {
-        setIsLogout(true);
+        if (incompletedParcelOrder?.length > 0
+          || incompletedRideOrder?.length > 0
+          || trackedParcelOrder?.length > 0) {
+          setIsProgress(true)
+        } else {
+          setIsLogout(true);
+        }
         // let query ={
         //   user_id:appUser?._id
         //   }
@@ -295,6 +311,106 @@ export default function SideMenu({ navigation }) {
   const getCheckDevice = async () => {
     await getCheckDeviceId()
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          getIncompleteParcelOrder(),
+          getTrackingParcelOrder(),
+          getIncompleteRideOrder()
+        ]);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  const getIncompleteParcelOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+
+    if ((resIncompleteOrder[0]?.status == 'pending'
+      || resIncompleteOrder[0]?.status == 'find-rider')) {
+      // deleteIncompleteOrder(resIncompleteOrder);
+    }
+    else if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending'
+        || resIncompleteOrder[0]?.status !== 'find-rider')
+    ) {
+      setIncompletedParcelOrder(resIncompleteOrder);
+    }
+  };
+
+  const getIncompleteRideOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('ride');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+
+    if ((resIncompleteOrder[0]?.status == 'pending'
+      || resIncompleteOrder[0]?.status == 'find-rider')) {
+      // deleteIncompleteOrder(resIncompleteOrder);
+    }
+    else if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending'
+        || resIncompleteOrder[0]?.status !== 'find-rider')
+    ) {
+      setIncompletedRideOrder(resIncompleteOrder);
+    }
+  };
+
+  const getTrackingParcelOrder = async () => {
+    const resTrack = await ordersTrackOrder(handleLoadingTrack);
+    setTrackedParcelOrder(resTrack);
+  };
+
+  const handleLoadingTrack = v => {
+    console.log('Track...', v);
+  };
+
+
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
+      console.log('cancel Order data -- ', data);
+      if (data) {
+        getIncompleteParcelOrder();
+        getIncompleteRideOrder();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data --Parcel ', data);
+      if (data) {
+        getIncompleteParcelOrder();
+        getTrackingParcelOrder();
+        getIncompleteRideOrder();
+      }
+
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('picked', data => {
+      console.log('picked data -- ', data);
+      if (data?.order_type == 'parcel') {
+        getTrackingParcelOrder();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab4', event => {
@@ -399,6 +515,19 @@ export default function SideMenu({ navigation }) {
               }
               onDelete={handleLogout}
             />
+
+            <PopUpInProgess
+              CTATitle={'Cancel'}
+              visible={isProgrss}
+              type={'warning'}
+              onClose={() => setIsProgress(false)}
+              title={'You cannot logout'}
+              text={
+                 "You cannot logout your account while your order is being processed."
+              }
+            />
+
+
           </AppInputScroll>
         </>
       )}

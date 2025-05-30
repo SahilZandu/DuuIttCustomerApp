@@ -16,7 +16,7 @@ import { appImages } from '../commons/AppImages';
 import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
-import { colors } from '../theme/colors';
+import { getCurrentLocation } from './GetAppLocation';
 
 let currentLocation = {
   lat: 30.7400,
@@ -32,46 +32,62 @@ const MapCurrentLocationRoute = ({
 }) => {
   const mapRef = useRef(null);
   const debounceTimeout = useRef(null);
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat ? Number(origin?.lat) : Number(currentLocation?.lat),
-    longitude: origin?.lng ? Number(origin?.lng) : Number(currentLocation?.lng),
-    latitudeDelta: getMpaDalta().latitudeDelta,
-    longitudeDelta: getMpaDalta().longitudeDelta,
+    latitude: origin?.lat && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(getLocation('lat') ?? currentLocation?.lat),
+    longitude: origin?.lat && origin?.lng?.toString()?.length > 0 ? Number(origin?.lng) : Number(getLocation('lng') ?? currentLocation?.lng),
+    latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
+    longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
   });
+
   const [isMapReady, setIsMapReady] = useState(false);
   // console.log('origin---11', origin, mapRegion);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsMapReady(currentLocation?.lat?.toString()?.length > 0 ? true : false)
-    }, 300)
-  }, [currentLocation])
+
 
   // Update region when origin changes
   useEffect(() => {
     if (origin) {
-      currentLocation = origin;
+      // currentLocation = origin;
+      currentLocation = {
+        lat: getLocation('lat') ?? origin?.lat ?? currentLocation?.lat,
+        lng: getLocation('lng') ?? origin?.lng ?? currentLocation?.lng,
+      }
       setMapRegion(prev => ({
         ...prev,
-        latitude: origin?.lat
+        latitude: origin?.lat?.toString()?.length > 0
           ? Number(origin?.lat)
           : Number(currentLocation?.lat),
-        longitude: origin?.lng
+        longitude: origin?.lng?.toString()?.length > 0
           ? Number(origin?.lng)
           : Number(currentLocation?.lng),
-        latitudeDelta: getMpaDalta().latitudeDelta,
-        longitudeDelta: getMpaDalta().longitudeDelta,
+        latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
+        longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
       }));
       if (mapRef?.current) {
         mapRef?.current.animateToRegion({
-          latitude: Number(origin?.lat),
-          longitude: Number(origin?.lng),
-          latitudeDelta: getMpaDalta().latitudeDelta,
-          longitudeDelta: getMpaDalta().longitudeDelta,
+          latitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(currentLocation?.lat),
+          longitude: origin && origin?.lng?.toString()?.length > 0 ? Number(origin?.lng) : Number(currentLocation?.lng),
+          latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
+          longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
         }, 500); // smooth zoom
       }
     }
   }, [origin, isMapReady]);
+
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsMapReady(currentLocation?.lat?.toString()?.length > 0 ? true : false)
+  //   }, 1000)
+  // }, [currentLocation])
 
   const onTouchLocationData = useCallback(
     coordinate => {
@@ -80,8 +96,8 @@ const MapCurrentLocationRoute = ({
         ...prev,
         latitude: Number(coordinate?.latitude),
         longitude: Number(coordinate?.longitude),
-        latitudeDelta: getMpaDalta().latitudeDelta,
-        longitudeDelta: getMpaDalta().longitudeDelta,
+        latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
+        longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
       }));
       handleRegionChangeComplete(coordinate)
       onTouchLocation(coordinate);
@@ -107,7 +123,8 @@ const MapCurrentLocationRoute = ({
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}>
-      {mapRegion?.latitude?.toString()?.length > 0 &&
+      {(mapRegion?.latitude?.toString()?.length > 0 &&
+        mapRegion?.longitude?.toString()?.length > 0) &&
         <MapView
           provider={PROVIDER_GOOGLE}
           // onRegionChange={e => {
@@ -128,6 +145,8 @@ const MapCurrentLocationRoute = ({
           onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
           onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
           showsCompass
+          showsUserLocation={false}
+          followsUserLocation={false}
           onMapReady={handleMapReady}>
           {mapRegion?.latitude?.toString()?.length > 0 &&
             mapRegion?.longitude?.toString()?.length > 0 && (

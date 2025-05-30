@@ -192,8 +192,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
     // If any value is NaN, don't proceed
     if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
-    const timeout = setInterval(() => {
-      // const timeout = setTimeout(() => {
+    // const timeout = setInterval(() => {
+    const timeout = setTimeout(() => {
       const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
 
       const camera = {
@@ -210,10 +210,10 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       if (mapRef.current) {
         mapRef.current.animateCamera(camera, { duration: 1000 });
       }
-    }, 10000);
+    }, 20000);
 
-    return () => clearInterval(timeout);
-    // return () => clearTimeout(timeout);
+    // return () => clearInterval(timeout);
+    return () => clearTimeout(timeout);
 
   }, [origin, destination]);
 
@@ -297,46 +297,46 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}>
-    {mapRegion?.latitude?.toString()?.length > 0 &&
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        onRegionChange={e => {
-          setMpaDalta(e);
-          // console.log('e---onRegionChange', e);
-          // handleRegionChangeComplete(e)
-        }}
-        ref={mapRef}
-        style={[styles.mapContainer, mapContainerView]}
-        zoomEnabled={true}
-        scrollEnabled={true}
-        showsScale={true}
-        mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-        region={mapRegion}
-        // initialRegion={mapRegion}
-        zoomTapEnabled={true}
-        rotateEnabled={true}
-        loadingEnabled={true}
-        showsCompass={true}
-        cacheEnabled={false}
-        followsUserLocation={false}
-        showsUserLocation={false}
-        onMapReady={handleMapReady}
-      >
-        {/* Origin Marker */}
-        {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
-          <Marker.Animated
-            ref={markerRef}
-            coordinate={animatedCoordinate}
-            tracksViewChanges={!isMapReady}
-          >
-            <Image
-              resizeMode="cover"
-              source={appImages.markerRideImage}
-              style={styles.markerBikeImage}
-            />
-          </Marker.Animated>
-        )}
-        {/* {originMarker?.latitude && originMarker?.longitude && (
+      {mapRegion?.latitude?.toString()?.length > 0 &&
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          onRegionChange={e => {
+            setMpaDalta(e);
+            // console.log('e---onRegionChange', e);
+            // handleRegionChangeComplete(e)
+          }}
+          ref={mapRef}
+          style={[styles.mapContainer, mapContainerView]}
+          zoomEnabled={true}
+          scrollEnabled={true}
+          showsScale={true}
+          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+          region={mapRegion}
+          // initialRegion={mapRegion}
+          zoomTapEnabled={true}
+          rotateEnabled={true}
+          loadingEnabled={true}
+          showsCompass={true}
+          cacheEnabled={false}
+          followsUserLocation={false}
+          showsUserLocation={false}
+          onMapReady={handleMapReady}
+        >
+          {/* Origin Marker */}
+          {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
+            <Marker.Animated
+              ref={markerRef}
+              coordinate={animatedCoordinate}
+              tracksViewChanges={!isMapReady}
+            >
+              <Image
+                resizeMode="cover"
+                source={appImages.markerRideImage}
+                style={styles.markerBikeImage}
+              />
+            </Marker.Animated>
+          )}
+          {/* {originMarker?.latitude && originMarker?.longitude && (
           <Marker 
           // tracksViewChanges={!isMapReady}
           coordinate={originMarker} 
@@ -349,21 +349,21 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           </Marker>
         )} */}
 
-        {/* Destination Marker */}
-        {animatedDesCoordinate?.latitude && animatedDesCoordinate?.longitude && (
-          <Marker.Animated
-            ref={markerDesRef}
-            coordinate={animatedDesCoordinate}
-            tracksViewChanges={!isMapReady}
-          >
-            <Image
-              resizeMode="contain"
-              source={appImages.markerImage}
-              style={styles.markerImage}
-            />
-          </Marker.Animated>
-        )}
-        {/* {destinationLocation?.lat && destinationLocation?.lng && ( 
+          {/* Destination Marker */}
+          {animatedDesCoordinate?.latitude && animatedDesCoordinate?.longitude && (
+            <Marker.Animated
+              ref={markerDesRef}
+              coordinate={animatedDesCoordinate}
+              tracksViewChanges={!isMapReady}
+            >
+              <Image
+                resizeMode="contain"
+                source={appImages.markerImage}
+                style={styles.markerImage}
+              />
+            </Marker.Animated>
+          )}
+          {/* {destinationLocation?.lat && destinationLocation?.lng && ( 
           <Marker
             coordinate={destinationMarker}
             tracksViewChanges={!isMapReady}
@@ -376,16 +376,16 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           </Marker>
         )} */}
 
-        {/* Polyline for the Route */}
-        {coords?.length > 0 && (
-          <Polyline
-            coordinates={coords}
-            strokeWidth={4}
-            strokeColor={colors.main}
-          />
-        )}
-      </MapView>
-}
+          {/* Polyline for the Route */}
+          {coords?.length > 0 && (
+            <Polyline
+              coordinates={coords}
+              strokeWidth={4}
+              strokeColor={colors.main}
+            />
+          )}
+        </MapView>
+      }
     </View>
   );
 };

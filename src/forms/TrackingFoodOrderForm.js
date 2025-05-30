@@ -329,6 +329,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
                     </Text>
                   </View>
                   <Image
+                  resizeMode={'contain'}
                     style={styles.tarckImage}
                     source={appImages.mapTrackImage}
                   />

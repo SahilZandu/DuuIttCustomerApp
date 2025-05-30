@@ -24,7 +24,7 @@ import { screenHeight } from '../../../halpers/matrics';
 import { rootStore } from '../../../stores/rootStore';
 import { appImages } from '../../../commons/AppImages';
 import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
-import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -61,6 +61,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
+       setCurrentLocation();
       handleAndroidBackButton(navigation)
       setMpaDaltaInitials();
     }, [])
@@ -234,8 +235,9 @@ const ChooseMapLocation = ({ navigation, route }) => {
   // };
 
   const handleCurrentAddress = async () => {
+    setCurrentLocation();
     const addressData = await getGeoCodes(
-      currentLocation?.lat,
+      currentLocation?.lat, 
       currentLocation?.lng,
     );
     console.log('addressData', addressData);

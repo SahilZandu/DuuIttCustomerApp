@@ -30,7 +30,7 @@ import TextRender from './TextRender';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 
 const CardOrderDetails = ({ item }) => {
-  console.log('item -- ', item);
+  // console.log('item -- ', item);
 
   const setStatusData = status => {
     switch (status) {
@@ -337,7 +337,7 @@ const CardOrderDetails = ({ item }) => {
           </View>
         </TouchableOpacity>
       </AppInputScroll>
-      <View
+      {/* <View
         style={{
           justifyContent: 'center',
           bottom: hp(7),
@@ -354,7 +354,7 @@ const CardOrderDetails = ({ item }) => {
           bottomCheck={1}
           textTransform={'capitalize'}
         />
-      </View>
+      </View> */}
     </View>
   );
 };

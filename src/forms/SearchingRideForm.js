@@ -633,6 +633,7 @@ import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import { silderArray } from '../stores/DummyData/Home';
 import BackgroundTimer from 'react-native-background-timer';
+import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 
 
 
@@ -665,8 +666,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   const [rideProgessImage, setRideProgessImage] = useState(hp('1%'));
   const [readMsg, setReadMsg] = useState(false)
   const [kms, setKms] = useState({
-    distance_km:0,
-    eta:'0m 0s'
+    distance_km: 0,
+    eta: '0m 0s'
   });
 
   const getLocation = type => {
@@ -700,6 +701,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   useFocusEffect(
     useCallback(() => {
+      handleAndroidBackButton();
       checkUnseenMsg();
       setChatNotificationStatus(true);
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
@@ -888,7 +890,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       });
 
       socketServices.on('getEtaToCustomer', (data) => {
-        console.log('Distance (km):',data, data.distance_km);
+        console.log('Distance (km):', data, data.distance_km);
         console.log('ETA:', data.eta);
         setKms(data)
       });
@@ -957,7 +959,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   useEffect(() => {
     let intervalId;
-  
+
     if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
       intervalId = setInterval(async () => {
         console.log('⏱️ Refreshing find rider...');
@@ -971,16 +973,16 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         );
       }, 60000); // every 60 seconds
     }
-  
+
     return () => {
       clearInterval(intervalId); // Clear when screen unmounts or deps change
     };
   }, [parcelInfo?.status, searchingFind]);
 
-  
+
   useEffect(() => {
     let intervalId;
-  
+
     if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
       intervalId = BackgroundTimer.setInterval(async () => {
         console.log('⏱️ (BG) Refreshing find rider...');
@@ -994,7 +996,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         );
       }, 60000); // every 60 seconds
     }
-  
+
     return () => {
       BackgroundTimer.clearInterval(intervalId);
     };
@@ -1073,8 +1075,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       order_id: info?._id,
       refresh: 'refresh',
     };
-    console.log("query--==-",query);
-    
+    console.log("query--==-", query);
+
     socketServices.emit('find-nearby-riders', query);
 
     const value = {
@@ -1291,7 +1293,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                 {parcelInfo?.status === 'find-rider' ||
                   parcelInfo?.status === 'pending' ? (
                   <View style={styles.innerSearchingView}>
-                    <View style={styles.textMainView}>
+                    {/* <View style={styles.textMainView}>
                       <Text style={styles.searchingPartnerText}>
                         {screenName == 'parcel'
                           ? 'Searching Delivery Partner'
@@ -1300,8 +1302,17 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                       <Text style={styles.findNearbyText}>
                         Finding drivers nearby
                       </Text>
-                    </View>
-                    <View style={{ marginTop: '4%' }}>
+                    </View> */}
+                    <MeetingPickupComp
+                      firstText={screenName == 'parcel'
+                        ? 'Searching Delivery Partner'
+                        : 'Searching Ride'}
+                      secondText={'Finding drivers nearby'}
+                      onPressDot={() => {
+                        onDotPress();
+                      }}
+                    />
+                    <View style={{ marginTop: hp('2%') }}>
                       <Image
                         resizeMode="contain"
                         style={[
@@ -1341,7 +1352,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                   // openMap(riderDest,destination,'Destination');
                 }}
                 onCancelOrder={() => {
-                  onCancelOrderRequest()
+                  onDotPress();
+                  // onCancelOrderRequest();
                 }}
               />
             )}
@@ -1507,7 +1519,7 @@ const styles = StyleSheet.create({
   },
   innerSearchingView: {
     paddingHorizontal: 30,
-    marginTop: '3%',
+    marginTop: ' 0.5%',
   },
   textMainView: {
     justifyContent: 'center',

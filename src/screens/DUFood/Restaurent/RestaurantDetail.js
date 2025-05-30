@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,20 +9,20 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {colors} from '../../../theme/colors';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { colors } from '../../../theme/colors';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
 import Header from '../../../components/header/Header';
 import OrgReviewCard from '../Components/Cards/OrgReviewCard';
 import Ratings from '../../../halpers/Ratings';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
@@ -52,12 +52,12 @@ let asestsArray = [
 ];
 
 let perPage = 10;
-export default function RestaurantDetail({navigation, route}) {
+export default function RestaurantDetail({ navigation, route }) {
   const day = new Date();
   let today = day.getDay();
-  const {restaurantData} = route?.params;
+  const { restaurantData } = route?.params;
   // console.log('restaurant----', restaurantData);
-  const {getRestaurantReview} = rootStore.dashboardStore;
+  const { getRestaurantReview } = rootStore.dashboardStore;
   const [fullImage, setFullImage] = useState(false);
   const [imageUriIndex, setImageUriIndex] = useState(0);
   const [orgReviews, setOrgReviews] = useState([]);
@@ -96,10 +96,10 @@ export default function RestaurantDetail({navigation, route}) {
   //   }
   // }, [restaurant]);
   useFocusEffect(
-    useCallback(()=>{
-     handleAndroidBackButton(navigation)
-     perPage = 10;
-    },[])
+    useCallback(() => {
+      handleAndroidBackButton(navigation)
+      perPage = 10;
+    }, [])
   )
 
   useEffect(() => {
@@ -184,7 +184,7 @@ export default function RestaurantDetail({navigation, route}) {
         <Text
           style={[
             styles.restaurantProductText,
-            {marginLeft: i == 0 ? 0 : '1%'},
+            { marginLeft: i == 0 ? 0 : '1%' },
           ]}>
           {item?.title}{' '}
           {(i + 1) % restaurant?.product?.slice(0, 3)?.length == 0 ? '' : '|'}
@@ -209,7 +209,7 @@ export default function RestaurantDetail({navigation, route}) {
     }
   };
 
-  const ProgressView = ({item, index}) => {
+  const ProgressView = ({ item, index }) => {
     return (
       <View style={styles.progressView}>
         <Text style={styles.progessName}>{item?.name}</Text>
@@ -267,7 +267,7 @@ export default function RestaurantDetail({navigation, route}) {
   };
   const renderFooter = () => {
     return loadingMore ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={colors.main} />
       </View>
     ) : null;
@@ -296,7 +296,7 @@ export default function RestaurantDetail({navigation, route}) {
           {<DisRating />}
 
           <View style={styles.assestMainView}>
-      
+
             {asestsArray?.length > 0 ? (
               <>
                 <Text style={styles.assestPhoto}>Photos</Text>
@@ -337,13 +337,22 @@ export default function RestaurantDetail({navigation, route}) {
     );
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
-      <View style={{marginHorizontal: 20, justifyContent: 'center'}}>
+      <View style={{ marginHorizontal: 20, justifyContent: 'center' }}>
         <OrgReviewCard item={item} index={index} isDishRating={false} />
       </View>
     );
   };
+
+  const renderEmptyList = () => {
+    return (
+      <View style={styles.NoDataViewReviews}>
+        <Text style={styles.NoDataTextReviews}>No Record Found</Text>
+      </View>
+    )
+
+  }
 
   return (
     <View style={styles.conatiner}>
@@ -356,12 +365,11 @@ export default function RestaurantDetail({navigation, route}) {
           navigation.goBack();
         }}
       />
-       {loading ? <AnimatedLoader type={'restaurantReviewsLoader'} />
-         :
-      <View style={styles.listMainView}>
-        {orgReviews?.length > 0 ? (
+      {loading ? <AnimatedLoader type={'restaurantReviewsLoader'} />
+        :
+        <View style={styles.listMainView}>
           <FlatList
-            contentContainerStyle={{paddingBottom: '20%'}}
+            contentContainerStyle={{ paddingBottom: '20%' }}
             showsVerticalScrollIndicator={false}
             data={orgReviews}
             renderItem={renderItem}
@@ -370,13 +378,9 @@ export default function RestaurantDetail({navigation, route}) {
             onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
             ListFooterComponent={renderFooter}
             ListHeaderComponent={renderHaider}
+            ListEmptyComponent={renderEmptyList}
           />
-        ) : (
-          <View style={styles.NoDataViewReviews}>
-            <Text style={styles.NoDataTextReviews}>No Record Found</Text>
-          </View>
-        )}
-      </View>}
+        </View>}
     </View>
   );
 }
@@ -409,7 +413,7 @@ const styles = StyleSheet.create({
     color: colors.color5A,
     marginStart: wp('3%'),
     position: 'absolute',
-    transform: [{translateY: -10}],
+    transform: [{ translateY: -10 }],
   },
   innerView: {
     marginHorizontal: 20,
@@ -544,7 +548,7 @@ const styles = StyleSheet.create({
     marginTop: hp('5%'),
   },
   NoDataTextReviews: {
-    fontSize: RFValue(15),
+    fontSize: RFValue(13),
     fontFamily: fonts.medium,
     color: colors.black,
   },

@@ -67,9 +67,9 @@ const PriceDetailsForm = ({navigation}) => {
   const [weight, setWeight] = useState(20);
   const [quantity, setQuantity] = useState(1);
   const [sliderItems, setSliderItems] = useState(silderArray);
-  const [isAddressModal, setIsAddressModal] = useState(false);
-  const [isStatus, setIsStatus] = useState('');
-  const [isSecure, setIsSecure] = useState(false);
+  const [isAddressModal, setIsAddressModal] = useState(true);
+  const [isStatus, setIsStatus] = useState('drop');
+  const [isSecure, setIsSecure] = useState(true);
   const [initialValues, setInitialValues] = useState({
     phone: receiverAddress?.phone?.toString(),
   });
@@ -216,7 +216,7 @@ const PriceDetailsForm = ({navigation}) => {
           <Text style={styles.secureText}>Secure parcel delivery</Text>
         </TouchableOpacity>
         <Spacer space={'-5%'} />
-        {isSecure && (
+        {(isSecure && loading == false) && (
           <InputFieldLabel
             borderWidth={1}
             inputLabel={"Receiver's mobile number"}
@@ -224,11 +224,18 @@ const PriceDetailsForm = ({navigation}) => {
             name={'phone'}
             placeholder={'Enter mobile number'}
             maxLength={10}
+            showErrorMsg={true}
           />
         )}
       </View>
     );
   };
+
+  const onPressSecure =(data)=>{
+
+      alert(data)
+    setIsSecure(data)
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -269,6 +276,7 @@ const PriceDetailsForm = ({navigation}) => {
                     setIsAddressModal(true);
                   }}
                 />
+                <SecureTextData/>
 
                 <View style={{marginTop: hp('1%')}}>
                   <Text style={styles.parcelInstView}>Parcel Instructions</Text>
@@ -289,8 +297,6 @@ const PriceDetailsForm = ({navigation}) => {
               <View style={{marginHorizontal: 10}}>
                 <HomeSlider data={sliderItems} />
               </View>
-
-              <SecureTextData />
             </AppInputScroll>
           </KeyboardAvoidingView>
 
@@ -300,7 +306,7 @@ const PriceDetailsForm = ({navigation}) => {
           </View>
         </>
       </Formik>
-      {(appUserData?.profile_pic == null ||
+      {/* {(appUserData?.profile_pic == null ||
         appUserData?.profile_pic?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}
@@ -309,7 +315,7 @@ const PriceDetailsForm = ({navigation}) => {
             navigation.navigate('profile', {screenName: 'parcelRoute'})
           }
         />
-      )}
+      )} */}
       <ModalPopUp
         isVisible={isAddressModal}
         onClose={() => {
@@ -324,6 +330,8 @@ const PriceDetailsForm = ({navigation}) => {
             onClose={() => {
               setIsAddressModal(false);
             }}
+            onPressSecure ={onPressSecure}
+            isSecure={isSecure}
           />
         </View>
       </ModalPopUp>
@@ -442,8 +450,8 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   secureMainView: {
-    marginTop: '4%',
-    marginHorizontal: 20,
+    marginTop: '-2%',
+    // marginHorizontal: 20,
   },
   secureTouch: {
     flexDirection: 'row',

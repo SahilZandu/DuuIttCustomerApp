@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
   },
   currentLocTouch: {
     position: 'absolute',
-    bottom:Platform.OS === 'ios'?hp('19%'):hp('22%'),
+    bottom:Platform.OS === 'ios'? hp('20.5%'):hp('22%'),
     right: '3%',
     backgroundColor: colors.white,
     borderRadius: 10,

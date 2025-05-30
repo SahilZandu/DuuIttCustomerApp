@@ -228,6 +228,8 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
           )}
 
           <View style={styles.bottomBtn}>
+            {item?.order_type == 'food' ?
+            <>
             <BTN
               backgroundColor={colors.white}
               labelColor={colors.main}
@@ -251,6 +253,18 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
               bottomCheck={15}
               textTransform={'capitalize'}
             />
+             </>:
+            <BTN
+            backgroundColor={colors.white}
+            labelColor={colors.main}
+            width={screenWidth(80)}
+            title={setDetailsBtn(item?.order_type)}
+            onPress={() => {
+              handleDetails(item);
+            }}
+            bottomCheck={15}
+            textTransform={'capitalize'}
+          />}
           </View>
         </View>
       </TouchableOpacity>

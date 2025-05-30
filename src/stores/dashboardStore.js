@@ -18,11 +18,14 @@ export default class DashboardStore {
     request.append('phone', Number(values?.mobile));
     request.append('gender', values?.gender);
     request.append('date_of_birth', values?.date_of_birth);
+    
+    if(values?.image?.length > 0){
     request.append('profile_pic', {
       uri: values?.image,
       name: 'profile.png',
       type: 'image/png',
     });
+  }
 
     console.log('request Data updateProfile:-', request, values);
 

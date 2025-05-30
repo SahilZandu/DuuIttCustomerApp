@@ -27,6 +27,7 @@ function InputFieldLabel({
   marginBottom,
   marginTop,
   marginLeft,
+  showErrorMsg,
   ...otherProps
 }) {
   const {
@@ -118,7 +119,7 @@ function InputFieldLabel({
       <View style={{marginHorizontal: 10}}>
         <FieldErrorMessage
           error={errors[name]}
-          visible={rightIcon ? true : touched[name]}
+          visible={rightIcon || showErrorMsg ? true : touched[name]}
         />
       </View>
     </>

@@ -161,7 +161,6 @@ export default function ParcelHome({ navigation }) {
     };
   }, []);
 
-  console.log('ratingData----', ratingData);
   const getTrackingOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
     setTrackedArray(resTrack);
@@ -171,10 +170,14 @@ export default function ParcelHome({ navigation }) {
     const resIncompleteOrder = await getPendingForCustomer('parcel');
     console.log('resIncompleteOrder parcel--', resIncompleteOrder);
 
-    if (resIncompleteOrder[0]?.status == 'pending') {
+    if ((resIncompleteOrder[0]?.status == 'pending' 
+      || resIncompleteOrder[0]?.status == 'find-rider')) {
       deleteIncompleteOrder(resIncompleteOrder);
     }
-    else if (resIncompleteOrder?.length > 0 && resIncompleteOrder[0]?.status !== 'pending') {
+    else if (resIncompleteOrder?.length > 0 && 
+     (resIncompleteOrder[0]?.status !== 'pending' 
+      || resIncompleteOrder[0]?.status !== 'find-rider')
+    ) {
       setAddParcelInfo(resIncompleteOrder[0]);
       setIncompletedArray(resIncompleteOrder);
     }

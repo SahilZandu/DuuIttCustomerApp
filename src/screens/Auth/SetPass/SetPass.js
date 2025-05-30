@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Text,
   View,
@@ -11,11 +11,18 @@ import {styles} from './styles';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 import Header from '../../../components/header/Header';
 import SetPassForm from '../../../forms/SetPassForm';
+import { useFocusEffect } from '@react-navigation/native';
+import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 
 
 
 export default function SetPass({navigation,route}) {
-  
+
+  useFocusEffect(
+    useCallback(()=>{
+      handleAndroidBackButton(navigation)
+    })
+  )
   return (
     <View style={styles.container}>
          <Header

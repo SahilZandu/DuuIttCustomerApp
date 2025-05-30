@@ -48,10 +48,10 @@ const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
             <Image
               resizeMode='cover'
               style={styles.image}
-              source={
-                item?.restaurant?.banner?.length > 0
-                  ? {uri: Url?.Image_Url +  item?.restaurant?.banner}
-                  : setTrackImage(item?.order_type)
+              source={setTrackImage(item?.order_type)
+                // item?.restaurant?.banner?.length > 0
+                //   ? {uri: Url?.Image_Url +  item?.restaurant?.banner}
+                //   : setTrackImage(item?.order_type)
               }
             />
             <View style={styles.trackIdView}>

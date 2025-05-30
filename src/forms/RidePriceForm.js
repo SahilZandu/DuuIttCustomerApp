@@ -171,7 +171,7 @@ const RidePriceForm = ({ navigation }) => {
         </View>
       </>
 
-      {(appUserData?.profile_pic == null ||
+      {/* {(appUserData?.profile_pic == null ||
         appUserData?.profile_pic?.length === 0) && (
           <IncompletedAppRule
             title={'App Confirmation'}
@@ -180,7 +180,7 @@ const RidePriceForm = ({ navigation }) => {
               navigation.navigate('profile', { screenName: 'rideRoute' })
             }
           />
-        )}
+        )} */}
 
       <ModalPopUp
         isVisible={isAddressModal}

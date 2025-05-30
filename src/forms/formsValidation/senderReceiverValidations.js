@@ -7,15 +7,15 @@ export const senderReceiverValidations = () => {
       .required('Address is required')
       .min(2, "Address should be 2 character")
       .max(100, "Address should not be greater than 50 character"),
-    ['name']: Yup.string('Enter your name')
-      .trim()
-      .required('Name is required')
-      .min(2, "Name should be 2 character")
-      .max(50, "Name should not be greater than 50 character")
-      .matches(
-        /^[A-Za-z\s]{2,50}$/,
-        'Name not valid',
-      ),
+    // ['name']: Yup.string('Enter your name')
+    //   .trim()
+    //   .required('Name is required')
+    //   .min(2, "Name should be 2 character")
+    //   .max(50, "Name should not be greater than 50 character")
+    //   .matches(
+    //     /^[A-Za-z\s]{2,50}$/,
+    //     'Name not valid',
+    //   ),
     ['phone']: Yup.string('Enter your phone number')
       .trim()
       .required('Enter your phone number')

@@ -54,6 +54,7 @@ const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
           </View>
         </Surface>
       </TouchableOpacity>
+      {trackedArray?.length > 1 &&
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('trackingFoodOrderList');
@@ -63,7 +64,7 @@ const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
         <Surface elevation={2} style={styles.moreSurface}>
           <Text style={styles.moreText}> +{trackedArray?.length} more</Text>
         </Surface>
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   );
 };
