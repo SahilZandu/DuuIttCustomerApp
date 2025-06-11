@@ -1,7 +1,7 @@
-import {action, computed, observable, runInAction} from 'mobx';
-import {agent} from '../api/agent';
-import {rootStore} from './rootStore';
-import {useToast} from '../halpers/useToast';
+import { action, computed, observable, runInAction } from 'mobx';
+import { agent } from '../api/agent';
+import { rootStore } from './rootStore';
+import { useToast } from '../halpers/useToast';
 
 export default class FoodDashStore {
   restaurentList = [];
@@ -268,14 +268,21 @@ export default class FoodDashStore {
     }
   };
 
-  getRecomendedItems = async handleLoading => {
+  getRecomendedItems = async (geoLocation, handleLoading) => {
+    let requestData = {
+      near_by: {
+        lng: geoLocation.lng,
+        lat: geoLocation.lat,
+      }
+    }
+
     try {
-      const res = await agent.getRecomendedItems();
+      const res = await agent.getRecomendedItems(requestData);
       console.log('restaurant getRecomendedItems Res : ', res);
       if (res?.statusCode == 200) {
-        this.recommendedOrderList = res?.data ?? [];
+        this.recommendedOrderList = res?.data?.data ?? [];
         handleLoading(false);
-        return res?.data;
+        return res?.data?.data;
       } else {
         this.recommendedOrderList = [];
         handleLoading(false);

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Text,
   View,
@@ -7,24 +7,25 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Keyboard,
 } from 'react-native';
 import CTA from '../components/cta/CTA';
-import {Formik, useFormikContext} from 'formik';
+import { Formik, useFormikContext } from 'formik';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {SvgXml} from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { SvgXml } from 'react-native-svg';
 import AppInputScroll from '../halpers/AppInputScroll';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import RBSheet from '@lunalee/react-native-raw-bottom-sheet';
 import PickUpdateActions from '../halpers/PickUpdateActions';
-import {updateProfileValidations} from './formsValidation/updateProfileValidations';
-import {colors} from '../theme/colors';
-import {rootStore} from '../stores/rootStore';
+import { updateProfileValidations } from './formsValidation/updateProfileValidations';
+import { colors } from '../theme/colors';
+import { rootStore } from '../stores/rootStore';
 import Url from '../api/Url';
 import InputFieldLabel from '../components/InputFieldLabel';
 import FieldInputText from '../components/FieldInputText';
@@ -46,8 +47,8 @@ let genderArray = [
   },
 ];
 
-const FormButton = ({loading, onPress}) => {
-  const {dirty, isValid, values} = useFormikContext();
+const FormButton = ({ loading, onPress }) => {
+  const { dirty, isValid, values } = useFormikContext();
 
   return (
     <CTA
@@ -61,9 +62,9 @@ const FormButton = ({loading, onPress}) => {
   );
 };
 
-const ProfileForm = ({navigation, screenName}) => {
-  const {updateProfile} = rootStore.dashboardStore;
-  const {appUser} = rootStore.commonStore;
+const ProfileForm = ({ navigation, screenName }) => {
+  const { updateProfile } = rootStore.dashboardStore;
+  const { appUser } = rootStore.commonStore;
   const refRBSheet = useRef(null);
   const dateFormat = d => {
     var date = new Date(d);
@@ -112,7 +113,7 @@ const ProfileForm = ({navigation, screenName}) => {
   };
 
   const onSuccess = () => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     setUpdate(false);
     setInitialValues({
       image: Url?.Image_Url + appUser?.profile_pic,
@@ -138,12 +139,12 @@ const ProfileForm = ({navigation, screenName}) => {
     return new Date(year, month - 1, day);
   };
 
-  const DatePickeButton = ({}) => {
-    const {setFieldValue, values} = useFormikContext();
+  const DatePickeButton = ({ }) => {
+    const { setFieldValue, values } = useFormikContext();
 
     // Get date from formik field or fallback to current date
 
-     
+
     const selectedDate = values?.dob
       ? parseDateFromString(values?.dob)
       : dateStart;
@@ -173,7 +174,7 @@ const ProfileForm = ({navigation, screenName}) => {
       <View style={styles.imageMainView}>
         <Image
           style={styles.image}
-          source={image?.length > 0 ? {uri: image} : appImages.avtarImage}
+          source={image?.length > 0 ? { uri: image } : appImages.avtarImage}
         />
         <View style={styles.editIconMain}>
           <TouchableOpacity
@@ -199,29 +200,33 @@ const ProfileForm = ({navigation, screenName}) => {
       <Formik
         initialValues={initialValues}
         validationSchema={updateProfileValidations()}>
-        <View  pointerEvents={loading ?"none" :'auto'} style={{flex: 1}}>
+        <View pointerEvents={loading ? "none" : 'auto'} style={{ flex: 1 }}>
           <KeyboardAvoidingView
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <AppInputScroll
               Pb={'25%'}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{flex: 1, marginHorizontal: 20}}>
+              <View style={{ flex: 1, marginHorizontal: 20 }}>
                 {/* {<ProfileCoverImage />} */}
                 <View style={styles.imageMainView}>
                   <View style={styles.imageView}>
                     <Image
                       style={styles.image}
                       source={
-                        image?.length > 0 ? {uri: image} : appImages.avtarImage
+                        image?.length > 0 ? { uri: image } : appImages.avtarImage
                       }
                     />
                   </View>
                   <View style={styles.editIconMain}>
                     <TouchableOpacity
                       onPress={() => {
-                        refRBSheet.current.open();
+                        Keyboard.dismiss();
+                        setTimeout(() => {
+                          refRBSheet.current.open();
+                        }, 100)
+
                       }}
                       activeOpacity={0.8}
                       style={styles.editImageTouch}>
@@ -251,7 +256,7 @@ const ProfileForm = ({navigation, screenName}) => {
                   keyboardType="number-pad"
                   name={'mobile'}
                   placeholder={'Enter phone number'}
-                  maxLength={10}
+                  maxLength={14}
                 />
 
                 <FieldInputText
@@ -279,7 +284,7 @@ const ProfileForm = ({navigation, screenName}) => {
             </AppInputScroll>
           </KeyboardAvoidingView>
           <View
-            style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
+            style={{ backgroundColor: colors.appBackground, height: hp('9%') }}>
             <FormButton loading={loading} onPress={handleLogin} />
           </View>
           <DatePickeButton />

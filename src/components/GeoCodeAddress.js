@@ -7,6 +7,11 @@ let dalta = {
   longitudeDelta: 0.0321,
 };
 
+let manageRideDalta = {
+  latitudeDelta: 0.0650,
+  longitudeDelta: 0.0650,
+}
+
 export const getGeoCodes = (latitude, longitude) => {
   console.log('latitude, longitude', latitude, longitude);
   const { setCurrentAddress } = rootStore.myAddressStore;
@@ -50,14 +55,33 @@ export function getMpaDalta() {
 export function setMpaDalta(data) {
   let a = dalta;
   // if (data.latitudeDelta <= 0.0602 && data.longitudeDelta <= 0.0501) {
-    (dalta.latitudeDelta = data.latitudeDelta),
-      (dalta.longitudeDelta = data.longitudeDelta);
-    dalta = a;
+  (dalta.latitudeDelta = data.latitudeDelta),
+    (dalta.longitudeDelta = data.longitudeDelta);
+  dalta = a;
   // }
-
 }
 
 export function setMpaDaltaInitials() {
   let a = { latitudeDelta: 0.0322, longitudeDelta: 0.0321 };
   dalta = a;
+}
+
+
+
+export function getMapManageRideDalta() {
+  return manageRideDalta;
+}
+
+export function setMapManageRideDalta(data) {
+  let a = manageRideDalta;
+  // if (data.latitudeDelta <= 0.0602 && data.longitudeDelta <= 0.0501) {
+  (manageRideDalta.latitudeDelta = data.latitudeDelta),
+    (manageRideDalta.longitudeDelta = data.longitudeDelta);
+    manageRideDalta = a;
+  // }
+}
+
+export function setMapManageRideDaltaInitials() {
+  let a = { latitudeDelta: 0.0650, longitudeDelta: 0.0650 };
+  manageRideDalta = a;
 }

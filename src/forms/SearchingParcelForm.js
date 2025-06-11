@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Text,
   View,
@@ -14,16 +14,16 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
-import {colors} from '../theme/colors';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../theme/fonts/fonts';
+import { colors } from '../theme/colors';
 import * as Progress from 'react-native-progress';
 import DriverArrivingComp from '../components/DriverArrivingComp';
 import TextRender from '../components/TextRender';
 import OtpShowComp from '../components/OtpShowComp';
 import MapRouteMarker from '../components/MapRouteMarker';
-import {rootStore} from '../stores/rootStore';
+import { rootStore } from '../stores/rootStore';
 import MapRoute from '../components/MapRoute';
 import MeetingPickupComp from '../components/MeetPickupComp';
 import HomeSlider from '../components/slider/homeSlider';
@@ -35,13 +35,13 @@ import {
   getCurrentLocation,
   setCurrentLocation,
 } from '../components/GetAppLocation';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 import {
   GestureHandlerRootView,
   PanGestureHandler,
 } from 'react-native-gesture-handler';
-import {screenHeight, screenWidth} from '../halpers/matrics';
+import { screenHeight, screenWidth } from '../halpers/matrics';
 import {
   cancelParcel,
   cancelParcelRide,
@@ -49,20 +49,21 @@ import {
 } from '../stores/DummyData/CancelData';
 import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
-import {silderArray} from '../stores/DummyData/Home';
+import { silderArray } from '../stores/DummyData/Home';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 import BackgroundTimer from 'react-native-background-timer';
+import BackBtn from '../components/cta/BackBtn';
 
 
 
-const SearchingParcelForm = ({navigation, route, screenName}) => {
-  const {addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider} =
+const SearchingParcelForm = ({ navigation, route, screenName }) => {
+  const { addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider } =
     rootStore.parcelStore;
   const intervalRef = useRef(null);
-  const {appUser} = rootStore.commonStore;
-  const {updateOrderStatus} = rootStore.orderStore;
-  const {unseenMessages,setChatNotificationStatus} = rootStore.chatStore;
-  const {paymentMethod, totalAmount} = route.params;
+  const { appUser } = rootStore.commonStore;
+  const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
+  const { unseenMessages, setChatNotificationStatus } = rootStore.chatStore;
+  const { paymentMethod, totalAmount } = route.params;
   const [searching, setSearching] = useState(true);
   const [searchArrive, setSearchArrive] = useState('search');
   const [searchingFind, setSearchingFind] = useState('searching');
@@ -82,11 +83,11 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   const [minMaxHp, setMinMaxHp] = useState(screenHeight(69));
   const [rideProgess, setRideProgess] = useState(0.2);
   const [rideProgessImage, setRideProgessImage] = useState(hp('1%'));
-    const [readMsg, setReadMsg] = useState(false)
-     const [kms, setKms] = useState({
-        distance_km:0,
-        eta:'0m 0s'
-      });
+  const [readMsg, setReadMsg] = useState(false)
+  const [kms, setKms] = useState({
+    distance_km: 0,
+    eta: '0m 0s'
+  });
 
   const getLocation = type => {
     let d =
@@ -132,7 +133,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
       console.log('cancel Order data -- ', data);
       if (data?.order_type == 'parcel') {
-        navigation.navigate(screenName, {screen: 'home'});
+        navigation.navigate(screenName, { screen: 'home' });
         setSearchArrive('search');
       }
     });
@@ -166,7 +167,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
       console.log('dropped data -- ', data);
       if (data?.order_type == 'parcel') {
         if (screenName == 'ride') {
-          navigation.navigate(screenName, {screen: 'home'});
+          navigation.navigate(screenName, { screen: 'home' });
           setSearchArrive('search');
         }
       }
@@ -180,8 +181,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('chatData', data => {
       console.log('chatData Order data -- ', data);
-      if(data?.order_type == 'parcel'){
-      checkUnseenMsg();
+      if (data?.order_type == 'parcel') {
+        checkUnseenMsg();
       }
     });
     return () => {
@@ -192,7 +193,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('chatPage', data => {
       console.log('chatPagedata -- ', data);
-      if(data?.order_type == 'parcel'){
+      if (data?.order_type == 'parcel') {
         onChat();
       }
     });
@@ -246,7 +247,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
         }
       });
       socketServices.on('getEtaToCustomer', (data) => {
-        console.log('Distance (km):',data, data.distance_km);
+        console.log('Distance (km):', data, data.distance_km);
         console.log('ETA:', data.eta);
         setKms(data)
       });
@@ -274,9 +275,10 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
 
   useFocusEffect(
     useCallback(() => {
-        checkUnseenMsg();
-        setChatNotificationStatus(true);
-        handleAndroidBackButton();
+      checkUnseenMsg();
+      setChatNotificationStatus(true);
+      // handleAndroidBackButton();
+      handleAndroidBackButton('', '', 'parcel', navigation);
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
         const intervalId = setInterval(() => {
           setCurrentLocation();
@@ -293,6 +295,32 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   );
 
   useEffect(() => {
+    setTimeout(() => {
+      getIncompleteOrder();
+    }, 500)
+  }, [parcelInfo])
+
+  const getIncompleteOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder ride--', resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if (resIncompleteOrder[0]?.status !== "pending") {
+        if (resIncompleteOrder[0]?.status === "picked") {
+          setParcelInfo(resIncompleteOrder[0]);
+          setAddParcelInfo(resIncompleteOrder[0]);
+          navigation.navigate('pickSuccessfully');
+          setSearchArrive('search');
+        } else {
+          setParcelInfo(resIncompleteOrder[0]);
+        }
+      }
+    }
+    else {
+      navigation.navigate('parcel', { screen: 'home' });
+    }
+  };
+
+  useEffect(() => {
     if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
       const findNearbyRiders = setInterval(() => {
         // console.log('info--', parcelInfo);
@@ -303,7 +331,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
           order_id: parcelInfo?._id,
           refresh: '',
         };
-        socketServices.emit('find-nearby-riders', query);
+        // socketServices.emit('find-nearby-riders', query);
       }, 20000);
       return () => {
         clearInterval(findNearbyRiders);
@@ -330,54 +358,54 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   //   }
   // }, [parcelInfo, searchingFind]);
 
-  
-   useEffect(() => {
-      let intervalId;
-    
-      if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
-        intervalId = setInterval(async () => {
-          console.log('⏱️ Refreshing find rider...');
-          setSearchingFind('refresh');
-          await updateOrderStatus(
-            parcelInfo?._id,
-            'pending',
-            handleDeleteLoading,
-            onDeleteSuccess,
-            false
-          );
-        }, 60000); // every 60 seconds
-      }
-    
-      return () => {
-        clearInterval(intervalId); // Clear when screen unmounts or deps change
-      };
-    }, [parcelInfo?.status, searchingFind]);
-  
-    
-    useEffect(() => {
-      let intervalId;
-    
-      if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
-        intervalId = BackgroundTimer.setInterval(async () => {
-          console.log('⏱️ (BG) Refreshing find rider...');
-          setSearchingFind('refresh');
-          await updateOrderStatus(
-            parcelInfo?._id,
-            'pending',
-            handleDeleteLoading,
-            onDeleteSuccess,
-            false
-          );
-        }, 60000); // every 60 seconds
-      }
-    
-      return () => {
-        BackgroundTimer.clearInterval(intervalId);
-      };
-    }, [parcelInfo?.status, searchingFind]);
-  
-  
-  
+
+  useEffect(() => {
+    let intervalId;
+
+    if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
+      intervalId = setInterval(async () => {
+        console.log('⏱️ Refreshing find rider...');
+        setSearchingFind('refresh');
+        await updateOrderStatus(
+          parcelInfo?._id,
+          'pending',
+          handleDeleteLoading,
+          onDeleteSuccess,
+          false
+        );
+      }, 60000); // every 60 seconds
+    }
+
+    return () => {
+      clearInterval(intervalId); // Clear when screen unmounts or deps change
+    };
+  }, [parcelInfo?.status, searchingFind]);
+
+
+  useEffect(() => {
+    let intervalId;
+
+    if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
+      intervalId = BackgroundTimer.setInterval(async () => {
+        console.log('⏱️ (BG) Refreshing find rider...');
+        setSearchingFind('refresh');
+        await updateOrderStatus(
+          parcelInfo?._id,
+          'pending',
+          handleDeleteLoading,
+          onDeleteSuccess,
+          false
+        );
+      }, 60000); // every 60 seconds
+    }
+
+    return () => {
+      BackgroundTimer.clearInterval(intervalId);
+    };
+  }, [parcelInfo?.status, searchingFind]);
+
+
+
   const checkUnseenMsg = async () => {
     let req = {
       orderId: addParcelInfo?._id ?? parcelInfo?._id,
@@ -387,7 +415,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     console.log("res unseenMessages", res);
     if (res?.statusCode == 200 && res?.data?.length > 0) {
       setReadMsg(true)
-    }else{
+    } else {
       setReadMsg(false)
     }
 
@@ -411,7 +439,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   };
 
   const backToHome = () => {
-    navigation.navigate(screenName, {screen: 'home'});
+    navigation.navigate(screenName, { screen: 'home' });
     setSearchArrive('search');
   };
 
@@ -435,9 +463,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
   }
 
 
-
   const getSocketLocation = async socketServices => {
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     let query = {
       lat: getLocation('lat')?.toString(),
       lng: getLocation('lng')?.toString(),
@@ -467,7 +494,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
       order_id: info?._id,
       refresh: 'refresh',
     };
-    socketServices.emit('find-nearby-riders', query);
+    // socketServices.emit('find-nearby-riders', query);
 
     const value = {
       parcel_id: info?._id,
@@ -515,8 +542,8 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     }
   };
 
-  const onChat =()=>{
-    navigation.navigate("chat",{item:parcelInfo})
+  const onChat = () => {
+    navigation.navigate("chat", { item: parcelInfo })
   }
 
   const openMap = (riderDest, destination, label) => {
@@ -552,7 +579,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     socketServices.removeListener('remaining-distance');
     socketServices.disconnectSocket();
     setTimeout(() => {
-      navigation.navigate(screenName, {screen: 'home'});
+      navigation.navigate(screenName, { screen: 'home' });
     }, 200);
   };
 
@@ -570,7 +597,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
     }, 500);
   };
 
-  const onGestureEvent = ({nativeEvent}) => {
+  const onGestureEvent = ({ nativeEvent }) => {
     console.log('nativeEvent----------', nativeEvent, parcelInfo);
     // if (parcelInfo?.status == 'picked') {
     //   if (nativeEvent?.translationY >= 0) {
@@ -640,17 +667,17 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                 mapContainerView={
                   Platform.OS == 'ios'
                     ? {
-                        height:
-                          minMaxHp == screenHeight(69)
-                            ? screenHeight(31)
-                            : screenHeight(58),
-                      }
+                      height:
+                        minMaxHp == screenHeight(69)
+                          ? screenHeight(31)
+                          : screenHeight(58),
+                    }
                     : {
-                        height:
-                          minMaxHp == screenHeight(69)
-                            ? screenHeight(31)
-                            : screenHeight(68),
-                      }
+                      height:
+                        minMaxHp == screenHeight(69)
+                          ? screenHeight(31)
+                          : screenHeight(68),
+                    }
                 }
               />
               {/* ) : null} */}
@@ -676,12 +703,15 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
             </>
           )}
         </View>
+        <BackBtn onPress={() => {
+          backToHome();
+        }} />
         {searchArrive == 'search' ? (
           <View style={styles.containerSearchingView}>
             {searchingFind == 'searching' ? (
               <>
                 {parcelInfo?.status === 'find-rider' ||
-                parcelInfo?.status === 'pending' ? (
+                  parcelInfo?.status === 'pending' ? (
                   <View style={styles.innerSearchingView}>
                     {/* <View style={styles.textMainView}>
                       <Text style={styles.searchingPartnerText}>
@@ -702,13 +732,13 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                         onDotPress();
                       }}
                     />
-                    <View style={{marginTop: hp('2%')}}>
+                    <View style={{ marginTop: hp('2%') }}>
                       <Image
                         resizeMode="contain"
                         // style={styles.bikeImage}
                         style={[
                           styles.bikeImage,
-                          {marginLeft: rideProgessImage},
+                          { marginLeft: rideProgessImage },
                         ]}
                         source={appImages.searchingParcel}
                       />
@@ -752,13 +782,13 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
         ) : (
           <PanGestureHandler onGestureEvent={onGestureEvent}>
             <Animated.View
-              style={[styles.containerDriverTouch, {height: minMaxHp}]}>
+              style={[styles.containerDriverTouch, { height: minMaxHp }]}>
               <View style={styles.topLineView} />
-              <View style={{marginHorizontal: 20}}>
+              <View style={{ marginHorizontal: 20 }}>
                 <MeetingPickupComp
                   // firstText={'Meet at your pickup stop'}
-                  firstText={parcelInfo?.status == 'picked' 
-                    ? 'Drop you off at location' 
+                  firstText={parcelInfo?.status == 'picked'
+                    ? 'Drop you off at location'
                     : 'Meet at your pickup stop'}
                   secondText={'Ride Details'}
                   onPressDot={() => {
@@ -822,7 +852,7 @@ const SearchingParcelForm = ({navigation, route, screenName}) => {
                     {/* })} */}
                   </>
                 )}
-                <View style={{marginLeft: '6%', alignSelf: 'center'}}>
+                <View style={{ marginLeft: '6%', alignSelf: 'center' }}>
                   <HomeSlider data={sliderItems} />
                 </View>
               </View>

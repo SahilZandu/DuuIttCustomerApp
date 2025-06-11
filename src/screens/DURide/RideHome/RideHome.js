@@ -63,6 +63,7 @@ export default function RideHome({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      getIncompleteOrder();
       setChatData();
       getCheckDevice();
       setMpaDaltaInitials();
@@ -70,7 +71,6 @@ export default function RideHome({ navigation }) {
       handleAndroidBackButton(navigation);
       setCurrentLocation();
       onUpdateUserInfo();
-      getIncompleteOrder();
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
       socketServices.disconnectSocket();
@@ -139,22 +139,28 @@ export default function RideHome({ navigation }) {
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
     console.log('resIncompleteOrder ride--', resIncompleteOrder);
-    if ((resIncompleteOrder[0]?.status == 'pending' 
-      || resIncompleteOrder[0]?.status == 'find-rider')) {
-      deleteIncompleteOrder(resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if ((resIncompleteOrder[0]?.status == 'pending'
+        || resIncompleteOrder[0]?.status == 'find-rider')) {
+        deleteIncompleteOrder(resIncompleteOrder);
+      }
+      else if (resIncompleteOrder?.length > 0 &&
+        (resIncompleteOrder[0]?.status !== 'pending'
+          || resIncompleteOrder[0]?.status !== 'find-rider')) {
+        setAddParcelInfo(resIncompleteOrder[0]);
+        setIncompletedArray(resIncompleteOrder);
+      }
     }
-    else if (resIncompleteOrder?.length > 0 && 
-      (resIncompleteOrder[0]?.status !== 'pending' 
-      || resIncompleteOrder[0]?.status !== 'find-rider')) {
-      setAddParcelInfo(resIncompleteOrder[0]);
-      setIncompletedArray(resIncompleteOrder);
+    else {
+      setAddParcelInfo([]);
+      setIncompletedArray([]);
     }
   };
 
   const deleteIncompleteOrder = async (data) => {
     const parcelId = data[0]?._id;
     console.log('Item parcelId--', parcelId);
-    if (data[0]?.status === 'pending') {
+    if (data[0]?.status === 'pending' || data[0]?.status === 'find-rider') {
       await updateOrderStatus(
         parcelId,
         'deleted',

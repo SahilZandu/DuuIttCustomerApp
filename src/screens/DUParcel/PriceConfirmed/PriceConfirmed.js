@@ -415,6 +415,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import BTN from '../../../components/cta/BTN';
 import Slider from '@react-native-community/slider';
 import AppInputScroll from '../../../halpers/AppInputScroll';
+import BackBtn from '../../../components/cta/BackBtn';
 
 let priceArray = [0, 10, 20, 30, 40, 50];
 const paymentMethod = ['Cash', 'Online'];
@@ -439,7 +440,8 @@ export default function PriceConfirmed({navigation, route}) {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      // handleAndroidBackButton();
+      handleAndroidBackButton('', '', 'ride', navigation);
       setSelectedCount(0);
       setSelectedWidth('0%');
     }, []),
@@ -594,6 +596,10 @@ export default function PriceConfirmed({navigation, route}) {
     });
   };
 
+  const backToHome =()=>{
+    navigation.navigate('parcel', {screen: 'home'});
+  }
+
   return (
     <View style={styles.container}>
       <MapRoute
@@ -601,7 +607,9 @@ export default function PriceConfirmed({navigation, route}) {
         destination={pickDropDetails?.receiver_address?.geo_location}
         mapContainerView={{height: hp('48%')}}
       />
-
+      <BackBtn onPress={() => {
+          backToHome();
+        }} />
       <View style={styles.containerDriverTouch}>
         <Spacer space={'2%'}/>
         <Formik initialValues={initialValues}>
@@ -663,7 +671,7 @@ export default function PriceConfirmed({navigation, route}) {
                   handleFindRider(value);
                 }}
                 onBackPress={() => {
-                  navigation.navigate('parcel', {screen: 'home'});
+                  backToHome();
                 }}
               />
             </View>

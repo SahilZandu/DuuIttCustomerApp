@@ -29,7 +29,7 @@ export const updateProfileValidations = () => {
       .min(10, 'number should be more then 10 digit')
       .matches(
         // /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
-        /^(?:\+91|91)?[6-9]\d{9}$/,
+        /^(?:)?[6-9]\d{9}$/,
         'Number not valid',
       ),
     ['dob']: Yup.string('Select date of birth')

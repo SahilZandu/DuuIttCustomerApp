@@ -79,7 +79,7 @@ const LoginForm = ({navigation, type}) => {
           <InputField
             textColor={'#000000'}
             keyboardType="number-pad"
-            maxLength={10}
+            maxLength={14}
             // prefix={'+91'}
             name={'mobile'}
             label={''}

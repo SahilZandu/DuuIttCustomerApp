@@ -14,11 +14,11 @@ let data = {};
 
 export function useNotifications(navigation) {
   const { setAddParcelInfo } = rootStore.parcelStore;
-  const {chatNotificationStatus}=rootStore.chatStore;
+  const { chatNotificationStatus } = rootStore.chatStore;
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      const {chatNotificationStatus}=rootStore.chatStore;
+      const { chatNotificationStatus } = rootStore.chatStore;
       console.log('forground notification:', remoteMessage);
       const channelId = await notifee.createChannel({
         id: 'duuittcustomer.com',
@@ -41,7 +41,7 @@ export function useNotifications(navigation) {
       //     largeIcon: 'ic_launcher',
       //   },
       // };
-        
+
       const newa = remoteMessage.notification;
 
       data = remoteMessage?.data;
@@ -50,9 +50,9 @@ export function useNotifications(navigation) {
         let chatData = JSON.parse(remoteMessage?.data?.notification_data);
         console.log('chatData notification', chatData);
         DeviceEventEmitter.emit('chatData', chatData);
-        if(chatNotificationStatus === true){
+        if (chatNotificationStatus === true) {
           await notifee.displayNotification(newa);
-         }
+        }
       } else {
         // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
         await notifee.displayNotification(newa);
@@ -212,7 +212,12 @@ export function useNotifications(navigation) {
           let acceptedDetails = JSON.parse(detail.notification?.data?.notification_data)
           setAddParcelInfo(acceptedDetails)
           console.log('searchingRide notification newOrder', acceptedDetails);
-          navigation.navigate(route, { screen: 'searchingRide' })
+          navigation.navigate(route, {
+            screen: 'searchingRide', params: {
+              paymentMethod: '',
+              totalAmount: 0
+            }
+          })
           DeviceEventEmitter.emit('newOrder', acceptedDetails)
         }
 
@@ -228,7 +233,12 @@ export function useNotifications(navigation) {
           setAddParcelInfo(pickedDetails)
           console.log('picked notification picked', pickedDetails);
           if (route == "ride") {
-            navigation.navigate(route, { screen: 'searchingRide' });
+            navigation.navigate(route, {
+              screen: 'searchingRide', params: {
+                paymentMethod: '',
+                totalAmount: 0
+              }
+            });
           } else {
             navigation.navigate(route, { screen: 'trackingOrder' });
           }
@@ -237,10 +247,10 @@ export function useNotifications(navigation) {
 
         if (detail?.notification?.data?.route == "dropped") {
           let droppedDetails = JSON.parse(detail.notification?.data?.notification_data)
-           setAddParcelInfo({})
+          setAddParcelInfo({})
           console.log('notification dropped', droppedDetails);
           // navigation.navigate(route, { screen: 'home' });
-          navigation.navigate('dashborad', { screen: 'tab3', params: {tabText: 'All Orders'}});
+          navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
           DeviceEventEmitter.emit('dropped', droppedDetails)
         }
         if (detail?.notification?.data?.route == 'chat') {
@@ -248,7 +258,12 @@ export function useNotifications(navigation) {
           setAddParcelInfo(chatData)
           console.log('chatPage notification', chatData);
           if (route == "ride") {
-            navigation.navigate(route, { screen: 'searchingRide' });
+            navigation.navigate(route, {
+              screen: 'searchingRide', params: {
+                paymentMethod: '',
+                totalAmount: 0
+              }
+            });
           } else {
             navigation.navigate(route, { screen: 'trackingOrder' });
           }
@@ -294,7 +309,12 @@ export function useNotifications(navigation) {
       let acceptedDetails = JSON.parse(notification?.payload?.notification_data)
       setAddParcelInfo(acceptedDetails)
       console.log('searchingRide notification newOrder', acceptedDetails);
-      navigation.navigate(route, { screen: 'searchingRide' })
+      navigation.navigate(route, {
+        screen: 'searchingRide', params: {
+          paymentMethod: '',
+          totalAmount: 0
+        }
+      })
       DeviceEventEmitter.emit('newOrder', acceptedDetails)
     }
 
@@ -310,7 +330,12 @@ export function useNotifications(navigation) {
       setAddParcelInfo(pickedDetails)
       console.log('picked notification picked', pickedDetails);
       if (route == "ride") {
-        navigation.navigate(route, { screen: 'searchingRide' });
+        navigation.navigate(route, {
+          screen: 'searchingRide', params: {
+            paymentMethod: '',
+            totalAmount: 0
+          }
+        });
       } else {
         navigation.navigate(route, { screen: 'trackingOrder' });
       }
@@ -322,7 +347,7 @@ export function useNotifications(navigation) {
       //  setAddParcelInfo({})
       console.log('notification dropped', droppedDetails);
       // navigation.navigate(route, { screen: 'home' });
-      navigation.navigate('dashborad', { screen: 'tab3', params: {tabText: 'All Orders'}});
+      navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
       DeviceEventEmitter.emit('dropped', droppedDetails)
     }
 
@@ -331,7 +356,12 @@ export function useNotifications(navigation) {
       setAddParcelInfo(chatData)
       console.log('chatPage notification', chatData);
       if (route == "ride") {
-        navigation.navigate(route, { screen: 'searchingRide' });
+        navigation.navigate(route, {
+          screen: 'searchingRide', params: {
+            paymentMethod: '',
+            totalAmount: 0
+          }
+        });
       } else {
         navigation.navigate(route, { screen: 'trackingOrder' });
       }

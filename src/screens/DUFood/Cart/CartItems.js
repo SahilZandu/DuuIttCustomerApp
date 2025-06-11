@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import {
   Text,
   View,
@@ -7,17 +7,17 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import {currencyFormat} from '../../../halpers/currencyFormat';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
+import { SvgXml } from 'react-native-svg';
+import { currencyFormat } from '../../../halpers/currencyFormat';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import DotedLine from '../Components/DotedLine';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {colors} from '../../../theme/colors';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { colors } from '../../../theme/colors';
 import Url from '../../../api/Url';
 
 const isOpenNote = false;
@@ -56,7 +56,7 @@ const CartItems = ({
       : false;
   };
 
-  const EditBtn = ({item}) => {
+  const EditBtn = ({ item }) => {
     console.log('EditBtn item--', item);
     if (getIsVarient(item) || getIsAddons(item)) {
       return (
@@ -82,7 +82,7 @@ const CartItems = ({
                   style={styles.cartImage}
                   source={
                     item?.image?.length > 0
-                      ? {uri: Url?.Image_Url + item?.image}
+                      ? { uri: Url?.Image_Url + item?.image }
                       : appImages.foodIMage
                   }
                 />
@@ -118,7 +118,7 @@ const CartItems = ({
                       <Text style={styles.increaseText}>+</Text>
                     </Pressable>
                   </View>
-                  <Text style={{flex: 1}} />
+                  <Text style={{ flex: 1 }} />
                   <Text style={styles.priceText}>
                     {currencyFormat(
                       item?.quantity >= 1
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
   },
   cartItemView: {
     marginTop: '5%',
@@ -252,25 +252,27 @@ const styles = StyleSheet.create({
   btnMainView: {
     borderWidth: 1,
     height: hp('3.5%'),
-    paddingHorizontal: '2%',
-    width: wp('22%'),
+    paddingHorizontal: wp('3%'),
+    width: wp('24%'),
     backgroundColor: colors.main,
     borderColor: colors.main,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    justifyContent: 'space-between'
   },
   decreaseTouch: {
-    height: hp('4%'),
-    width: wp('7%'),
+    // height: hp('%'),
+    // width: wp('7%'),
+    // justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: hp('-0.5%'),
   },
   decreaseText: {
     color: colors.white,
-    fontFamily: fonts.semiBold,
-    fontSize: RFValue(14),
+    fontFamily: fonts.bold,
+    fontSize: RFValue(18),
   },
   qunitityText: {
     color: colors.white,
@@ -280,15 +282,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   increaseTouch: {
-    height: hp('4%'),
-    width: wp('7%'),
+    // height: hp('4%'),
+    // width: wp('7%'),
+    // justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: hp('-0.5%'),
   },
   increaseText: {
     color: colors.white,
-    fontFamily: fonts.semiBold,
-    fontSize: RFValue(14),
+    fontFamily: fonts.bold,
+    fontSize: RFValue(18),
   },
   priceText: {
     color: colors.black,
@@ -338,7 +341,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     marginLeft: wp('3%'),
     width: wp('84%'),
   },

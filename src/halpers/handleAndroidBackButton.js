@@ -5,7 +5,7 @@ import RNRestart from 'react-native-restart';
 
 
 
-function handleAndroidBackButton(navigation, tab) {
+function handleAndroidBackButton(navigation, tab,type,goBack) {
 
   const { addParcelInfo, setAddParcelInfo } = rootStore.parcelStore;
   const { updateOrderStatus } = rootStore.orderStore;
@@ -32,17 +32,21 @@ function handleAndroidBackButton(navigation, tab) {
   const onDeleteSuccess = () => {
     console.log('onDeleteSuccess...');
     if (Platform.OS === 'ios') {
+      goBack.navigate(type, { screen: 'home' });
       setAddParcelInfo({})
-      setTimeout(() => {
-        RNRestart.restart();
-      }, 200)
+     
+      // setTimeout(() => {
+      //   RNRestart.restart();
+      // }, 200)
     }
     else {
+      goBack.navigate(type, { screen: 'home' });
       BackHandler.exitApp();
       setAddParcelInfo({})
-      setTimeout(() => {
-        RNRestart.restart();
-      }, 200)
+     
+      // setTimeout(() => {
+      //   RNRestart.restart();
+      // }, 200)
     }
   }
 

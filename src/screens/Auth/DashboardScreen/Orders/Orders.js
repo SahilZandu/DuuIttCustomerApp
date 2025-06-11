@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Text,
   View,
@@ -35,15 +35,20 @@ let perPage = 20;
 
 export default function Orders({ navigation, route }) {
   const { tabText } = route.params;
+  const flatListRef = useRef(null);
   const { parcelsOfUser, getOrderHistorybyFilters, orderHistoryList } =
     rootStore.orderStore;
   const { appUser } = rootStore.commonStore;
-  const {getCheckDeviceId} = rootStore.dashboardStore;
-  const [orderList, setOrderList] = useState(orderHistoryList);
+  const { getCheckDeviceId } = rootStore.dashboardStore;
+  const [orderList, setOrderList] = useState(
+    (tabText === "All Orders") ?
+      orderHistoryList : []);
   const [type, setType] = useState('All Orders');
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(
-    orderHistoryList?.length > 0 ? false : true,
+    (orderHistoryList?.length > 0
+      && tabText === "All Orders")
+      ? false : true,
   );
   const [internet, setInternet] = useState(true);
 
@@ -53,30 +58,40 @@ export default function Orders({ navigation, route }) {
     useCallback(() => {
       getCheckDevice();
       checkInternet();
-        handleAndroidBackButton(navigation,tabText);
+      handleAndroidBackButton(navigation, tabText);
+      setLoading((orderHistoryList?.length > 0
+        && tabText === "All Orders")
+        ? false : true)
       if (tabText == 'Food') {
         defaultType = 'Food';
         setType('Food');
+        setOrderList([])
+        getOrderList();
       } else if (tabText == 'Ride') {
         defaultType = 'Ride';
         setType('Ride');
+        setOrderList([])
+        getOrderList();
       } else if (tabText == 'Parcel') {
         defaultType = 'Parcel';
         setType('Parcel');
+        setOrderList([])
+        getOrderList();
       } else {
         defaultType = 'All Orders';
         setType('All Orders');
+        setOrderList(orderHistoryList || [])
+        getOrderList();
       }
-      getOrderList();
       setTimeout(() => {
         setLoading(false);
-      }, 5000);
+      }, 10000);
     }, [tabText]),
   );
 
-    const getCheckDevice = async () => {
-     await getCheckDeviceId();
-    }
+  const getCheckDevice = async () => {
+    await getCheckDeviceId();
+  }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab3', event => {
@@ -94,29 +109,56 @@ export default function Orders({ navigation, route }) {
   };
 
   const getOrderList = async () => {
+    const res = await parcelsOfUser("All Orders", perPage, handleLoading);
+    console.log('res---parcelsOfUser', res);
+    if (res?.length > 0) {
+      setOrderList(res);
+      setLoadingMore(false);
+      setTimeout(() => {
+        handleTabPress(defaultType);
+      }, 1000)
+
+    } else {
+      setTimeout(() => {
+        handleTabPress(defaultType);
+      }, 1000)
+      setOrderList([]);
+      setLoadingMore(false);
+    }
+  };
+
+
+
+  const getMoreOrderList = async () => {
     const res = await parcelsOfUser(defaultType, perPage, handleLoading);
     console.log('res---parcelsOfUser', res);
     if (res?.length > 0) {
       setOrderList(res);
       setLoadingMore(false);
-      handleTabPress(defaultType);
     } else {
-      handleTabPress(defaultType);
       setOrderList([]);
       setLoadingMore(false);
     }
   };
 
   const handleLoading = v => {
-    setLoading(v);
+    if (v == false) {
+      setTimeout(() => {
+        setLoading(v);
+      }, 4000)
+    } else {
+      setLoading(v);
+    }
+
   };
 
   const loadMoredata = () => {
     console.log('load more');
-    if (!loadingMore && orderList?.length >= perPage) {
+    if (!loadingMore && (orderList?.length >= perPage || tabText !== "All Orders")) {
       perPage = perPage + 20;
       setLoadingMore(true);
-      getOrderList();
+      getMoreOrderList();
+      // getOrderList();
     }
   };
 
@@ -131,9 +173,9 @@ export default function Orders({ navigation, route }) {
   const renderItem = ({ item, i }) => {
     return (
       <>
-        <CardOrder item={item} index={i} 
-        navigation={navigation}
-        handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
+        <CardOrder item={item} index={i}
+          navigation={navigation}
+          handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
       </>
     );
   };
@@ -141,9 +183,12 @@ export default function Orders({ navigation, route }) {
   const handleTabPress = async text => {
     defaultType = text;
     setType(text);
+    if (flatListRef?.current) {
+      flatListRef?.current?.scrollToIndex({ animated: true, index: 0 });
+    }
     const filter = await getOrderHistorybyFilters(text);
     //  console.log('filter--', filter, defaultType, text);
-    setOrderList(filter);
+    setOrderList([...filter]);
   };
 
   return (
@@ -169,6 +214,9 @@ export default function Orders({ navigation, route }) {
               <View style={{ flex: 0 }}>
                 {orderList?.length > 0 ? (
                   <FlatList
+                    ref={flatListRef}
+                    initialScrollIndex={0}
+                    initialNumToRender={20}
                     contentContainerStyle={{paddingBottom: Platform.OS == 'ios' ? '35%' : '30%' }}
                     scrollEnabled={true}
                     showsVerticalScrollIndicator={false}

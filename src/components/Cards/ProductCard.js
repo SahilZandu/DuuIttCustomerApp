@@ -406,22 +406,24 @@ const styles = StyleSheet.create({
   },
   addItemAminView: {
     backgroundColor: colors.main,
-    height: hp('3%'),
+    height: hp('3.5%'),
     alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
+    justifyContent:'space-between',
     flexDirection: 'row',
     borderRadius: 20,
+    width: wp('25%'),
+    paddingHorizontal:wp('3%')
   },
   decreaseView: {
-    width: wp('9%'),
+    // width: wp('11%'),
     alignItems: 'center',
-    marginTop: '-3%',
+    marginTop: hp('-0.5%'),
+  
   },
   decreaseText: {
     color: colors.white,
     fontSize: RFValue(18),
-    fontFamily: fonts.medium,
+    fontFamily: fonts.bold,
   },
   qualityText: {
     color: colors.white,
@@ -430,19 +432,20 @@ const styles = StyleSheet.create({
     marginTop: '1%',
   },
   increaseView: {
-    width: wp('9%'),
+    // width: wp('11%'),
     alignItems: 'center',
-    marginTop: '-3%',
+    marginTop: hp('-0.5%'),
+    
   },
   increaseText: {
     color: colors.white,
     fontSize: RFValue(18),
-    fontFamily: fonts.medium,
+    fontFamily: fonts.bold,
   },
   addBtnView: {
     backgroundColor: colors.colorEC,
-    height: hp('3%'),
-    paddingHorizontal: '3%',
+    height: hp('3.5%'),
+    paddingHorizontal: wp('4%'),
     alignItems: 'center',
     flexDirection: 'row',
     borderColor: colors.main,

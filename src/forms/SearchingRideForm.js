@@ -634,6 +634,7 @@ import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import { silderArray } from '../stores/DummyData/Home';
 import BackgroundTimer from 'react-native-background-timer';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
+import BackBtn from '../components/cta/BackBtn';
 
 
 
@@ -642,7 +643,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     rootStore.parcelStore;
   const intervalRef = useRef(null);
   const { appUser } = rootStore.commonStore;
-  const { updateOrderStatus } = rootStore.orderStore;
+  const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
   const { unseenMessages, setChatNotificationStatus } = rootStore.chatStore;
   const { paymentMethod, totalAmount } = route.params;
   const [searching, setSearching] = useState(true);
@@ -701,7 +702,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      handleAndroidBackButton('', '', 'ride', navigation);
       checkUnseenMsg();
       setChatNotificationStatus(true);
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
@@ -718,6 +719,25 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       }
     }, [parcelInfo]),
   );
+  useEffect(() => {
+    setTimeout(() => {
+      getIncompleteOrder();
+    }, 500)
+
+  }, [parcelInfo])
+
+  const getIncompleteOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('ride');
+    console.log('resIncompleteOrder ride--getIncompleteOrder', resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if (resIncompleteOrder[0]?.status !== "pending") {
+        setParcelInfo(resIncompleteOrder[0]);
+      }
+    }
+    else {
+      navigation.navigate('ride', { screen: 'home' });
+    }
+  };
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -929,7 +949,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
           refresh: '',
         };
         console.log('query--', query);
-        socketServices.emit('find-nearby-riders', query);
+        // socketServices.emit('find-nearby-riders', query);
       }, 20000);
       return () => {
         clearInterval(findNearbyRiders);
@@ -959,7 +979,6 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   useEffect(() => {
     let intervalId;
-
     if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
       intervalId = setInterval(async () => {
         console.log('⏱️ Refreshing find rider...');
@@ -1077,7 +1096,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     };
     console.log("query--==-", query);
 
-    socketServices.emit('find-nearby-riders', query);
+    // socketServices.emit('find-nearby-riders', query);
 
     const value = {
       parcel_id: info?._id,
@@ -1286,6 +1305,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
             </>
           )}
         </View>
+        <BackBtn onPress={() => {
+          backToHome();
+        }} />
         {searchArrive == 'search' ? (
           <View style={styles.containerSearchingView}>
             {searchingFind == 'searching' ? (

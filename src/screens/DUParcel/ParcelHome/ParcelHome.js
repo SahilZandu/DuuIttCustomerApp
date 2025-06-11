@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Image, DeviceEventEmitter } from 'react-native';
+import { View, Image, DeviceEventEmitter, Alert } from 'react-native';
 import { appImages } from '../../../commons/AppImages';
 import { styles } from './styles';
 import {
@@ -138,6 +138,7 @@ export default function ParcelHome({ navigation }) {
       if (data?.order_type == 'parcel') {
         // navigation.navigate('parcel', {screen: 'home'});
         getTrackingOrder();
+        getIncompleteOrder();
       }
     });
     return () => {
@@ -154,6 +155,7 @@ export default function ParcelHome({ navigation }) {
           setIsReviewRider(true);
         }, 300);
         getTrackingOrder();
+        getIncompleteOrder();
       }
     });
     return () => {
@@ -169,24 +171,29 @@ export default function ParcelHome({ navigation }) {
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('parcel');
     console.log('resIncompleteOrder parcel--', resIncompleteOrder);
-
-    if ((resIncompleteOrder[0]?.status == 'pending' 
-      || resIncompleteOrder[0]?.status == 'find-rider')) {
-      deleteIncompleteOrder(resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if ((resIncompleteOrder[0]?.status == 'pending'
+        || resIncompleteOrder[0]?.status == 'find-rider')) {
+        deleteIncompleteOrder(resIncompleteOrder);
+      }
+      else if (resIncompleteOrder?.length > 0 &&
+        (resIncompleteOrder[0]?.status !== 'pending'
+          || resIncompleteOrder[0]?.status !== 'find-rider')
+      ) {
+        setAddParcelInfo(resIncompleteOrder[0]);
+        setIncompletedArray(resIncompleteOrder);
+      }
     }
-    else if (resIncompleteOrder?.length > 0 && 
-     (resIncompleteOrder[0]?.status !== 'pending' 
-      || resIncompleteOrder[0]?.status !== 'find-rider')
-    ) {
-      setAddParcelInfo(resIncompleteOrder[0]);
-      setIncompletedArray(resIncompleteOrder);
+    else {
+      setAddParcelInfo({});
+      setIncompletedArray([]);
     }
   };
 
   const deleteIncompleteOrder = async (data) => {
     const parcelId = data[0]?._id;
     console.log('Item parcelId--', parcelId);
-    if (data[0]?.status === 'pending') {
+    if (data[0]?.status === 'pending' || data[0]?.status === 'find-rider') {
       await updateOrderStatus(
         parcelId,
         'deleted',

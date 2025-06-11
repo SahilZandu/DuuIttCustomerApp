@@ -47,7 +47,8 @@ const RecommendedOrder = ({ data, onPress,onAddDec }) => {
           borderColor: colors.main, // Border color (slightly darker green)
           borderRadius: 20, // Rounded corners
           alignItems: 'center',
-          justifyContent:'space-evenly',}}>
+          justifyContent:'space-evenly',
+          }}>
           <TouchableOpacity
           onPress={()=>{onAddDec(item , 
             Number(item?.item?.quantity) - 1

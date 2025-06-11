@@ -40,6 +40,9 @@ import { rootStore } from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
+import FieldErrorMessage from '../../../components/FieldErrorMessage';
+
+
 
 let currentLocation = {
   lat: null,
@@ -71,6 +74,7 @@ export default function AddMyAddress({ navigation, route }) {
   const [name, setName] = useState('');
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState('Home');
+  const [showErrorMsg, setShowErrorMsg] = useState('')
 
   const [initialValues, setInitialValues] = useState({
     changeAdress: address ?? '',
@@ -170,6 +174,7 @@ export default function AddMyAddress({ navigation, route }) {
 
   const handleSvae = async values => {
     // console.log('values--', values,address ,title,geoLocation);
+    setShowErrorMsg('');
     Keyboard.dismiss();
     await myAddress(
       type,
@@ -179,6 +184,7 @@ export default function AddMyAddress({ navigation, route }) {
       geoLocation,
       loactionId,
       onSuccess,
+      onErrorMsg,
       handleLoading,
     );
   };
@@ -198,6 +204,10 @@ export default function AddMyAddress({ navigation, route }) {
     }, 300);
   };
 
+  const onErrorMsg = (msg) => {
+    setShowErrorMsg(msg)
+  }
+
   const onPressAddress = (data, details) => {
     setName(details?.name);
     setAddress(details?.formatted_address);
@@ -208,6 +218,7 @@ export default function AddMyAddress({ navigation, route }) {
   const handleConfirm = () => {
     console.log('geoLocation--', geoLocation, name, address);
     setVisible(true);
+    setShowErrorMsg('')
   };
 
 
@@ -327,18 +338,24 @@ export default function AddMyAddress({ navigation, route }) {
               placeholder={'Enter your name'}
               maxLength={50}
             />
-             <InputFieldLabel
+            <InputFieldLabel
               borderWidth={1}
               inputLabel={'Nearby landmark (Optional)'}
               name={'landmark'}
               placeholder={'e.g. Bidu biotique'}
               maxLength={100}
             />
-
           </View>
-
-          <Spacer space={'10%'} />
+          <Spacer space={showErrorMsg ? hp('3%') : hp('6%')} />
+          {showErrorMsg &&
+            <View style={{ marginHorizontal: 30, marginBottom: hp('2.5%') }}>
+              <FieldErrorMessage
+                error={showErrorMsg}
+                visible={true}
+              />
+            </View>}
           <FormButton loading={loading} onPress={handleSvae} />
+
         </View>
       </Formik>
     );

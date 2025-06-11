@@ -13,7 +13,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import { appImages } from '../commons/AppImages';
-import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE, AnimatedRegion } from 'react-native-maps';
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 import { getCurrentLocation } from './GetAppLocation';
@@ -31,53 +31,95 @@ const MapCurrentLocationRoute = ({
   height,
 }) => {
   const mapRef = useRef(null);
-  const debounceTimeout = useRef(null);
-  const getLocation = type => {
-    let d =
-      type == 'lat'
-        ? getCurrentLocation()?.latitude
-        : getCurrentLocation()?.longitude;
-
-    return d ? d : '';
-  };
+  const markerRef = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(getLocation('lat') ?? currentLocation?.lat),
-    longitude: origin?.lat && origin?.lng?.toString()?.length > 0 ? Number(origin?.lng) : Number(getLocation('lng') ?? currentLocation?.lng),
-    latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
-    longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
+    latitude: origin?.lat || getCurrentLocation()?.latitude || 30.7400,
+    longitude: origin?.lng || getCurrentLocation()?.longitude || 76.7900,
+    ...getMpaDalta(),
+    //   latitudeDelta: getMpaDalta().latitudeDelta,
+    //   longitudeDelta: getMpaDalta().longitudeDelta,
   });
 
   const [isMapReady, setIsMapReady] = useState(false);
   // console.log('origin---11', origin, mapRegion);
+  const [animatedCoordinate] = useState(
+    new AnimatedRegion({
+      latitude: origin?.lat || null,
+      longitude: origin?.lng || null,
+      ...getMpaDalta(),
+      //     latitudeDelta: getMpaDalta().latitudeDelta,
+      //     longitudeDelta: getMpaDalta().longitudeDelta,
+    })
+  );
 
 
 
   // Update region when origin changes
+  // useEffect(() => {
+  //   if (origin?.lat && origin?.lng) {
+  //     // currentLocation = origin;
+  //     currentLocation = {
+  //       lat: getLocation('lat') ?? origin?.lat ?? currentLocation?.lat,
+  //       lng: getLocation('lng') ?? origin?.lng ?? currentLocation?.lng,
+  //     }
+  //     setMapRegion(prev => ({
+  //       ...prev,
+  //       latitude: origin?.lat?.toString()?.length > 0
+  //         ? Number(origin?.lat)
+  //         : Number(currentLocation?.lat),
+  //       longitude: origin?.lng?.toString()?.length > 0
+  //         ? Number(origin?.lng)
+  //         : Number(currentLocation?.lng),
+  //       latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
+  //       longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
+  //     }));
+  //     const lat = Number(origin?.lat);
+  //     const lng = Number(origin?.lng);
+  //     const newCoord = { latitude: lat, longitude: lng };
+  //     animatedCoordinate.timing({
+  //       ...newCoord,
+  //       duration: 500,
+  //       useNativeDriver: false,
+  //     }).start();
+
+  //     if (mapRef?.current) {
+  //       mapRef?.current.animateToRegion({
+  //         latitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(currentLocation?.lat),
+  //         longitude: origin && origin?.lng?.toString()?.length > 0 ? Number(origin?.lng) : Number(currentLocation?.lng),
+  //         latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
+  //         longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
+  //       }, 2000); // smooth zoom
+  //     }
+  //   }
+  // }, [origin, isMapReady]);
   useEffect(() => {
-    if (origin) {
-      // currentLocation = origin;
-      currentLocation = {
-        lat: getLocation('lat') ?? origin?.lat ?? currentLocation?.lat,
-        lng: getLocation('lng') ?? origin?.lng ?? currentLocation?.lng,
-      }
-      setMapRegion(prev => ({
-        ...prev,
-        latitude: origin?.lat?.toString()?.length > 0
-          ? Number(origin?.lat)
-          : Number(currentLocation?.lat),
-        longitude: origin?.lng?.toString()?.length > 0
-          ? Number(origin?.lng)
-          : Number(currentLocation?.lng),
-        latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
-        longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
-      }));
-      if (mapRef?.current) {
-        mapRef?.current.animateToRegion({
-          latitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(currentLocation?.lat),
-          longitude: origin && origin?.lng?.toString()?.length > 0 ? Number(origin?.lng) : Number(currentLocation?.lng),
-          latitudeDelta: getMpaDalta().latitudeDelta ?? 0.0322,
-          longitudeDelta: getMpaDalta().longitudeDelta ?? 0.0321,
-        }, 500); // smooth zoom
+    if (origin?.lat && origin?.lng) {
+      const newCoord = {
+        latitude: Number(origin.lat),
+        longitude: Number(origin.lng),
+      };
+
+      currentLocation = newCoord;
+
+      setMapRegion({
+        ...newCoord,
+        ...getMpaDalta(),
+      });
+
+      animatedCoordinate.timing({
+        ...newCoord,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(
+          {
+            ...newCoord,
+            ...getMpaDalta(),
+          },
+          2000
+        );
       }
     }
   }, [origin, isMapReady]);
@@ -108,7 +150,8 @@ const MapCurrentLocationRoute = ({
 
   const handleMapReady = () => {
     // console.log('Map is ready');
-    if (origin?.lat?.toString()?.length > 0) {
+    if (origin?.lat?.toString()?.length > 0
+      && animatedCoordinate?.latitude?.toString()?.length > 0) {
       setTimeout(() => {
         setIsMapReady(true);
       }, 2000);
@@ -144,11 +187,25 @@ const MapCurrentLocationRoute = ({
           loadingEnabled
           onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
           onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
-          showsCompass
+          showsCompass={false}
           showsUserLocation={false}
           followsUserLocation={false}
           onMapReady={handleMapReady}>
-          {mapRegion?.latitude?.toString()?.length > 0 &&
+          {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
+            <Marker.Animated
+              ref={markerRef}
+              coordinate={animatedCoordinate}
+              tracksViewChanges={!isMapReady}
+            >
+              <Image
+                resizeMode="contain"
+                source={appImages.markerImage}
+                style={styles.markerImage}
+              />
+
+            </Marker.Animated>
+          )}
+          {/* {mapRegion?.latitude?.toString()?.length > 0 &&
             mapRegion?.longitude?.toString()?.length > 0 && (
               <Marker
                 coordinate={{
@@ -162,7 +219,7 @@ const MapCurrentLocationRoute = ({
                   style={styles.markerImage}
                 />
               </Marker>
-            )}
+            )} */}
         </MapView>}
       {isMapReady == false && (
         // <View style={{position: 'absolute'}}>

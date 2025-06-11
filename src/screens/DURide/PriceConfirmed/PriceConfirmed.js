@@ -472,7 +472,7 @@
 //   );
 // }
 
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -482,40 +482,41 @@ import {
   Animated,
   Alert,
 } from 'react-native';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {styles} from './styles';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
-import {currencyFormat} from '../../../halpers/currencyFormat';
-import {Surface} from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
+import { currencyFormat } from '../../../halpers/currencyFormat';
+import { Surface } from 'react-native-paper';
 import CheckBoxText from '../../../components/CheckBoxText';
-import {Formik, useFormikContext} from 'formik';
+import { Formik, useFormikContext } from 'formik';
 import PickDropLocation from '../../../components/PickDropLocation';
 import Spacer from '../../../halpers/Spacer';
 import HomeSlider from '../../../components/slider/homeSlider';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import MapRoute from '../../../components/MapRoute';
-import {silderArray} from '../../../stores/DummyData/Home';
-import {colors} from '../../../theme/colors';
+import { silderArray } from '../../../stores/DummyData/Home';
+import { colors } from '../../../theme/colors';
 import ModalPopUp from '../../../components/ModalPopUp';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import BTN from '../../../components/cta/BTN';
 import LinearGradient from 'react-native-linear-gradient';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
 import Slider from '@react-native-community/slider';
 import AppInputScroll from '../../../halpers/AppInputScroll';
+import BackBtn from '../../../components/cta/BackBtn';
 
 let priceArray = [0, 10, 20, 30, 40, 50];
 
 const paymentMethod = ['Cash', 'Online'];
 
-export default function PriceConfirmed({navigation, route}) {
-  const {item} = route.params;
+export default function PriceConfirmed({ navigation, route }) {
+  const { item } = route.params;
   console.log('Price item---', item);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -534,7 +535,8 @@ export default function PriceConfirmed({navigation, route}) {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      // handleAndroidBackButton();
+      handleAndroidBackButton('', '', 'ride', navigation);
       setSelectedCount(0);
       setSelectedWidth('0%');
     }, []),
@@ -550,8 +552,8 @@ export default function PriceConfirmed({navigation, route}) {
     }
   }, [item]);
 
-  const BtnForm = ({onPress, onBackPress}) => {
-    const {dirty, isValid, values} = useFormikContext();
+  const BtnForm = ({ onPress, onBackPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
     return (
       <View
         style={{
@@ -648,7 +650,7 @@ export default function PriceConfirmed({navigation, route}) {
     }
   };
 
-  const ProgressBarWithGradient = ({progress}) => {
+  const ProgressBarWithGradient = ({ progress }) => {
     return (
       <View
         style={{
@@ -662,8 +664,8 @@ export default function PriceConfirmed({navigation, route}) {
         }}>
         <LinearGradient
           colors={['#28B056', '#63BE82', '#9DCBAD']} // Gradient colors
-          start={{x: 1, y: 0}}
-          end={{x: 0, y: 1}}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
           style={{
             width: `${progress * 100}%`, // Dynamic width based on progress
             height: '100%',
@@ -675,38 +677,44 @@ export default function PriceConfirmed({navigation, route}) {
 
   const onPressPickLocation = () => {
     navigation.navigate('editOrderLocation', {
-      pickDrop:'pick',
+      pickDrop: 'pick',
       item: item?.sender_address,
-      orderItem:item,
+      orderItem: item,
     });
   };
 
   const onPressDropLocation = () => {
     navigation.navigate('editOrderLocation', {
-      pickDrop:'drop',
-      item:item?.receiver_address,
-      orderItem:item,
+      pickDrop: 'drop',
+      item: item?.receiver_address,
+      orderItem: item,
     });
   };
+
+  const backToHome = () => {
+    navigation.navigate('ride', { screen: 'home' });
+  }
 
   return (
     <View style={styles.container}>
       <MapRoute
         origin={pickDropDetails?.sender_address?.geo_location}
         destination={pickDropDetails?.receiver_address?.geo_location}
-        mapContainerView={{height: hp('48%')}}
+        mapContainerView={{ height: hp('48%') }}
       />
-
+      <BackBtn onPress={() => {
+        backToHome();
+      }} />
       <View style={styles.containerDriverTouch}>
         {/* <View style={styles.topLineView} /> */}
-        <Spacer space={'2%'}/>
+        <Spacer space={'2%'} />
         <Formik initialValues={initialValues}>
           <>
             <AppInputScroll
               Pb={hp('25%')}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
-              <View style={{marginHorizontal: 20,marginTop:'3%'}}>
+              <View style={{ marginHorizontal: 20, marginTop: '3%' }}>
                 <PickDropLocation
                   pickUpLocation={pickUpLocation}
                   dropLocation={dropLocation}
@@ -762,7 +770,7 @@ export default function PriceConfirmed({navigation, route}) {
                   handleFindRider(value);
                 }}
                 onBackPress={() => {
-                  navigation.navigate('ride', {screen: 'home'});
+                  backToHome();
                 }}
               />
             </View>
@@ -782,7 +790,7 @@ export default function PriceConfirmed({navigation, route}) {
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
           }}>
-          <View style={{marginHorizontal: 20}}>
+          <View style={{ marginHorizontal: 20 }}>
             <Text
               style={{
                 fontSize: RFValue(15),
@@ -823,11 +831,11 @@ export default function PriceConfirmed({navigation, route}) {
               }}>
               You can also directly increase the fare
             </Text>
-            <View style={{justifyContent: 'center', marginTop: hp('3%')}}>
+            <View style={{ justifyContent: 'center', marginTop: hp('3%') }}>
               <ProgressBarWithGradient progress={selectedCount} />
               <View style={styles.sliderView}>
                 <Slider
-                  style={{width: wp(90), height: hp(5)}}
+                  style={{ width: wp(90), height: hp(5) }}
                   minimumValue={0}
                   step={1}
                   maximumValue={5}
@@ -902,7 +910,7 @@ export default function PriceConfirmed({navigation, route}) {
                 xml={appImagesSvg.progessPositive}
               />
             </View>
-            <View style={{marginTop: '10%'}}>
+            <View style={{ marginTop: '10%' }}>
               <BTN
                 width={wp('86%')}
                 title={`Book Now for ${currencyFormat(total)}`}

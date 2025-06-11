@@ -15,8 +15,8 @@ export const loginValidations = type => {
       .trim()
       .required('Enter your mobile number')
       .matches(
-        /^(?:\+91|91)?[6-9]\d{9}$/,
-        // /(?=.*?\d)^\$?(([1-9]\d{0,2}(,\d{3})*)|\d+)?(\.\d{1,2})?$/,
+        /^(?:)?[6-9]\d{9}$/,
+        // /^(?:\+91|91)?[6-9]\d{9}$/,
         'Number not valid',
       )
       .min(10 ,"Mobile number should be 10 digits")

@@ -33,6 +33,8 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import ModalPopUpTouch from '../../../components/ModalPopUpTouch';
 import { colors } from '../../../theme/colors';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
+import OnlineFoodUnavailable from '../../../components/OnlineFoodUnavailable';
+
 
 let geoLocation = {
   lat: null,
@@ -112,7 +114,7 @@ export default function FoodHome({ navigation }) {
     setRepeatOrdersList(res);
   };
   const getRecomendedItemsData = async () => {
-    const res = await getRecomendedItems(handleLoading);
+    const res = await getRecomendedItems(geoLocation, handleLoading);
     // console.log("res getRecomendedItemsData",res,recomendedList)
     setRecomendedList(res);
     recommendedData = res;
@@ -207,9 +209,10 @@ export default function FoodHome({ navigation }) {
           onUpdateLatLng();
           getRestaurantList();
           getCategoryList();
+          getRecomendedItemsData();
         }
       }, 300);
-      getRecomendedItemsData();
+
       onUpdateUserInfo();
       getCartItemsCount();
       getRepeatedOrderListData();
@@ -570,16 +573,16 @@ export default function FoodHome({ navigation }) {
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles.mainScreen}
-            stickyHeaderIndices={
-              (repeatOrdersList?.length ?? 0) > 2 &&
-                (recomendedList?.length ?? 0) > 2
-                ? [3]
-                : (repeatOrdersList?.length ?? 0) > 2 ||
-                  (recomendedList?.length ?? 0) > 2
-                  ? [2]
-                  : [1]
-            }
-            // stickyHeaderIndices={[3]}
+            // stickyHeaderIndices={
+            //   (repeatOrdersList?.length ?? 0) > 2 &&
+            //     (recomendedList?.length ?? 0) > 2
+            //     ? [3]
+            //     : (repeatOrdersList?.length ?? 0) > 2 ||
+            //       (recomendedList?.length ?? 0) > 2
+            //       ? [2]
+            //       : [1]
+            // }
+            stickyHeaderIndices={[3]}
             contentContainerStyle={{
               flexGrow: 1,
               paddingBottom: hp('10%'),
@@ -594,7 +597,7 @@ export default function FoodHome({ navigation }) {
               </View>
             </View> */}
 
-            {repeatOrdersList?.length > 2 && (
+            {repeatOrdersList?.length > 0 && (
               <View style={styles.orderMainView}>
                 <RepeatOrder
                   data={repeatOrdersList}
@@ -608,7 +611,7 @@ export default function FoodHome({ navigation }) {
               </View>
             )}
 
-            {recomendedList?.length > 2 && (
+            {recomendedList?.length > 0 && (
               <View style={styles.orderMainView}>
                 <RecommendedOrder
                   data={recomendedList}
@@ -660,7 +663,12 @@ export default function FoodHome({ navigation }) {
                 </View>
               )}
             </View>
+              
+         
           </ScrollView>
+          <OnlineFoodUnavailable
+              appUserData={appUserInfo}
+              navigation={navigation} />
 
           <View style={styles.bottomCartBtnView}>
             {trackedArray?.length > 0 && (
@@ -689,6 +697,7 @@ export default function FoodHome({ navigation }) {
               />
             )}
           </View>
+
         </>
       )}
       <MikePopUp
@@ -722,6 +731,7 @@ export default function FoodHome({ navigation }) {
           onDeleteCartUpdateRest(false);
         }}
       />
+
       {/* <ReviewsRatingComp 
        type={'FOOD'}
       title={'Did you enjoy your meal?'}

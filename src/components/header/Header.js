@@ -6,7 +6,11 @@ import { appImagesSvg } from '../../commons/AppImages';
 import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts/fonts';
 
-const Header = ({ shareSVG, bgColor, onPress, title, backArrow, shareIcon, onPressShare, onPressPhone }) => {
+const Header = ({ shareSVG, bgColor,
+  onPress, title,
+  backArrow, shareIcon,
+  onPressShare, onPressPhone,
+  rightTitle, onPressRight,rightColor }) => {
   return (
     <View
       style={{
@@ -56,6 +60,19 @@ const Header = ({ shareSVG, bgColor, onPress, title, backArrow, shareIcon, onPre
           onPress={onPressPhone}
           style={{ marginRight: '5%' }}>
           <SvgXml xml={appImagesSvg.phoneChatIcon} />
+        </TouchableOpacity>
+      )}
+      {onPressRight && (
+        <TouchableOpacity
+          hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
+          activeOpacity={0.9}
+          onPress={onPressRight}
+          style={{ marginRight: '5%' }}>
+          <Text style={{
+            fontSize: RFValue(13),
+            fontFamily: fonts.semiBold,
+            color: rightColor ? rightColor: colors.black,
+          }}>{rightTitle}</Text>
         </TouchableOpacity>
       )}
 

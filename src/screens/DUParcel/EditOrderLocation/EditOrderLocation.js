@@ -120,19 +120,37 @@ const EditOrderLocation = ({ navigation, route }) => {
             location_id: LocationId,
         };
         console.log('newItem---', newItem, pickDrop);
-        const isSameLocation =
-            newItem?.location_id &&
-              ((pickDrop === 'pick') &&
-                  (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
-                    parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)) ||
-                (pickDrop !== 'pick') &&
-                (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
-                 parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)));
+        // const isSameLocation =
+        //     newItem?.location_id &&
+        //       ((pickDrop === 'pick') &&
+        //           (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
+        //             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)) ||
+        //         (pickDrop !== 'pick') &&
+        //         (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
+        //          parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)));
 
 
-        // console.log("isSameLocation--", isSameLocation);
+        // // console.log("isSameLocation--", isSameLocation);
 
-        if (isSameLocation) {
+        // if (isSameLocation) {
+        //     alert("You can't choose the same location. Please choose another location.");
+        //     return;
+        // }
+
+        if (
+            (newItem?.location_id || newItem?.geo_location) &&
+            pickDrop === 'pick' &&
+            parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
+            parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)
+        ) {
+            alert("You can't choose the same location. Please choose another location.");
+            return;
+        } else if (
+            (newItem?.location_id || newItem?.geo_location) &&
+            pickDrop !== 'pick' &&
+            parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
+            parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)
+        ) {
             alert("You can't choose the same location. Please choose another location.");
             return;
         }

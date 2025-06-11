@@ -106,12 +106,13 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           zoomTapEnabled
           rotateEnabled
           loadingEnabled
-          showsCompass>
+          showsCompass={false}
+        >
           {markerArray && markerArray?.length > 0 ? (
             markerArray?.map((marker, index) => (
               <Marker
                 key={index}
-                tracksViewChanges={false}       
+                tracksViewChanges={false}
                 coordinate={{
                   latitude: Number(marker?.geo_location?.lat),
                   longitude: Number(marker?.geo_location?.lng),

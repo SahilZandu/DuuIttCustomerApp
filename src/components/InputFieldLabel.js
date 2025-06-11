@@ -1,15 +1,15 @@
-import React from 'react';
-import {TouchableOpacity, View, Text, TextInput} from 'react-native';
-import {useFormikContext} from 'formik';
-import {colors} from '../theme/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import React, { useState } from 'react';
+import { TouchableOpacity, View, Text, TextInput } from 'react-native';
+import { useFormikContext } from 'formik';
+import { colors } from '../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 import FieldErrorMessage from './FieldErrorMessage';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {fonts} from '../theme/fonts/fonts';
+import { fonts } from '../theme/fonts/fonts';
 
 function InputFieldLabel({
   name,
@@ -40,11 +40,24 @@ function InputFieldLabel({
     dirty,
     setFieldValue,
   } = useFormikContext();
+  const [inputShowError, setInputShowError] = useState(false)
+
+
+  function extractPhoneNumber(input) {
+    console.log("input---", input);
+    // Remove everything except digits
+    const digitsOnly = input.replace(/\D/g, '');
+    // Extract the last 10 digits (assumes Indian number)
+    console.log("digitsOnly.slice(-10)", digitsOnly.slice(-10));
+
+    return digitsOnly.slice(-10);
+  }
+
 
   return (
     <>
-      <View style={{marginTop:marginTop? marginTop : '10%', justifyContent: 'center'}}>
-        <View style={{position:'relative'}}>
+      <View style={{ marginTop: marginTop ? marginTop : '10%', justifyContent: 'center' }}>
+        <View style={{ position: 'relative' }}>
           {/* Label with "cut through border" effect */}
           {inputLabel && (
             <Text
@@ -71,7 +84,7 @@ function InputFieldLabel({
               borderWidth: borderWidth ? borderWidth : 1,
               borderColor: colors.colorBB,
               paddingHorizontal: '4%',
-              backgroundColor:colors.appBackground
+              backgroundColor: colors.appBackground
             }}>
             <TextInput
               editable={!rightIcon}
@@ -81,14 +94,22 @@ function InputFieldLabel({
               value={value ? value : values[name]}
               onBlur={() => (onBlur ? onBlur() : setFieldTouched(name))}
               onChangeText={t => {
+                // if (keyboardType == "number-pad") {
+                //   let res = extractPhoneNumber(t)
+                //   setFieldValue(name, res);
+                // } else {
                 setFieldValue(name, t);
+                // }
+              }}
+              onFocus={() => {
+                setInputShowError(true)
               }}
               style={{
                 flex: 1,
                 height: hp('5.8%'),
                 color: colors.black,
                 fontSize: RFValue(13),
-                marginLeft:'2%',
+                marginLeft: '2%',
               }}
               maxLength={maxLength}
               {...otherProps}
@@ -97,8 +118,8 @@ function InputFieldLabel({
               <TouchableOpacity
                 onPress={onRightPress}
                 activeOpacity={0.8}
-                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
-                style={{marginRight: '1%'}}>
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                style={{ marginRight: '1%' }}>
                 <SvgXml width={17} height={17} xml={image} />
               </TouchableOpacity>
             )}
@@ -116,10 +137,10 @@ function InputFieldLabel({
         )}
       </View>
 
-      <View style={{marginHorizontal: 10}}>
+      <View style={{ marginHorizontal: 10 }}>
         <FieldErrorMessage
           error={errors[name]}
-          visible={rightIcon || showErrorMsg ? true : touched[name]}
+          visible={rightIcon || showErrorMsg ? true : inputShowError || touched[name]}
         />
       </View>
     </>

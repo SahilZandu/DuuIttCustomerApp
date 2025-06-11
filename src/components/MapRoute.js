@@ -15,7 +15,8 @@ import { appImages } from '../commons/AppImages';
 import MapView, { Marker, AnimatedRegion, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import PolylineDecoder from '@mapbox/polyline';
 import { colors } from '../theme/colors';
-import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
+import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, } from './GeoCodeAddress';
+import { useFocusEffect } from '@react-navigation/native';
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
@@ -26,6 +27,12 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const markerRef = useRef(null);
   const markerDesRef = useRef(null);
 
+  useFocusEffect(
+    useCallback(() => {
+      setMapManageRideDaltaInitials();
+    }, [origin])
+  )
+
   const [destinationLocation, setDestinationLocation] = useState({
     lat: null,
     lng: null,
@@ -33,18 +40,18 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const [coords, setCoords] = useState([]);
   // const [region, setRegion] = useState({
   const [mapRegion, setMapRegion] = useState({
-    latitude: Number(origin?.lat) ? Number(origin?.lat) : null,
-    longitude: Number(origin?.lng) ? Number(origin?.lng) : null,
-    latitudeDelta: getMpaDalta().latitudeDelta,
-    longitudeDelta: getMpaDalta().longitudeDelta,
+    latitude: Number(origin?.lat) || 30.7400,
+    longitude: Number(origin?.lng) || 76.7900,
+    ...getMapManageRideDalta(),
   });
+
+
   const [isMapReady, setIsMapReady] = useState(false);
   const [animatedCoordinate] = useState(
     new AnimatedRegion({
       latitude: Number(origin?.lat) || null,
       longitude: Number(origin?.lng) || null,
-      latitudeDelta: getMpaDalta().latitudeDelta,
-      longitudeDelta: getMpaDalta().longitudeDelta,
+      ...getMapManageRideDalta(),
     })
   );
 
@@ -52,8 +59,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     new AnimatedRegion({
       latitude: Number(destination?.lat) || null,
       longitude: Number(destination?.lng) || null,
-      latitudeDelta: getMpaDalta().latitudeDelta,
-      longitudeDelta: getMpaDalta().longitudeDelta,
+      ...getMapManageRideDalta(),
     })
   );
   const mohaliChandigarhBounds = {
@@ -92,22 +98,49 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   };
 
+
+
   // Update latitude and longitude based on origin
   useEffect(() => {
     console.log('origin--MapRoute', origin, destination);
     if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
       const newRegion = {
-        latitude: Number(origin?.lat) ? Number(origin?.lat) : null,
-        longitude: Number(origin?.lng) ? Number(origin?.lng) : null,
-        latitudeDelta: getMpaDalta().latitudeDelta,
-        longitudeDelta: getMpaDalta().longitudeDelta,
+        latitude: Number(origin?.lat) || 30.7400,
+        longitude: Number(origin?.lng) || 76.7900,
+        ...getMapManageRideDalta(),
       };
       setMapRegion(newRegion);
-      // if (mapRef.current) {
+      // if (mapRef?.current) {
       //   mapRef?.current?.animateToRegion(newRegion, 1000);
       //   }
     }
   }, [origin]);
+
+  useEffect(() => {
+    let intervalId;
+    if (origin?.lat && origin?.lng) {
+      const newRegion = {
+        latitude: Number(origin.lat) || 30.7076,
+        longitude: Number(origin.lng) || 76.7151,
+        ...getMapManageRideDalta(),
+      };
+      setMapRegion(newRegion);
+      intervalId = setTimeout(() => {
+        setMapRegion(newRegion);
+        if (mapRef?.current) {
+          mapRef?.current?.animateToRegion(newRegion, 1000);
+        }
+      },5000); // 5 seconds
+    }
+
+    // Cleanup interval on unmount or origin change
+    return () => {
+      if (intervalId) {
+        clearTimeout(intervalId);
+      }
+    };
+  }, []);
+
 
   // const originMarker = useMemo(
   //   () => ({
@@ -210,7 +243,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       if (mapRef.current) {
         mapRef.current.animateCamera(camera, { duration: 1000 });
       }
-    }, 20000);
+    }, 60000);
 
     // return () => clearInterval(timeout);
     return () => clearTimeout(timeout);
@@ -301,7 +334,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         <MapView
           provider={PROVIDER_GOOGLE}
           onRegionChange={e => {
-            setMpaDalta(e);
+            setMapManageRideDalta(e);
+            // setMpaDalta(e);
             // console.log('e---onRegionChange', e);
             // handleRegionChangeComplete(e)
           }}
@@ -316,7 +350,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           zoomTapEnabled={true}
           rotateEnabled={true}
           loadingEnabled={true}
-          showsCompass={true}
+          showsCompass={false}
           cacheEnabled={false}
           followsUserLocation={false}
           showsUserLocation={false}

@@ -1,17 +1,17 @@
-import React from 'react';
-import {Pressable, TouchableOpacity, View, Text, TextInput, Platform} from 'react-native';
-import {useFormikContext} from 'formik';
-import {colors} from '../theme/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import React, { useState } from 'react';
+import { Pressable, TouchableOpacity, View, Text, TextInput, Platform } from 'react-native';
+import { useFormikContext } from 'formik';
+import { colors } from '../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 import FieldErrorMessage from './FieldErrorMessage';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg } from '../commons/AppImages';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {fonts} from '../theme/fonts/fonts';
-import {LaunchGallary} from './LaunchGallery';
+import { fonts } from '../theme/fonts/fonts';
+import { LaunchGallary } from './LaunchGallery';
 
 function InputFieldMultiLine({
   name,
@@ -42,10 +42,11 @@ function InputFieldMultiLine({
     setFieldValue,
   } = useFormikContext();
   // console.log("errors--dd",errors)
+  const [inputShowError, setInputShowError] = useState(false)
 
   return (
     <>
-      <View style={{marginTop: '5%', justifyContent: 'center'}}>
+      <View style={{ marginTop: '5%', justifyContent: 'center' }}>
         {inputLabel && (
           <Text
             style={{
@@ -77,6 +78,9 @@ function InputFieldMultiLine({
             onChangeText={t => {
               setFieldValue(name, t);
             }}
+            onFocus={() => {
+              setInputShowError(true)
+            }}
             style={{
               // flex: 1,
               height: height ? height : hp('18%'),
@@ -87,7 +91,7 @@ function InputFieldMultiLine({
               paddingVertical: '2%',
               textAlignVertical: 'top', // Aligns text to the top
               textAlign: 'left',        // Aligns text to the left
-              paddingHorizontal:0,     // Removes extra horizontal padding
+              paddingHorizontal: 0,     // Removes extra horizontal padding
             }}
             maxLength={maxLength}
             {...otherProps}
@@ -96,17 +100,17 @@ function InputFieldMultiLine({
             <TouchableOpacity
               onPress={onRightPress}
               activeOpacity={0.8}
-              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
-              style={{marginRight: '4%'}}>
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              style={{ marginRight: '4%' }}>
               <SvgXml width={17} height={17} xml={image} />
             </TouchableOpacity>
           )}
         </View>
       </View>
-      <View style={{marginHorizontal: 10}}>
+      <View style={{ marginHorizontal: 10 }}>
         <FieldErrorMessage
           error={errors[name]}
-          visible={rightIcon ? true : touched[name]}
+          visible={rightIcon || inputShowError ? true : inputShowError || touched[name]}
         />
       </View>
     </>

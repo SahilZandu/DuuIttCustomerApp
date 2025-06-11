@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet } from 'react-native';
+import { fonts } from '../../../theme/fonts/fonts';
+import { colors } from '../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   screen: {
     backgroundColor: colors.appBackground,
-    marginTop:'4%'
+    marginTop: hp('-2%')
   },
- 
+
 });

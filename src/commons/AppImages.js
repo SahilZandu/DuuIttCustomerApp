@@ -898,4 +898,5 @@ export const appImages = {
   customerSupportImage:require('../assets/customerSupportImage.png'),
   googleMapsIcon: require('../assets/googleMapsIcon.png'),
   infoIcon: require('../assets/infoIcon.png'),
+  onlineUnavailable:require('../assets/online_Unavailable.png'),
 };

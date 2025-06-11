@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Text,
   View,
@@ -7,17 +7,17 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import {colors} from '../../../theme/colors';
+import { colors } from '../../../theme/colors';
 import LoginForm from '../../../forms/LoginForm';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Spacer from '../../../halpers/Spacer';
-import {Strings} from '../../../translates/strings';
-import {styles} from './styles';
+import { Strings } from '../../../translates/strings';
+import { styles } from './styles';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 import BTN from '../../../components/cta/BTN';
 
-export default function Login({navigation}) {
+export default function Login({ navigation }) {
   const [type, setType] = useState('Mobile');
   const [update, setUpdate] = useState(true);
 
@@ -62,16 +62,16 @@ export default function Login({navigation}) {
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps={'handled'}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}>
         <View style={styles.screen}>
           <AuthScreenContent
-            marginTop={'25%'}
+            marginTop={'35%'}
             title={Strings?.sign_In}
             subTitle={Strings?.accessYourAccount}
           />
           <Spacer space={'6%'} />
           {update && <LoginForm navigation={navigation} type={type} />}
-          <Text style={styles.orText}>{Strings.Or}</Text>
+          {/* <Text style={styles.orText}>{Strings.Or}</Text>
           <Spacer space={'5%'} />
           <BTN
           backgroundColor={colors.white}
@@ -83,7 +83,7 @@ export default function Login({navigation}) {
             }
             textTransform={'capitalize'}
             onPress={handleType}
-          />
+          /> */}
           {/* <Pressable
             style={styles.touchView}
             onPress={handleType}>

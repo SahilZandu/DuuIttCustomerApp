@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, View, Text } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useFormikContext } from 'formik';
@@ -38,7 +38,7 @@ function InputField({
     dirty,
     setFieldValue,
   } = useFormikContext();
-
+  const [inputShowError, setInputShowError] = useState(false)
 
 
   return (
@@ -148,6 +148,9 @@ function InputField({
               ;
               setFieldValue(name, t);
             }}
+            onFocus={() => {
+              setInputShowError(true)
+            }}
             {...otherProps}
           />
         </Pressable>
@@ -165,7 +168,7 @@ function InputField({
           </Text>
         )}
       </View>
-      <FieldErrorMessage errorStyle={{ marginTop: 0 }} error={errors[name]} visible={touched[name]} />
+      <FieldErrorMessage errorStyle={{ marginTop: 0 }} error={errors[name]} visible={inputShowError || touched[name]} />
     </>
   );
 }

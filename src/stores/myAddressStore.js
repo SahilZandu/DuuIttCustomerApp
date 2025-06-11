@@ -17,6 +17,7 @@ export default class MyAddressStore {
     geoLocation,
     loactionId,
     onSuccess,
+    onErrorMsg,
     handleLoading,
   ) => {
     handleLoading(true);
@@ -58,6 +59,7 @@ export default class MyAddressStore {
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
+        onErrorMsg(message)
       }
       handleLoading(false);
     } catch (error) {
@@ -67,6 +69,7 @@ export default class MyAddressStore {
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
+      onErrorMsg(m)
     }
   };
 

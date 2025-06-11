@@ -1,16 +1,16 @@
-import React from 'react';
-import {Pressable, TouchableOpacity, View, Text, TextInput} from 'react-native';
-import {useFormikContext} from 'formik';
-import {colors} from '../theme/colors';
-import {RFValue} from 'react-native-responsive-fontsize';
+import React, { useState } from 'react';
+import { Pressable, TouchableOpacity, View, Text, TextInput } from 'react-native';
+import { useFormikContext } from 'formik';
+import { colors } from '../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
 import FieldErrorMessage from './FieldErrorMessage';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg } from '../commons/AppImages';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {fonts} from '../theme/fonts/fonts';
+import { fonts } from '../theme/fonts/fonts';
 
 
 function FieldInput({
@@ -37,11 +37,12 @@ function FieldInput({
     dirty,
     setFieldValue,
   } = useFormikContext();
+  const [inputShowError, setInputShowError] = useState(false)
 
 
   return (
     <>
-      <View style={{marginHorizontal: 22, marginTop: '5%'}}>
+      <View style={{ marginHorizontal: 22, marginTop: '5%' }}>
         {inputLabel && (
           <Text
             style={{
@@ -53,7 +54,7 @@ function FieldInput({
           </Text>
         )}
         <View
-          style={{flexDirection: 'row', alignItems: 'center'}}>
+          style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TextInput
             editable={rightIcon ? false : true}
             keyboardType={keyboardType}
@@ -64,23 +65,26 @@ function FieldInput({
             onChangeText={t => {
               setFieldValue(name, t);
             }}
+            onFocus={() => {
+              setInputShowError(true)
+            }}
             style={{
               flex: 1,
               height: hp('5%'),
               marginRight: '2%',
               color: colors.black,
               fontSize: RFValue(12),
-              fontFamily:fonts.medium,
+              fontFamily: fonts.medium,
             }}
             maxLength={maxLength}
             {...otherProps}
           />
-          {(rightIcon && image)  && (
+          {(rightIcon && image) && (
             <TouchableOpacity
-            onPress={onRightPress}
-            activeOpacity={0.8}
-              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
-              style={{marginRight: 5}}>
+              onPress={onRightPress}
+              activeOpacity={0.8}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              style={{ marginRight: 5 }}>
               <SvgXml width={17} height={17} xml={image} />
             </TouchableOpacity>
           )}
@@ -91,7 +95,7 @@ function FieldInput({
             backgroundColor: '#D9D9D9',
           }}
         />
-        <FieldErrorMessage  error={errors[name]} visible={touched[name]} />
+        <FieldErrorMessage error={errors[name]} visible={inputShowError || touched[name]} />
       </View>
     </>
   );

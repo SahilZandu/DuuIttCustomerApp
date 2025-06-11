@@ -5,8 +5,7 @@ import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import { rootStore } from '../../../../stores/rootStore';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import { useFocusEffect } from '@react-navigation/native';
-import { CommonActions } from '@react-navigation/native';
+import { useFocusEffect,CommonActions} from '@react-navigation/native';
 import Url from '../../../../api/Url';
 import ReusableSurfaceComp from '../../../../components/ReusableSurfaceComp';
 import TouchTextRightIconComp from '../../../../components/TouchTextRightIconComp';
@@ -183,18 +182,18 @@ export default function SideMenu({ navigation }) {
       disable: false,
     },
 
-    {
-      id: '1',
-      title: (appUser?.password &&
-        appUser?.password?.toString()?.length > 0)
-        ? "Update Password" : 'Set Password',
-      onPress: () => {
-        navigation.navigate('setUpdatePass');
-      },
-      icon: appImagesSvg.setUpdateIcon,
-      show: (appUser?.email && appUser?.email?.length > 0) ? true : false,
-      disable: false,
-    },
+    // {
+    //   id: '1',
+    //   title: (appUser?.password &&
+    //     appUser?.password?.toString()?.length > 0)
+    //     ? "Update Password" : 'Set Password',
+    //   onPress: () => {
+    //     navigation.navigate('setUpdatePass');
+    //   },
+    //   icon: appImagesSvg.setUpdateIcon,
+    //   show: (appUser?.email && appUser?.email?.length > 0) ? true : false,
+    //   disable: false,
+    // },
     {
       id: '2',
       title: 'My Address',

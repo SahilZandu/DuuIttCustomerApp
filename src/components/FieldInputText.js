@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Pressable, TouchableOpacity, View, Text, TextInput} from 'react-native';
 import {useFormikContext} from 'formik';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -46,6 +46,19 @@ function FieldInputText({
     setFieldValue,
   } = useFormikContext();
   // console.log("errors--dd",errors)
+    const [inputShowError, setInputShowError] = useState(false)
+
+
+    // onFocus={() => {
+    //   setInputShowError(true)
+    // }}
+
+    const onTouchPress =()=>{
+      setInputShowError(true)
+      onRightPress()
+    }
+
+
 
   return (
     <>
@@ -80,7 +93,8 @@ function FieldInputText({
           </Text>
         )}
         <TouchableOpacity
-          onPress={onRightPress}
+          // onPress={onRightPress}
+          onPress={()=>{onTouchPress()}}
           activeOpacity={0.8}
           style={{
             flexDirection: 'row',
@@ -103,7 +117,8 @@ function FieldInputText({
           </Text>
           {rightIcon && (
             <TouchableOpacity
-              onPress={onRightPress}
+              // onPress={onRightPress}
+              onPress={()=>{onTouchPress()}}
               activeOpacity={0.8}
               hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
               style={{
@@ -132,7 +147,7 @@ function FieldInputText({
       <View style={{justifyContent:'center'}}>
         <FieldErrorMessage
           error={errors[name]}
-          visible={rightIcon ? true : touched[name]}
+          visible={rightIcon || inputShowError  ? true : inputShowError ||  touched[name]}
         />
       </View>
     </>
