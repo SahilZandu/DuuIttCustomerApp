@@ -2,9 +2,10 @@ import * as Yup from 'yup';
 
 export const updateProfileValidations = () => {
   return Yup.object().shape({
-    // ['image']: Yup.string('Profile picture is required')
-    //   .trim()
-    //   .required('Profile picture is required'),
+    ['image']: Yup.string('Profile picture is required')
+      .trim()
+       .notRequired(),
+      // .required('Profile picture is required'),
     // ['name']: Yup.string('Enter your name')
     // .trim()
     // .required('Name is required')
@@ -22,7 +23,8 @@ export const updateProfileValidations = () => {
       .trim()
       .email('Enter a valid email')
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g, 'Enter a valid email')
-      .required('Enter your email address'),
+      // .required('Enter your email address')
+       .notRequired(),
     ['mobile']: Yup.string('Enter your phone number')
       .trim()
       .required('Enter your phone number')
@@ -34,9 +36,12 @@ export const updateProfileValidations = () => {
       ),
     ['dob']: Yup.string('Select date of birth')
       .trim()
-      .required('Date of birth is required'),
+      // .required('Date of birth is required'),
+      .notRequired(),
     ['gender']: Yup.string('Select your gender')
       .trim()
       .required('Select your gender'),
+    
+
   });
 };

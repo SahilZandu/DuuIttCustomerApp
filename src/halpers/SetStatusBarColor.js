@@ -58,6 +58,7 @@ const DashbordScreens = [
   'personalInfo',
   "editOrderLocation",
   "chat",
+'addRestaurantLocation',
 
 ];
 

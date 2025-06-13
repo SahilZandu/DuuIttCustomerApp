@@ -1,32 +1,32 @@
-import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import CTA from '../components/cta/CTA';
-import {Formik, useFormikContext} from 'formik';
+import { Formik, useFormikContext } from 'formik';
 import InputField from '../components/InputField';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import {Strings} from '../translates/strings';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
-import {colors} from '../theme/colors';
-import {rootStore} from '../stores/rootStore';
+import { Strings } from '../translates/strings';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../theme/fonts/fonts';
+import { colors } from '../theme/colors';
+import { rootStore } from '../stores/rootStore';
 import FieldInput from '../components/FieldInput';
-import {appImagesSvg} from '../commons/AppImages';
+import { appImagesSvg } from '../commons/AppImages';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
-import {personalInfoValidations} from './formsValidation/personalInfoValidations';
+import { personalInfoValidations } from './formsValidation/personalInfoValidations';
 import FieldInputText from '../components/FieldInputText';
 import InputFieldLabel from '../components/InputFieldLabel';
 
 let dateStart = new Date();
 
-const PersonalInfoForm = ({navigation, route}) => {
-  const {loginType} = route.params;
-  const {appUser} = rootStore.commonStore;
-  const {updateCustomerInfo} = rootStore.authStore;
+const PersonalInfoForm = ({ navigation, route }) => {
+  const { loginType } = route.params;
+  const { appUser } = rootStore.commonStore;
+  const { updateCustomerInfo } = rootStore.authStore;
   const [loading, setLoading] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
 
@@ -64,8 +64,8 @@ const PersonalInfoForm = ({navigation, route}) => {
     return new Date(year, month - 1, day);
   };
 
-  const DatePickeButton = ({}) => {
-    const {setFieldValue, values} = useFormikContext();
+  const DatePickeButton = ({ }) => {
+    const { setFieldValue, values } = useFormikContext();
     const selectedDate = values?.dob
       ? parseDateFromString(values?.dob)
       : dateStart;
@@ -95,8 +95,8 @@ const PersonalInfoForm = ({navigation, route}) => {
     );
   };
 
-  const FormButton = ({loading, onPress}) => {
-    const {dirty, isValid, values} = useFormikContext();
+  const FormButton = ({ loading, onPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
     console.log('values--', values);
     return (
       <CTA
@@ -112,41 +112,39 @@ const PersonalInfoForm = ({navigation, route}) => {
     <Formik
       initialValues={initialValues}
       validationSchema={personalInfoValidations()}>
-      <View pointerEvents={loading ?"none" :'auto'} style={styles.main}>
-        <InputField
-          textColor={colors.black}
+      <View pointerEvents={loading ? "none" : 'auto'} style={styles.main}>
+        <InputFieldLabel
+          borderWidth={1}
+          inputLabel={'Name*'}
           name={'name'}
-          label={''}
-          placeholder={'Enter your name'}
+          placeholder={'Enter full name'}
           maxLength={50}
+          borderRadius={50}
         />
-
-        <InputField
-          autoCapitalize={'none'}
-          editable={loginType == 'Email' ? false : true}
-          isBlur={loginType == 'Email' ? true : false}
-          textColor={colors.black}
-          keyboardType="email-address"
-          name={'email'}
-          label={''}
-          placeholder={'Enter email address'}
-        />
-
-        <InputField
+        <InputFieldLabel
+          borderWidth={1}
+          borderRadius={50}
           editable={loginType == 'Mobile' ? false : true}
           isBlur={loginType == 'Mobile' ? true : false}
-          textColor={colors.black}
           keyboardType="number-pad"
           maxLength={10}
-          // prefix={'+91'}
           name={'mobile'}
-          label={''}
+          inputLabel={'Mobile Number*'}
           placeholder={'Enter mobile number'}
         />
-
-        <Spacer space={'-4%'} />
-
+        <InputFieldLabel
+          autoCapitalize={'none'}
+          borderWidth={1}
+          borderRadius={50}
+          editable={loginType == 'Email' ? false : true}
+          isBlur={loginType == 'Email' ? true : false}
+          keyboardType="email-address"
+          name={'email'}
+          inputLabel={'Email(Optional)'}
+          placeholder={'Enter email address'}
+        />
         <FieldInputText
+          inputLabel={"Date of Birth(Optional)"}
           borderRadius={50}
           borderWidth={1.2}
           name={'dob'}
@@ -174,7 +172,7 @@ const styles = StyleSheet.create({
     // width: wp('85%'),
     //  alignSelf: 'center',
     marginHorizontal: 30,
-    backgroundColor:colors.appBackground
+    backgroundColor: colors.appBackground
   },
 
   forgotView: {

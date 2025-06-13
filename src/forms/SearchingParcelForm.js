@@ -228,7 +228,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         }
       }, 1000);
     }
-  }, [parcelInfo]);
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -277,8 +277,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     useCallback(() => {
       checkUnseenMsg();
       setChatNotificationStatus(true);
-      // handleAndroidBackButton();
-      handleAndroidBackButton('', '', 'parcel', navigation);
+      handleAndroidBackButton('', 'parcel', 'parcel', navigation);
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
         const intervalId = setInterval(() => {
           setCurrentLocation();
@@ -770,7 +769,8 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                   refershFindRidersData();
                 }}
                 onBackToHome={() => {
-                  backToHome();
+                  navigation.navigate('priceConfirmed', { item: parcelInfo });
+                  // backToHome();
                 }}
                 onCancelOrder={() => {
                   onDotPress();

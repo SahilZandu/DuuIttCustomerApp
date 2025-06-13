@@ -536,7 +536,7 @@ export default function PriceConfirmed({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       // handleAndroidBackButton();
-      handleAndroidBackButton('', '', 'ride', navigation);
+      handleAndroidBackButton('', 'ride', 'ride', navigation);
       setSelectedCount(0);
       setSelectedWidth('0%');
     }, []),
@@ -558,10 +558,10 @@ export default function PriceConfirmed({ navigation, route }) {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: wp(88),
+          // justifyContent: 'space-between',
+          // width: wp(88),
         }}>
-        <BTN
+        {/* <BTN
           backgroundColor={colors.white}
           labelColor={colors.main}
           width={wp(42)}
@@ -570,9 +570,9 @@ export default function PriceConfirmed({ navigation, route }) {
           onPress={() => {
             onBackPress();
           }}
-        />
+        /> */}
         <BTN
-          width={wp(42)}
+          width={wp(88)}
           title={'Find a driver'}
           textTransform={'capitalize'}
           onPress={() => {
@@ -769,9 +769,9 @@ export default function PriceConfirmed({ navigation, route }) {
                 onPress={value => {
                   handleFindRider(value);
                 }}
-                onBackPress={() => {
-                  backToHome();
-                }}
+                // onBackPress={() => {
+                //   backToHome();
+                // }}
               />
             </View>
           </>

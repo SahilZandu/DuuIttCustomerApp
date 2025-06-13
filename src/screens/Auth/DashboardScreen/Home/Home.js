@@ -165,7 +165,7 @@ export default function Home({ navigation }) {
               keyboardShouldPersistTaps={'handled'}>
               <View style={styles.innerView}>
                 <ChangeRoute data={homeCS} navigation={navigation} />
-                <RenderOffer data={mainArray} />
+                {/* <RenderOffer data={mainArray} /> */}
               </View>
               <View style={styles.bottomImageView}>
                 <Image

@@ -26,6 +26,7 @@ function InputField({
   onChange,
   editable,
   keyboardType,
+  labelColor,
   ...otherProps
 }) {
   const {
@@ -47,16 +48,16 @@ function InputField({
         style={{
           justifyContent: 'center',
           marginVertical: '2%',
-          marginTop: '6%',
+          marginTop: inputLabel ? '4%' : '6%',
           opacity: isBlur ? 0.5 : 1,
         }}>
         {inputLabel && (
           <Text
             style={{
-              marginBottom: 10,
+              marginBottom: '1.5%',
               fontSize: RFValue(13),
               fontFamily: fonts.regular,
-              color: '#8F8F8F',
+              color: labelColor ? labelColor : colors.color8F,
               marginLeft: '2%'
             }}>
             {inputLabel}

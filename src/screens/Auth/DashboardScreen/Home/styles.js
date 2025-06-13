@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     marginHorizontal:10
   },
   bottomImageView:{
-    marginTop:Platform.OS === 'ios'? '0.1%': '2%'
+    marginTop:Platform.OS === 'ios'? '0.5%': '2%'
   },
   bottomImage:{
     height: hp('30%'),

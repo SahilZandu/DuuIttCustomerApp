@@ -1,16 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, Dimensions, TouchableOpacity,View, Text} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Dimensions, TouchableOpacity, View, Text } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import { appImagesSvg } from '../commons/AppImages';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 
-const RiderNotAvailableComp = ({onRefershFindRiders, onBackToHome,onCancelOrder}) => {
+const RiderNotAvailableComp = ({ onRefershFindRiders, onBackToHome, onCancelOrder }) => {
 
   return (
     <View style={styles.container}>
@@ -23,22 +23,26 @@ const RiderNotAvailableComp = ({onRefershFindRiders, onBackToHome,onCancelOrder}
         style={styles.btnTouch}>
         <SvgXml height={50} width={50} xml={appImagesSvg.refershIcon} />
       </TouchableOpacity>
-      <View style={{justifyContent:"space-between",
-        flexDirection:'row',alignItems:'center',marginHorizontal:wp('10%')}}>
-      <TouchableOpacity
-        onPress={onCancelOrder}
-        activeOpacity={0.8}
-        style={styles.cancelOrderTouch}>
-        <Text style={styles.cancelText}>Cancel Order</Text>
-        <View style={[styles.bottomLine,{backgroundColor:colors.red}]} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={onBackToHome}
-        activeOpacity={0.8}
-        style={styles.backHomeTouch}>
-        <Text style={styles.backHomeText}>Back to home</Text>
-        <View style={styles.bottomLine} />
-      </TouchableOpacity>
+      <View style={{
+        justifyContent: "space-between",
+        flexDirection: 'row', alignItems: 'center', marginHorizontal: wp('10%')
+      }}>
+        <TouchableOpacity
+          onPress={onCancelOrder}
+          activeOpacity={0.8}
+          style={styles.cancelOrderTouch}>
+          <Text style={styles.cancelText}>Cancel Order</Text>
+          <View style={[styles.bottomLine, { backgroundColor: colors.red }]} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onBackToHome}
+          activeOpacity={0.8}
+          style={styles.backHomeTouch}>
+          <Text style={styles.backHomeText}>
+            {/* Back to home */}Raise Your Fair
+          </Text>
+          <View style={styles.bottomLine} />
+        </TouchableOpacity>
       </View>
     </View>
   );

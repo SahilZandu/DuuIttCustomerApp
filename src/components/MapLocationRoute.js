@@ -36,8 +36,8 @@ const MapLocationRoute = ({
   const markerRef = useRef(null);
   const debounceTimeout = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat || getCurrentLocation()?.latitude || 30.7400,
-    longitude: origin?.lng || getCurrentLocation()?.longitude || 76.7900,
+    latitude: Number(origin?.lat) || getCurrentLocation()?.latitude || 30.7400,
+    longitude: Number(origin?.lng) || getCurrentLocation()?.longitude || 76.7900,
     ...getMpaDalta(),
     //   latitudeDelta: getMpaDalta().latitudeDelta,
     //   longitudeDelta: getMpaDalta().longitudeDelta,
@@ -46,8 +46,8 @@ const MapLocationRoute = ({
 
   const [animatedCoordinate] = useState(
     new AnimatedRegion({
-      latitude: origin?.lat || 30.7400,
-      longitude: origin?.lng || 76.7900,
+      latitude: Number(origin?.lat) || null,
+      longitude: Number(origin?.lng) || null,
       ...getMpaDalta(),
       //     latitudeDelta: getMpaDalta().latitudeDelta,
       //     longitudeDelta: getMpaDalta().longitudeDelta,
@@ -137,7 +137,7 @@ const MapLocationRoute = ({
         );
       }
     }
-  }, [origin,isMapReady]);
+  }, [origin, isMapReady]);
 
   // useEffect(() => {
   //   if (origin) {

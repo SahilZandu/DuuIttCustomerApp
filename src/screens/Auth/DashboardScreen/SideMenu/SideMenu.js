@@ -331,14 +331,8 @@ export default function SideMenu({ navigation }) {
   const getIncompleteParcelOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('parcel');
     console.log('resIncompleteOrder parcel--', resIncompleteOrder);
-
-    if ((resIncompleteOrder[0]?.status == 'pending'
-      || resIncompleteOrder[0]?.status == 'find-rider')) {
-      // deleteIncompleteOrder(resIncompleteOrder);
-    }
-    else if (resIncompleteOrder?.length > 0 &&
-      (resIncompleteOrder[0]?.status !== 'pending'
-        || resIncompleteOrder[0]?.status !== 'find-rider')
+ if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending')
     ) {
       setIncompletedParcelOrder(resIncompleteOrder);
     }
@@ -347,14 +341,8 @@ export default function SideMenu({ navigation }) {
   const getIncompleteRideOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
     console.log('resIncompleteOrder parcel--', resIncompleteOrder);
-
-    if ((resIncompleteOrder[0]?.status == 'pending'
-      || resIncompleteOrder[0]?.status == 'find-rider')) {
-      // deleteIncompleteOrder(resIncompleteOrder);
-    }
-    else if (resIncompleteOrder?.length > 0 &&
-      (resIncompleteOrder[0]?.status !== 'pending'
-        || resIncompleteOrder[0]?.status !== 'find-rider')
+    if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending')
     ) {
       setIncompletedRideOrder(resIncompleteOrder);
     }

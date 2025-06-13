@@ -14,18 +14,19 @@ export default class DashboardStore {
     handleLoading(true);
     var request = new FormData();
     request.append('name', values?.name);
-    request.append('email', values?.email?.toLowerCase());
+    if (values?.email?.length > 0) {
+      request.append('email', values?.email?.toLowerCase());
+    }
     request.append('phone', Number(values?.mobile));
     request.append('gender', values?.gender);
     request.append('date_of_birth', values?.date_of_birth);
-    
-    if(values?.image?.length > 0){
-    request.append('profile_pic', {
-      uri: values?.image,
-      name: 'profile.png',
-      type: 'image/png',
-    });
-  }
+    if (values?.image?.length > 0) {
+      request.append('profile_pic', {
+        uri: values?.image,
+        name: 'profile.png',
+        type: 'image/png',
+      });
+    }
 
     console.log('request Data updateProfile:-', request, values);
 
@@ -279,7 +280,7 @@ export default class DashboardStore {
       page: 1,
       limit: limit,
       range: range?.toLowerCase() ?? 'all',
-      status:'all',
+      status: 'all',
     };
     console.log("requestData--=", requestData);
     try {

@@ -317,16 +317,23 @@ export default class AuthStore {
   };
 
 
-
   updateCustomerInfo = async (values, navigation, handleLoading) => {
     handleLoading(true)
     let requestData = {
       name: values?.name,
-      email: values?.email?.toLowerCase(),
-      phone: values?.mobile,
-      date_of_birth: values?.date_of_birth,
+      phone: Number(values?.mobile),
       gender: "male"
     };
+
+    if (values?.email?.length > 0) {
+      requestData.email = values?.email?.toLowerCase();
+    }
+
+    if (values?.date_of_birth?.length > 0) {
+      requestData.date_of_birth = values?.date_of_birth;
+    }
+
+
     console.log('request Data updateCustomerInfo:-', requestData);
     // return
     try {

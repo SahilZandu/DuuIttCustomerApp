@@ -120,8 +120,8 @@ const ProfileForm = ({ navigation, screenName }) => {
       name: appUser?.name,
       email: appUser?.email,
       mobile: appUser?.phone?.toString(),
-      dob: dateFormat(appUser?.date_of_birth),
-      date_of_birth: dateFormatApi(appUser?.date_of_birth),
+      dob: appUser?.date_of_birth?.length > 0 ? dateFormat(appUser?.date_of_birth) : '',
+      date_of_birth: appUser?.date_of_birth?.length > 0 ? dateFormatApi(appUser?.date_of_birth) : '',
       gender: appUser?.gender,
     });
 
@@ -238,32 +238,31 @@ const ProfileForm = ({ navigation, screenName }) => {
 
                 <InputFieldLabel
                   borderWidth={1}
-                  inputLabel={'Name'}
+                  inputLabel={'Name*'}
                   name={'name'}
                   placeholder={'Enter full name'}
                 />
                 <InputFieldLabel
-                  autoCapitalize={'none'}
                   borderWidth={1}
-                  inputLabel={'Email Address'}
-                  keyboardType="email-address"
-                  name={'email'}
-                  placeholder={'example@gmail.com'}
-                />
-                <InputFieldLabel
-                  borderWidth={1}
-                  inputLabel={'Phone Number'}
+                  inputLabel={'Phone Number*'}
                   keyboardType="number-pad"
                   name={'mobile'}
                   placeholder={'Enter phone number'}
                   maxLength={14}
                 />
-
+                <InputFieldLabel
+                  autoCapitalize={'none'}
+                  borderWidth={1}
+                  inputLabel={'Email Address(Optional)'}
+                  keyboardType="email-address"
+                  name={'email'}
+                  placeholder={'example@gmail.com'}
+                />
                 <FieldInputText
                   borderWidth={1.2}
                   name={'dob'}
                   rightIcon={true}
-                  inputLabel={'Date of Birth'}
+                  inputLabel={'Date of Birth(Optional)'}
                   placeholder={'Enter date of birth'}
                   image={appImagesSvg.datePickerSvg}
                   onBlur={true}
@@ -276,7 +275,7 @@ const ProfileForm = ({ navigation, screenName }) => {
                   position={'relative'}
                   marginTop={hp('-4%')}
                   name={'gender'}
-                  title={'Gender'}
+                  title={'Gender*'}
                   value={initialValues.gender}
                   list={genderArray}
                 />

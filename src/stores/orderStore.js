@@ -1,7 +1,7 @@
-import {action, computed, observable, runInAction} from 'mobx';
-import {agent} from '../api/agent';
-import {rootStore} from './rootStore';
-import {useToast} from '../halpers/useToast';
+import { action, computed, observable, runInAction } from 'mobx';
+import { agent } from '../api/agent';
+import { rootStore } from './rootStore';
+import { useToast } from '../halpers/useToast';
 
 export default class OrderStore {
   orderHistoryList = [];

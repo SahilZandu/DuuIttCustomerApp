@@ -27,6 +27,7 @@
     "@simform_solutions/react-native-audio-waveform": "^2.1.2",
     "axios": "^1.7.2",
     "formik": "^2.4.6",
+    "geolib": "^3.3.4",
     "ios": "^0.0.1",
     "mobx": "^6.13.1",
     "mobx-react-lite": "^4.0.7",

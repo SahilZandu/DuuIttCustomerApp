@@ -16,7 +16,7 @@ import SenderReceiverForm from './SenderReceiverForm';
 import { silderArray } from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
 import MapRoute from '../components/MapRoute';
-import Spacer from '../halpers/Spacer';
+import Spacer from '../halpers/Spacer'
 
 const RidePriceForm = ({ navigation }) => {
   const { senderAddress, receiverAddress, setSenderAddress, setReceiverAddress } =
@@ -41,6 +41,8 @@ const RidePriceForm = ({ navigation }) => {
       setAppUserData(appUser);
     }, []),
   );
+
+  
 
   console.log('appUser ride --', appUser);
 

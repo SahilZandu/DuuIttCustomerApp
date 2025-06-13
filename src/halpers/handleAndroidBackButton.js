@@ -5,7 +5,7 @@ import RNRestart from 'react-native-restart';
 
 
 
-function handleAndroidBackButton(navigation, tab,type,goBack) {
+function handleAndroidBackButton(navigation, tab, type, goBack) {
 
   const { addParcelInfo, setAddParcelInfo } = rootStore.parcelStore;
   const { updateOrderStatus } = rootStore.orderStore;
@@ -34,7 +34,7 @@ function handleAndroidBackButton(navigation, tab,type,goBack) {
     if (Platform.OS === 'ios') {
       goBack.navigate(type, { screen: 'home' });
       setAddParcelInfo({})
-     
+
       // setTimeout(() => {
       //   RNRestart.restart();
       // }, 200)
@@ -43,7 +43,7 @@ function handleAndroidBackButton(navigation, tab,type,goBack) {
       goBack.navigate(type, { screen: 'home' });
       BackHandler.exitApp();
       setAddParcelInfo({})
-     
+
       // setTimeout(() => {
       //   RNRestart.restart();
       // }, 200)
@@ -51,42 +51,47 @@ function handleAndroidBackButton(navigation, tab,type,goBack) {
   }
 
   const onBackPress = () => {
-    if (tab && tab !== "All Orders") {
+    if (tab && tab == "ride") {
+      goBack.navigate('ride', { screen: 'home' });
+    } else if (tab && tab == "parcel") {
+      goBack.navigate('parcel', { screen: 'home' });
+    }
+    else if (tab && tab !== "All Orders") {
       navigation.navigate('tab4')
     } else {
       if (navigation) {
         navigation.goBack();
       } else {
-        if ((addParcelInfo?._id?.length > 0 &&
-          (addParcelInfo?.status === 'pending'
-            || addParcelInfo?.status === 'find-rider'))) {
-          console.log('Item parcelId--', addParcelInfo?._id);
-          if (Platform.OS === 'ios') {
-            const subscription = AppState.addEventListener('change', nextAppState => {
-              // if (
-              //   appState.current.match(/inactive|background/) &&
-              //   nextAppState === 'active'
-              // ) {
-              //   console.log('App has come to the foreground!');
-              //   if (tab && tab !== "All Orders") {
-              //     navigation.navigate('tab4');
-              //   } else if (navigation.canGoBack()) {
-              //     navigation.goBack();
-              //   }
-              // }
-              if (nextAppState === 'inactive') {
-                console.log('App is inactive');
-                deleteIncompleteOrder(addParcelInfo);
-              }
-              appState.current = nextAppState;
-            });
-          } else {
-            deleteIncompleteOrder(addParcelInfo);
-          }
-        } else {
-          BackHandler.exitApp();
-        }
-        // BackHandler.exitApp();
+        // if ((addParcelInfo?._id?.length > 0 &&
+        //   (addParcelInfo?.status === 'pending'
+        //     || addParcelInfo?.status === 'find-rider'))) {
+        //   console.log('Item parcelId--', addParcelInfo?._id);
+        //   if (Platform.OS === 'ios') {
+        //     const subscription = AppState.addEventListener('change', nextAppState => {
+        //       // if (
+        //       //   appState.current.match(/inactive|background/) &&
+        //       //   nextAppState === 'active'
+        //       // ) {
+        //       //   console.log('App has come to the foreground!');
+        //       //   if (tab && tab !== "All Orders") {
+        //       //     navigation.navigate('tab4');
+        //       //   } else if (navigation.canGoBack()) {
+        //       //     navigation.goBack();
+        //       //   }
+        //       // }
+        //       if (nextAppState === 'inactive') {
+        //         console.log('App is inactive');
+        //         deleteIncompleteOrder(addParcelInfo);
+        //       }
+        //       appState.current = nextAppState;
+        //     });
+        //   } else {
+        //     deleteIncompleteOrder(addParcelInfo);
+        //   }
+        // } else {
+        //   BackHandler.exitApp();
+        // }
+        BackHandler.exitApp();
         // Alert.alert(
         //       'Exit App',
         //       'Are you sure you want exit the application?', [{

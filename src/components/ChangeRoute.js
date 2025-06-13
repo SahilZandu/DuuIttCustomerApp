@@ -117,7 +117,7 @@
 
 // export default ChangeRoute;
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Pressable,
   Text,
@@ -126,6 +126,7 @@ import {
   Image,
   FlatList,
   Platform,
+  DeviceEventEmitter,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SvgXml } from 'react-native-svg';
@@ -138,8 +139,106 @@ import {
 } from 'react-native-responsive-screen';
 import { screenHeight } from '../halpers/matrics';
 import { Surface } from 'react-native-paper';
+import OrderIndicator from '../halpers/OrderIndicator';
+import { rootStore } from '../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ChangeRoute = ({ data, navigation }) => {
+  const {
+    ordersTrackOrder,
+    orderTrackingList,
+    getPendingForCustomer,
+  } = rootStore.orderStore;
+  const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
+  const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
+  const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
+
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  )
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('cancelOrder', data => {
+      console.log('cancel Order data -- ', data);
+      if (data?.order_type) {
+        fetchData();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data --Ride ', data);
+      if (data?.order_type) {
+        fetchData();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      await Promise.all([
+        getIncompleteParcelOrder(),
+        getTrackingParcelOrder(),
+        getIncompleteRideOrder()
+      ]);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+
+  const getIncompleteParcelOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+
+    if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending'
+      )) {
+      setIncompletedParcelOrder(resIncompleteOrder);
+    } else {
+      setIncompletedParcelOrder([])
+    }
+  };
+
+  const getIncompleteRideOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('ride');
+    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+
+    if (resIncompleteOrder?.length > 0 &&
+      (resIncompleteOrder[0]?.status !== 'pending')
+    ) {
+      setIncompletedRideOrder(resIncompleteOrder);
+    } else {
+      setIncompletedRideOrder([])
+    }
+  };
+
+  const getTrackingParcelOrder = async () => {
+    const resTrack = await ordersTrackOrder(handleLoadingTrack);
+    if (resTrack?.length > 0) {
+      setTrackedParcelOrder(resTrack);
+    } else {
+      setTrackedParcelOrder([]);
+    }
+  };
+
+  const handleLoadingTrack = v => {
+    console.log('Track...', v);
+  };
+
+
+
+
   const onRoutePress = item => {
     if (item?.name == 'FOOD') {
       navigation.navigate('food', { screen: 'home' });
@@ -149,6 +248,20 @@ const ChangeRoute = ({ data, navigation }) => {
       navigation.navigate('parcel', { screen: 'home' });
     } else {
       navigation.navigate('dashborad', { screen: 'home' });
+    }
+  };
+
+  const setIndicatorShow = (name, ride, parcel, parcelTrack) => {
+    if (ride?.length > 0 && name == "RIDE") {
+      return true
+    } else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "PARCEL") {
+      return true
+    }
+    else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "FOOD") {
+      return true
+    }
+    else {
+      return false
     }
   };
 
@@ -293,6 +406,11 @@ const ChangeRoute = ({ data, navigation }) => {
             </TouchableOpacity>
           )}
         </Surface>
+        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <OrderIndicator
+          onPress={() => { onRoutePress(item); }}
+          isHashOrders={s => console.log('s', s)}
+        />
+        }
       </>
     );
   };

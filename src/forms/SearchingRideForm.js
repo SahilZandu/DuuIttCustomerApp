@@ -702,7 +702,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton('', '', 'ride', navigation);
+      handleAndroidBackButton('', 'ride', 'ride', navigation);
       checkUnseenMsg();
       setChatNotificationStatus(true);
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
@@ -728,7 +728,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   const getIncompleteOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
-    console.log('resIncompleteOrder ride--getIncompleteOrder', resIncompleteOrder);
+    console.log('ride--getIncompleteOrder', resIncompleteOrder);
     if (resIncompleteOrder?.length > 0) {
       if (resIncompleteOrder[0]?.status !== "pending") {
         setParcelInfo(resIncompleteOrder[0]);
@@ -886,11 +886,13 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
           }
           // refRBSheet.current.open();
         } else {
+          // if (parcelInfo?.status !== 'find-rider') {
           onGetNearByRider(parcelInfo);
+          // }
         }
       }, 1000);
     }
-  }, [parcelInfo]);
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -1035,7 +1037,10 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       setSearchArrive('arrive');
     } else {
       setSearchingFind('searching');
-      onGetNearByRider(parcelInfo);
+      if (parcelInfo?.status == 'find-rider') {
+        onGetNearByRider(parcelInfo);
+      }
+
     }
   };
 
@@ -1370,7 +1375,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                   refershFindRidersData();
                 }}
                 onBackToHome={() => {
-                  backToHome();
+                  navigation.navigate('priceConfirmed', { item: parcelInfo });
+                  // backToHome();
                   // openMap(riderDest,destination,'Destination');
                 }}
                 onCancelOrder={() => {

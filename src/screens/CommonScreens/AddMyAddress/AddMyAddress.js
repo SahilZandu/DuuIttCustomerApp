@@ -555,8 +555,8 @@ export default function AddMyAddress({ navigation, route }) {
           origin={geoLocation}
         /> */}
         <View style={{ height: Platform.OS == 'ios' ? hp('66%') : hp('74%'), }}>
-          {(geoLocation?.lat && geoLocation?.lng) &&
-            <>
+          {/* {(geoLocation?.lat && geoLocation?.lng) &&
+            <> */}
               <MapLocationRoute
                 mapContainerView={{
                   height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
@@ -565,7 +565,7 @@ export default function AddMyAddress({ navigation, route }) {
                 onTouchLocation={handleTouchAddress}
                 height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
               />
-            </>}
+            {/* </>} */}
 
           <AutoCompleteGooglePlaceHolder
             onPressAddress={onPressAddress}

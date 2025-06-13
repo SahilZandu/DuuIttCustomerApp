@@ -17,6 +17,7 @@ import PolylineDecoder from '@mapbox/polyline';
 import { colors } from '../theme/colors';
 import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, } from './GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
+import { getDistance } from 'geolib';
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
 
@@ -30,9 +31,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   useFocusEffect(
     useCallback(() => {
       setMapManageRideDaltaInitials();
+      const distance = getDistance(
+        { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+        { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+      );
+
+      console.log(`Distance: ${distance} meters`);
     }, [origin])
   )
-
   const [destinationLocation, setDestinationLocation] = useState({
     lat: null,
     lng: null,
@@ -42,7 +48,10 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const [mapRegion, setMapRegion] = useState({
     latitude: Number(origin?.lat) || 30.7400,
     longitude: Number(origin?.lng) || 76.7900,
-    ...getMapManageRideDalta(),
+    ...getMapManageRideDalta(getDistance(
+      { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+      { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+    )),
   });
 
 
@@ -51,7 +60,12 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     new AnimatedRegion({
       latitude: Number(origin?.lat) || null,
       longitude: Number(origin?.lng) || null,
-      ...getMapManageRideDalta(),
+      ...getMapManageRideDalta(
+        getDistance(
+          { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+          { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+        )
+      ),
     })
   );
 
@@ -59,7 +73,11 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     new AnimatedRegion({
       latitude: Number(destination?.lat) || null,
       longitude: Number(destination?.lng) || null,
-      ...getMapManageRideDalta(),
+      ...getMapManageRideDalta(getDistance(
+        { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+        { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+      )
+      ),
     })
   );
   const mohaliChandigarhBounds = {
@@ -98,8 +116,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   };
 
-
-
   // Update latitude and longitude based on origin
   useEffect(() => {
     console.log('origin--MapRoute', origin, destination);
@@ -107,7 +123,10 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       const newRegion = {
         latitude: Number(origin?.lat) || 30.7400,
         longitude: Number(origin?.lng) || 76.7900,
-        ...getMapManageRideDalta(),
+        ...getMapManageRideDalta(getDistance(
+          { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+          { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+        )),
       };
       setMapRegion(newRegion);
       // if (mapRef?.current) {
@@ -118,11 +137,16 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   useEffect(() => {
     let intervalId;
-    if (origin?.lat && origin?.lng) {
+    if (origin && origin?.lat && origin?.lng) {
       const newRegion = {
         latitude: Number(origin.lat) || 30.7076,
         longitude: Number(origin.lng) || 76.7151,
-        ...getMapManageRideDalta(),
+        ...getMapManageRideDalta(
+          getDistance(
+            { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+            { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+          )
+        ),
       };
       setMapRegion(newRegion);
       intervalId = setTimeout(() => {
@@ -130,7 +154,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         if (mapRef?.current) {
           mapRef?.current?.animateToRegion(newRegion, 1000);
         }
-      },5000); // 5 seconds
+      }, 5000); // 5 seconds
     }
 
     // Cleanup interval on unmount or origin change
@@ -139,7 +163,34 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         clearTimeout(intervalId);
       }
     };
-  }, []);
+  }, [coords]);
+
+  useEffect(() => {
+    if (coords?.length > 1 && mapRef?.current) {
+      const edgePadding = {
+        top: 30,
+        right: 20,
+        bottom: 10, // 👈 Increase bottom padding significantly
+        left: 20,
+      };
+      mapRef?.current.fitToCoordinates(coords, {
+        edgePadding,
+        animated: true,
+      });
+
+      // Optional: second adjustment after a delay
+      const timeout = setTimeout(() => {
+        mapRef?.current?.fitToCoordinates(coords, {
+          edgePadding,
+          animated: true,
+        });
+      }, 6000);
+
+      return () => clearTimeout(timeout);
+    }
+
+  }, [coords]);
+
 
 
   // const originMarker = useMemo(

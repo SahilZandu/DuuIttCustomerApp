@@ -53,41 +53,53 @@ export default function Orders({ navigation, route }) {
   const [internet, setInternet] = useState(true);
 
   // console.log('tabText--', tabText,defaultType);
+  useEffect(() => {
+    setLoading(
+      (orderHistoryList?.length > 0
+        && tabText === "All Orders")
+        ? false : true)
+    if (tabText == 'Food') {
+      defaultType = 'Food';
+      setType('Food');
+      // setOrderList([])
+      getOrderList();
+    } else if (tabText == 'Ride') {
+      defaultType = 'Ride';
+      setType('Ride');
+      // setOrderList([])
+      getOrderList();
+    } else if (tabText == 'Parcel') {
+      defaultType = 'Parcel';
+      setType('Parcel');
+      // setOrderList([])
+      getOrderList();
+    } else {
+      defaultType = 'All Orders';
+      setType('All Orders');
+      setOrderList(orderHistoryList || [])
+      getOrderList();
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 15000);
+
+  }, [tabText])
 
   useFocusEffect(
     useCallback(() => {
       getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation, tabText);
-      setLoading((orderHistoryList?.length > 0
-        && tabText === "All Orders")
-        ? false : true)
-      if (tabText == 'Food') {
-        defaultType = 'Food';
-        setType('Food');
-        setOrderList([])
+      if (orderHistoryList?.length > 0) {
         getOrderList();
-      } else if (tabText == 'Ride') {
-        defaultType = 'Ride';
-        setType('Ride');
-        setOrderList([])
-        getOrderList();
-      } else if (tabText == 'Parcel') {
-        defaultType = 'Parcel';
-        setType('Parcel');
-        setOrderList([])
-        getOrderList();
-      } else {
-        defaultType = 'All Orders';
-        setType('All Orders');
-        setOrderList(orderHistoryList || [])
-        getOrderList();
+        setTimeout(() => {
+          setLoading(false);
+        }, 15000);
       }
-      setTimeout(() => {
-        setLoading(false);
-      }, 10000);
     }, [tabText]),
   );
+
+
 
   const getCheckDevice = async () => {
     await getCheckDeviceId();
@@ -145,7 +157,7 @@ export default function Orders({ navigation, route }) {
     if (v == false) {
       setTimeout(() => {
         setLoading(v);
-      }, 4000)
+      }, 8000)
     } else {
       setLoading(v);
     }
@@ -188,7 +200,7 @@ export default function Orders({ navigation, route }) {
     }
     const filter = await getOrderHistorybyFilters(text);
     //  console.log('filter--', filter, defaultType, text);
-    setOrderList([...filter]);
+    setOrderList(filter);
   };
 
   return (
@@ -217,7 +229,7 @@ export default function Orders({ navigation, route }) {
                     ref={flatListRef}
                     initialScrollIndex={0}
                     initialNumToRender={20}
-                    contentContainerStyle={{paddingBottom: Platform.OS == 'ios' ? '35%' : '30%' }}
+                    contentContainerStyle={{ paddingBottom: Platform.OS == 'ios' ? '35%' : '30%' }}
                     scrollEnabled={true}
                     showsVerticalScrollIndicator={false}
                     data={orderList}

@@ -28,6 +28,10 @@ function InputFieldLabel({
   marginTop,
   marginLeft,
   showErrorMsg,
+  borderRadius,
+  editable,
+  isBlur,
+  autoCapitalize,
   ...otherProps
 }) {
   const {
@@ -57,7 +61,7 @@ function InputFieldLabel({
   return (
     <>
       <View style={{ marginTop: marginTop ? marginTop : '10%', justifyContent: 'center' }}>
-        <View style={{ position: 'relative' }}>
+        <View style={{ position: 'relative', opacity: isBlur ? 0.5 : 1, }}>
           {/* Label with "cut through border" effect */}
           {inputLabel && (
             <Text
@@ -80,14 +84,16 @@ function InputFieldLabel({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              borderRadius: 10,
+              borderRadius: borderRadius ? borderRadius : 10,
               borderWidth: borderWidth ? borderWidth : 1,
               borderColor: colors.colorBB,
               paddingHorizontal: '4%',
               backgroundColor: colors.appBackground
             }}>
             <TextInput
-              editable={!rightIcon}
+              // editable={!rightIcon}
+              autoCapitalize={autoCapitalize}
+              editable={editable}
               keyboardType={keyboardType}
               placeholder={placeholder}
               placeholderTextColor={colors.color95}
