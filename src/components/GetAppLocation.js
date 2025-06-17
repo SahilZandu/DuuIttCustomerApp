@@ -108,3 +108,14 @@ export const getLiveLocation = () => {
 };
 
 
+export const filterAddress =(address)=> {
+  const parts = address?.split(',').map(part => part?.trim());
+  // If first part looks like a Plus Code or short code (letters, numbers, or +)
+  // if (/^[A-Za-z0-9\+]{3,10}$/.test(parts[0])) {
+  if (/[\d\+]/.test(parts[0]?.trim())) {
+    parts.shift(); // Remove the first part
+  }
+  return parts?.join(', ').trim();
+}
+
+

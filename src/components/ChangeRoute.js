@@ -142,12 +142,16 @@ import { Surface } from 'react-native-paper';
 import OrderIndicator from '../halpers/OrderIndicator';
 import { rootStore } from '../stores/rootStore';
 import { useFocusEffect } from '@react-navigation/native';
+import CornerTriangle from '../halpers/OrderIndicator';
 
 const ChangeRoute = ({ data, navigation }) => {
   const {
     ordersTrackOrder,
     orderTrackingList,
     getPendingForCustomer,
+    setRideOrderInProgress,
+    setParcelTrackingOrder,
+    setParcelOrderInProgress,
   } = rootStore.orderStore;
   const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
   const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
@@ -204,8 +208,10 @@ const ChangeRoute = ({ data, navigation }) => {
     if (resIncompleteOrder?.length > 0 &&
       (resIncompleteOrder[0]?.status !== 'pending'
       )) {
+      setParcelOrderInProgress(resIncompleteOrder)
       setIncompletedParcelOrder(resIncompleteOrder);
     } else {
+      setParcelOrderInProgress([])
       setIncompletedParcelOrder([])
     }
   };
@@ -217,8 +223,10 @@ const ChangeRoute = ({ data, navigation }) => {
     if (resIncompleteOrder?.length > 0 &&
       (resIncompleteOrder[0]?.status !== 'pending')
     ) {
+      setRideOrderInProgress(resIncompleteOrder)
       setIncompletedRideOrder(resIncompleteOrder);
     } else {
+      setRideOrderInProgress([])
       setIncompletedRideOrder([])
     }
   };
@@ -226,8 +234,10 @@ const ChangeRoute = ({ data, navigation }) => {
   const getTrackingParcelOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
     if (resTrack?.length > 0) {
+      setParcelTrackingOrder(resTrack)
       setTrackedParcelOrder(resTrack);
     } else {
+      setParcelTrackingOrder([])
       setTrackedParcelOrder([]);
     }
   };
@@ -235,8 +245,6 @@ const ChangeRoute = ({ data, navigation }) => {
   const handleLoadingTrack = v => {
     console.log('Track...', v);
   };
-
-
 
 
   const onRoutePress = item => {
@@ -250,6 +258,7 @@ const ChangeRoute = ({ data, navigation }) => {
       navigation.navigate('dashborad', { screen: 'home' });
     }
   };
+
 
   const setIndicatorShow = (name, ride, parcel, parcelTrack) => {
     if (ride?.length > 0 && name == "RIDE") {
@@ -350,12 +359,6 @@ const ChangeRoute = ({ data, navigation }) => {
               style={{
                 flex: 1,
                 flexDirection: 'row',
-                // height: screenHeight(14),
-                // backgroundColor: colors.white,
-                // borderRadius: 10,
-                // borderWidth: 1,
-                // borderColor: colors.colorD9,
-                // marginTop: '5%',
               }}>
               <View
                 style={{
@@ -406,11 +409,12 @@ const ChangeRoute = ({ data, navigation }) => {
             </TouchableOpacity>
           )}
         </Surface>
-        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <OrderIndicator
+        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <CornerTriangle onPress={() => { onRoutePress(item) }} />}
+        {/* {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <OrderIndicator
           onPress={() => { onRoutePress(item); }}
           isHashOrders={s => console.log('s', s)}
         />
-        }
+        } */}
       </>
     );
   };

@@ -6,6 +6,8 @@ import { useToast } from '../halpers/useToast';
 export default class OrderStore {
   orderHistoryList = [];
   orderTrackingList = [];
+  parcelOrderInProgress = [];
+  rideOrderInProgress = []
 
   parcelsOfUser = async (order_type, limit, handleLoading) => {
     let requestData = {
@@ -128,7 +130,7 @@ export default class OrderStore {
       }
     } catch (error) {
       console.log('error orders Track Order:', error);
-      return [];
+      // return [];
     }
   };
 
@@ -170,4 +172,18 @@ export default class OrderStore {
       }
     }
   };
+
+
+  setParcelTrackingOrder = async (data) => {
+    this.orderTrackingList = data
+  }
+
+  setParcelOrderInProgress = async (data) => {
+    this.parcelOrderInProgress = data
+  }
+
+  setRideOrderInProgress = async (data) => {
+    this.rideOrderInProgress = data
+  }
+
 }

@@ -24,7 +24,7 @@ import { screenHeight } from '../../../halpers/matrics';
 import { rootStore } from '../../../stores/rootStore';
 import { appImages } from '../../../commons/AppImages';
 import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
-import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { filterAddress, getCurrentLocation } from '../../../components/GetAppLocation';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -104,7 +104,9 @@ const EditOrderLocation = ({ navigation, route }) => {
     const onPressAddress = (data, details) => {
         console.log('data ,details 333', data, details);
         setName(details?.name);
-        setAddress(details?.formatted_address);
+          const shortAddress = filterAddress(details?.formatted_address)
+            // console.log("shortAddress----",shortAddress);
+            setAddress(shortAddress);
         setGeoLocation(details?.geometry?.location);
         setLocationId(details?.place_id)
     };

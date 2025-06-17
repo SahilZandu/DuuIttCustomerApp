@@ -1,25 +1,81 @@
 import React, { useEffect, useState } from 'react';
-import {Surface} from 'react-native-paper';
-import {TouchableOpacity, View, Text, StyleSheet, Platform} from 'react-native';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
+import { Surface } from 'react-native-paper';
+import { TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg } from '../commons/AppImages';
 import { screenHeight } from '../halpers/matrics';
 
-const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
-    const [completedProfile ,setCompletedProfile]=useState('30%')
+const ProfileCompleteIconTextComp = ({ navigation, appUser }) => {
+  const [completedProfile, setCompletedProfile] = useState('30%')
   // console.log('appUser --- comp', appUser);
 
-  useEffect(()=>{
-    if(appUser?.name?.length > 0){
-      setCompletedProfile('100%')
-    }else{
-      setCompletedProfile('30%')
+  // useEffect(() => {
+  //   if (appUser?.gender?.length > 0 &&
+  //     appUser?.email?.length > 0 &&
+  //     appUser?.profile_pic?.length > 0 &&
+  //     appUser?.date_of_birth?.length > 0) {
+  //     setCompletedProfile('100%');
+  //   } else if (appUser?.gender?.length > 0 &&
+  //     appUser?.email?.length > 0 &&
+  //     appUser?.profile_pic?.length > 0
+  //   ) {
+  //     setCompletedProfile('85%');
+  //   }
+  //   else if (appUser?.gender?.length > 0 &&
+  //     appUser?.email?.length > 0 &&
+  //     appUser?.date_of_birth?.length > 0) {
+  //     setCompletedProfile('85%');
+  //   }
+  //   else if (appUser?.gender?.length > 0 &&
+  //     appUser?.profile_pic?.length > 0 &&
+  //     appUser?.date_of_birth?.length > 0) {
+  //     setCompletedProfile('85%');
+  //   } else if (appUser?.gender?.length > 0 &&
+  //     appUser?.email?.length > 0
+  //   ) {
+  //     setCompletedProfile('70%');
+  //   } else if (appUser?.gender?.length > 0 &&
+  //     appUser?.date_of_birth?.length > 0) {
+  //     setCompletedProfile('70%');
+  //   }
+  //   else if (appUser?.gender?.length > 0 &&
+  //     appUser?.profile_pic?.length > 0) {
+  //     setCompletedProfile('70%');
+  //   }
+  //   else if (appUser?.gender?.length > 0) {
+  //     setCompletedProfile('50%');
+  //   }
+  //   else {
+  //     setCompletedProfile('30%')
+  //   }
+
+  // }, [appUser])
+  useEffect(() => {
+    if (appUser) {
+      const fields = [
+        appUser?.gender,
+        appUser?.email,
+        appUser?.profile_pic,
+        appUser?.date_of_birth,
+      ];
+
+      const filledCount = fields?.filter(field => !!field?.length).length;
+
+      const completionMap = {
+        4: '100%',
+        3: '85%',
+        2: '70%',
+        1: '50%',
+        0: '30%',
+      };
+
+      setCompletedProfile(completionMap[filledCount]);
     }
 
-  },[appUser])
+  }, [appUser]);
 
   return (
     <Surface elevation={2} style={styles.container}>
@@ -27,11 +83,10 @@ const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            navigation.navigate('profile',{screenName:'sideMenu'});
+            navigation.navigate('profile', { screenName: 'sideMenu' });
           }}
           style={styles.profileTouchView}>
           <SvgXml height={22} width={22} xml={appImagesSvg.profileIcon} />
-
           <Text style={styles.title}>{'My Profile'}</Text>
           <View style={styles.completeView}>
             <Text style={styles.completeText}>{`${completedProfile} completed`}</Text>
@@ -39,7 +94,7 @@ const ProfileCompleteIconTextComp = ({navigation,  appUser}) => {
           <SvgXml
             height={22}
             width={22}
-            style={{marginLeft: 'auto'}}
+            style={{ marginLeft: 'auto' }}
             xml={appImagesSvg.rightArrow}
           />
         </TouchableOpacity>
@@ -52,10 +107,10 @@ export default ProfileCompleteIconTextComp;
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor:Platform.OS == 'ios'? colors.black50:colors.black, // You can customize shadow color
+    shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black, // You can customize shadow color
     backgroundColor: colors.white,
     borderRadius: 10,
-    height:screenHeight(7),
+    height: screenHeight(7),
     marginTop: '4%',
     justifyContent: 'center',
     marginHorizontal: 20,
@@ -80,7 +135,7 @@ const styles = StyleSheet.create({
   completeView: {
     borderWidth: 1,
     borderColor: colors.colorFFA,
-    backgroundColor:colors.colorFF10,
+    backgroundColor: colors.colorFF10,
     marginRight: '1%',
     paddingHorizontal: '4%',
     padding: '1.5%',
@@ -90,6 +145,6 @@ const styles = StyleSheet.create({
   completeText: {
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
-    color:colors.colorFF,
+    color: colors.colorFF,
   },
 });

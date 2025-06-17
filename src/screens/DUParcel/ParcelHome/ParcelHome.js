@@ -41,6 +41,8 @@ export default function ParcelHome({ navigation }) {
     orderTrackingList,
     getPendingForCustomer,
     updateOrderStatus,
+    setParcelTrackingOrder,
+    setParcelOrderInProgress,
   } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
@@ -165,7 +167,14 @@ export default function ParcelHome({ navigation }) {
 
   const getTrackingOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
-    setTrackedArray(resTrack);
+    if (resTrack?.length > 0) {
+      setParcelTrackingOrder(resTrack)
+      setTrackedArray(resTrack);
+    } else {
+      setParcelTrackingOrder([])
+      setTrackedArray([]);
+    }
+
   };
 
   const getIncompleteOrder = async () => {
@@ -182,15 +191,26 @@ export default function ParcelHome({ navigation }) {
           // || resIncompleteOrder[0]?.status !== 'find-rider'
         )
       ) {
+        setParcelOrderInProgress(resIncompleteOrder)
         setAddParcelInfo(resIncompleteOrder[0]);
         setIncompletedArray(resIncompleteOrder);
       }
     }
     else {
+      setParcelOrderInProgress([])
       setAddParcelInfo({});
       setIncompletedArray([]);
     }
   };
+
+  useEffect(() => {
+    // if (incompletedArray?.length == 0) {
+      const interval = setTimeout(() => {
+        getIncompleteOrder(); // make sure this is a function call
+      }, 4000);
+      return () => clearTimeout(interval); // cleanup
+    // }
+  }, []);
 
   const deleteIncompleteOrder = async (data) => {
     const parcelId = data[0]?._id;

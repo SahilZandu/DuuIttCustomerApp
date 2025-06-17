@@ -1,4 +1,5 @@
 import { rootStore } from '../stores/rootStore';
+import { filterAddress } from './GetAppLocation';
 
 const myApiKey = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
 
@@ -29,8 +30,10 @@ export const getGeoCodes = (latitude, longitude) => {
         console.log('responseJson---', responseJson);
         if (responseJson.status === 'OK') {
           console.log('responseJson---', responseJson?.results);
+          const shortAddress = filterAddress(responseJson?.results?.[0]?.formatted_address)
+          // console.log("shortAddress----", shortAddress);
           const data = {
-            address: responseJson?.results?.[0]?.formatted_address,
+            address: shortAddress ? shortAddress : responseJson?.results?.[0]?.formatted_address,
             place_Id: responseJson?.results?.[0]?.place_id,
             geo_location: responseJson?.results?.[0]?.geometry?.location,
           };
@@ -128,7 +131,7 @@ export function setMpaDaltaInitials() {
 // }
 export function getMapManageRideDalta(distanceMeter) {
   const distance = (distanceMeter / 1000).toFixed(2); // in km
-  const newDelta = {...manageRideDalta}; // clone original
+  const newDelta = { ...manageRideDalta }; // clone original
 
   const d = parseFloat(Number(distance)); // convert string back to number
   console.log("d--", d);

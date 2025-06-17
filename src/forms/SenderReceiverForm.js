@@ -175,21 +175,7 @@ import { colors } from '../theme/colors';
 import { SvgXml } from 'react-native-svg';
 import { appImagesSvg } from '../commons/AppImages';
 
-const FormButton = ({ loading, onPress }) => {
-  const { dirty, isValid, values } = useFormikContext();
 
-  return (
-    <CTA
-      disable={!(isValid && dirty)}
-      title={'Save'}
-      onPress={() => onPress(values)}
-      loading={loading}
-      isBottom={true}
-      width={'90%'}
-      textTransform={'capitalize'}
-    />
-  );
-};
 
 const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure, isSecure }) => {
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
@@ -202,6 +188,25 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
     name: item?.name ? item?.name : '',
     phone: item?.phone ? item?.phone?.toString() : '',
   });
+
+
+  const FormButton = ({ loading, onPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
+
+    return (
+      <CTA
+        disable={
+          !(isValid && dirty) &&
+          !(values?.phone?.toString()?.length > 9 && values?.address_detail?.length > 1)}
+        title={'Save'}
+        onPress={() => onPress(values)}
+        loading={loading}
+        isBottom={true}
+        width={'90%'}
+        textTransform={'capitalize'}
+      />
+    );
+  };
 
   const handleLogin = values => {
     console.log('values', values, item, pickDrop);
@@ -232,31 +237,31 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
 
 
   const SecureTextData = () => {
-    const {values, setFieldValue} = useFormikContext();
-    const {receiverAddress} = rootStore.myAddressStore;
+    const { values, setFieldValue } = useFormikContext();
+    const { receiverAddress } = rootStore.myAddressStore;
     useEffect(() => {
       if (isSecure) {
         setFieldValue('phone', receiverAddress?.phone?.toString());
       }
     }, [receiverAddress]);
     return (
-     
-        <TouchableOpacity
-          style={styles.secureTouch}
-          onPress={() => {
-            onPressSecure(!isSecure);
-            if (isSecure) {
-              setFieldValue('phone', receiverAddress?.phone?.toString());
-            }
-          }}
-          activeOpacity={0.9}>
-          {isSecure == true ? (
-            <SvgXml xml={appImagesSvg.checkBox} />
-          ) : (
-            <SvgXml xml={appImagesSvg.unCheckBox} />
-          )}
-          <Text style={styles.secureText}>Secure parcel delivery</Text>
-        </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.secureTouch}
+        onPress={() => {
+          onPressSecure(!isSecure);
+          if (isSecure) {
+            setFieldValue('phone', receiverAddress?.phone?.toString());
+          }
+        }}
+        activeOpacity={0.9}>
+        {isSecure == true ? (
+          <SvgXml xml={appImagesSvg.checkBox} />
+        ) : (
+          <SvgXml xml={appImagesSvg.unCheckBox} />
+        )}
+        <Text style={styles.secureText}>Secure parcel delivery</Text>
+      </TouchableOpacity>
     );
   };
 
@@ -309,10 +314,10 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
               maxLength={100}
               placeholder={'Landmark'}
             />
-           {/* {pickDrop == 'drop' &&  <SecureTextData/>} */}
+            {/* {pickDrop == 'drop' &&  <SecureTextData/>} */}
           </View>
-          <View style={{ marginTop:hp('13%')}}>
-          <FormButton loading={loading} onPress={handleLogin} />
+          <View style={{ marginTop: hp('13%') }}>
+            <FormButton loading={loading} onPress={handleLogin} />
           </View>
         </View>
       </Formik>

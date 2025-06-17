@@ -22,7 +22,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import { screenHeight } from '../../../halpers/matrics';
 import { rootStore } from '../../../stores/rootStore';
 import { appImages } from '../../../commons/AppImages';
-import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { filterAddress, getCurrentLocation } from '../../../components/GetAppLocation';
 import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
@@ -54,11 +54,14 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
   const [LocationId, setLocationId] = useState('')
+  const [loading ,setLoading] =useState(false)
 
   const onPressAddress = (data, details) => {
     console.log('data ,details 333', data, details);
     setName(details?.name);
-    setAddress(details?.formatted_address);
+    const shortAddress = filterAddress(details?.formatted_address)
+    // console.log("shortAddress----",shortAddress);
+    setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id)
   };
@@ -138,6 +141,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   }, []);
 
   const onHandleConfirm = () => {
+    setLoading(true)
     const newItem = {
       ...item,
       address: address,
@@ -171,6 +175,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
       parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
     ) {
+      setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
       return;
     } else if (
@@ -179,6 +184,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
       parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
     ) {
+      setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
       return;
     }
@@ -187,25 +193,40 @@ const ChooseMapLocation = ({ navigation, route }) => {
     //   pickDrop: pickDrop,
     //   item: newItem,
     // });
-    if (pickDrop == 'pick') {
+    // if (pickDrop == 'pick') {
+    //   setSenderAddress(newItem);
+    //   setTimeout(() => {
+    //     if (receiverAddress?.address?.length > 0) {
+    //       navigation.navigate('priceDetails');
+    //     } else {
+    //       navigation.navigate('setLocationHistory');
+    //     }
+    //   }, 500);
+    // } else {
+    //   setReceiverAddress(newItem);
+    //   setTimeout(() => {
+    //     if (senderAddress?.address?.length > 0) {
+    //       navigation.navigate('priceDetails');
+    //     } else {
+    //       navigation.navigate('setLocationHistory');
+    //     }
+    //   }, 500);
+    // }
+    if (pickDrop === 'pick') {
       setSenderAddress(newItem);
-      setTimeout(() => {
-        if (receiverAddress?.address?.length > 0) {
-          navigation.navigate('priceDetails');
-        } else {
-          navigation.navigate('setLocationHistory');
-        }
-      }, 200);
     } else {
       setReceiverAddress(newItem);
-      setTimeout(() => {
-        if (senderAddress?.address?.length > 0) {
-          navigation.navigate('priceDetails');
-        } else {
-          navigation.navigate('setLocationHistory');
-        }
-      }, 200);
     }
+    setTimeout(() => {
+      setLoading(false)
+      const senderSet = pickDrop === 'pick' ? newItem : senderAddress;
+      const receiverSet = pickDrop === 'drop' ? newItem : receiverAddress;
+      if (senderSet?.address?.length > 0 && receiverSet?.address?.length > 0) {
+        navigation.navigate('priceDetails');
+      } else {
+        navigation.navigate('setLocationHistory');
+      }
+    },800);
   };
 
   const handleCurrentAddress = async () => {
@@ -230,7 +251,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     );
     // console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
-    // console.log('nameData--', nameData[0]);
+    // console.log('nameData--',nameData, nameData[0]);
     let newLocation = {
       lat: loaction?.latitude,
       lng: loaction?.longitude,
@@ -308,6 +329,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
                 />
                 <Spacer space={'12%'} />
                 <CTA
+                loading={loading}
                   onPress={() => {
                     // onHandleConfirm();
                     handleRegionChangeComplete(geoLocation);

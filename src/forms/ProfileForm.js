@@ -65,6 +65,8 @@ const FormButton = ({ loading, onPress }) => {
 const ProfileForm = ({ navigation, screenName }) => {
   const { updateProfile } = rootStore.dashboardStore;
   const { appUser } = rootStore.commonStore;
+  console.log("appUser--ProfileForm",appUser);
+  
   const refRBSheet = useRef(null);
   const dateFormat = d => {
     var date = new Date(d);
@@ -99,7 +101,7 @@ const ProfileForm = ({ navigation, screenName }) => {
       appUser?.date_of_birth?.length > 0
         ? dateFormatApi(appUser?.date_of_birth)
         : '',
-    gender: appUser?.gender?.length > 0 ? appUser?.gender : 'male',
+     gender: (appUser?.gender && appUser?.gender?.length > 0)? appUser?.gender : '',
   });
 
   const handleLogin = async values => {

@@ -39,7 +39,7 @@ let ratingData = {};
 export default function RideHome({ navigation }) {
   const { appUser } = rootStore.commonStore;
   const { setChatData } = rootStore.chatStore;
-  const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
+  const { getPendingForCustomer, updateOrderStatus, setRideOrderInProgress } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
   const { getCheckDeviceId } = rootStore.dashboardStore;
@@ -149,15 +149,26 @@ export default function RideHome({ navigation }) {
         (resIncompleteOrder[0]?.status !== 'pending'
           // || resIncompleteOrder[0]?.status !== 'find-rider'
         )) {
+        setRideOrderInProgress(resIncompleteOrder)
         setAddParcelInfo(resIncompleteOrder[0]);
         setIncompletedArray(resIncompleteOrder);
       }
     }
     else {
-      setAddParcelInfo([]);
+      setRideOrderInProgress([])
+      setAddParcelInfo({});
       setIncompletedArray([]);
     }
   };
+
+  useEffect(() => {
+    // if (incompletedArray?.length == 0) {
+    const interval = setTimeout(() => {
+      getIncompleteOrder(); // make sure this is a function call
+    }, 4000);
+    return () => clearTimeout(interval); // cleanup
+    // }
+  }, []);
 
   const deleteIncompleteOrder = async (data) => {
     const parcelId = data[0]?._id;
@@ -260,7 +271,9 @@ export default function RideHome({ navigation }) {
           />
 
           <SearchTextIcon
-            title={'Enter pick up or send location'}
+            title={'Search for your destination'
+              // 'Enter pick up or send location'
+            }
             onPress={() => {
               if (incompletedArray?.length > 0) {
                 onPressInCompleteOrder();

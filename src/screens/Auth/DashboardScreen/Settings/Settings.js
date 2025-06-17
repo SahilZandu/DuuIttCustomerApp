@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Platform, DeviceEventEmitter } from 'react-native';
 import Header from '../../../../components/header/Header';
 import { useFocusEffect, CommonActions } from '@react-navigation/native';
-import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import { styles } from '../Help/styles';
+import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import TouchableTextSwitch from '../../../../components/TouchableTextSwitch';
 import PopUp from '../../../../components/appPopUp/PopUp';
@@ -24,7 +23,7 @@ export default function Settings({ navigation }) {
   const [isDelete, setIsDelete] = useState(false);
   const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
   const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
-  const [trackedParcelOrder, setTrackedParcelOrder] = useState( orderTrackingList ?? [])
+  const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
   const [isProgrss, setIsProgress] = useState(false);
 
   useFocusEffect(
@@ -34,21 +33,21 @@ export default function Settings({ navigation }) {
   );
 
 
-   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          await Promise.all([
-            getIncompleteParcelOrder(),
-            getTrackingParcelOrder(),
-            getIncompleteRideOrder()
-          ]);
-        } catch (error) {
-          console.error('Error fetching orders:', error);
-        }
-      };
-  
-      fetchData();
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          getIncompleteParcelOrder(),
+          getTrackingParcelOrder(),
+          getIncompleteRideOrder()
+        ]);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
   const getIncompleteParcelOrder = async () => {
@@ -218,7 +217,7 @@ export default function Settings({ navigation }) {
             title={'Wallet Settings'}
             text={'Show/Hide your wallet on home'}
           /> */}
-          <TouchableTextSwitch
+          {/* <TouchableTextSwitch
             toggle={false}
             title={'Terms and Conditions'}
             text={'You must agree to the Terms & Conditions.'}
@@ -237,7 +236,7 @@ export default function Settings({ navigation }) {
                 type: 'policy',
               });
             }}
-          />
+          /> */}
         </View>
         <PopUp
           visible={isDelete}
@@ -249,16 +248,16 @@ export default function Settings({ navigation }) {
           }
           onDelete={handleDelete}
         />
-         <PopUpInProgess
-              CTATitle={'Cancel'}
-              visible={isProgrss}
-              type={'warning'}
-              onClose={() => setIsProgress(false)}
-              title={'You cannot delete account'}
-              text={
-                "You cannot delete your account while your order is being processed."
-               }
-            />
+        <PopUpInProgess
+          CTATitle={'Cancel'}
+          visible={isProgrss}
+          type={'warning'}
+          onClose={() => setIsProgress(false)}
+          title={'You cannot delete account'}
+          text={
+            "You cannot delete your account while your order is being processed."
+          }
+        />
       </AppInputScroll>
     </View>
   );

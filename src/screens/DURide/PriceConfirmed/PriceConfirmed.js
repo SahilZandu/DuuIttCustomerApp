@@ -518,6 +518,7 @@ const paymentMethod = ['Cash', 'Online'];
 export default function PriceConfirmed({ navigation, route }) {
   const { item } = route.params;
   console.log('Price item---', item);
+  const { setAddParcelInfo, } = rootStore.parcelStore;
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
   const [initialValues, setInitialValues] = useState({
@@ -546,6 +547,7 @@ export default function PriceConfirmed({ navigation, route }) {
     if (Object?.keys(item || {})?.length > 0) {
       setTotal(item?.total_amount);
       setFare(item?.total_amount);
+      setFireValue(0)
       setPickUpLocation(item?.sender_address?.address);
       setDropLocation(item?.receiver_address?.address);
       setPickDropDetails(item);
@@ -590,6 +592,12 @@ export default function PriceConfirmed({ navigation, route }) {
 
   const handlePriceFindRider = () => {
     setIsPriceModal(false);
+    let updateItem = {
+      ...item,
+      total_amount: total
+    }
+    setAddParcelInfo(updateItem);
+
     setTimeout(() => {
       navigation.navigate('searchingRide', {
         paymentMethod: initialValues?.paymentMethods,
@@ -769,9 +777,9 @@ export default function PriceConfirmed({ navigation, route }) {
                 onPress={value => {
                   handleFindRider(value);
                 }}
-                // onBackPress={() => {
-                //   backToHome();
-                // }}
+              // onBackPress={() => {
+              //   backToHome();
+              // }}
               />
             </View>
           </>

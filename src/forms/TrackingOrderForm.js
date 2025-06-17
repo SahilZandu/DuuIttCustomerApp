@@ -333,7 +333,7 @@ const TrackingOrderForm = ({ navigation }) => {
                       : setTrackImage(item?.order_type),
 
                   name: item?.rider?.name ? item?.rider?.name : 'DuuItt Rider',
-                  rating: item?.rider?.average_rating?.toString() ?? '0',
+                  rating: item?.rider?.average_rating != null ? item.rider.average_rating.toFixed(1)?.toString() : '0.0'
                 }}
                 onMessage={() => {
                   onChat(item);

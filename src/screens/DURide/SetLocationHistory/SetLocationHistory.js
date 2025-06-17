@@ -348,8 +348,12 @@ const SetLocationHistory = ({ navigation }) => {
           onPressPickLocation={onPressPickLocation}
           onPressDropLocation={onPressDropLocation}
           onChangePress={() => { onChangePress() }}
-          pick={'Pickup loaction'}
-          drop={'Dropped location'}
+          pick={'Enter your pickup'
+            // 'Pickup loaction'
+            }
+          drop={'Enter your destination'
+            // 'Dropped location'
+            }
         />
 
         {/* <View style={styles.currentLocView}>

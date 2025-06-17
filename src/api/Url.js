@@ -52,6 +52,7 @@ export default  {
     paymentsVerify:'payments/verify',
     deleteAccount:'customers/info',
     adminInfo:'admin/info',
+    supportInfo:'contact',
    updateCustomerInfo :'customers/update-customer-info',
    checkDeviceId :"customers/check-device-info",
    

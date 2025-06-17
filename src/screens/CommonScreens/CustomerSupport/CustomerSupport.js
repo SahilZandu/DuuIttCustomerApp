@@ -1,33 +1,33 @@
-import {hasProp} from 'mobx/dist/internal';
-import React, {useEffect, useState, useCallback} from 'react';
-import {Text, View, Image, Linking} from 'react-native';
-import {appImages} from '../../../commons/AppImages';
+import { hasProp } from 'mobx/dist/internal';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Text, View, Image, Linking } from 'react-native';
+import { appImages } from '../../../commons/AppImages';
 import Header from '../../../components/header/Header';
-import {styles} from './styles';
+import { styles } from './styles';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../../theme/colors';
+import { colors } from '../../../theme/colors';
 import BTN from '../../../components/cta/BTN';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 
-export default function CustomerSupport({navigation}) {
-  const {getAdminInfo} = rootStore.authStore;
+export default function CustomerSupport({ navigation }) {
+  const { getAdminInfo, getSupportInfo } = rootStore.authStore;
   const [infoData, setInfoData] = useState({});
 
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-      getAdminInfoData();
+      getSupportInfoData();
     }, []),
   );
 
-  const getAdminInfoData = async () => {
-    const res = await getAdminInfo(handleLoading);
-    console.log('res----', res);
+  const getSupportInfoData = async () => {
+    const res = await getSupportInfo(handleLoading);
+    console.log('res----getAdminInfoData', res);
     setInfoData(res);
   };
 
@@ -69,6 +69,7 @@ export default function CustomerSupport({navigation}) {
         </Text>
         <View style={styles.buttonView}>
           <BTN
+            disable={infoData?.email?.length > 0 ? false : true}
             backgroundColor={colors.white}
             labelColor={colors.main}
             width={wp('40%')}
@@ -81,6 +82,7 @@ export default function CustomerSupport({navigation}) {
           />
 
           <BTN
+            disable={infoData?.phone?.toString()?.length > 0 ? false : true}
             width={wp('40%')}
             title={'Call Us'}
             onPress={() => {

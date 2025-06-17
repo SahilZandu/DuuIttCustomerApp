@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
-import {View, Platform, Text} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Platform, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {bottomTabIcons} from '../commons/AppImages';
-import {colors} from '../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { bottomTabIcons } from '../commons/AppImages';
+import { colors } from '../theme/colors';
 import Home from '../screens/Auth/DashboardScreen/Home/Home';
 import Promo from '../screens/Auth/DashboardScreen/Promo/Promo';
 import Orders from '../screens/Auth/DashboardScreen/Orders/Orders';
@@ -20,13 +20,24 @@ import FoodHome from '../screens/DUFood/FoodHome/FoodHome';
 import ResturantMenuProducts from '../screens/DUFood/Restaurent/ResturantMenuProducts';
 import * as Animatable from 'react-native-animatable';
 
- 
+
 import MyAddress from '../screens/CommonScreens/MyAddress/MyAddress';
+import { rootStore } from '../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 export function DashboardBottomNavigator() {
+  const {
+    orderTrackingList,
+    parcelOrderInProgress,
+    rideOrderInProgress,
+  } = rootStore.orderStore;
   const [update, setUpdate] = useState(true);
+  const [parcelOrdTrack, setParcelOrdTrack] = useState(orderTrackingList)
+  const [parcelOrdInProgess, setParcelOrdInProgess] = useState(parcelOrderInProgress)
+  const [rideOrdInProgess, setRideOrdInProgess] = useState(rideOrderInProgress)
+
 
   const handleAnimation = () => {
     setUpdate(false);
@@ -35,12 +46,25 @@ export function DashboardBottomNavigator() {
     }, 100);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const {
+        orderTrackingList,
+        parcelOrderInProgress,
+        rideOrderInProgress,
+      } = rootStore.orderStore;
+      setParcelOrdTrack(orderTrackingList)
+      setParcelOrdInProgess(parcelOrderInProgress)
+      setRideOrdInProgess(rideOrderInProgress)
+    }, [orderTrackingList, parcelOrderInProgress, rideOrderInProgress])
+  )
+
   return (
     <Tab.Navigator
       initialRouteName="tab1"
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
-        tabBarIcon: ({focused}) => {
+        tabBarIcon: ({ focused }) => {
           let iconName;
           switch (route.name) {
             case 'tab1':
@@ -70,22 +94,34 @@ export function DashboardBottomNavigator() {
           }
           return (
             <View style={styles.iconContainer}>
-               {focused && update == true && (
+              {focused && update == true && (
                 <Animatable.View
                   style={styles.animatedView}
                   duration={800}
                   animation={'pulse'}
                   iterationCount={1}>
 
-                  </Animatable.View>
+                </Animatable.View>
               )}
-              <SvgXml 
-              // height={20} width={20} 
-              xml={iconName} />
+              <SvgXml
+                // height={20} width={20} 
+                xml={iconName} />
+              {(route.name == "tab1" &&
+                (parcelOrdTrack?.length > 0 ||
+                  parcelOrdInProgess?.length > 0 ||
+                  rideOrdInProgess?.length > 0)) &&
+                <View style={{
+                  position: 'absolute',
+                  top: hp('2.7%'),
+                  right: wp('7.5%'),
+                  height: 8, width: 8,
+                  backgroundColor: 'red',
+                  borderRadius: 100
+                }} />}
             </View>
           );
         },
-        tabBarLabel: ({focused, color}) => {
+        tabBarLabel: ({ focused, color }) => {
           let label;
           switch (route.name) {
             case 'tab1':
@@ -139,13 +175,13 @@ export function DashboardBottomNavigator() {
         name="tab1"
         component={Home}
         // options={{tabBarLabel: 'Home'}}
-        listeners={{tabPress: handleAnimation}}
+        listeners={{ tabPress: handleAnimation }}
       />
       <Tab.Screen
         name="tab2"
         component={Offers}
         // options={{tabBarLabel: 'Promo'}}
-        listeners={{tabPress: handleAnimation}}
+        listeners={{ tabPress: handleAnimation }}
       />
       <Tab.Screen
         name="tab3"
@@ -157,14 +193,14 @@ export function DashboardBottomNavigator() {
             handleAnimation();
             navigation.navigate('tab3', { tabText: 'All Orders' }); // Force re-render with new params
           },
-          })}
-         initialParams={{tabText:'All Orders'}} // Pass initial params
+        })}
+        initialParams={{ tabText: 'All Orders' }} // Pass initial params
       />
       <Tab.Screen
         name="tab4"
         component={SideMenu}
         // options={{tabBarLabel: 'Profile'}}
-        listeners={{tabPress: handleAnimation}}
+        listeners={{ tabPress: handleAnimation }}
       />
     </Tab.Navigator>
   );
@@ -177,15 +213,15 @@ export function RideBottomNavigator() {
     setUpdate(false);
     setTimeout(() => {
       setUpdate(true);
-    },100);
+    }, 100);
   };
 
   return (
     <Tab.Navigator
       initialRouteName="tab1"
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
-        tabBarIcon: ({focused}) => {
+        tabBarIcon: ({ focused }) => {
           let iconName;
           switch (route.name) {
             case 'tab1':
@@ -226,7 +262,7 @@ export function RideBottomNavigator() {
             </View>
           );
         },
-        tabBarLabel: ({focused, color}) => {
+        tabBarLabel: ({ focused, color }) => {
           let label;
           switch (route.name) {
             case 'tab1':
@@ -280,7 +316,7 @@ export function RideBottomNavigator() {
         name="tab1"
         component={RideHome}
         // options={{tabBarLabel: 'Home'}}
-        listeners={{tabPress: handleAnimation}}
+        listeners={{ tabPress: handleAnimation }}
       />
       {/* <Tab.Screen
         name="tab2"
@@ -292,8 +328,8 @@ export function RideBottomNavigator() {
         name="tab2"
         component={MyAddress}
         // options={{tabBarLabel: 'Orders'}}
-        listeners={{tabPress: handleAnimation}}
-        initialParams={{screenName: 'ride'}} // Pass initial params
+        listeners={{ tabPress: handleAnimation }}
+        initialParams={{ screenName: 'ride' }} // Pass initial params
       />
       {/* <Tab.Screen
         name="tab4"
@@ -318,9 +354,9 @@ export function FoodBottomNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="tab1"
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
-        tabBarIcon: ({focused}) => {
+        tabBarIcon: ({ focused }) => {
           let iconName;
           switch (route.name) {
             case 'tab1':
@@ -361,7 +397,7 @@ export function FoodBottomNavigator() {
             </View>
           );
         },
-        tabBarLabel: ({focused, color}) => {
+        tabBarLabel: ({ focused, color }) => {
           let label;
           switch (route.name) {
             case 'tab1':
@@ -370,7 +406,7 @@ export function FoodBottomNavigator() {
             // case 'tab1':
             //   label = 'resturantProducts';
             //   break;
-              
+
             // case 'tab2':
             //   label = 'Orders';
             //   break;
@@ -420,7 +456,7 @@ export function FoodBottomNavigator() {
         component={FoodHome}
         // component={ResturantMenuProducts}
         // options={{tabBarLabel: 'Home'}}
-        listeners={{tabPress: handleAnimation}}
+        listeners={{ tabPress: handleAnimation }}
       />
       {/* <Tab.Screen
         name="tab2"
@@ -432,8 +468,8 @@ export function FoodBottomNavigator() {
         name="tab2"
         component={MyAddress}
         // options={{tabBarLabel: 'Orders'}}
-        listeners={{tabPress: handleAnimation}}
-        initialParams={{screenName: 'food'}} // Pass initial params
+        listeners={{ tabPress: handleAnimation }}
+        initialParams={{ screenName: 'food' }} // Pass initial params
       />
       {/* <Tab.Screen
         name="tab4"
@@ -452,15 +488,15 @@ export function ParcelBottomNavigator() {
     setUpdate(false);
     setTimeout(() => {
       setUpdate(true);
-    },100);
+    }, 100);
   };
 
   return (
     <Tab.Navigator
       initialRouteName="tab1"
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
-        tabBarIcon: ({focused}) => {
+        tabBarIcon: ({ focused }) => {
           let iconName;
           switch (route.name) {
             case 'tab1':
@@ -502,7 +538,7 @@ export function ParcelBottomNavigator() {
             </View>
           );
         },
-        tabBarLabel: ({focused, color}) => {
+        tabBarLabel: ({ focused, color }) => {
           let label;
           switch (route.name) {
             case 'tab1':
@@ -556,7 +592,7 @@ export function ParcelBottomNavigator() {
         name="tab1"
         component={ParcelHome}
         // options={{tabBarLabel: 'Home'}}
-        listeners={{tabPress: handleAnimation}}
+        listeners={{ tabPress: handleAnimation }}
       />
       {/* <Tab.Screen
         name="tab2"
@@ -568,8 +604,8 @@ export function ParcelBottomNavigator() {
         name="tab2"
         component={MyAddress}
         // options={{tabBarLabel: 'MyAddress'}}
-        listeners={{tabPress: handleAnimation}}
-        initialParams={{screenName: 'parcel'}} // Pass initial params
+        listeners={{ tabPress: handleAnimation }}
+        initialParams={{ screenName: 'parcel' }} // Pass initial params
       />
       {/* <Tab.Screen
         name="tab4"
@@ -588,7 +624,7 @@ const styles = {
     alignItems: 'center',
     backgroundColor: colors.white,
   },
-  animatedView:{
+  animatedView: {
     height: hp('0.8%'),
     backgroundColor: colors.main,
     width: wp('20%'),
@@ -623,7 +659,7 @@ const styles = {
   //     bottom: '17%',
   //   },
   tabBarStyle: {
-    position:'absolute',
+    position: 'absolute',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
     paddingVertical: '2%',

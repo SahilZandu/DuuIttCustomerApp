@@ -171,16 +171,16 @@ export default function SideMenu({ navigation }) {
   ];
 
   const moreOptions = [
-    {
-      id: '0',
-      title: 'Wallet',
-      onPress: () => {
-        navigation.navigate('wallet');
-      },
-      icon: appImagesSvg.walletSvg,
-      show: true,
-      disable: false,
-    },
+    // {
+    //   id: '0',
+    //   title: 'Wallet',
+    //   onPress: () => {
+    //     navigation.navigate('wallet');
+    //   },
+    //   icon: appImagesSvg.walletSvg,
+    //   show: true,
+    //   disable: false,
+    // },
 
     // {
     //   id: '1',
@@ -205,15 +205,6 @@ export default function SideMenu({ navigation }) {
       show: true,
       disable: false,
     },
-    // {
-    //   title: 'About',
-    //   onPress: () => {
-    //     console.log('About');
-    //   },
-    //   icon: appImagesSvg.aboutSvg,
-    //   show: true,
-    //   disable: false,
-    // },
     {
       id: '3',
       title: 'Send feedback',
@@ -256,9 +247,19 @@ export default function SideMenu({ navigation }) {
       show: true,
       disable: false,
     },
-
-    {
+     {
       id: '7',
+      title: 'About',
+      onPress: () => {
+        navigation.navigate('about');
+        console.log('About');
+      },
+      icon: appImagesSvg.aboutSvg,
+      show: true,
+      disable: false,
+    },
+    {
+      id: '8',
       title: 'Logout',
       onPress: async () => {
         if (incompletedParcelOrder?.length > 0

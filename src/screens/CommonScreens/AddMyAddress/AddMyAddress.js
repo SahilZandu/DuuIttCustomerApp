@@ -30,7 +30,7 @@ import CTA from '../../../components/cta/CTA';
 import { Strings } from '../../../translates/strings';
 import { addMyAddressValidations } from '../../../forms/formsValidation/addMyAddressValidations';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
-import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
+import { filterAddress, getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import { appImages } from '../../../commons/AppImages';
 import Modal from 'react-native-modal';
@@ -210,7 +210,9 @@ export default function AddMyAddress({ navigation, route }) {
 
   const onPressAddress = (data, details) => {
     setName(details?.name);
-    setAddress(details?.formatted_address);
+      const shortAddress = filterAddress(details?.formatted_address)
+      //  console.log("shortAddress----",shortAddress);
+     setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id);
   };

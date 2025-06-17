@@ -24,7 +24,7 @@ import { screenHeight } from '../../../halpers/matrics';
 import { rootStore } from '../../../stores/rootStore';
 import { appImages } from '../../../commons/AppImages';
 import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
-import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
+import { filterAddress, getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -58,6 +58,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
   const [LocationId, setLocationId] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -137,12 +138,15 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const onPressAddress = (data, details) => {
     console.log('data ,details 333', data, "----------------", details);
     setName(details?.name);
-    setAddress(details?.formatted_address);
+    const shortAddress = filterAddress(details?.formatted_address)
+    console.log("shortAddress----", shortAddress);
+    setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id)
   };
 
   const onHandleConfirm = () => {
+    setLoading(true)
     const newItem = {
       ...item,
       address: address,
@@ -175,6 +179,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
       parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
     ) {
+      setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
       return;
     } else if (
@@ -183,6 +188,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
       parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
     ) {
+      setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
       return;
     }
@@ -196,15 +202,15 @@ const ChooseMapLocation = ({ navigation, route }) => {
     }
 
     setTimeout(() => {
+      setLoading(false)
       const senderSet = pickDrop === 'pick' ? newItem : senderAddress;
       const receiverSet = pickDrop === 'drop' ? newItem : receiverAddress;
-
       if (senderSet?.address?.length > 0 && receiverSet?.address?.length > 0) {
         navigation.navigate('priceDetails');
       } else {
         navigation.navigate('setLocationHistory');
       }
-    }, 200);
+    }, 800);
   };
 
 
@@ -356,6 +362,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
                 />
                 <Spacer space={'12%'} />
                 <CTA
+                  loading={loading}
                   onPress={() => {
                     // onHandleConfirm();
                     handleRegionChangeComplete(geoLocation);

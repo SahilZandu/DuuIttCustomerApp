@@ -317,12 +317,31 @@ export default class AuthStore {
   };
 
 
+  getSupportInfo = async handleLoading => {
+    try {
+      const res = await agent.supportInfo();
+      console.log('getSupportInfo API Res:', res);
+      if (res?.statusCode == 200) {
+        handleLoading(false);
+        return res?.data;
+      } else {
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error:getAdminInfo', error);
+      handleLoading(false);
+      return [];
+    }
+  };
+
+
   updateCustomerInfo = async (values, navigation, handleLoading) => {
     handleLoading(true)
     let requestData = {
       name: values?.name,
       phone: Number(values?.mobile),
-      gender: "male"
+      gender: ""
     };
 
     if (values?.email?.length > 0) {

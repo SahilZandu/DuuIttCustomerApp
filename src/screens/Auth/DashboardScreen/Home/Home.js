@@ -158,7 +158,10 @@ export default function Home({ navigation }) {
         <NoInternet />
       ) : (
         <>
-          <DashboardHeader title={'Home'} />
+          <DashboardHeader title={'Home'}
+            appUserInfo={appUser}
+            navigation={navigation}
+            showProfile={true} />
           <View style={styles.mainView}>
             <AppInputScroll
               padding={true}

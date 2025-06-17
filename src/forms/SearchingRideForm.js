@@ -727,15 +727,19 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   }, [parcelInfo])
 
   const getIncompleteOrder = async () => {
-    const resIncompleteOrder = await getPendingForCustomer('ride');
-    console.log('ride--getIncompleteOrder', resIncompleteOrder);
-    if (resIncompleteOrder?.length > 0) {
-      if (resIncompleteOrder[0]?.status !== "pending") {
-        setParcelInfo(resIncompleteOrder[0]);
+    if (totalAmount == 0) {
+      const resIncompleteOrder = await getPendingForCustomer('ride');
+      console.log('ride--getIncompleteOrder', resIncompleteOrder);
+      if (resIncompleteOrder?.length > 0) {
+        if (resIncompleteOrder[0]?.status !== "pending") {
+          setParcelInfo(resIncompleteOrder[0]);
+        }
       }
-    }
-    else {
-      navigation.navigate('ride', { screen: 'home' });
+      else {
+        if (resIncompleteOrder?.length == 0) {
+          navigation.navigate('ride', { screen: 'home' });
+        }
+      }
     }
   };
 
@@ -923,9 +927,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       socketServices.on('near-by-riders', data => {
         console.log('near-by-riders data--:', data, data?.data);
         if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
-          setNearByRider(data);
+          // setNearByRider(data);
         } else {
-          setNearByRider([]);
+          // setNearByRider([]);
         }
       });
     }, 2000);
@@ -1469,6 +1473,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         )}
 
         <PopUpRideDetails
+          // totalAmount={totalAmount ? totalAmount: parcelInfo?.total_amount}
           isVisible={rideDetailsVisible}
           onClose={() => {
             setRideDetailsVisible(false);

@@ -249,50 +249,82 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {colors} from '../../theme/colors';
-import {fonts} from '../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts/fonts';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { SvgXml } from 'react-native-svg';
-import { appImagesSvg } from '../../commons/AppImages';
+import { appImages, appImagesSvg } from '../../commons/AppImages';
+import Url from '../../api/Url';
 
 
-const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,onFocus,onBlur}) => {
+const DashboardHeader = ({ title,
+  onChangeText, value,
+  onCancelPress,
+  onMicroPhone,
+  onFocus,
+  onBlur,
+  appUserInfo,
+  navigation,
+  showProfile
+}) => {
   const searchInputRef = useRef(null);
-    const handleSearchButtonPress = () => {
+  const handleSearchButtonPress = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   };
   return (
+    <View
+      style={{
+        flexDirection: 'row',
+        backgroundColor: colors.appBackground,
+        alignItems: 'center',
+        paddingBottom: '2.5%',
+        marginTop: Platform.OS == 'ios' ? '1%' : '4%',
+        paddingHorizontal: 20,
+        borderBottomColor: colors.colorD9,
+        borderBottomWidth: 1
+      }}>
       <View
-        style={{
-          flexDirection: 'row',
-          backgroundColor: colors.appBackground,
-          alignItems: 'center',
-          paddingBottom: '2.5%',
-           marginTop:Platform.OS == 'ios' ? '1%':'4%',
-          paddingHorizontal: 20,
-          borderBottomColor:colors.colorD9,
-          borderBottomWidth:1
-        }}>
-        <View
-          style={{flex: 1, backgroundColor: colors.appBackground, marginLeft: '1%'}}>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontSize: RFValue(15),
-              fontFamily: fonts.semiBold,
-              color: colors.black,
-            }}>
-           {title}
-          </Text>
-        </View>
-       {onChangeText && (
+        style={{ flex: 1, backgroundColor: colors.appBackground, marginLeft: '1%' }}>
+        <Text
+          numberOfLines={1}
+          style={{
+            fontSize: RFValue(15),
+            fontFamily: fonts.semiBold,
+            color: colors.black,
+          }}>
+          {title}
+        </Text>
+      </View>
+      {showProfile && <TouchableOpacity
+        hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
+        onPress={() => {
+          navigation.navigate('profile', { screenName: 'home' });
+        }}
+        activeOpacity={0.8}>
+        <Image
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 100,
+            borderColor: colors.main,
+            borderWidth: 0.3,
+          }}
+          source={
+            appUserInfo?.profile_pic?.length > 0
+              ? { uri: Url.Image_Url + appUserInfo?.profile_pic }
+              : appImages.profileImage
+          }
+        />
+      </TouchableOpacity>}
+      {onChangeText && (
         <View
           style={{
             flexDirection: 'row',
@@ -334,12 +366,12 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
               <TouchableOpacity
                 onPress={onCancelPress}
                 activeOpacity={0.8}
-                hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}>
+                hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}>
                 <SvgXml
                   width={21}
                   height={21}
                   xml={appImagesSvg.cancelSvg2}
-                  style={{right: wp('0.1%')}}
+                  style={{ right: wp('0.1%') }}
                 />
               </TouchableOpacity>
             ) : (
@@ -348,12 +380,12 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
                   handleSearchButtonPress();
                 }}
                 activeOpacity={0.8}
-                hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}>
+                hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}>
                 <SvgXml
                   width={20}
                   height={20}
                   xml={appImagesSvg.searchIcon}
-                  style={{right: wp('0.7%')}}
+                  style={{ right: wp('0.7%') }}
                 />
               </TouchableOpacity>
             )}
@@ -367,15 +399,15 @@ const DashboardHeader = ({title,onChangeText,value,onCancelPress,onMicroPhone,on
             <TouchableOpacity
               onPress={onMicroPhone}
               activeOpacity={0.8}
-              hitSlop={{top: 15, bottom: 10, left: 5, right: 5}}
-              style={{left: wp('3%')}}>
+              hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}
+              style={{ left: wp('3%') }}>
               <SvgXml width={20} height={20} xml={appImagesSvg.microPhoneSvg} />
             </TouchableOpacity>
           </View>
         </View>
       )}
-      </View>
-  
+    </View>
+
   );
 };
 

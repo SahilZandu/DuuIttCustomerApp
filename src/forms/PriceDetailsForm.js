@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Text,
   View,
@@ -12,28 +12,28 @@ import {
   Keyboard,
 } from 'react-native';
 import CTA from '../components/cta/CTA';
-import {Formik, useFormik, useFormikContext} from 'formik';
+import { Formik, useFormik, useFormikContext } from 'formik';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {SvgXml} from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { SvgXml } from 'react-native-svg';
 import AppInputScroll from '../halpers/AppInputScroll';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
-import {colors} from '../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../theme/fonts/fonts';
+import { colors } from '../theme/colors';
 import PickDropLocation from '../components/PickDropLocation';
-import {useFocusEffect} from '@react-navigation/native';
-import {rootStore} from '../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
+import { rootStore } from '../stores/rootStore';
 import HomeSlider from '../components/slider/homeSlider';
 import DotTextComp from '../components/DotTextComp';
 import ModalPopUp from '../components/ModalPopUp';
 import SenderReceiverForm from './SenderReceiverForm';
 import InputFieldLabel from '../components/InputFieldLabel';
-import {senderReceiverValidations} from './formsValidation/senderReceiverValidations';
-import {silderArray} from '../stores/DummyData/Home';
+import { senderReceiverValidations } from './formsValidation/senderReceiverValidations';
+import { silderArray } from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
 import MapRoute from '../components/MapRoute';
 
@@ -56,11 +56,11 @@ const parcelInst = [
   },
 ];
 
-const PriceDetailsForm = ({navigation}) => {
-  const {senderAddress, receiverAddress, setSenderAddress, setReceiverAddress} =
+const PriceDetailsForm = ({ navigation }) => {
+  const { senderAddress, receiverAddress, setSenderAddress, setReceiverAddress } =
     rootStore.myAddressStore;
-  const {addRequestParcelRide} = rootStore.parcelStore;
-  const {appUser} = rootStore.commonStore;
+  const { addRequestParcelRide } = rootStore.parcelStore;
+  const { appUser } = rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
@@ -78,14 +78,14 @@ const PriceDetailsForm = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       getCheckSenderReceiverData();
-      const {appUser} = rootStore.commonStore;
+      const { appUser } = rootStore.commonStore;
       setAppUserData(appUser);
     }, []),
   );
   console.log('appUser parcel --', appUser);
 
   const getCheckSenderReceiverData = () => {
-    const {senderAddress, receiverAddress} = rootStore.myAddressStore;
+    const { senderAddress, receiverAddress } = rootStore.myAddressStore;
     console.log(
       'senderAddress,receiverAddress',
       senderAddress,
@@ -96,8 +96,8 @@ const PriceDetailsForm = ({navigation}) => {
   };
 
   const handlePrice = async values => {
-     Keyboard.dismiss();
-    let newReceiverAddress = {...receiverAddress};
+    Keyboard.dismiss();
+    let newReceiverAddress = { ...receiverAddress };
     if (isSecure == true && values?.phone) {
       newReceiverAddress = {
         ...receiverAddress,
@@ -133,8 +133,8 @@ const PriceDetailsForm = ({navigation}) => {
     setLoading(v);
   };
 
-  const FormButton = ({loading, onPress}) => {
-    const {dirty, isValid, values} = useFormikContext();
+  const FormButton = ({ loading, onPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
     return (
       <CTA
         // disable={weight == '' || weight > 20}
@@ -157,7 +157,7 @@ const PriceDetailsForm = ({navigation}) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'pick',
       item: senderAddress,
-      screenName:'priceDetails'
+      screenName: 'priceDetails'
     });
   };
 
@@ -165,7 +165,7 @@ const PriceDetailsForm = ({navigation}) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'drop',
       item: receiverAddress,
-      screenName:'priceDetails'
+      screenName: 'priceDetails'
     });
   };
 
@@ -190,8 +190,8 @@ const PriceDetailsForm = ({navigation}) => {
   };
 
   const SecureTextData = () => {
-    const {values, setFieldValue} = useFormikContext();
-    const {receiverAddress} = rootStore.myAddressStore;
+    const { values, setFieldValue } = useFormikContext();
+    const { receiverAddress } = rootStore.myAddressStore;
     useEffect(() => {
       if (isSecure) {
         setFieldValue('phone', receiverAddress?.phone?.toString());
@@ -217,34 +217,45 @@ const PriceDetailsForm = ({navigation}) => {
         </TouchableOpacity>
         <Spacer space={'-5%'} />
         {(isSecure && loading == false) && (
-          <InputFieldLabel
-            borderWidth={1}
-            inputLabel={"Receiver's mobile number"}
-            keyboardType="number-pad"
-            name={'phone'}
-            placeholder={'Enter mobile number'}
-            maxLength={10}
-            showErrorMsg={true}
-          />
+          <TouchableOpacity activeOpacity={0.9}
+          style={{ overflow: 'visible' }} 
+          onPress={() => { 
+            setIsStatus('drop');
+            setIsAddressModal(true);
+            }}>
+            <View pointerEvents="none">
+              <InputFieldLabel
+                // onRightPress={()=>{alert("yes")}}
+                editable={false}
+                //  rightIcon={true}
+                borderWidth={1}
+                inputLabel={"Receiver's mobile number"}
+                keyboardType="number-pad"
+                name={'phone'}
+                placeholder={'Enter mobile number'}
+                maxLength={10}
+                showErrorMsg={true}
+              />
+            </View>
+          </TouchableOpacity>
+
         )}
       </View>
     );
   };
 
-  const onPressSecure =(data)=>{
-
-      alert(data)
+  const onPressSecure = (data) => {
     setIsSecure(data)
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Formik
         initialValues={initialValues}
         validationSchema={senderReceiverValidations()}>
         <>
           <KeyboardAvoidingView
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <AppInputScroll
               Pb={hp('40%')}
@@ -257,8 +268,8 @@ const PriceDetailsForm = ({navigation}) => {
                   height: Platform.OS == 'ios' ? hp('25%') : hp('25%'),
                 }}
               />
-               <Spacer space={hp('2%')}/>
-              <View style={{flex: 1, marginHorizontal: 20}}>
+              <Spacer space={hp('2%')} />
+              <View style={{ flex: 1, marginHorizontal: 20 }}>
                 <PickDropLocation
                   pickUpLocation={pickUpLocation}
                   dropLocation={dropLocation}
@@ -276,9 +287,9 @@ const PriceDetailsForm = ({navigation}) => {
                     setIsAddressModal(true);
                   }}
                 />
-                <SecureTextData/>
+                <SecureTextData />
 
-                <View style={{marginTop: hp('1%')}}>
+                <View style={{ marginTop: hp('1%') }}>
                   <Text style={styles.parcelInstView}>Parcel Instructions</Text>
 
                   <View style={styles.parcelInstInnerView}>
@@ -294,14 +305,14 @@ const PriceDetailsForm = ({navigation}) => {
                   </View>
                 </View>
               </View>
-              <View style={{marginHorizontal: 10}}>
+              <View style={{ marginHorizontal: 10 }}>
                 <HomeSlider data={sliderItems} />
               </View>
             </AppInputScroll>
           </KeyboardAvoidingView>
 
           <View
-            style={{backgroundColor: colors.appBackground, height: hp('9%')}}>
+            style={{ backgroundColor: colors.appBackground, height: hp('9%') }}>
             <FormButton loading={loading} onPress={handlePrice} />
           </View>
         </>
@@ -322,7 +333,7 @@ const PriceDetailsForm = ({navigation}) => {
           setIsAddressModal(false);
         }}>
         <View
-          style={{height: hp('58%'), backgroundColor: colors.appBackground}}>
+          style={{ height: hp('58%'), backgroundColor: colors.appBackground }}>
           <SenderReceiverForm
             navigation={navigation}
             pickDrop={isStatus}
@@ -330,7 +341,7 @@ const PriceDetailsForm = ({navigation}) => {
             onClose={() => {
               setIsAddressModal(false);
             }}
-            onPressSecure ={onPressSecure}
+            onPressSecure={onPressSecure}
             isSecure={isSecure}
           />
         </View>

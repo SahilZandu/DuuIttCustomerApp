@@ -164,6 +164,7 @@ export const agent = {
   deleteAccount: body =>
     requests.delete(`${Url.deleteAccount}/${body?.userId}`),
   adminInfo: () => requests.get(Url.adminInfo),
+  supportInfo: () => requests.get(Url.supportInfo),
   updateCustomerInfo: body => requests.post(Url.updateCustomerInfo, body),
   checkDeviceId: body => requests.post(Url.checkDeviceId, body),
 

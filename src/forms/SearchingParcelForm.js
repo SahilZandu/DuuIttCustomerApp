@@ -259,9 +259,9 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       socketServices.on('near-by-riders', data => {
         console.log('near-by-riders data--:', data, data?.data);
         if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
-          setNearByRider(data);
+          // setNearByRider(data);
         } else {
-          setNearByRider([]);
+          // setNearByRider([]);
         }
       });
     }, 2000);
@@ -300,22 +300,26 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   }, [parcelInfo])
 
   const getIncompleteOrder = async () => {
-    const resIncompleteOrder = await getPendingForCustomer('parcel');
-    console.log('resIncompleteOrder ride--', resIncompleteOrder);
-    if (resIncompleteOrder?.length > 0) {
-      if (resIncompleteOrder[0]?.status !== "pending") {
-        if (resIncompleteOrder[0]?.status === "picked") {
-          setParcelInfo(resIncompleteOrder[0]);
-          setAddParcelInfo(resIncompleteOrder[0]);
-          navigation.navigate('pickSuccessfully');
-          setSearchArrive('search');
-        } else {
-          setParcelInfo(resIncompleteOrder[0]);
+    if (totalAmount == 0) {
+      const resIncompleteOrder = await getPendingForCustomer('parcel');
+      console.log('resIncompleteOrder ride--', resIncompleteOrder);
+      if (resIncompleteOrder?.length > 0) {
+        if (resIncompleteOrder[0]?.status !== "pending") {
+          if (resIncompleteOrder[0]?.status === "picked") {
+            setParcelInfo(resIncompleteOrder[0]);
+            setAddParcelInfo(resIncompleteOrder[0]);
+            navigation.navigate('pickSuccessfully');
+            setSearchArrive('search');
+          } else {
+            setParcelInfo(resIncompleteOrder[0]);
+          }
         }
       }
-    }
-    else {
-      navigation.navigate('parcel', { screen: 'home' });
+      else {
+        if (resIncompleteOrder?.length == 0) {
+          navigation.navigate('parcel', { screen: 'home' });
+        }
+      }
     }
   };
 
