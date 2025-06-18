@@ -21,7 +21,6 @@ import NoInternet from './src/components/NoInternet';
 import { rootStore } from './src/stores/rootStore';
 import Toast from 'react-native-toast-message';
 
-
 let focusRoute = '';
 
 function App() {
