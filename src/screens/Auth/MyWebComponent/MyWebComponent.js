@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, ActivityIndicator, Platform } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { WebView } from 'react-native-webview';
@@ -10,6 +10,7 @@ import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import Header from '../../../components/header/Header';
 import { colors } from '../../../theme/colors';
 import { styles } from './styles';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -17,11 +18,34 @@ export default function MyWebComponent({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const { type } = route?.params;
 
-  const link = type == 'policy' ? privacyPolicyLink : termsAndConditionsLink;
+  let link = type == 'policy' ? privacyPolicyLink : termsAndConditionsLink;
 
   useEffect(() => {
-    handleAndroidBackButton(navigation);
-  }, []);
+    if (type == 'policy') {
+      link = privacyPolicyLink
+    } else if (type == 'terms') {
+      link = termsAndConditionsLink
+    } else {
+      link = termsAndConditionsLink
+    }
+  }, [type])
+
+  const setHeaderText = (type) => {
+    switch (type) {
+      case 'policy':
+        return 'Privacy Policy';
+      case 'terms':
+        return 'Terms & Conditions'
+      default:
+        return 'Open Source Library';
+    }
+  }
+
+  useFocusEffect(
+    useCallback(()=>{
+      handleAndroidBackButton(navigation);
+    },[])
+  )
 
   return (
     <View style={styles.container}>
@@ -30,7 +54,7 @@ export default function MyWebComponent({ navigation, route }) {
           navigation.goBack();
         }}
         backArrow={true}
-        title={type == 'policy' ? 'Privacy Policy' : 'Terms & Conditions'}
+        title={setHeaderText(type)}
       />
       {loading && (
         <View

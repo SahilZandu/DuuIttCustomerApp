@@ -83,7 +83,7 @@ const PopUpRideDetails = ({
               }}
             />
             <TextRender
-              title={'Cash'}
+              title={'Pay'}
               value={currencyFormat(Number(info?.total_amount))}
               bottomLine={false}
             />

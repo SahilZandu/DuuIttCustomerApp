@@ -28,7 +28,7 @@ export default class ChatStore {
                 handleErrorMsg();
             }
         } catch (error) {
-            console.log('error:', error);
+            console.log('sendMessage error:', error);
             handleErrorMsg();
             const m = error?.data?.message
                 ? error?.data?.message

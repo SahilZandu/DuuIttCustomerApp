@@ -185,7 +185,7 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
   const [initialValues, setInitialValues] = useState({
     address_detail: item?.address ? item?.address_detail : '',
     landmark: item?.landmark ? item?.landmark : '',
-    name: item?.name ? item?.name : '',
+    name: (item?.name && item?.address_detail) ? item?.name : '',
     phone: item?.phone ? item?.phone?.toString() : '',
   });
 

@@ -32,6 +32,7 @@ axios.interceptors.response.use(
     }
 
     if (statusCode === 401) {
+      rootStore.dashboardStore.saveFcmToken(null)
       rootStore.commonStore.setToken(null);
       rootStore.commonStore.setAppUser(null);
       RNRestart.restart();
@@ -58,6 +59,7 @@ axios.interceptors.response.use(
     }
 
     if (status === 401) {
+      rootStore.dashboardStore.saveFcmToken(null);
       rootStore.commonStore.setToken(null);
       rootStore.commonStore.setAppUser(null);
       RNRestart.restart();

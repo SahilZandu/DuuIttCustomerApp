@@ -63,7 +63,7 @@ const trackArray = [
 const TrackingOrderForm = ({ navigation }) => {
   const { ordersTrackOrder, orderTrackingList } = rootStore.orderStore;
   const { appUser } = rootStore.commonStore;
-  const { unseenMessages, setChatNotificationStatus } = rootStore.chatStore;
+  const { unseenMessages, setChatNotificationStatus, setChatData } = rootStore.chatStore;
   const [loading, setLoading] = useState(
     orderTrackingList?.length?.length > 0 ? false : true,
   );
@@ -191,13 +191,16 @@ const TrackingOrderForm = ({ navigation }) => {
   }
 
   const onChat = (data) => {
+    setChatData([])
     let newCheckMsg = [...checkChatMsg]
     const filterCheckMsg = newCheckMsg?.filter((item, i) => {
       return item?._id !== data?._id
     })
     setCheckChatMsg(filterCheckMsg);
+    setTimeout(() => {
+      navigation.navigate("chat", { item: data })
+    }, 500)
 
-    navigation.navigate("chat", { item: data })
   }
 
 
@@ -245,12 +248,12 @@ const TrackingOrderForm = ({ navigation }) => {
     setLoading(v);
   };
 
-  const hanldeLinking = type => {
+  const hanldeLinking = (type, item) => {
     if (type) {
       if (type == 'email') {
         Linking.openURL(`mailto:${'DuuItt@gmail.com'}`);
       } else {
-        Linking.openURL(`tel:${'1234567890'}`);
+        Linking.openURL(`tel:${item?.rider?.phone ?? '1234567890'}`);
       }
     }
   };
@@ -337,10 +340,10 @@ const TrackingOrderForm = ({ navigation }) => {
                 }}
                 onMessage={() => {
                   onChat(item);
-                  // hanldeLinking('email');
+                  // hanldeLinking('email',item);
                 }}
                 onCall={() => {
-                  hanldeLinking('call');
+                  hanldeLinking('call', item);
                 }}
               />
               <View style={styles.lineView} />
@@ -351,7 +354,7 @@ const TrackingOrderForm = ({ navigation }) => {
               />
               <View style={styles.lineView} />
               <TextRender
-                title={'Cash'}
+                title={'Pay'}
                 value={currencyFormat(item?.total_amount)}
                 bottomLine={false}
               />

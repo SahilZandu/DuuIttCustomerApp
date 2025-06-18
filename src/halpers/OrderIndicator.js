@@ -78,11 +78,13 @@
 // export default OrderIndicator;
 
 import React from 'react';
-import { View, StyleSheet,Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet,Image, TouchableOpacity, Platform } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } 
 from 'react-native-responsive-screen';
 import * as Animatable from 'react-native-animatable';
 import { appImages } from '../commons/AppImages';
+import { colors } from '../theme/colors';
+
 
 const CornerTriangle = ({onPress}) => {
   return (
@@ -96,7 +98,7 @@ const CornerTriangle = ({onPress}) => {
         //  "shake"  "tada"
         iterationCount={'infinite'}
         direction="alternate"
-        duration={4000}>
+        duration={1000}>
             <Image style={{height:20,width:20}}
              source={appImages.homeIconDot} />
             </Animatable.View>
@@ -110,8 +112,8 @@ export default CornerTriangle;
 const styles = StyleSheet.create({
   main: {
     position: 'absolute', // fixed typo here
-    top: hp('2.9%'),
-    right: wp('0.9%'),
+    top: Platform.OS == 'ios' ? hp('2.9%') :hp('3.1%'),
+    right: Platform.OS == 'ios' ? wp('0.9%'):wp('1.1%'),
     width:wp("20"),
     height:hp("20%"),
     overflow: 'hidden',
@@ -125,8 +127,8 @@ const styles = StyleSheet.create({
     borderLeftWidth: 60,
     borderBottomWidth: 60,
     borderTopLeftRadius:10,
-    borderLeftColor: '#FCEEEF', // Light pink fill
-    borderBottomColor: 'transparent',
+    borderLeftColor: colors.redThink, 
+    borderBottomColor: Platform.OS == 'ios' ? 'transparent' :colors.white,
     transform: [{ rotate: '90deg' }],
   },
   redDot: {

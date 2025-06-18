@@ -264,7 +264,15 @@ export function useNotifications(navigation) {
                 totalAmount: 0
               }
             });
-          } else {
+          } else if ((route == "parcel" && chatData?.status == "accepted")) {
+            navigation.navigate(route, {
+              screen: 'searchingRide', params: {
+                paymentMethod: '',
+                totalAmount: 0
+              }
+            });
+          }
+          else {
             navigation.navigate(route, { screen: 'trackingOrder' });
           }
           DeviceEventEmitter.emit('chatPage', chatData);
@@ -303,8 +311,8 @@ export function useNotifications(navigation) {
     console.log("route---", notification,);
     const routeType = notification?.payload?.route;
     // console.log("route---", route);
-
-    const route = notification?.payload?.notification_data?.order_type == 'parcel' ? 'parcel' : "ride"
+    let data = JSON.parse(notification?.payload?.notification_data)
+    let route = data?.order_type == 'parcel' ? 'parcel' : "ride"
     if (routeType === "searchingRide") {
       let acceptedDetails = JSON.parse(notification?.payload?.notification_data)
       setAddParcelInfo(acceptedDetails)
@@ -362,7 +370,16 @@ export function useNotifications(navigation) {
             totalAmount: 0
           }
         });
-      } else {
+      }
+      else if ((route == "parcel" && chatData?.status == "accepted")) {
+        navigation.navigate(route, {
+          screen: 'searchingRide', params: {
+            paymentMethod: '',
+            totalAmount: 0
+          }
+        });
+      }
+      else {
         navigation.navigate(route, { screen: 'trackingOrder' });
       }
       DeviceEventEmitter.emit('chatPage', chatData);

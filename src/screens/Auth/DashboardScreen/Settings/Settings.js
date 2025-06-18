@@ -9,6 +9,7 @@ import PopUp from '../../../../components/appPopUp/PopUp';
 import { rootStore } from '../../../../stores/rootStore';
 import socketServices from '../../../../socketIo/SocketServices';
 import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
+import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 
 export default function Settings({ navigation }) {
   const { deleteAccount } = rootStore.dashboardStore;

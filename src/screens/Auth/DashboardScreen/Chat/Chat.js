@@ -42,16 +42,14 @@ import Spacer from '../../../../halpers/Spacer';
 export default function Chat({ navigation, route }) {
   const { appUser } = rootStore.commonStore;
   const { item } = route.params;
-  const { sendMessage, getChatData, markSeen, setChatData, chatingData,setChatNotificationStatus } = rootStore.chatStore;
+  const { sendMessage, getChatData, markSeen, setChatData, chatingData, setChatNotificationStatus } = rootStore.chatStore;
   const [messages, setMessages] = useState(chatingData ?? []);
   const [visible, setVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(chatingData?.length > 0 ? false : true)
 
-  console.log("messages----", messages);
-
-
+  console.log("messages----item", messages, item);
 
   const hanldeLinking = () => {
     Linking.openURL(`tel:${item?.rider?.phone?.toString() ?? '1234567890'}`);
@@ -100,7 +98,6 @@ export default function Chat({ navigation, route }) {
       const mappedMessages = chatArray?.map((item, index) => {
         let userId = item?.senderRole === 'customer' ? 1 : 2;
         let userName = item?.senderRole === 'customer' ? "Customer" : "Rider";
-
         return {
           _id: index + 1, // or item._id if you prefer
           createdAt: new Date(item?.timestamp),
@@ -244,13 +241,13 @@ export default function Chat({ navigation, route }) {
       customerId: appUser?._id
     }
     socketServices.emit('chat-message', data)
-    sendMessage(data,handleErrorMsg);
+    sendMessage(data, handleErrorMsg);
     setInputText(''); // Clear input after sending
     setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
     // const docId = appUser?._id > item?._id ? appUser?._id + "-" +item?._id: item?._id + "-" +appUser?._id ;
   }, [appUser]);
 
-  const handleErrorMsg =()=>{
+  const handleErrorMsg = () => {
     getChatList();
   }
 

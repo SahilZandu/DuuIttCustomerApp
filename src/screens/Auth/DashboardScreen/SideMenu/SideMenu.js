@@ -20,7 +20,7 @@ import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 
 export default function SideMenu({ navigation }) {
   const { setToken, setAppUser, appUser } = rootStore.commonStore;
-  const { getCheckDeviceId } = rootStore.dashboardStore;
+  const { getCheckDeviceId,saveFcmToken } = rootStore.dashboardStore;
   const {
     ordersTrackOrder,
     orderTrackingList,
@@ -440,6 +440,7 @@ export default function SideMenu({ navigation }) {
       };
       socketServices.emit('remove-user', query);
       socketServices.disconnectSocket();
+      await saveFcmToken(null);
       await setToken(null);
       await setAppUser(null);
       navigation.dispatch(

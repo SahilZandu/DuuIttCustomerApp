@@ -200,6 +200,7 @@ const PriceDetailsForm = ({ navigation }) => {
     return (
       <View style={styles.secureMainView}>
         <TouchableOpacity
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
           style={styles.secureTouch}
           onPress={() => {
             setIsSecure(!isSecure);
@@ -218,10 +219,10 @@ const PriceDetailsForm = ({ navigation }) => {
         <Spacer space={'-5%'} />
         {(isSecure && loading == false) && (
           <TouchableOpacity activeOpacity={0.9}
-          style={{ overflow: 'visible' }} 
-          onPress={() => { 
-            setIsStatus('drop');
-            setIsAddressModal(true);
+            style={{ overflow: 'visible' }}
+            onPress={() => {
+              setIsStatus('drop');
+              setIsAddressModal(true);
             }}>
             <View pointerEvents="none">
               <InputFieldLabel

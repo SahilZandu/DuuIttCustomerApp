@@ -1,5 +1,5 @@
-import React, { useCallback,} from 'react';
-import { View,} from 'react-native';
+import React, { useCallback, } from 'react';
+import { View, } from 'react-native';
 import Header from '../../../../components/header/Header';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
@@ -10,13 +10,11 @@ import { appImagesSvg } from '../../../../commons/AppImages';
 
 export default function About({ navigation }) {
 
-
     useFocusEffect(
         useCallback(() => {
             handleAndroidBackButton(navigation);
         }, []),
     );
-
 
     const aboutOptions = [
         {
@@ -48,12 +46,12 @@ export default function About({ navigation }) {
             title: 'Open source library',
             onPress: () => {
                 navigation.navigate('myWebComponent', {
-                    type: 'policy',
+                    type: 'openSource',
                 });
             },
             icon: appImagesSvg.aboutSvg,
             show: true,
-            disable: true,
+            disable: false,
         },
         {
             id: '4',
@@ -66,9 +64,6 @@ export default function About({ navigation }) {
             disable: true,
         },
     ];
-
-
-
 
 
     return (

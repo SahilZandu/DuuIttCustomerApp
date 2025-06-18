@@ -60,8 +60,8 @@ export default class DashboardStore {
   saveFcmToken = async fcm => {
     const deviceId = await getUniqueId();
     let requestData = {
-      device_id: deviceId,
-      fcm_token: fcm,
+      device_id: fcm ? deviceId : '',
+      fcm_token: fcm ? fcm : '',
     };
 
     console.log('customers Fcm Token', requestData);
@@ -70,7 +70,9 @@ export default class DashboardStore {
       const res = await agent.customersFcmToken(requestData);
       console.log('customers Fcm Token Res : ', res);
       if (res?.statusCode == 200) {
-        await rootStore.commonStore.setAppUser(res?.data);
+        if (fcm) {
+          await rootStore.commonStore.setAppUser(res?.data);
+        }
       }
     } catch (error) {
       console.log('error customers Fcm Token:', error);
