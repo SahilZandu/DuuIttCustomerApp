@@ -481,6 +481,36 @@ export default class DashboardStore {
     }
   };
 
+  userLogout = async (handleLoading,isSuccess,onError) => {
+    handleLoading(true)
+    let requestData = {
+      // userId: appUser?._id
+    };
+    console.log('userLogout requestData', requestData);
+    try {
+      const res = await agent.userLogout(requestData);
+      console.log('userLogout Res :', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        isSuccess()
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        onError()
+      }
+    } catch (error) {
+      console.log('error paymentsVerify:', error);
+      handleLoading(false);
+      onError()
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return []
+    }
+  };
 
 
 }

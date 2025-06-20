@@ -225,7 +225,8 @@ export function useNotifications(navigation) {
           let cancelDetails = JSON.parse(detail.notification?.data?.notification_data)
           setAddParcelInfo(cancelDetails)
           console.log('cancelDetails notification cancelOrder', cancelDetails);
-          navigation.navigate(route, { screen: 'home' });
+          // navigation.navigate(route, { screen: 'home' });
+          navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
           DeviceEventEmitter.emit('cancelOrder', cancelDetails)
         }
         if (detail?.notification?.data?.route == "picked") {
@@ -330,7 +331,8 @@ export function useNotifications(navigation) {
       let cancelDetails = JSON.parse(notification?.payload?.notification_data)
       setAddParcelInfo(cancelDetails)
       console.log('cancelDetails notification cancelOrder', cancelDetails);
-      navigation.navigate(route, { screen: 'home' });
+      // navigation.navigate(route, { screen: 'home' });
+      navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
       DeviceEventEmitter.emit('cancelOrder', cancelDetails)
     }
     if (routeType === "picked") {

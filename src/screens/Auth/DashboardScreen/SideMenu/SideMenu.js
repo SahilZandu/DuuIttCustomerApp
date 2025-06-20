@@ -5,7 +5,7 @@ import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import { rootStore } from '../../../../stores/rootStore';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import { useFocusEffect,CommonActions} from '@react-navigation/native';
+import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import Url from '../../../../api/Url';
 import ReusableSurfaceComp from '../../../../components/ReusableSurfaceComp';
 import TouchTextRightIconComp from '../../../../components/TouchTextRightIconComp';
@@ -20,7 +20,7 @@ import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 
 export default function SideMenu({ navigation }) {
   const { setToken, setAppUser, appUser } = rootStore.commonStore;
-  const { getCheckDeviceId,saveFcmToken } = rootStore.dashboardStore;
+  const { getCheckDeviceId, saveFcmToken, userLogout } = rootStore.dashboardStore;
   const {
     ordersTrackOrder,
     orderTrackingList,
@@ -38,6 +38,7 @@ export default function SideMenu({ navigation }) {
   const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
   const [isProgrss, setIsProgress] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const foodOptions = [
     {
@@ -247,7 +248,7 @@ export default function SideMenu({ navigation }) {
       show: true,
       disable: false,
     },
-     {
+    {
       id: '7',
       title: 'About',
       onPress: () => {
@@ -332,7 +333,7 @@ export default function SideMenu({ navigation }) {
   const getIncompleteParcelOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('parcel');
     console.log('resIncompleteOrder parcel--', resIncompleteOrder);
- if (resIncompleteOrder?.length > 0 &&
+    if (resIncompleteOrder?.length > 0 &&
       (resIncompleteOrder[0]?.status !== 'pending')
     ) {
       setIncompletedParcelOrder(resIncompleteOrder);
@@ -433,16 +434,24 @@ export default function SideMenu({ navigation }) {
   };
 
   const handleLogout = async () => {
-    setIsLogout(false);
+    await userLogout(handleLogoutLoading, isSuccess, onError)
+
+  };
+
+  const handleLogoutLoading = (v) => {
+    setLoading(v)
+  }
+  const isSuccess = () => {
+
     setTimeout(async () => {
       let query = {
         user_id: appUser?._id,
       };
       socketServices.emit('remove-user', query);
       socketServices.disconnectSocket();
-      await saveFcmToken(null);
       await setToken(null);
       await setAppUser(null);
+      setIsLogout(false);
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -450,7 +459,11 @@ export default function SideMenu({ navigation }) {
         }),
       );
     }, 500);
-  };
+  }
+  const onError = () => {
+    setIsLogout(false);
+  }
+
 
   return (
     <View style={styles.container}>
@@ -512,10 +525,9 @@ export default function SideMenu({ navigation }) {
               onClose={() => setIsProgress(false)}
               title={'You cannot logout'}
               text={
-                 "You cannot logout your account while your order is being processed."
+                "You cannot logout your account while your order is being processed."
               }
             />
-
 
           </AppInputScroll>
         </>

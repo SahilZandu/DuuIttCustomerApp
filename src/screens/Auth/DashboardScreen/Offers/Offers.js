@@ -3,6 +3,7 @@ import {
   Text,
   View,
   DeviceEventEmitter,
+  Image,
 } from 'react-native';
 import {styles} from './styles';
 import {
@@ -24,6 +25,7 @@ import {
 } from '../../../../stores/DummyData/Offers';
 import PromotionsFlatList from '../../../../components/slider/promotionsSlider';
 import TwoTextSlider from '../../../../components/slider/twoTextSlider';
+import { appImages } from '../../../../commons/AppImages';
 
 
 export default function Offers({navigation}) {
@@ -81,7 +83,7 @@ export default function Offers({navigation}) {
 
   return (
     <View style={styles.container}>
-      {internet == false ? (
+      {/* {internet == false ? (
         <NoInternet />
       ) : (
         <>
@@ -118,7 +120,10 @@ export default function Offers({navigation}) {
               </View>
             </AppInputScroll>
         </>
-      )}
+      )} */}
+      <Image
+      resizeMode='stretch'
+       style={{height:hp('100%'),width:wp('100%')}} source={appImages.explore2}/>
     </View>
   );
 }

@@ -31,6 +31,7 @@ import { colors } from '../../../theme/colors';
 export default function PersonalInfo({ navigation, route }) {
   const [isLogout, setIsLogout] = useState(false);
   const { appUser, setToken, setAppUser } = rootStore.commonStore;
+  const {userLogout}=rootStore.dashboardStore;
 
   useFocusEffect(
     useCallback(() => {
@@ -39,25 +40,38 @@ export default function PersonalInfo({ navigation, route }) {
     }, []),
   );
 
+  
   const handleLogout = async () => {
-    setIsLogout(false);
-    setTimeout(async () => {
-      let query = {
-        user_id: appUser?._id,
-      };
-      socketServices.emit('remove-user', query);
-      socketServices.disconnectSocket();
-      await setToken(null);
-      await setAppUser(null);
-      navigation.navigate("login");
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{ name: 'auth' }],
-      //   }),
-      // );
-    }, 500);
-  };
+    await userLogout(handleLogoutLoading ,isSuccess ,onError)
+    
+   };
+ 
+   const handleLogoutLoading = (v) => {
+     setLoading(v)
+   }
+   const isSuccess = () => {
+   
+     setTimeout(async () => {
+       let query = {
+         user_id: appUser?._id,
+       };
+       socketServices.emit('remove-user', query);
+       socketServices.disconnectSocket();
+       await setToken(null);
+       await setAppUser(null);
+       setIsLogout(false);
+       navigation.dispatch(
+         CommonActions.reset({
+           index: 0,
+           routes: [{ name: 'auth' }],
+         }),
+       );
+     }, 500);
+   }
+   const onError = () => {
+     setIsLogout(false);
+   }
+  
 
 
   return (

@@ -900,4 +900,9 @@ export const appImages = {
   infoIcon: require('../assets/infoIcon.png'),
   onlineUnavailable:require('../assets/online_Unavailable.png'),
   homeIconDot:require('../assets/home_IconDot.png'),
+  explore1:require('../assets/explore1.jpg'),
+  explore2:require('../assets/explore2.jpg'),
+  explore3:require('../assets/explore3.jpg'),
+
+
 };

@@ -236,6 +236,13 @@ const TrackingOrderForm = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getTrackingOrder();
+    }, 60000); // 1 minute
+    return () => clearInterval(intervalId); // Clean up on unmount
+  }, []);
+
   const getTrackingOrder = async () => {
     const res = await ordersTrackOrder(handleLoading);
     setTrackedArray(res);
@@ -324,7 +331,7 @@ const TrackingOrderForm = ({ navigation }) => {
             elevation={3}
             style={[
               styles.trackingSurfaceView,
-              { height: item?.secure ? hp('62%') : hp('54.5%') },
+              { height: item?.secure ? hp('68%') : hp('60.5%') },
             ]}>
             <View style={styles.innerTrackingView}>
               <DriverTrackingProfileComp
@@ -358,6 +365,16 @@ const TrackingOrderForm = ({ navigation }) => {
                 value={currencyFormat(item?.total_amount)}
                 bottomLine={false}
               />
+              {/* {item?.arrival_time && */}
+              <>
+                <View style={styles.lineView} />
+                <TextRender
+                  title={'Arrival Time'}
+                  value={item?.arrival_time ?? '00:00'}
+                  bottomLine={false}
+                />
+              </>
+              {/* } */}
               {item?.secure && (
                 <>
                   <View style={styles.lineView} />
@@ -367,6 +384,7 @@ const TrackingOrderForm = ({ navigation }) => {
                   />
                 </>
               )}
+
               <View style={styles.lineView} />
               <TouchableOpacity
                 onPress={() => {
@@ -395,6 +413,9 @@ const TrackingOrderForm = ({ navigation }) => {
       </View>
     );
   };
+
+
+
 
   return (
     <View style={styles.main}>

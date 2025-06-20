@@ -20,7 +20,7 @@ export default  {
     customersFcmToken:'customers/update',
     testMessage:'test/message',
     updateOrderStatus:'orders/update-order-status',
-
+  
     restaurentAll:'restaurant/all',
     allDishCategory:'dish-category/all',
     restaurantListaccordingCategory :'restaurant/restaurant-list-for-menu-group',
@@ -59,9 +59,9 @@ export default  {
    sendMessage:"chat/send-message",
    markSeen:"chat/mark-seen",
    chatOrderId:"chat",
-   unseenMessages :'chat/unseen-messages'
-
-    
+   unseenMessages :'chat/unseen-messages',
+   updateOrderArrivedTime:"orders/update-order-arrived-time",
+   userLogout:"customers/logout",
 
 } 
 

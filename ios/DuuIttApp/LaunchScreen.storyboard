@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <accessibilityOverrides dynamicTypePreference="2"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -10,37 +11,29 @@
     </dependencies>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="jDG-IS-9F9">
+        <scene sceneID="YI7-n9-u8W">
             <objects>
-                <viewController id="f0f-A8-yhB" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="PlM-Cy-u5B">
+                <viewController id="bdb-vf-UIb" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="g6T-98-G8B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="oIB-ZM-7my">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="4DJ-SE-E7Y">
                                 <rect key="frame" x="0.0" y="223.5" width="375" height="0.0"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="pqo-qP-6Om">
-                                <rect key="frame" x="0.0" y="647" width="375" height="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="UOK-ZJ-eTp"/>
+                        <viewLayoutGuide key="safeArea" id="622-MQ-mYA"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="pqo-qP-6Om" firstAttribute="leading" secondItem="UOK-ZJ-eTp" secondAttribute="leading" id="6ei-VR-w9Q"/>
-                            <constraint firstItem="pqo-qP-6Om" firstAttribute="centerX" secondItem="UOK-ZJ-eTp" secondAttribute="centerX" id="Oea-6H-8hT"/>
-                            <constraint firstItem="oIB-ZM-7my" firstAttribute="centerY" secondItem="PlM-Cy-u5B" secondAttribute="bottom" multiplier="1/3" constant="1" id="Yn9-XA-HoY"/>
-                            <constraint firstItem="UOK-ZJ-eTp" firstAttribute="centerX" secondItem="oIB-ZM-7my" secondAttribute="centerX" id="d7o-su-uGa"/>
-                            <constraint firstItem="oIB-ZM-7my" firstAttribute="leading" secondItem="UOK-ZJ-eTp" secondAttribute="leading" symbolic="YES" id="kHJ-d3-Dbc"/>
-                            <constraint firstItem="UOK-ZJ-eTp" firstAttribute="bottom" secondItem="pqo-qP-6Om" secondAttribute="bottom" constant="20" id="wmf-73-bBV"/>
+                            <constraint firstItem="4DJ-SE-E7Y" firstAttribute="leading" secondItem="622-MQ-mYA" secondAttribute="leading" symbolic="YES" id="emF-um-Xj5"/>
+                            <constraint firstItem="622-MQ-mYA" firstAttribute="centerX" secondItem="4DJ-SE-E7Y" secondAttribute="centerX" id="t6w-ww-YCg"/>
+                            <constraint firstItem="4DJ-SE-E7Y" firstAttribute="centerY" secondItem="g6T-98-G8B" secondAttribute="bottom" multiplier="1/3" constant="1" id="tkh-HZ-dHY"/>
                         </constraints>
                     </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cIp-X1-vVT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="w2Q-x7-4Gd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="52.173913043478265" y="375"/>
         </scene>

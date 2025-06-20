@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,23 +7,23 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from 'react-native';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
 import ModalPopUpTouch from './ModalPopUpTouch';
 import AppInputScroll from '../halpers/AppInputScroll';
-import {Formik, useFormikContext} from 'formik';
+import { Formik, useFormikContext } from 'formik';
 import InputFieldMultiLine from './InputFieldMultiLine';
 import BTN from './cta/BTN';
-import {feedbackValidations} from '../forms/formsValidation/feedbackValidations';
+import { feedbackValidations } from '../forms/formsValidation/feedbackValidations';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Spacer from '../halpers/Spacer';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
-import {rootStore} from '../stores/rootStore';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg } from '../commons/AppImages';
+import { rootStore } from '../stores/rootStore';
 import { reviewRatingValidations } from '../forms/formsValidation/reviewRatingValidations';
 
 
@@ -38,26 +38,26 @@ const ReviewsRatingComp = ({
   type,
   reviewToRider
 }) => {
-  const {addReviews} = rootStore.dashboardStore;
+  const { addReviews } = rootStore.dashboardStore;
   const [initialValues, setInitialValues] = useState({
     rating: 0,
     feedback: '',
   });
   const [ratingShow, setRatingShow] = useState(0);
 
-//   console.log("data type,---", data,type);
+  //   console.log("data type,---", data,type);
 
   const onRestaurantRating = item => {
     setRatingShow(item);
   };
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setRatingShow(0)
-  },[isVisible])
+  }, [isVisible])
 
   const RestaurantContainer = () => {
-    const {setFieldValue} = useFormikContext();
+    const { setFieldValue } = useFormikContext();
     return (
       <View style={styles.mainStarView}>
         {starArray?.map((item, i) => {
@@ -84,8 +84,8 @@ const ReviewsRatingComp = ({
     );
   };
 
-  const FormButton = ({loading, onPress}) => {
-    const {dirty, isValid, values} = useFormikContext();
+  const FormButton = ({ loading, onPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
     return (
       <BTN
         disable={!(isValid && dirty)}
@@ -100,22 +100,22 @@ const ReviewsRatingComp = ({
     let payload = {};
     if (reviewToRider === false) {
       payload = {
-        review: values?.feedback,
+        review: values?.feedback ?? '',
         rating: values?.rating,
         type: type,
         order_id: data?._id,
         restaurant_id: data?.restaurant?._id,
         rider_id: data?.rider_id,
-        review_to_rider:reviewToRider
+        review_to_rider: reviewToRider
       };
     } else {
       payload = {
-        review: values?.feedback,
+        review: values?.feedback ?? '',
         rating: values?.rating,
         type: type,
         order_id: data?._id,
         rider_id: data?.rider_id,
-        review_to_rider:reviewToRider
+        review_to_rider: reviewToRider
       };
     }
     const res = await addReviews(payload, handleLoading);
@@ -140,14 +140,14 @@ const ReviewsRatingComp = ({
       onOuterClose={onClose}>
       <View style={styles.main}>
         <KeyboardAvoidingView
-          style={{flex: 1}}
+          style={{ flex: 1 }}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust if needed
           behavior={Platform.OS === 'ios' ? 'padding' : null}>
           <Spacer space={'2%'} />
           <AppInputScroll
             padding={true}
             keyboardShouldPersistTaps={'handled'}
-            // Pb={hp('15%')}
+          // Pb={hp('15%')}
           >
             <Formik
               initialValues={initialValues}

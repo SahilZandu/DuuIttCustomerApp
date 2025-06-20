@@ -169,11 +169,13 @@ export const agent = {
   supportInfo: () => requests.get(Url.supportInfo),
   updateCustomerInfo: body => requests.post(Url.updateCustomerInfo, body),
   checkDeviceId: body => requests.post(Url.checkDeviceId, body),
-
   sendMessage: body => requests.post(Url.sendMessage, body),
   markSeen: body => requests.post(Url.markSeen, body),
   chatOrderId: body => requests.get(`${Url.chatOrderId}/${body?.orderId}`),
   unseenMessages: body => requests.post(Url.unseenMessages, body),
+  updateOrderArrivedTime: body => requests.post(Url.updateOrderArrivedTime, body),
+  userLogout: body => requests.post(Url.userLogout, body),
+  
 
 };
 
