@@ -1,4 +1,4 @@
-import React, {useState, useEffect, memo} from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   View,
   Image,
@@ -11,35 +11,36 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {fonts} from '../../theme/fonts/fonts';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {colors} from '../../theme/colors';
-import {appImages} from '../../commons/AppImages';
+import { SvgXml } from 'react-native-svg';
+import { fonts } from '../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { colors } from '../../theme/colors';
+import { appImages } from '../../commons/AppImages';
 import Url from '../../api/Url';
 
-const CategoryCard = ({data, onPress, navigation}) => {
+const CategoryCard = ({ data, onPress, navigation }) => {
   // console.log('data-- CategoryCard,', data);
 
-  const renderProductItem = ({item, index}) => (
+  const renderProductItem = ({ item, index }) => (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() =>
-        navigation.navigate('categoryViseFoodListing', {category: item})
+        navigation.navigate('categoryViseFoodListing', { category: item })
       }>
       <View style={[styles.itemContainer(index)]}>
         <Image
           source={
-            item?.image?.length > 0
-              ? {uri: Url.Image_Url + item?.image}
-              : appImages.burgerImage
+            //  (item?.image && item?.image?.length > 0)
+            //     ? {uri: Url.Image_Url + item?.image}
+            //     : appImages.burgerImage
+            appImages.burgerImage
           }
           resizeMode="cover"
           style={styles.image}
         />
         <Text
           numberOfLines={2}
-          style={[styles.name, {textAlign: 'center', marginTop: '5%'}]}>
+          style={[styles.name, { textAlign: 'center', marginTop: '5%' }]}>
           {item.name}
         </Text>
       </View>

@@ -194,7 +194,10 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     const subscription = DeviceEventEmitter.addListener('chatPage', data => {
       console.log('chatPagedata -- ', data);
       if (data?.order_type == 'parcel') {
-        onChat();
+        setTimeout(() => {
+          onChat();
+        },500)
+
       }
     });
     return () => {
@@ -546,7 +549,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   };
 
   const onChat = () => {
-    navigation.navigate("chat", { item: parcelInfo })
+    navigation.navigate("chat", { item: parcelInfo ?? addParcelInfo})
   }
 
   const openMap = (riderDest, destination, label) => {

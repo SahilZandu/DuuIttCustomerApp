@@ -196,9 +196,14 @@ const TrackingOrderForm = ({ navigation }) => {
     const filterCheckMsg = newCheckMsg?.filter((item, i) => {
       return item?._id !== data?._id
     })
+
+    let itemData = trackedArray?.filter((item, i) => {
+      return item?._id == data?._id
+    })
+
     setCheckChatMsg(filterCheckMsg);
     setTimeout(() => {
-      navigation.navigate("chat", { item: data })
+      navigation.navigate("chat", { item: itemData?.length > 0 ? itemData[0] : data })
     }, 500)
 
   }
@@ -227,8 +232,11 @@ const TrackingOrderForm = ({ navigation }) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('chatPage', data => {
       console.log('chatPagedata -- ', data);
+      //  getTrackingOrder();
       if (data?.order_type == 'parcel') {
-        onChat(data);
+        setTimeout(() => {
+          onChat(data);
+        }, 500);
       }
     });
     return () => {

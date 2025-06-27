@@ -5,6 +5,7 @@ export const colors = {
     bottomBarColor:'#28B056',
     ripleColor : 'rgba(52, 52, 52, 0.1)',
     white: '#FFFFFF',
+    whiteThink: '#FFFFFF01',
     white75: 'rgba(255, 255, 255, 0.75)',
     white50: 'rgba(255, 255, 255, 0.50)',
     white40: 'rgba(255, 255, 255, 0.40)',

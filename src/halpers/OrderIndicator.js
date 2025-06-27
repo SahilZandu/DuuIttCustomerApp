@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 60,
     borderTopLeftRadius:10,
     borderLeftColor: colors.redThink, 
-    borderBottomColor: Platform.OS == 'ios' ? 'transparent' :colors.white,
+    borderBottomColor: Platform.OS == 'ios' ? 'transparent' :colors.whiteThink,
     transform: [{ rotate: '90deg' }],
   },
   redDot: {

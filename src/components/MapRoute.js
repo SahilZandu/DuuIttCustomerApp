@@ -31,12 +31,11 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   useFocusEffect(
     useCallback(() => {
       setMapManageRideDaltaInitials();
-      const distance = getDistance(
-        { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
-        { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
-      );
-
-      console.log(`Distance: ${distance} meters`);
+      // const distance = getDistance(
+      //   { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+      //   { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+      // );
+      // console.log(`Distance: ${distance} meters`);
     }, [origin])
   )
   const [destinationLocation, setDestinationLocation] = useState({

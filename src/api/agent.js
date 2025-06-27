@@ -143,7 +143,7 @@ export const agent = {
   deleteCart: body => requests.post(Url.deleteCart, body),
 
   foodOrder: body => requests.post(Url.foodOrder, body),
-  getRepeatedOrderList: body => requests.get(Url.repeatedOrderList, body),
+  getRepeatedOrderList: body => requests.post(Url.repeatedOrderList, body),
   getRecomendedItems: body => requests.post(Url.recomendedItems, body),
   getFoodOrderTracking: () => requests.get(Url.getFoodOrderTracking),
 

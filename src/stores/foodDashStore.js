@@ -243,9 +243,20 @@ export default class FoodDashStore {
     }
   };
 
-  getRepeatedOrderList = async handleLoading => {
+  getRepeatedOrderList = async (geoLocation, handleLoading) => {
+    let requestData = {
+      delivery_address: {
+        geo_location: {
+          lng: geoLocation?.lng,
+          lat: geoLocation?.lat,
+        }
+      }
+    }
+
+    console.log("requestData---", requestData);
+
     try {
-      const res = await agent.getRepeatedOrderList();
+      const res = await agent.getRepeatedOrderList(requestData);
       console.log('restaurant getRepeatedOrderList Res : ', res);
       if (res?.statusCode == 200) {
         this.repeatedOrderList = res?.data?.orders ?? [];
@@ -271,8 +282,8 @@ export default class FoodDashStore {
   getRecomendedItems = async (geoLocation, handleLoading) => {
     let requestData = {
       near_by: {
-        lng: geoLocation.lng,
-        lat: geoLocation.lat,
+        lng: geoLocation?.lng,
+        lat: geoLocation?.lat,
       }
     }
 

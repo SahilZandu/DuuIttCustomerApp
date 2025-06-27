@@ -71,19 +71,21 @@ export default function Chat({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      // socketServices.initailizeSocket();
+      socketServices.initailizeSocket();
       setChatNotificationStatus(false);
       handleAndroidBackButton(navigation)
       getChatList();
       setTimeout(() => {
         let Payload = {
-          roomId: `${item?._id}-${item?.rider?._id}-${item?.customer?._id}`
+          roomId: `${item?._id}-${item?.rider?._id ?? item?.rider_id}-${item?.customer?._id ?? item?.customer_id}`
           // roomId:`6821a769260e070d22d9e503-6810a4b37d14572e56d6013d-674004448c0213057bd1519c`
         }
         socketServices.emit('roomId', Payload)
       }, 1000)
-    }, [])
+    }, [item])
   )
+
+
 
 
 
@@ -226,6 +228,7 @@ export default function Chat({ navigation, route }) {
 
 
   const onSend = useCallback(async (messages = []) => {
+    console.log("item----onSend", item);
     const msg = messages[0];
     const myMsg = {
       ...msg,
@@ -237,7 +240,8 @@ export default function Chat({ navigation, route }) {
       orderId: item?._id,
       senderRole: 'customer',
       message: msg?.text,
-      riderId: item?.rider?._id,
+      // riderId: item?.rider?._id,
+      riderId: item?.rider?._id ?? item?.rider_id,
       customerId: appUser?._id
     }
     socketServices.emit('chat-message', data)
@@ -245,7 +249,7 @@ export default function Chat({ navigation, route }) {
     setInputText(''); // Clear input after sending
     setMessages(previousMessages => GiftedChat.append(previousMessages, myMsg));
     // const docId = appUser?._id > item?._id ? appUser?._id + "-" +item?._id: item?._id + "-" +appUser?._id ;
-  }, [appUser]);
+  }, [appUser, item, messages]);
 
   const handleErrorMsg = () => {
     getChatList();

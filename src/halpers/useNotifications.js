@@ -29,18 +29,10 @@ export function useNotifications(navigation) {
 
       (remoteMessage.notification.android = {
         channelId: channelId,
-        smallIcon: 'ic_launcher', // Uses the app icon
-        largeIcon: 'ic_launcher', // Uses the app icon
+        // smallIcon: 'ic_launcher', // Uses the app icon
+        // largeIcon: 'ic_launcher', // Uses the app icon
         // color: '#FFFFFF', // Optional: Sets the accent color
       });
-      // const androidNotification = {
-      //   ...remoteMessage.notification,
-      //   android: {
-      //     channelId: channelId,
-      //     smallIcon: 'ic_launcher',
-      //     largeIcon: 'ic_launcher',
-      //   },
-      // };
 
       const newa = remoteMessage.notification;
 
@@ -56,7 +48,6 @@ export function useNotifications(navigation) {
       } else {
         // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
         await notifee.displayNotification(newa);
-
         if (remoteMessage?.data?.route == "searchingRide") {
           let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data)
           setAddParcelInfo(acceptedDetails)
@@ -86,6 +77,8 @@ export function useNotifications(navigation) {
           // navigation.navigate('newOrder');
           DeviceEventEmitter.emit('dropped', droppedDetails)
         }
+
+
       }
 
     });
@@ -206,7 +199,8 @@ export function useNotifications(navigation) {
       if (type === EventType.PRESS) {
         console.log('User pressed notification', detail.notification);
         detail.notification.data = data;
-        const route = data?.order_type == 'parcel' ? 'parcel' : "ride"
+        let notificationData = JSON.parse(detail.notification?.data?.notification_data)
+        const route = (notificationData?.order_type) == 'parcel' ? 'parcel' : "ride"
 
         if (detail?.notification?.data?.route == "searchingRide") {
           let acceptedDetails = JSON.parse(detail.notification?.data?.notification_data)
@@ -245,7 +239,6 @@ export function useNotifications(navigation) {
           }
           DeviceEventEmitter.emit('picked', pickedDetails)
         }
-
         if (detail?.notification?.data?.route == "dropped") {
           let droppedDetails = JSON.parse(detail.notification?.data?.notification_data)
           setAddParcelInfo({})

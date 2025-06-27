@@ -80,8 +80,14 @@ export default function FoodHome({ navigation }) {
   const [repeatOrdersList, setRepeatOrdersList] = useState(
     repeatedOrderList ?? [],
   );
+  const [loadingRepeat, setLoadingRepeat] = useState(
+    repeatedOrderList?.length > 0 ? false : true,
+  );
   const [recomendedList, setRecomendedList] = useState(
     recommendedOrderList ?? [],
+  );
+  const [loadingRecommended, setLoadingRecommended] = useState(
+    recommendedOrderList?.length > 0 ? false : true,
   );
   const [clickItem, setClickItem] = useState({});
   const [trackedArray, setTrackedArray] = useState(foodOrderTrackingList ?? []);
@@ -108,17 +114,31 @@ export default function FoodHome({ navigation }) {
     setRestaurantList(res);
     setLoadingMore(false);
   };
+
+  const handleLoading = v => {
+    setLoading(v);
+  };
+
   const getRepeatedOrderListData = async () => {
-    const res = await getRepeatedOrderList(handleLoading);
+    const res = await getRepeatedOrderList(geoLocation, handleRepeatLoading);
     console.log('res getRepeatedOrderListData', res);
     setRepeatOrdersList(res);
   };
+
+  const handleRepeatLoading = (v) => {
+    setLoadingRepeat(v)
+  }
+
   const getRecomendedItemsData = async () => {
-    const res = await getRecomendedItems(geoLocation, handleLoading);
+    const res = await getRecomendedItems(geoLocation, handleRecommendedLoading);
     // console.log("res getRecomendedItemsData",res,recomendedList)
     setRecomendedList(res);
     recommendedData = res;
   };
+
+  const handleRecommendedLoading = (v) => {
+    setLoadingRecommended(v)
+  }
 
   // console.log('res getRecomendedItemsData', recomendedList);
 
@@ -184,9 +204,7 @@ export default function FoodHome({ navigation }) {
   //   // Add more restaurants as needed
   // ];
 
-  const handleLoading = v => {
-    setLoading(v);
-  };
+
 
   const getTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleTrackingLoading);
@@ -207,15 +225,12 @@ export default function FoodHome({ navigation }) {
       setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
-          getRestaurantList();
-          getCategoryList();
-          getRecomendedItemsData();
         }
       }, 300);
 
       onUpdateUserInfo();
       getCartItemsCount();
-      getRepeatedOrderListData();
+
     }, []),
   );
 
@@ -224,6 +239,14 @@ export default function FoodHome({ navigation }) {
       lat: getLocation('lat'),
       lng: getLocation('lng'),
     };
+    setTimeout(() => {
+      getRepeatedOrderListData();
+      getRecomendedItemsData();
+      getRestaurantList();
+      getCategoryList();
+    }, 1000)
+
+
   };
 
   const loadMoredata = () => {
@@ -542,7 +565,7 @@ export default function FoodHome({ navigation }) {
     <View style={[styles.container]}>
       {internet == false ? (
         <NoInternet />
-      ) : (loading && loadingCategory) == true ? (
+      ) : ((loading && loadingCategory && loadingRepeat && loadingRecommended)) == true ? (
         <AnimatedLoader type={'foodHomeLoader'} />
       ) : (
         <>
@@ -663,12 +686,12 @@ export default function FoodHome({ navigation }) {
                 </View>
               )}
             </View>
-              
-         
+
+
           </ScrollView>
-          <OnlineFoodUnavailable
+          {/* <OnlineFoodUnavailable
               appUserData={appUserInfo}
-              navigation={navigation} />
+              navigation={navigation} /> */}
 
           <View style={styles.bottomCartBtnView}>
             {trackedArray?.length > 0 && (

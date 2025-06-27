@@ -266,9 +266,9 @@ const ChangeRoute = ({ data, navigation }) => {
     } else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "PARCEL") {
       return true
     }
-    else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "FOOD") {
-      return true
-    }
+    // else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "FOOD") {
+    //   return true
+    // }
     else {
       return false
     }
