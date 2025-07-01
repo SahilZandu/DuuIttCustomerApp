@@ -49,7 +49,7 @@ let currentLocation = {
     lng: null,
 };
 export default function AddRestaurantLocation({ navigation }) {
-
+     const {setChangeLiveLocation}=rootStore.foodDashboardStore;
     const getLocation = type => {
         let d =
             type == 'lat'
@@ -92,18 +92,22 @@ export default function AddRestaurantLocation({ navigation }) {
             setCurrentLocation();
             setMpaDaltaInitials();
             handleAndroidBackButton(navigation);
-            if (geoLocation && geoLocation?.lat) {
-                getCurrentAddress();
+            currentLocation = {
+                lat: getLocation('lat'),
+                lng: getLocation('lng'),
             }
+            // if (geoLocation && geoLocation?.lat) {
+            //     getCurrentAddress();
+            // }
         }, []),
     );
 
-    useEffect(() => {
-        currentLocation = {
-            lat: getLocation('lat'),
-            lng: getLocation('lng'),
-        }
-    }, []);
+    // useEffect(() => {
+    //     currentLocation = {
+    //         lat: getLocation('lat'),
+    //         lng: getLocation('lng'),
+    //     }
+    // }, []);
 
     useEffect(() => {
         if (address?.length > 0) {
@@ -127,12 +131,6 @@ export default function AddRestaurantLocation({ navigation }) {
     };
 
 
-    const handleSvae = async (geoLocation) => {
-        console.log('geoLocation--', geoLocation);
-        Keyboard.dismiss();
-    };
-
-
     const onPressAddress = (data, details) => {
         setName(details?.name);
         setAddress(details?.formatted_address);
@@ -141,14 +139,19 @@ export default function AddRestaurantLocation({ navigation }) {
     };
 
     const handleConfirm = () => {
+        Keyboard.dismiss();
         console.log('geoLocation--', geoLocation, name, address);
-        handleSvae(geoLocation);
+        let data = {
+            address: address,
+            geoLocation: geoLocation
+        }
+        setChangeLiveLocation(data),
+        navigation.goBack();
+        
     };
 
-
-
     const handleCurrentAddress = async () => {
-        setCurrentLocation();
+         setCurrentLocation();
         const addressData = await getGeoCodes(
             currentLocation?.lat,
             currentLocation?.lng,

@@ -12,6 +12,10 @@ export default class FoodDashStore {
   recommendedOrderList = [];
   foodOrderTrackingList = [];
   mealOrderList = [];
+  changeLiveLocation = {
+    address: '',
+    geoLocation: {},
+  }
 
   restaurentAll = async (geoLocation, selectedFilter, limit, handleLoading) => {
     // let vegNonVeg='';
@@ -354,4 +358,9 @@ export default class FoodDashStore {
       return [];
     }
   };
+
+  setChangeLiveLocation = (data) => {
+    this.changeLiveLocation = data
+  }
+
 }

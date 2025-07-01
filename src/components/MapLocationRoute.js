@@ -123,7 +123,7 @@ const MapLocationRoute = ({
 
       animatedCoordinate.timing({
         ...newCoord,
-        duration: 500,
+        duration: Platform.OS == 'ios'? 1:100,
         useNativeDriver: false,
       }).start();
 
@@ -241,7 +241,9 @@ const MapLocationRoute = ({
   const handleMapReady = () => {
     // console.log('Map is ready');
     if (origin?.lat?.toString()?.length > 0
-      && animatedCoordinate?.latitude?.toString()?.length > 0) {
+      // && mapRegion?.latitude?.toString()?.length > 0 
+      && animatedCoordinate?.latitude?.toString()?.length > 0
+    ) {
       setTimeout(() => {
         setIsMapReady(true);
       }, 2000);
@@ -285,20 +287,21 @@ const MapLocationRoute = ({
         >
           {/* {(mapRegion?.latitude?.toString()?.length > 0 &&
             mapRegion?.longitude?.toString()?.length > 0) && ( 
-            \ // <Marker
-            //   coordinate={{
-            //     latitude: Number(mapRegion?.latitude),
-            //     longitude: Number(mapRegion?.longitude),
-            //   }}
-            //   tracksViewChanges={!isMapReady}
-            // >
-            //   <Image
-            //     resizeMode="contain"
-            //     source={appImages.markerImage}
-            //     style={styles.markerImage}
-            //   />
-            // </Marker>
-            // */}
+             <Marker
+              coordinate={{
+                latitude: Number(mapRegion?.latitude),
+                longitude: Number(mapRegion?.longitude),
+              }}
+              tracksViewChanges={!isMapReady}
+            >
+              <Image
+                resizeMode="contain"
+                source={appImages.markerImage}
+                style={styles.markerImage}
+              />
+            </Marker>
+             )} */}
+            
           {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
             <Marker.Animated
               ref={markerRef}
@@ -315,6 +318,7 @@ const MapLocationRoute = ({
 
 
           )}
+
           {/* <Polygon
           coordinates={[
             // { latitude: 30.8258, longitude: 76.6600 }, // NW

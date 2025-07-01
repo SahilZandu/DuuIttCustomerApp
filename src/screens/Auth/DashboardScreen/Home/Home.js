@@ -38,14 +38,27 @@ export default function Home({ navigation }) {
   const [internet, setInternet] = useState(true);
   useFocusEffect(
     useCallback(() => {
+      requestUserNotificationPermission();
       getCheckDevice();
       requestNotificationPermission();
       handleAndroidBackButton();
       setCurrentLocation()
       checkInternet()
       checkNotificationPer()
+      initFCM();
     }, []),
   );
+
+
+  async function requestUserNotificationPermission() {
+      const settings = await notifee.requestPermission();
+  
+      if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+        console.log('Permission settings:', settings);
+      } else {
+        console.log('User declined permissions');
+      }
+    }
 
   const checkNotificationPer = () => {
     notifee.setBadgeCount(0).then(() => console.log('Badge count removed'));
@@ -99,58 +112,61 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     socketServices.initailizeSocket();
-    const requestUserPermission = async () => {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
-        await registerForRemoteMessages();
-      }
-    };
-
-    const registerForRemoteMessages = async () => {
-      try {
-        await messaging().registerDeviceForRemoteMessages();
-        console.log('Device registered for remote messages.');
-        await getToken();
-      } catch (error) {
-        console.log('Error registering device for remote messages:', error);
-      }
-    };
-
-    const getToken = async () => {
-      try {
-        const token = await messaging().getToken();
-        console.log('FCM Token:', token);
-        if (token) {
-          setTimeout(() => {
-            let request = {
-              user_id: appUser?._id,
-              fcm_token: token,
-              user_type: 'customer',
-            };
-            saveFcmToken(token);
-            socketServices.emit('update-fcm-token', request);
-            setTimeout(() => {
-              socketServices.disconnectSocket();
-            }, 500);
-          }, 1500);
-        }
-        //  await saveFcmToken(token)
-      } catch (error) {
-        console.log('Error getting token:', error);
-      }
-    };
-
     // Initialize FCM
-    const initFCM = async () => {
-      await requestUserPermission();
-    };
+    // const initFCM = async () => {
+    //   await requestUserPermission();
+    // };
+    // initFCM();
+  }, [appUser]);
+  
 
-    initFCM();
-  }, []);
+  const initFCM = async () => {
+    await requestUserPermission();
+  };
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      await registerForRemoteMessages();
+    }
+  };
+
+  const registerForRemoteMessages = async () => {
+    try {
+      await messaging().registerDeviceForRemoteMessages();
+      console.log('Device registered for remote messages.');
+      await getToken();
+    } catch (error) {
+      console.log('Error registering device for remote messages:', error);
+    }
+  };
+
+  const getToken = async () => {
+    try {
+      const token = await messaging().getToken();
+      console.log('FCM Token:', token);
+      if (token) {
+        setTimeout(() => {
+          let request = {
+            user_id: appUser?._id,
+            fcm_token: token,
+            user_type: 'customer',
+          };
+          saveFcmToken(token);
+          socketServices.emit('update-fcm-token', request);
+          setTimeout(() => {
+            socketServices.disconnectSocket();
+          }, 500);
+        }, 1500);
+      }
+      //  await saveFcmToken(token)
+    } catch (error) {
+      console.log('Error getting token:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>

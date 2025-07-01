@@ -9,7 +9,6 @@ import {
 } from 'react-native-responsive-screen';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
-import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import { filters, silderArray } from '../../../stores/DummyData/Home';
 import { rootStore } from '../../../stores/rootStore';
 import { fetch } from '@react-native-community/netinfo';
@@ -34,6 +33,7 @@ import ModalPopUpTouch from '../../../components/ModalPopUpTouch';
 import { colors } from '../../../theme/colors';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import OnlineFoodUnavailable from '../../../components/OnlineFoodUnavailable';
+import DashboardHeader3 from '../../../components/header/DashboardHeader3';
 
 
 let geoLocation = {
@@ -58,6 +58,7 @@ export default function FoodHome({ navigation }) {
     getRecomendedItems,
     getFoodOrderTracking,
     foodOrderTrackingList,
+    changeLiveLocation,
   } = rootStore.foodDashboardStore;
 
   let selectedFilter = '';
@@ -93,6 +94,8 @@ export default function FoodHome({ navigation }) {
   const [trackedArray, setTrackedArray] = useState(foodOrderTrackingList ?? []);
   const [isReviewStar, setIsReviewStar] = useState(true);
   const [loadingRating, setLoadingRating] = useState(false);
+
+  console.log("changeLiveLocation---", changeLiveLocation);
 
   const getLocation = type => {
     let d =
@@ -212,7 +215,7 @@ export default function FoodHome({ navigation }) {
   };
 
   const handleTrackingLoading = v => {
-    setLoading(v);
+    console.log("v");
   };
 
   useFocusEffect(
@@ -223,9 +226,9 @@ export default function FoodHome({ navigation }) {
       setCurrentLocation();
       getTrackingOrder();
       setTimeout(() => {
-        if (getLocation) {
-          onUpdateLatLng();
-        }
+        // if (getLocation) {
+        onUpdateLatLng();
+        // }
       }, 300);
 
       onUpdateUserInfo();
@@ -236,8 +239,8 @@ export default function FoodHome({ navigation }) {
 
   const onUpdateLatLng = () => {
     geoLocation = {
-      lat: getLocation('lat'),
-      lng: getLocation('lng'),
+      lat: changeLiveLocation?.geoLocation?.lat ?? getLocation('lat'),
+      lng: changeLiveLocation?.geoLocation?.lng ?? getLocation('lng'),
     };
     setTimeout(() => {
       getRepeatedOrderListData();
@@ -569,7 +572,7 @@ export default function FoodHome({ navigation }) {
         <AnimatedLoader type={'foodHomeLoader'} />
       ) : (
         <>
-          <DashboardHeader2
+          <DashboardHeader3
             navigation={navigation}
             onPress={() => {
               navigation.goBack();
@@ -689,9 +692,9 @@ export default function FoodHome({ navigation }) {
 
 
           </ScrollView>
-          {/* <OnlineFoodUnavailable
-              appUserData={appUserInfo}
-              navigation={navigation} /> */}
+          {(restaurantList?.length == 0 && loading == false) && <OnlineFoodUnavailable
+            appUserData={appUserInfo}
+            navigation={navigation} />}
 
           <View style={styles.bottomCartBtnView}>
             {trackedArray?.length > 0 && (

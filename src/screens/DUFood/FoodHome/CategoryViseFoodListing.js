@@ -79,7 +79,6 @@ export default function CategoryViseFoodListing({ navigation, route }) {
       console.log('category', category);
       checkInternet();
       handleAndroidBackButton(navigation);
-
       setCurrentLocation();
       onUpdateUserInfo();
       onRestaurentInfo();

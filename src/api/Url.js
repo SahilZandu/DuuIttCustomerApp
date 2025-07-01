@@ -1,7 +1,9 @@
 export default  {
-    Base_Url :'https://duuitt.hashsoft.io/',
-    Image_Url :'https://duuitt.hashsoft.io/',
-    login : 'customers',
+    // Base_Url :'https://duuitt.hashsoft.io/',
+    // Image_Url :'https://duuitt.hashsoft.io/',
+    Base_Url :'https://duuitt.hsdevbox.com/',
+    Image_Url :'https://duuitt.hsdevbox.com/',
+    login : 'customers',  
     verifyOtp:'customers/verify-otp',
     forgetPass:'customers/forget-password',
     resendOtp:'customers/send-otp',

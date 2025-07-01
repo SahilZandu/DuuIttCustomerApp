@@ -29,9 +29,6 @@ export function useNotifications(navigation) {
 
       (remoteMessage.notification.android = {
         channelId: channelId,
-        // smallIcon: 'ic_launcher', // Uses the app icon
-        // largeIcon: 'ic_launcher', // Uses the app icon
-        // color: '#FFFFFF', // Optional: Sets the accent color
       });
 
       const newa = remoteMessage.notification;

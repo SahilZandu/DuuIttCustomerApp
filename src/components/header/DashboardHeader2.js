@@ -164,7 +164,8 @@ const DashboardHeader2 = ({
               justifyContent: 'center',
             }}>
               <Image resizeMode='cover'
-                style={{ height: 15, width: 15 }} 
+                style={{ height: 15, width: 15 ,
+                }} 
                 source={appImages.ruppeYellowIcon} />
               <Text
                 numberOfLines={1}
@@ -207,6 +208,7 @@ const DashboardHeader2 = ({
               appUserInfo?.profile_pic?.length > 0
                 ? { uri: Url.Image_Url + appUserInfo?.profile_pic }
                 : appImages.profileImage
+                // appImages.profileImage
             }
           />
         </TouchableOpacity>

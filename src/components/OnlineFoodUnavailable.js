@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import {
     widthPercentageToDP as wp,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: wp('100%'),
         height: hp('90%'),
-        marginTop: hp("14%")
+        marginTop:Platform.OS ==='ios'? hp("13.5%"): hp("14.5%")
     },
     subView: {
         flex: 1,
