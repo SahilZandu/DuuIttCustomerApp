@@ -137,6 +137,9 @@ export default function FoodHome({ navigation }) {
     // console.log("res getRecomendedItemsData",res,recomendedList)
     setRecomendedList(res);
     recommendedData = res;
+    // if(res?.length > 0){
+    //   getCartItemsCount();
+    // }
   };
 
   const handleRecommendedLoading = (v) => {
@@ -232,9 +235,9 @@ export default function FoodHome({ navigation }) {
       }, 300);
 
       onUpdateUserInfo();
-      getCartItemsCount();
 
-    }, []),
+
+    }, [changeLiveLocation]),
   );
 
   const onUpdateLatLng = () => {
@@ -247,6 +250,7 @@ export default function FoodHome({ navigation }) {
       getRecomendedItemsData();
       getRestaurantList();
       getCategoryList();
+      getCartItemsCount();
     }, 1000)
 
 
@@ -338,7 +342,7 @@ export default function FoodHome({ navigation }) {
       setcartItems(cart);
       setTimeout(() => {
         onCheckRecommededItem(cart?.food_item);
-      }, 500);
+      }, 800);
     } else {
       onCheckRecommededItem([]);
       setcartItems({});
@@ -346,10 +350,12 @@ export default function FoodHome({ navigation }) {
   };
 
   const onCheckRecommededItem = foodItemArray => {
-    console.log('foodItemArray--', foodItemArray);
+    // console.log('foodItemArray--', foodItemArray);
     if (foodItemArray?.length > 0) {
       let recommendedListData = (recommendedData ?? []).map(item => {
+        console.log("item---recommendedData", item)
         const exactItem = foodItemArray?.find(data => data?._id === item?._id);
+        console.log("item--onCheckRecommededItem", item, exactItem);
         return exactItem
           ? {
             ...item,
@@ -371,10 +377,12 @@ export default function FoodHome({ navigation }) {
       if (recommendedListData?.length > 0) {
         setRecomendedList(recommendedListData);
         recommendedData = recommendedListData;
-      } else {
+      }
+      else {
         setRecomendedList(recommendedData);
       }
-    } else {
+    }
+    else {
       getRecomendedItemsData();
     }
   };

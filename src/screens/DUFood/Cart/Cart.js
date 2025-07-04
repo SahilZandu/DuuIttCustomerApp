@@ -44,7 +44,7 @@ const Cart = ({navigation, route}) => {
   const {appUser} = rootStore.commonStore;
   const {foodOrder, getCompleteMealItems, mealOrderList} =
     rootStore.foodDashboardStore;
-  const {getRestaurantOffers, restaurentOfferCoupan, applyCoupon} =
+  const {getRestaurantOffers, restaurentOfferCoupan, applyCoupon,} =
     rootStore.dashboardStore;
   const [isPlaying, setIsPLayig] = useState(false);
   const [appCart, setAppCart] = useState({
@@ -118,19 +118,22 @@ const Cart = ({navigation, route}) => {
   // console.log("appUser cart --",appUser);
 
   useEffect(() => {
+    if(cartList?._id?.length > 0){
     getRestaurantOffersData();
+    }
     if (restaurant) {
       getCompMealList();
     }
-  }, [restaurant]);
+  }, [restaurant,cartList]);
 
   const getRestaurantOffersData = async () => {
     const restaurantCoupans = await getRestaurantOffers(
-      restaurant,
+      cartList,
       handleOffersLoading,
     );
+    console.log('restaurantCoupans--', restaurantCoupans);
     if (restaurantCoupans?.length > 0) {
-      // console.log('restaurantCoupans--', restaurantCoupans);
+      console.log('restaurantCoupans--', restaurantCoupans);
       setOfferList(restaurantCoupans);
     } else {
       setOfferList([]);

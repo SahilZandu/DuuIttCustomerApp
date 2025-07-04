@@ -141,11 +141,15 @@ export default class FoodDashStore {
     this.categoryMenuList = data;
   };
 
-  restaurantListForDishCategory = async (item, handleLoading) => {
+  restaurantListForDishCategory = async (item, geoLocation, handleLoading) => {
     handleLoading(true);
     let requestData = {
       dish_name: item?.name,
+      latitude: geoLocation?.lat,
+      longitude: geoLocation?.lng,
     };
+    console.log("requestData---restaurantListForDishCategory", requestData);
+
     try {
       const res = await agent.restaurantListForDishCategory(requestData);
       console.log('restaurant List For Dish Category Res : ', res);

@@ -16,7 +16,7 @@ import {
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
-import { setCurrentLocation } from '../../../components/GetAppLocation';
+import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import { rootStore } from '../../../stores/rootStore';
 import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
@@ -29,13 +29,24 @@ import { colors } from '../../../theme/colors';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import PopUp from '../../../components/appPopUp/PopUp';
 
+let geoLocation = {
+  lat: null,
+  lng: null,
+};
+
 export default function CategoryViseFoodListing({ navigation, route }) {
   const { category } = route.params;
-
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+    return d ? d : '';
+  };
   const { appUser } = rootStore.commonStore;
-  const { deleteCart, getCart, getRestraurent } =
+  const { deleteCart, getCart, } =
     rootStore.cartStore;
-  const { restaurantListForDishCategory, restaurantCustomerLikeDislike } =
+  const { restaurantListForDishCategory, restaurantCustomerLikeDislike, changeLiveLocation } =
     rootStore.foodDashboardStore;
   const [restoInfo, setRestoInfo] = useState({});
   const [cartItems, setcartItems] = useState({});
@@ -81,17 +92,21 @@ export default function CategoryViseFoodListing({ navigation, route }) {
       handleAndroidBackButton(navigation);
       setCurrentLocation();
       onUpdateUserInfo();
-      onRestaurentInfo();
       getCartItemsCount();
     }, []),
   );
 
   useEffect(() => {
+
+    geoLocation = {
+      lat: changeLiveLocation?.geoLocation?.lat ?? getLocation('lat'),
+      lng: changeLiveLocation?.geoLocation?.lng ?? getLocation('lng'),
+    };
     getRelatedRestaurantList();
   }, [category]);
 
   const getRelatedRestaurantList = async () => {
-    const res = await restaurantListForDishCategory(category, handleLoading);
+    const res = await restaurantListForDishCategory(category, geoLocation, handleLoading);
     console.log('res---getRelatedRestaurantList', res);
     setRelatedRestaurant(res);
     setRelatedRestFilter(res);
@@ -104,16 +119,6 @@ export default function CategoryViseFoodListing({ navigation, route }) {
   const onUpdateUserInfo = () => {
     const { appUser } = rootStore.commonStore;
     setAppUserInfo(appUser);
-  };
-  const onRestaurentInfo = async () => {
-    const restInfoo = await getRestraurent();
-
-    console.log('restaurentInfo>', restInfoo);
-    if (restInfoo?.restaurentname != undefined) {
-      setRestoInfo(restInfoo);
-    } else {
-      setRestoInfo({});
-    }
   };
 
   useEffect(() => {
@@ -145,13 +150,11 @@ export default function CategoryViseFoodListing({ navigation, route }) {
 
   const handleLikeUnlike = async item => {
     const likeUnLikeArray = await relatedRestaurant?.map((data, i) => {
-      if (data?.restaurant?._id == item?._id) {
+
+      if (data?._id == item?._id) {
         return {
           ...data,
-          restaurant: {
-            ...data.restaurant,
-            likedRestaurant: data?.restaurant?.likedRestaurant ? false : true,
-          },
+          likedRestaurant: data?.likedRestaurant == true ? false : true
         };
       } else {
         return { ...data };
@@ -163,7 +166,7 @@ export default function CategoryViseFoodListing({ navigation, route }) {
       like: item?.likedRestaurant == true ? false : true,
     };
     setRelatedRestaurant([...likeUnLikeArray]);
-    console.log('item--handleLikeUnlike', likeUnLikeArray, item);
+    // console.log('item--handleLikeUnlike', likeUnLikeArray, item);
     const resLikeUnLike = await restaurantCustomerLikeDislike(request);
     // console.log("resLikeUnLike---",resLikeUnLike);
     if (resLikeUnLike?.statusCode == 200) {
@@ -179,7 +182,7 @@ export default function CategoryViseFoodListing({ navigation, route }) {
     return (
       <View key={index}>
         <RestaurantsCard
-          item={item?.restaurant}
+          item={item}
           navigation={navigation}
           onLike={item => {
             handleLikeUnlike(item);
@@ -238,6 +241,7 @@ export default function CategoryViseFoodListing({ navigation, route }) {
                 <View style={styles.flatListView}>
                   {relatedRestaurant?.length > 0 ? (
                     <FlatList
+                      initialNumToRender={20}
                       showsVerticalScrollIndicator={false}
                       data={relatedRestaurant}
                       renderItem={topRestaurentItem}

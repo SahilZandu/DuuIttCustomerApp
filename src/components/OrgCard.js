@@ -10,10 +10,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
-import {colors} from '../theme/colors';
-import {SvgXml} from 'react-native-svg';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../theme/fonts/fonts';
+import { colors } from '../theme/colors';
+import { SvgXml } from 'react-native-svg';
 
 const OrgCard = ({
   org,
@@ -134,7 +134,7 @@ const OrgCard = ({
 
   const Offline = () => {
     return (
-      <View style={{marginBottom: '5%'}}>
+      <View style={{justifyContent:'center',marginTop:'3%'}}>
         {/* <Image
           source={isResOpenSoon ? resOpenSoonIcon : resClosedIcon}
           style={{
@@ -148,14 +148,9 @@ const OrgCard = ({
         /> */}
 
         <Text
-          style={{
-            color: '#646464',
-            fontFamily: fonts.medium,
-            fontSize: RFValue(10),
-            position: 'absolute',
-            width: wp('65%'),
-            top: isResOpenSoon ? hp('5%') : hp('3%'),
-          }}>
+          style={[styles.offlineText, {
+            // top: isResOpenSoon ? hp('5%') : hp('3%'),
+          }]}>
           {isResOpenSoon
             ? 'Restaurant opens in ' + isResOpenSoon
             : 'This restaurant is not accepting orders at the moment. It should re-open soon.'}
@@ -166,12 +161,12 @@ const OrgCard = ({
 
   return (
     <TouchableOpacity
-    activeOpacity={0.8}
-     onPress={onReviews}>
+      activeOpacity={0.8}
+      onPress={onReviews}>
       <View style={styles.container}>
-        {isResOpen == false && <Offline />}
-        <View style={{flexDirection: 'row'}}>
-          <Text numberOfLines={2} style={[styles.title, {flex: 1}]}>
+        {/* {isResOpen !== false && <Offline />} */}
+        <View style={{ flexDirection: 'row' }}>
+          <Text numberOfLines={2} style={[styles.title, { flex: 1 }]}>
             {org?.name}
           </Text>
           <View
@@ -190,9 +185,10 @@ const OrgCard = ({
         </View>
 
         <Text style={styles.des}>{org?.about}</Text>
-        <Text style={styles.addressText}>25-30 min 1km {org?.address}</Text>
-        <OrgStatus />
-
+        <Text style={styles.addressText}> {org?.minimum_order_preparation_time - 5 ?? 0} - {org?.minimum_order_preparation_time ?? 0} Min{' '}{(org?.distanceInKm).toFixed(1)} KM</Text>
+        <Text style={styles.addressText}>{org?.address}</Text>
+        {isResOpen !== false && <OrgStatus />}
+        {isResOpen == false && <Offline />}
         {/* <Coupnes orgOffers={orgOffers} /> */}
       </View>
     </TouchableOpacity>
@@ -202,10 +198,10 @@ const OrgCard = ({
 export default OrgCard;
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     marginHorizontal: 20,
-     paddingVertical: 16,
-     justifyContent:'center'
+    paddingVertical: 16,
+    justifyContent: 'center'
   },
   title: {
     color: colors.black,
@@ -213,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(17),
     textTransform: 'capitalize',
   },
-  ratingView:{
+  ratingView: {
     flexDirection: 'row',
     paddingHorizontal: '3%',
     paddingVertical: 5,
@@ -223,24 +219,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
-  ratingImage:{
+  ratingImage: {
     right: '10%',
-     top: '-2%'
+    top: '-2%'
   },
-  ratingText:{
+  ratingText: {
     fontSize: RFValue(11),
     fontFamily: fonts.semiBold,
     color: colors.white,
     left: '10%',
   },
   des: {
-    color:colors.color64,
+    color: colors.color64,
     fontFamily: fonts.medium,
     fontSize: RFValue(11),
     marginTop: '1.5%',
   },
   addressText: {
-    color:colors.black,
+    color: colors.black,
     fontFamily: fonts.regular,
     fontSize: RFValue(11),
     marginTop: '1.5%',
@@ -250,28 +246,35 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: RFValue(11),
   },
-  openRestaurantView:{
+  openRestaurantView: {
     flexDirection: 'row', // This arranges the children in a horizontal row
     flexWrap: 'nowrap',
     width: '100%',
-    marginTop:'3%',
+    marginTop: '3%',
   },
-  tickButton:{
+  tickButton: {
     marginRight: '2%',
-     marginTop: '0.5%'
+    marginTop: '0.5%'
   },
-  openNowText:{
-    color:colors.main,
+  openNowText: {
+    color: colors.main,
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
   },
-  timeText:{
+  timeText: {
     fontSize: RFValue(12),
     fontFamily: fonts.medium,
     color: colors.black,
-    marginLeft:'2%',
+    marginLeft: '2%',
+  },
+  offlineText: {
+    color: colors.black,
+    fontFamily: fonts.medium,
+    fontSize: RFValue(12),
+    width: wp('90%'),
+    textTransform:'capitalize'
   }
-  
+
 });
 
 const star = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 8 8" fill="none">

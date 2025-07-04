@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef, memo} from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import {
   View,
   ScrollView,
@@ -11,25 +11,25 @@ import {
   UIManager,
   Alert,
 } from 'react-native';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import OrgCard from '../../../components/OrgCard';
 // import {offerData} from '../../Components/offerdata';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import ProductCard from '../../../components/Cards/ProductCard';
 import GroupsFilter from '../../../components/GroupsFilter';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import MenuListModal from '../../../components/MenuListModal';
 import ViewCartBtn from '../Components/ViewCartBtn';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import OrderCustomization from '../../../components/OrderCustomization';
 import FastImage from 'react-native-fast-image';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {colors} from '../../../theme/colors';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { colors } from '../../../theme/colors';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import Url from '../../../api/Url';
@@ -39,12 +39,12 @@ let filterType = 'all';
 
 let CustomizeItem = null;
 
-const ResturantProducts = memo(({navigation, route}) => {
-  const {item} = route.params;
-  const {setCart, getCart, updateCart, deleteCart} = rootStore.cartStore;
-  const {restaurantUnderMenuGroup, setCategoryMenuList, categoryMenuList} =
+const ResturantProducts = memo(({ navigation, route }) => {
+  const { item } = route.params;
+  const { setCart, getCart, updateCart, deleteCart } = rootStore.cartStore;
+  const { restaurantUnderMenuGroup, setCategoryMenuList, categoryMenuList } =
     rootStore.foodDashboardStore;
-  const {appUser} = rootStore.commonStore;
+  const { appUser } = rootStore.commonStore;
   const [groupProducts, setGroupProducts] = useState(categoryMenuList ?? []);
   const [groupProductsfilter, setGroupProdutsFilter] = useState(
     categoryMenuList ?? [],
@@ -79,10 +79,10 @@ const ResturantProducts = memo(({navigation, route}) => {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-      const {appUser} = rootStore.commonStore;
+      const { appUser } = rootStore.commonStore;
       filterType = 'all';
       setTimeout(() => {
-        const {categoryMenuList} = rootStore.foodDashboardStore;
+        const { categoryMenuList } = rootStore.foodDashboardStore;
         getUserCart(categoryMenuList);
       }, 500);
     }, []),
@@ -95,7 +95,7 @@ const ResturantProducts = memo(({navigation, route}) => {
     }
   }, [item]);
 
-  // console.log('restaurant---', restaurant);
+  console.log('restaurant---timings,timings1,timings2', restaurant, restaurant.timings, restaurant.timings?.specified, restaurant.timings?.all_days);
 
   const getRestCategoryList = async () => {
     try {
@@ -141,10 +141,10 @@ const ResturantProducts = memo(({navigation, route}) => {
     UIManager.measureLayout(
       nodeHandle,
       findNodeHandle(scrollViewRef.current),
-      () => {},
+      () => { },
       (x, y) => {
         let a = y;
-        scrollViewRef.current.scrollTo({y, animated: true});
+        scrollViewRef.current.scrollTo({ y, animated: true });
       },
     );
     setShowFilters(false);
@@ -152,7 +152,7 @@ const ResturantProducts = memo(({navigation, route}) => {
 
   const handleReviewNavigation = () => {
     // console.log('ç---');
-    navigation.navigate('restaurantDetail', {restaurantData: restaurant});
+    navigation.navigate('restaurantDetail', { restaurantData: restaurant });
     // if (orgReviews && orgReviews.length > 0 && restaurant) {
     //   navigation.navigate('restaurantDetail', {reviews: orgReviews, restaurant});
     // }
@@ -219,7 +219,7 @@ const ResturantProducts = memo(({navigation, route}) => {
     // console.log('item,quan,handleAddRemove', item, quan, restaurant, newItem);
 
     // const getCartList = await getCart(restaurant);
-    const getCartList = {...selectedCartList};
+    const getCartList = { ...selectedCartList };
     console.log('getCartList handleAddRemove:-', getCartList, item);
     if (getCartList?.cart_items?.length > 0) {
       if (getCartList?.restaurant_id == item?.restaurant_id) {
@@ -239,7 +239,7 @@ const ResturantProducts = memo(({navigation, route}) => {
         if (checkAvailabilityById) {
           updatedCartList = getCartList?.cart_items?.map(data => {
             if (data?.food_item_id == item?._id) {
-              return {...data, quantity: quan};
+              return { ...data, quantity: quan };
             }
             return {
               ...data,
@@ -328,8 +328,8 @@ const ResturantProducts = memo(({navigation, route}) => {
           );
           // console.log('exactItem--', exactItem, product);
           return exactItem
-            ? {...product, quantity: exactItem?.quantity}
-            : {...product, quantity: 0};
+            ? { ...product, quantity: exactItem?.quantity }
+            : { ...product, quantity: 0 };
         }),
       }));
 
@@ -392,9 +392,9 @@ const ResturantProducts = memo(({navigation, route}) => {
     // console.log('indexx, item---', index, item);
     const newArrayList = groupProducts?.map((data, i) => {
       if (i === index) {
-        return {...data, expandable: !data?.expandable};
+        return { ...data, expandable: !data?.expandable };
       }
-      return {...data};
+      return { ...data };
     });
     setGroupProducts([...newArrayList]);
 
@@ -406,7 +406,7 @@ const ResturantProducts = memo(({navigation, route}) => {
     // );
   };
 
-  const renderGroups = ({item, index}) => {
+  const renderGroups = ({ item, index }) => {
     // console.log('item, index---', item, index);
     let upperItem = item;
     let upperIndex = index;
@@ -442,7 +442,7 @@ const ResturantProducts = memo(({navigation, route}) => {
         {item?.expandable && (
           <FlatList
             data={item?.food_items}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <ProductCard
                 isResOpen={isResOpen}
                 restaurant={restaurant}
@@ -470,7 +470,7 @@ const ResturantProducts = memo(({navigation, route}) => {
             keyExtractor={subItem => subItem?._id}
             ItemSeparatorComponent={() => (
               <View style={styles.separateRenderView}>
-                {Array?.from({length: 30})?.map((_, index) => (
+                {Array?.from({ length: 30 })?.map((_, index) => (
                   <View key={index} style={styles.separateRenderDoted} />
                 ))}
               </View>
@@ -503,8 +503,8 @@ const ResturantProducts = memo(({navigation, route}) => {
               },
             ]}
             source={
-              restaurant?.restaurant?.logo?.length > 0
-                ? {uri: Url.Image_Url + restaurant?.restaurant?.logo}
+              restaurant?.banner?.length > 0
+                ? { uri: Url.Image_Url + restaurant?.banner }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
@@ -534,13 +534,13 @@ const ResturantProducts = memo(({navigation, route}) => {
         </View>
         <View style={styles.restaurantScrollViewHold}>
           <ScrollView
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             horizontal={true}
             nestedScrollEnabled={false}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{paddingRight: '45%'}}>
+            contentContainerStyle={{ paddingRight: '45%' }}>
             <View style={styles.filterMainView}>
-              <View style={[styles.filterView, {opacity: showFilters ? 1 : 0}]}>
+              <View style={[styles.filterView, { opacity: showFilters ? 1 : 0 }]}>
                 <SvgXml xml={appImagesSvg.filter} />
                 <Text style={styles.filterText}>
                   {'  '}
@@ -567,7 +567,7 @@ const ResturantProducts = memo(({navigation, route}) => {
               <>
                 <Text style={styles.menuText}>Menu</Text>
                 <FlatList
-                  style={{marginTop: '3%'}}
+                  style={{ marginTop: '3%' }}
                   data={groupProducts}
                   renderItem={renderGroups}
                   // keyExtractor={item => item?._id || item?.name}
@@ -597,7 +597,7 @@ const ResturantProducts = memo(({navigation, route}) => {
       {isCart?.food_item?.length > 0 && !loading && (
         <ViewCartBtn
           isCart={isCart}
-          viewCart={() => navigation.navigate('cart', {restaurant})}
+          viewCart={() => navigation.navigate('cart', { restaurant })}
         />
       )}
       {/* {isOtherCart && !loading && (
@@ -649,7 +649,7 @@ const ResturantProducts = memo(({navigation, route}) => {
             food_item_id: CustomizeItem?._id,
             add_on_items: addons ?? [],
           };
-          const getCartList = {...(selectedCartList ?? {})};
+          const getCartList = { ...(selectedCartList ?? {}) };
           console.log(
             'getCartList OrderCustomization:-',
             getCartList,

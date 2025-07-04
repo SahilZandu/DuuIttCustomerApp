@@ -1,28 +1,415 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  Platform,
-  Dimensions,
-  Text,
-  Alert,
-} from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import { appImages } from '../commons/AppImages';
-import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE, AnimatedRegion } from 'react-native-maps';
-import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
-import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
-import { colors } from '../theme/colors';
-import { useFocusEffect } from '@react-navigation/native';
-import { getCurrentLocation } from './GetAppLocation';
+// import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+// import {
+//   StyleSheet,
+//   View,
+//   Image,
+//   Platform,
+//   Dimensions,
+//   Text,
+//   Alert,
+// } from 'react-native';
+// import {
+//   heightPercentageToDP as hp,
+//   widthPercentageToDP as wp,
+// } from 'react-native-responsive-screen';
+// import { appImages } from '../commons/AppImages';
+// import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE, AnimatedRegion } from 'react-native-maps';
+// import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
+// import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
+// import { colors } from '../theme/colors';
+// import { useFocusEffect } from '@react-navigation/native';
+// import { getCurrentLocation } from './GetAppLocation';
 
-let currentLocation = {
-  lat: 30.7400,
-  lng: 76.7900,
+// let currentLocation = {
+//   lat: 30.7400,
+//   lng: 76.7900,
+// };
+
+// const MapLocationRoute = ({
+//   mapContainerView,
+//   origin,
+//   isPendingReq,
+//   onTouchLocation,
+//   height,
+// }) => {
+//   const mapRef = useRef(null);
+//   const markerRef = useRef(null);
+//   const debounceTimeout = useRef(null);
+//   const [mapRegion, setMapRegion] = useState({
+//     latitude: Number(origin?.lat) || getCurrentLocation()?.latitude || 30.7400,
+//     longitude: Number(origin?.lng) || getCurrentLocation()?.longitude || 76.7900,
+//     ...getMpaDalta(),
+//     //   latitudeDelta: getMpaDalta().latitudeDelta,
+//     //   longitudeDelta: getMpaDalta().longitudeDelta,
+//   });
+//   const [isMapReady, setIsMapReady] = useState(false);
+
+//   const [animatedCoordinate] = useState(
+//     new AnimatedRegion({
+//       latitude: Number(origin?.lat) || null,
+//       longitude: Number(origin?.lng) || null,
+//       ...getMpaDalta(),
+//       //     latitudeDelta: getMpaDalta().latitudeDelta,
+//       //     longitudeDelta: getMpaDalta().longitudeDelta,
+//     })
+//   );
+
+
+
+//   console.log('origin---11', origin, mapRegion);
+//   const mohaliChandigarhBounds = {
+//     north: 30.8258,
+//     south: 30.6600,
+//     west: 76.6600,
+//     east: 76.8500,
+//   };
+
+//   const isWithinBounds = (latitude, longitude) => {
+//     return (
+//       latitude <= mohaliChandigarhBounds.north &&
+//       latitude >= mohaliChandigarhBounds.south &&
+//       longitude >= mohaliChandigarhBounds.west &&
+//       longitude <= mohaliChandigarhBounds.east
+//     );
+//   };
+
+//   const handleRegionChangeComplete = (region) => {
+//     console.log('Updated region:', region);
+//     // if (!isWithinBounds(region.latitude, region.longitude)) {
+//     //   // Recenter map if user tries to go out of bounds
+//     // mapRef.current?.animateToRegion({
+//     //   latitude: Number(mapRegion?.latitude) ?? 30.7400,
+//     //   longitude: Number(mapRegion?.longitude) ?? 76.7900,
+//     //   latitudeDelta: getMpaDalta().latitudeDelta,
+//     //   longitudeDelta: getMpaDalta().longitudeDelta,
+//     // });
+//     //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+//     // }
+
+//     if (debounceTimeout.current) {
+//       clearTimeout(debounceTimeout.current);
+//     }
+
+//     debounceTimeout.current = setTimeout(() => {
+//       if (!isWithinBounds(region.latitude, region.longitude)) {
+//         mapRef.current?.animateToRegion({
+//           latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
+//           longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
+//           latitudeDelta: getMpaDalta().latitudeDelta,
+//           longitudeDelta: getMpaDalta().longitudeDelta,
+//         });
+//         Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+//       }
+//     }, 2000); // Delay in milliseconds
+
+
+//   };
+
+//   // Update region when origin changes
+
+//   useEffect(() => {
+//     if (origin?.lat && origin?.lng) {
+//       const newCoord = {
+//         latitude: Number(origin.lat),
+//         longitude: Number(origin.lng),
+//       };
+
+//       currentLocation = newCoord;
+
+//       setMapRegion({
+//         ...newCoord,
+//         ...getMpaDalta(),
+//       });
+
+//       animatedCoordinate.timing({
+//         ...newCoord,
+//         duration: Platform.OS == 'ios'? 1:100,
+//         useNativeDriver: false,
+//       }).start();
+
+//       if (mapRef.current) {
+//         mapRef.current.animateToRegion(
+//           {
+//             ...newCoord,
+//             ...getMpaDalta(),
+//           },
+//           2000
+//         );
+//       }
+//     }
+//   }, [origin, isMapReady]);
+
+//   // useEffect(() => {
+//   //   if (origin) {
+//   //     // currentLocation = origin;
+//   //     currentLocation = {
+//   //       lat: getLocation('lat') ?? origin?.lat ?? currentLocation?.lat,
+//   //       lng: getLocation('lng') ?? origin?.lng ?? currentLocation?.lng,
+//   //     }
+
+//   //     setMapRegion(prev => ({
+//   //       ...prev,
+//   //       latitude: origin?.lat?.toString()?.length > 0
+//   //         ? Number(origin?.lat)
+//   //         : Number(currentLocation?.lat),
+//   //       longitude: origin?.lat?.toString()?.length > 0
+//   //         ? Number(origin?.lng)
+//   //         : Number(currentLocation?.lng),
+//   //       latitudeDelta: getMpaDalta().latitudeDelta,
+//   //       longitudeDelta: getMpaDalta().longitudeDelta,
+//   //     }));
+
+//   //     const lat = Number(origin?.lat);
+//   //     const lng = Number(origin?.lng);
+//   //     const newCoord = { latitude: lat, longitude: lng };
+
+//   //     animatedCoordinate.timing({
+//   //       ...newCoord,
+//   //       duration: 500,
+//   //       useNativeDriver: false,
+//   //     }).start();
+
+//   //     if (mapRef?.current) {
+//   //       mapRef?.current.animateToRegion({
+//   //         latitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(currentLocation?.lat),
+//   //         longitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lng) : Number(currentLocation?.lng),
+//   //         latitudeDelta: getMpaDalta().latitudeDelta,
+//   //         longitudeDelta: getMpaDalta().longitudeDelta,
+//   //       }, 2000); // smooth zoom
+//   //     }
+//   //   }
+//   // }, [origin, isMapReady]);
+
+
+//   // useEffect(() => {
+//   //   setTimeout(() => {
+//   //     setIsMapReady(currentLocation?.lat?.toString()?.length > 0 ? true : false)
+//   //   }, 300)
+//   // }, [currentLocation,origin])
+
+//   // const onTouchLocationData = useCallback(
+//   //   coordinate => {
+//   //     // console.log('coordinate---', coordinate);
+//   //     if (debounceTimeout.current) {
+//   //       clearTimeout(debounceTimeout.current);
+//   //     }
+//   //     debounceTimeout.current = setTimeout(() => {
+//   //       if (!isWithinBounds(coordinate.latitude, coordinate.longitude)) {
+//   //         mapRef.current?.animateToRegion({
+//   //           latitude: Number(30.7400 ?? coordinate?.latitude) ?? 30.7400,
+//   //           longitude: Number(76.7900 ?? coordinate?.longitude) ?? 76.7900,
+//   //           latitudeDelta: getMpaDalta().latitudeDelta,
+//   //           longitudeDelta: getMpaDalta().longitudeDelta,
+//   //         });
+//   //         Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+//   //       } else {
+//   //         setMapRegion(prev => ({
+//   //           ...prev,
+//   //           latitude: Number(coordinate?.latitude),
+//   //           longitude: Number(coordinate?.longitude),
+//   //           latitudeDelta: getMpaDalta().latitudeDelta,
+//   //           longitudeDelta: getMpaDalta().longitudeDelta,
+//   //         }));
+//   //         // handleRegionChangeComplete(coordinate)
+//   //         onTouchLocation(coordinate);
+//   //       }
+//   //     }, 50); // Delay in milliseconds
+
+//   //   },
+//   //   [onTouchLocation],
+//   // );
+
+//   const onTouchLocationData = useCallback(
+//     coordinate => {
+//       // console.log('coordinate---', coordinate)
+
+//       setMapRegion(prev => ({
+//         ...prev,
+//         latitude: Number(coordinate?.latitude),
+//         longitude: Number(coordinate?.longitude),
+//         ...getMpaDalta(),
+//         // latitudeDelta: getMpaDalta().latitudeDelta,
+//         // longitudeDelta: getMpaDalta().longitudeDelta,
+//       }));
+//       // handleRegionChangeComplete(coordinate)
+//       onTouchLocation(coordinate);
+
+//     },
+//     [onTouchLocation],
+//   );
+
+//   const handleMapReady = () => {
+//     // console.log('Map is ready');
+//     if (origin?.lat?.toString()?.length > 0
+//       // && mapRegion?.latitude?.toString()?.length > 0 
+//       && animatedCoordinate?.latitude?.toString()?.length > 0
+//     ) {
+//       setTimeout(() => {
+//         setIsMapReady(true);
+//       }, 2000);
+//     } else {
+//       setTimeout(() => {
+//         setIsMapReady(true);
+//       }, 5000);
+//     }
+//   };
+
+//   return (
+//     <View
+//       pointerEvents={isPendingReq ? 'none' : 'auto'}
+//       style={styles.homeSubContainer}>
+//       {(mapRegion?.latitude && mapRegion?.latitude?.toString()?.length > 0 &&
+//         mapRegion?.longitude && mapRegion?.longitude?.toString()?.length > 0) &&
+//         <MapView
+//           provider={PROVIDER_GOOGLE}
+//           onRegionChange={e => {
+//             setMpaDalta(e);
+//             // console.log('e---onRegionChange', e);
+//             // handleRegionChangeComplete(e);
+//           }}
+//           ref={mapRef}
+//           style={[styles.mapContainer, mapContainerView]}
+//           zoomEnabled
+//           scrollEnabled={true}
+//           showsScale
+//           mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+//           // initialRegion={mapRegion}
+//           region={mapRegion}
+//           zoomTapEnabled
+//           rotateEnabled
+//           loadingEnabled
+//           showsCompass={false}
+//           showsUserLocation={false}
+//           followsUserLocation={false}
+//           onMapReady={handleMapReady}
+//           onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
+//           onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
+//         >
+//           {/* {(mapRegion?.latitude?.toString()?.length > 0 &&
+//             mapRegion?.longitude?.toString()?.length > 0) && ( 
+//              <Marker
+//               coordinate={{
+//                 latitude: Number(mapRegion?.latitude),
+//                 longitude: Number(mapRegion?.longitude),
+//               }}
+//               tracksViewChanges={!isMapReady}
+//             >
+//               <Image
+//                 resizeMode="contain"
+//                 source={appImages.markerImage}
+//                 style={styles.markerImage}
+//               />
+//             </Marker>
+//              )} */}
+
+//           {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
+//             <Marker.Animated
+//               ref={markerRef}
+//               coordinate={animatedCoordinate}
+//               tracksViewChanges={!isMapReady}
+//             >
+//               <Image
+//                 resizeMode="contain"
+//                 source={appImages.markerImage}
+//                 style={styles.markerImage}
+//               />
+
+//             </Marker.Animated>
+
+
+//           )}
+
+//           {/* <Polygon
+//           coordinates={[
+//             // { latitude: 30.8258, longitude: 76.6600 }, // NW
+//             // { latitude: 30.8258, longitude: 76.8500 }, // NE
+//             // { latitude: 30.6600, longitude: 76.8500 }, // SE
+//             // { latitude: 30.6600, longitude: 76.6600 }, // SW
+//             { latitude: 30.8258, longitude: 76.7550 }, // top center
+//             { latitude: 30.8100, longitude: 76.8050 },
+//             { latitude: 30.7900, longitude: 76.8350 },
+//             { latitude: 30.7550, longitude: 76.8500 }, // mid-right
+//             { latitude: 30.7200, longitude: 76.8350 },
+//             { latitude: 30.6900, longitude: 76.8050 },
+//             { latitude: 30.6600, longitude: 76.7550 }, // bottom center
+//             { latitude: 30.6750, longitude: 76.7100 },
+//             { latitude: 30.7000, longitude: 76.6800 },
+//             { latitude: 30.7400, longitude: 76.6600 }, // mid-left
+//             { latitude: 30.7800, longitude: 76.6800 },
+//             { latitude: 30.8050, longitude: 76.7100 },
+//           ]}
+//           strokeColor={colors.black}
+//           fillColor="rgba(0, 150, 255, 0)"
+//           strokeWidth={2}
+//         /> */}
+//         </MapView>
+//       }
+//       {isMapReady == false && (
+//         // <View style={{position: 'absolute'}}>
+//         <AnimatedLoader
+//           absolute={'relative'}
+//           type={'homeMapLoader'}
+//           height={height}
+//         />
+//         // </View>
+//       )}
+//     </View>
+//   );
+// };
+
+// export default MapLocationRoute;
+
+// const styles = StyleSheet.create({
+//   homeSubContainer: {
+//     alignItems: 'flex-start',
+//     justifyContent: 'center',
+//     overflow: 'hidden',
+//     shadowRadius: 1,
+//     shadowOffset: { height: 2, width: 0 },
+//   },
+//   mapContainer: {
+//     alignSelf: 'center',
+//     height: hp('35%'),
+//     width: wp('100%'),
+//     overflow: 'hidden',
+//   },
+//   markerImage: {
+//     height: 30,
+//     width: 30,
+//     marginTop: Platform.OS === 'ios' ? '25%' : 0,
+//   },
+// });
+
+
+
+
+
+
+
+
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Image, Platform, Alert } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { appImages } from '../commons/AppImages';
+import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
+import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
+import { colors } from '../theme/colors';
+
+const mohaliChandigarhBounds = {
+  north: 30.8258,
+  south: 30.6600,
+  west: 76.6600,
+  east: 76.8500,
+};
+
+const isWithinBounds = (latitude, longitude) => {
+  return (
+    latitude <= mohaliChandigarhBounds.north &&
+    latitude >= mohaliChandigarhBounds.south &&
+    longitude >= mohaliChandigarhBounds.west &&
+    longitude <= mohaliChandigarhBounds.east
+  );
 };
 
 const MapLocationRoute = ({
@@ -33,220 +420,86 @@ const MapLocationRoute = ({
   height,
 }) => {
   const mapRef = useRef(null);
-  const markerRef = useRef(null);
   const debounceTimeout = useRef(null);
+  const debounceRef = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: Number(origin?.lat) || getCurrentLocation()?.latitude || 30.7400,
-    longitude: Number(origin?.lng) || getCurrentLocation()?.longitude || 76.7900,
+    latitude: origin && Number(origin?.lat) || 30.7400,
+    longitude: origin && Number(origin?.lng) || 76.7900,
     ...getMpaDalta(),
-    //   latitudeDelta: getMpaDalta().latitudeDelta,
-    //   longitudeDelta: getMpaDalta().longitudeDelta,
   });
   const [isMapReady, setIsMapReady] = useState(false);
 
-  const [animatedCoordinate] = useState(
-    new AnimatedRegion({
-      latitude: Number(origin?.lat) || null,
-      longitude: Number(origin?.lng) || null,
-      ...getMpaDalta(),
-      //     latitudeDelta: getMpaDalta().latitudeDelta,
-      //     longitudeDelta: getMpaDalta().longitudeDelta,
-    })
-  );
+  useEffect(() => {
+    if (origin?.lat && origin?.lng) {
+      const newRegion = {
+        latitude: Number(origin?.lat),
+        longitude: Number(origin?.lng),
+        ...getMpaDalta(),
+      };
+      if (mapRegion?.latitude !== newRegion?.latitude) {
+        setMapRegion(newRegion);
+      }
+      if (mapRef?.current && mapRegion?.latitude !== newRegion?.latitude) {
+        mapRef.current?.animateToRegion(newRegion, 1000);
+      }
+    }
+
+  }, [origin]);
 
 
+  // const handleRegionChangeComplete = region => {
 
-  console.log('origin---11', origin, mapRegion);
-  const mohaliChandigarhBounds = {
-    north: 30.8258,
-    south: 30.6600,
-    west: 76.6600,
-    east: 76.8500,
-  };
+  //   setMapRegion(region);
+  //   onTouchLocation({
+  //     latitude: region?.latitude,
+  //     longitude: region?.longitude,
+  //   });
+  // Optional bounds check
+  // if (!isWithinBounds(region?.latitude, region?.longitude)) {
+  //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+  //   const fallbackRegion = {
+  //     latitude: 30.7400,
+  //     longitude: 76.7900,
+  //     ...getMpaDalta(),
+  //   };
+  //   mapRef.current?.animateToRegion(fallbackRegion, 1000);
+  // }
+  // };
 
-  const isWithinBounds = (latitude, longitude) => {
-    return (
-      latitude <= mohaliChandigarhBounds.north &&
-      latitude >= mohaliChandigarhBounds.south &&
-      longitude >= mohaliChandigarhBounds.west &&
-      longitude <= mohaliChandigarhBounds.east
-    );
-  };
-
-  const handleRegionChangeComplete = (region) => {
-    console.log('Updated region:', region);
-    // if (!isWithinBounds(region.latitude, region.longitude)) {
-    //   // Recenter map if user tries to go out of bounds
-    // mapRef.current?.animateToRegion({
-    //   latitude: Number(mapRegion?.latitude) ?? 30.7400,
-    //   longitude: Number(mapRegion?.longitude) ?? 76.7900,
-    //   latitudeDelta: getMpaDalta().latitudeDelta,
-    //   longitudeDelta: getMpaDalta().longitudeDelta,
-    // });
-    //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-    // }
-
+  const handleRegionChangeComplete = useCallback((region) => {
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
-      if (!isWithinBounds(region.latitude, region.longitude)) {
-        mapRef.current?.animateToRegion({
-          latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
-          longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
-          latitudeDelta: getMpaDalta().latitudeDelta,
-          longitudeDelta: getMpaDalta().longitudeDelta,
-        });
-        Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-      }
-    }, 2000); // Delay in milliseconds
-
-
-  };
-
-  // Update region when origin changes
-
-  useEffect(() => {
-    if (origin?.lat && origin?.lng) {
-      const newCoord = {
-        latitude: Number(origin.lat),
-        longitude: Number(origin.lng),
-      };
-
-      currentLocation = newCoord;
-
-      setMapRegion({
-        ...newCoord,
-        ...getMpaDalta(),
+      setMapRegion(region);
+      onTouchLocation({
+        latitude: region.latitude,
+        longitude: region.longitude,
       });
+      // Optional bounds check
+      // if (!isWithinBounds(region?.latitude, region?.longitude)) {
+      //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+      //   const fallbackRegion = {
+      //     latitude: 30.7400,
+      //     longitude: 76.7900,
+      //     ...getMpaDalta(),
+      //   };
+      //   mapRef.current?.animateToRegion(fallbackRegion, 1000);
+      // }
+    }, 500); // Adjust delay if needed
+  }, [onTouchLocation]);
 
-      animatedCoordinate.timing({
-        ...newCoord,
-        duration: Platform.OS == 'ios'? 1:100,
-        useNativeDriver: false,
-      }).start();
-
-      if (mapRef.current) {
-        mapRef.current.animateToRegion(
-          {
-            ...newCoord,
-            ...getMpaDalta(),
-          },
-          2000
-        );
-      }
-    }
-  }, [origin, isMapReady]);
-
-  // useEffect(() => {
-  //   if (origin) {
-  //     // currentLocation = origin;
-  //     currentLocation = {
-  //       lat: getLocation('lat') ?? origin?.lat ?? currentLocation?.lat,
-  //       lng: getLocation('lng') ?? origin?.lng ?? currentLocation?.lng,
-  //     }
-
-  //     setMapRegion(prev => ({
-  //       ...prev,
-  //       latitude: origin?.lat?.toString()?.length > 0
-  //         ? Number(origin?.lat)
-  //         : Number(currentLocation?.lat),
-  //       longitude: origin?.lat?.toString()?.length > 0
-  //         ? Number(origin?.lng)
-  //         : Number(currentLocation?.lng),
-  //       latitudeDelta: getMpaDalta().latitudeDelta,
-  //       longitudeDelta: getMpaDalta().longitudeDelta,
-  //     }));
-
-  //     const lat = Number(origin?.lat);
-  //     const lng = Number(origin?.lng);
-  //     const newCoord = { latitude: lat, longitude: lng };
-
-  //     animatedCoordinate.timing({
-  //       ...newCoord,
-  //       duration: 500,
-  //       useNativeDriver: false,
-  //     }).start();
-
-  //     if (mapRef?.current) {
-  //       mapRef?.current.animateToRegion({
-  //         latitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lat) : Number(currentLocation?.lat),
-  //         longitude: origin && origin?.lat?.toString()?.length > 0 ? Number(origin?.lng) : Number(currentLocation?.lng),
-  //         latitudeDelta: getMpaDalta().latitudeDelta,
-  //         longitudeDelta: getMpaDalta().longitudeDelta,
-  //       }, 2000); // smooth zoom
-  //     }
-  //   }
-  // }, [origin, isMapReady]);
-
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsMapReady(currentLocation?.lat?.toString()?.length > 0 ? true : false)
-  //   }, 300)
-  // }, [currentLocation,origin])
-
-  // const onTouchLocationData = useCallback(
-  //   coordinate => {
-  //     // console.log('coordinate---', coordinate);
-  //     if (debounceTimeout.current) {
-  //       clearTimeout(debounceTimeout.current);
-  //     }
-  //     debounceTimeout.current = setTimeout(() => {
-  //       if (!isWithinBounds(coordinate.latitude, coordinate.longitude)) {
-  //         mapRef.current?.animateToRegion({
-  //           latitude: Number(30.7400 ?? coordinate?.latitude) ?? 30.7400,
-  //           longitude: Number(76.7900 ?? coordinate?.longitude) ?? 76.7900,
-  //           latitudeDelta: getMpaDalta().latitudeDelta,
-  //           longitudeDelta: getMpaDalta().longitudeDelta,
-  //         });
-  //         Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-  //       } else {
-  //         setMapRegion(prev => ({
-  //           ...prev,
-  //           latitude: Number(coordinate?.latitude),
-  //           longitude: Number(coordinate?.longitude),
-  //           latitudeDelta: getMpaDalta().latitudeDelta,
-  //           longitudeDelta: getMpaDalta().longitudeDelta,
-  //         }));
-  //         // handleRegionChangeComplete(coordinate)
-  //         onTouchLocation(coordinate);
-  //       }
-  //     }, 50); // Delay in milliseconds
-
-  //   },
-  //   [onTouchLocation],
-  // );
-
-  const onTouchLocationData = useCallback(
-    coordinate => {
-      // console.log('coordinate---', coordinate)
-
-      setMapRegion(prev => ({
-        ...prev,
-        latitude: Number(coordinate?.latitude),
-        longitude: Number(coordinate?.longitude),
-        ...getMpaDalta(),
-        // latitudeDelta: getMpaDalta().latitudeDelta,
-        // longitudeDelta: getMpaDalta().longitudeDelta,
-      }));
-      // handleRegionChangeComplete(coordinate)
-      onTouchLocation(coordinate);
-
-    },
-    [onTouchLocation],
-  );
 
   const handleMapReady = () => {
     // console.log('Map is ready');
     if (origin?.lat?.toString()?.length > 0
-      // && mapRegion?.latitude?.toString()?.length > 0 
-      && animatedCoordinate?.latitude?.toString()?.length > 0
+      && mapRegion?.latitude?.toString()?.length > 0
     ) {
+      setIsMapReady(true);
       setTimeout(() => {
         setIsMapReady(true);
-      }, 2000);
+      }, 1000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
@@ -254,104 +507,65 @@ const MapLocationRoute = ({
     }
   };
 
+
+  //   const onTouchLocationData = useCallback(
+  //   coordinate => {
+  //     console.log('coordinate---', coordinate)
+
+  //     // setMapRegion(prev => ({
+  //     //   ...prev,
+  //     //   latitude: Number(coordinate?.latitude),
+  //     //   longitude: Number(coordinate?.longitude),
+  //     //   ...getMpaDalta(),
+  //     //   // latitudeDelta: getMpaDalta().latitudeDelta,
+  //     //   // longitudeDelta: getMpaDalta().longitudeDelta,
+  //     // }));
+  //     // handleRegionChangeComplete(coordinate)
+  //     // onTouchLocation(coordinate);
+
+  //   },
+  //   [],
+  // );
+
+
+
+
   return (
-    <View
-      pointerEvents={isPendingReq ? 'none' : 'auto'}
-      style={styles.homeSubContainer}>
-      {(mapRegion?.latitude && mapRegion?.latitude?.toString()?.length > 0 &&
+    <View pointerEvents={isPendingReq ? 'none' : 'auto'} style={styles.homeSubContainer}>
+      {/* {(mapRegion?.latitude && mapRegion?.latitude?.toString()?.length > 0 &&
         mapRegion?.longitude && mapRegion?.longitude?.toString()?.length > 0) &&
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          onRegionChange={e => {
-            setMpaDalta(e);
-            // console.log('e---onRegionChange', e);
-            // handleRegionChangeComplete(e);
-          }}
-          ref={mapRef}
-          style={[styles.mapContainer, mapContainerView]}
-          zoomEnabled
-          scrollEnabled={true}
-          showsScale
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-          // initialRegion={mapRegion}
-          region={mapRegion}
-          zoomTapEnabled
-          rotateEnabled
-          loadingEnabled
-          showsCompass={false}
-          showsUserLocation={false}
-          followsUserLocation={false}
-          onMapReady={handleMapReady}
-          onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
-          onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
-        >
-          {/* {(mapRegion?.latitude?.toString()?.length > 0 &&
-            mapRegion?.longitude?.toString()?.length > 0) && ( 
-             <Marker
-              coordinate={{
-                latitude: Number(mapRegion?.latitude),
-                longitude: Number(mapRegion?.longitude),
-              }}
-              tracksViewChanges={!isMapReady}
-            >
-              <Image
-                resizeMode="contain"
-                source={appImages.markerImage}
-                style={styles.markerImage}
-              />
-            </Marker>
-             )} */}
-            
-          {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
-            <Marker.Animated
-              ref={markerRef}
-              coordinate={animatedCoordinate}
-              tracksViewChanges={!isMapReady}
-            >
-              <Image
-                resizeMode="contain"
-                source={appImages.markerImage}
-                style={styles.markerImage}
-              />
+        <> */}
+      <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={[styles.mapContainer, mapContainerView]}
+        initialRegion={mapRegion}
+        // region={mapRegion}
+        onRegionChange={(e) => { setMpaDalta(e) }}
+        onRegionChangeComplete={(e) => { handleRegionChangeComplete(e) }}
+        onMapReady={handleMapReady}
+        mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+        showsCompass={false}
+        showsUserLocation={false}
+        followsUserLocation={false}
+        loadingEnabled
+        zoomEnabled
+        scrollEnabled
+        rotateEnabled
+        zoomTapEnabled
+      />
 
-            </Marker.Animated>
+      {/* Static marker overlay */}
+      {isMapReady &&
+        <Image
+          source={appImages.markerImage}
+          style={styles.centerMarker}
+          resizeMode="contain"
+        />}
+      {/* </>} */}
 
-
-          )}
-
-          {/* <Polygon
-          coordinates={[
-            // { latitude: 30.8258, longitude: 76.6600 }, // NW
-            // { latitude: 30.8258, longitude: 76.8500 }, // NE
-            // { latitude: 30.6600, longitude: 76.8500 }, // SE
-            // { latitude: 30.6600, longitude: 76.6600 }, // SW
-            { latitude: 30.8258, longitude: 76.7550 }, // top center
-            { latitude: 30.8100, longitude: 76.8050 },
-            { latitude: 30.7900, longitude: 76.8350 },
-            { latitude: 30.7550, longitude: 76.8500 }, // mid-right
-            { latitude: 30.7200, longitude: 76.8350 },
-            { latitude: 30.6900, longitude: 76.8050 },
-            { latitude: 30.6600, longitude: 76.7550 }, // bottom center
-            { latitude: 30.6750, longitude: 76.7100 },
-            { latitude: 30.7000, longitude: 76.6800 },
-            { latitude: 30.7400, longitude: 76.6600 }, // mid-left
-            { latitude: 30.7800, longitude: 76.6800 },
-            { latitude: 30.8050, longitude: 76.7100 },
-          ]}
-          strokeColor={colors.black}
-          fillColor="rgba(0, 150, 255, 0)"
-          strokeWidth={2}
-        /> */}
-        </MapView>
-      }
-      {isMapReady == false && (
-        // <View style={{position: 'absolute'}}>
-        <AnimatedLoader
-          absolute={'relative'}
-          type={'homeMapLoader'}
-          height={height}
-        />
-        // </View>
+      {!isMapReady && (
+        <AnimatedLoader absolute="relative" type="homeMapLoader" height={height} />
       )}
     </View>
   );
@@ -364,21 +578,24 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
-    shadowRadius: 1,
-    shadowOffset: { height: 2, width: 0 },
   },
   mapContainer: {
     alignSelf: 'center',
     height: hp('35%'),
     width: wp('100%'),
-    overflow: 'hidden',
   },
-  markerImage: {
-    height: 30,
-    width: 30,
-    marginTop: Platform.OS === 'ios' ? '25%' : 0,
+  centerMarker: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -15,
+    marginTop: -30,
+    height: 35,
+    width: 32,
+    zIndex: 999,
   },
 });
+
 
 
 

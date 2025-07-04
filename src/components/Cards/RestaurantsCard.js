@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {appImages, appImagesSvg} from '../../commons/AppImages';
-import {fonts} from '../../theme/fonts/fonts';
-import {SvgXml} from 'react-native-svg';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { appImages, appImagesSvg } from '../../commons/AppImages';
+import { fonts } from '../../theme/fonts/fonts';
+import { SvgXml } from 'react-native-svg';
 import FastImage from 'react-native-fast-image';
-import {colors} from '../../theme/colors';
+import { colors } from '../../theme/colors';
 import Url from '../../api/Url';
 
 function NumToTime(num) {
@@ -40,7 +40,7 @@ function calculateTime(distance, speed) {
   }
 }
 
-const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
+const RestaurantsCard = ({ item, navigation, isHorizontal, onLike }) => {
   const distnace = item?.distance && item?.distance?.toFixed(1) + ' ' + 'KM';
   console.log('item>>', item);
   const [like, setLike] = useState(
@@ -59,7 +59,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        disabled={!item?.is_online}
+        // disabled={!item?.is_online}
         activeOpacity={0.8}
         onPress={() =>
           navigation.navigate('resturantProducts', {
@@ -89,7 +89,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
             ]}
             source={
               item?.banner?.length > 0
-                ? {uri: Url?.Image_Url + item?.banner}
+                ? { uri: Url?.Image_Url + item?.banner }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
@@ -119,7 +119,8 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
                     color: isResOpen ? colors.color27 : colors.black75,
                   },
                 ]}>
-                25-30 Min
+                {/* 25-30  */}
+                {item?.minimum_order_preparation_time - 5 ?? 0} - {item?.minimum_order_preparation_time ?? 0} Min
               </Text>
             </View>
             <View style={styles.kmMainView}>
@@ -130,7 +131,7 @@ const RestaurantsCard = ({item, navigation, isHorizontal, onLike}) => {
                     color: isResOpen ? colors.color27 : colors.black75,
                   },
                 ]}>
-                99 KM
+                {(item?.distanceInKm).toFixed(1)} KM
               </Text>
             </View>
           </View>
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     borderColor: colors.colorD9,
     zIndex: 2,
     shadowColor: colors.colorD9,
-    shadowOffset: {width: -1, height: 6},
+    shadowOffset: { width: -1, height: 6 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
     height: hp('4.5%'),
     width: wp('56%'),
     elevation: 2,
-    shadowOffset: {width: -1, height: 6},
+    shadowOffset: { width: -1, height: 6 },
   },
   ratingMainView: {
     flexDirection: 'row',

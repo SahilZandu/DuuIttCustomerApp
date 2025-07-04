@@ -153,7 +153,7 @@ export const agent = {
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
   applyCoupon: body => requests.post(Url.applyCoupon, body),
   appFeedback: body => requests.post(Url.appFeedback, body),
-
+  restaurantOffersData: body =>  requests.post(Url.restaurantOffersData, body),
   wallet: body => requests.get(`${Url.wallet}/${body?.userId}`),
   walletUpdateBalance: body => requests.patch(Url.walletUpdateBalance, body),
   transactionHistory: body =>

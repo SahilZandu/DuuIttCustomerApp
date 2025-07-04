@@ -58,11 +58,12 @@ const MapCurrentLocationRoute = ({
       };
 
       currentLocation = newCoord;
-
+      if (mapRegion?.latitude !== newCoord?.latitude) {
       setMapRegion({
         ...newCoord,
         ...getMpaDalta(),
       });
+    }
 
       animatedCoordinate.timing({
         ...newCoord,
@@ -157,7 +158,7 @@ const MapCurrentLocationRoute = ({
       && animatedCoordinate?.latitude?.toString()?.length > 0) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 2000);
+      }, 1000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);

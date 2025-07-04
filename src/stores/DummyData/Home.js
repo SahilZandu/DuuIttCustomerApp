@@ -8,13 +8,13 @@ export const homeCS = [
     duIcon: appImagesSvg.duSvg,
     title: 'Schedule a Ride',
   },
-  {
-    id: 2,
-    image: appImages.routeFood,
-    name: 'FOOD',
-    duIcon: appImagesSvg.duSvg,
-    title: 'Fresh & Full of Flavors',
-  },
+  // {
+  //   id: 2,
+  //   image: appImages.routeFood,
+  //   name: 'FOOD',
+  //   duIcon: appImagesSvg.duSvg,
+  //   title: 'Fresh & Full of Flavors',
+  // },
   {
     id: 3,
     image: appImages.routeParcel,

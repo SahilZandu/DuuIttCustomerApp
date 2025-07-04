@@ -150,6 +150,7 @@ const EditOrderLocation = ({ navigation, route }) => {
             pickDrop === 'pick' &&
             parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)
+           || newItem?.location_id === orderItem?.receiver_address?.location_id
         ) {
             alert("You can't choose the same location. Please choose another location.");
             return;
@@ -158,6 +159,7 @@ const EditOrderLocation = ({ navigation, route }) => {
             pickDrop !== 'pick' &&
             parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)
+            || newItem?.location_id === orderItem?.sender_address?.location_id
         ) {
             alert("You can't choose the same location. Please choose another location.");
             return;

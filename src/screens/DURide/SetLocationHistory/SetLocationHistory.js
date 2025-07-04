@@ -59,6 +59,10 @@ const SetLocationHistory = ({ navigation }) => {
     lat: getLocation('lat'),
     lng: getLocation('lng'),
   });
+  const [geoLocation2, setGeoLocation2] = useState({
+    lat: getLocation('lat'),
+    lng: getLocation('lng'),
+  });
   const [locationId, setLocationId] = useState('')
   const [currentAddress, setCurrentAddress] = useState('');
   const [name, setName] = useState('');
@@ -100,12 +104,15 @@ const SetLocationHistory = ({ navigation }) => {
     } else {
       setPickUpLocation(senderAddress?.address);
       setPickDrop('drop');
+      setGeoLocation(senderAddress?.geo_location);
+
     }
 
     if (Object?.keys(receiverAddress || {})?.length == 0) {
       setDropLocation('');
     } else {
       setDropLocation(receiverAddress?.address);
+      setGeoLocation2(receiverAddress?.geo_location);
     }
   };
 
@@ -249,7 +256,7 @@ const SetLocationHistory = ({ navigation }) => {
     } else {
       setDropLocation(item?.address);
       setReceiverAddress(item);
-      setGeoLocation(item?.geo_location);
+      setGeoLocation2(item?.geo_location);
       if (senderAddress?.address?.length > 0) {
         navigation.navigate('priceDetails');
       }
@@ -274,7 +281,7 @@ const SetLocationHistory = ({ navigation }) => {
       item: {
         name: name,
         address: pickUpLocation ? pickUpLocation : currentAddress,
-        geo_location: senderAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
+        geo_location: senderAddress?.address?.length > 0 ? geoLocation1 ?? senderAddress?.geo_location : geoLocation,
         location_id: senderAddress?.location_id?.length > 0 ? senderAddress?.location_id : locationId,
       },
       screenName: senderAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'
@@ -297,12 +304,11 @@ const SetLocationHistory = ({ navigation }) => {
       item: {
         name: name,
         address: dropLocation ? dropLocation : currentAddress,
-        geo_location: receiverAddress?.address?.length > 0 ? geoLocation1 : geoLocation,
+        geo_location: receiverAddress?.address?.length > 0 ? geoLocation2 ?? receiverAddress?.geo_location : geoLocation,
         location_id: receiverAddress?.location_id?.length > 0 ? receiverAddress?.location_id : locationId,
       },
       screenName: receiverAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'
     });
-    // alert('drop')
   };
 
   const onChangePress = () => {
@@ -350,10 +356,10 @@ const SetLocationHistory = ({ navigation }) => {
           onChangePress={() => { onChangePress() }}
           pick={'Enter your pickup'
             // 'Pickup loaction'
-            }
+          }
           drop={'Enter your destination'
             // 'Dropped location'
-            }
+          }
         />
 
         {/* <View style={styles.currentLocView}>

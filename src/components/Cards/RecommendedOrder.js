@@ -18,16 +18,16 @@ import { currencyFormat } from '../../halpers/currencyFormat';
 import { appImages } from '../../commons/AppImages';
 import Url from '../../api/Url';
 
-const RecommendedOrder = ({ data, onPress,onAddDec }) => {
-  
+const RecommendedOrder = ({ data, onPress, onAddDec }) => {
+
   const renderRecommendedOrderItem = ({ item, index }) => {
     // console.log('renderRecommendedOrderItem--', item, index);
 
     return (
       <View style={styles.itemContainer(index)}>
-        <Image source={item?.item?.image?.length > 0 ? 
-        { uri: Url?.Image_Url + item?.item?.image } 
-        : appImages.foodIMage}
+        <Image source={item?.item?.image?.length > 0 ?
+          { uri: Url?.Image_Url + item?.item?.image }
+          : appImages.foodIMage}
           resizeMode="cover" style={styles.image} />
         <Text numberOfLines={1} style={styles.name}>
           {item?.item?.name}
@@ -37,47 +37,43 @@ const RecommendedOrder = ({ data, onPress,onAddDec }) => {
             {currencyFormat(Number(item?.item?.selling_price))}</Text>
           {/* <AddButton item={item} /> */}
           <>
-      {item?.item?.quantity > 0 ? 
-      <View
-        style={{flexDirection:'row',
-           paddingVertical: 3,
-          width: wp('15%'),
-          backgroundColor: colors.main, // Filled color (green in this case)
-          borderWidth: 2,
-          borderColor: colors.main, // Border color (slightly darker green)
-          borderRadius: 20, // Rounded corners
-          alignItems: 'center',
-          justifyContent:'space-evenly',
-          }}>
-          <TouchableOpacity
-          onPress={()=>{onAddDec(item , 
-            Number(item?.item?.quantity) - 1
-            )
-            }}
-          activeOpacity={0.8} 
-          hitSlop={styles.hitSlot}>
-        <Text style={styles.addDecBtnText}>-</Text>
-        </TouchableOpacity>
-        <Text style={styles.addDecText}>{item?.item?.quantity}</Text>
-        <TouchableOpacity
-         onPress={()=>{onAddDec(item ,
-           Number(item?.item?.quantity) + 1
-        )}}
-        activeOpacity={0.8} 
-         hitSlop={styles.hitSlot}>
-        <Text style={styles.addDecBtnText}>+</Text>
-        </TouchableOpacity>
-      </View>
-      :
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={()=>{onAddDec(item ,
-          Number(item?.item?.quantity) + 1
-        )}}
-         style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>ADD</Text>
-      </TouchableOpacity>}
-      </>
+            {item?.item?.quantity > 0 ?
+              <View
+                style={styles.buttonContainerQuantity}>
+                <TouchableOpacity
+                  onPress={() => {
+                    onAddDec(item,
+                      Number(item?.item?.quantity) - 1
+                    )
+                  }}
+                  activeOpacity={0.8}
+                  hitSlop={styles.hitSlot}>
+                  <Text style={styles.addDecBtnText}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.addDecText}>{item?.item?.quantity}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    onAddDec(item,
+                      Number(item?.item?.quantity) + 1
+                    )
+                  }}
+                  activeOpacity={0.8}
+                  hitSlop={styles.hitSlot}>
+                  <Text style={styles.addDecBtnText}>+</Text>
+                </TouchableOpacity>
+              </View>
+              :
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  onAddDec(item,
+                    Number(item?.item?.quantity) + 1
+                  )
+                }}
+                style={styles.buttonContainer}>
+                <Text style={styles.buttonText}>ADD</Text>
+              </TouchableOpacity>}
+          </>
         </View>
       </View>
     );
@@ -148,10 +144,22 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginLeft: '3%',
   },
+  buttonContainerQuantity: {
+    flexDirection: 'row',
+    paddingVertical: 0.1,
+    width: wp('19%'),
+    backgroundColor: colors.main, // Filled color (green in this case)
+    borderWidth: 2,
+    borderColor: colors.main, // Border color (slightly darker green)
+    borderRadius: 20, // Rounded corners
+    alignItems: 'center',
+    justifyContent:'space-between',
+    paddingHorizontal: 8,
+  },
   buttonContainer: {
     paddingVertical: 3,
     // paddingHorizontal: 15,
-    width: wp('15%'),
+    width: wp('19%'),
     backgroundColor: colors.colorEC, // Filled color (green in this case)
     borderWidth: 2,
     borderColor: colors.main, // Border color (slightly darker green)
@@ -166,16 +174,17 @@ const styles = StyleSheet.create({
   },
   addDecText: {
     color: colors.white, // Text color
-    fontSize: RFValue(11),
-    fontWeight: fonts.bold,
-  },
-  addDecBtnText: {
-    color: colors.white, // Text color
     fontSize: RFValue(13),
     fontWeight: fonts.bold,
   },
-  hitSlot:{
-    top:10,bottom:10,left:10,right:10
+  addDecBtnText: {
+    top:hp('-0.1%'),
+    color: colors.white, // Text color
+    fontSize: RFValue(16),
+    fontWeight: fonts.bold,
+  },
+  hitSlot: {
+    top: 15, bottom: 15, left: 15, right: 15
   },
   noDataView: {
     justifyContent: 'center', marginTop: '3%', marginLeft: '5%'

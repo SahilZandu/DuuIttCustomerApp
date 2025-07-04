@@ -148,7 +148,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       geo_location: geoLocation,
       location_id: LocationId
     };
-    // console.log('newItem---', newItem, pickDrop);
+    console.log('newItem---', newItem, pickDrop);
 
     // console.log('newItem---', newItem, pickDrop, senderAddress, receiverAddress);
 
@@ -174,6 +174,8 @@ const ChooseMapLocation = ({ navigation, route }) => {
       pickDrop === 'pick' &&
       parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
       parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
+       ||
+      newItem?.location_id ===receiverAddress?.location_id
     ) {
       setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
@@ -183,6 +185,8 @@ const ChooseMapLocation = ({ navigation, route }) => {
       pickDrop !== 'pick' &&
       parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
       parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
+       || 
+       newItem?.location_id === senderAddress?.location_id
     ) {
       setLoading(false)
       alert("You can't choose the same location. Please choose another location.");

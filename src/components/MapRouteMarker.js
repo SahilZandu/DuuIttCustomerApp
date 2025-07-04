@@ -91,18 +91,18 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           showsScale={true}
           mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
           paddingAdjustmentBehavior={'automatic'}
-          initialRegion={{
-            latitude: lat,
-            longitude: long,
-            latitudeDelta: getMpaDalta().latitudeDelta,
-            longitudeDelta: getMpaDalta().longitudeDelta,
-          }}
-          // region={{
+          // initialRegion={{
           //   latitude: lat,
           //   longitude: long,
           //   latitudeDelta: getMpaDalta().latitudeDelta,
           //   longitudeDelta: getMpaDalta().longitudeDelta,
           // }}
+          region={{
+            latitude: lat,
+            longitude: long,
+            latitudeDelta: getMpaDalta().latitudeDelta,
+            longitudeDelta: getMpaDalta().longitudeDelta,
+          }}
           zoomTapEnabled
           rotateEnabled
           loadingEnabled

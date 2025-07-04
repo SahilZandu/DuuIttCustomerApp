@@ -153,23 +153,58 @@ export default class DashboardStore {
     }
   };
 
-  getRestaurantOffers = async (restaurant, handleLoading) => {
+  // getRestaurantOffers = async (restaurant, handleLoading) => {
+  //   handleLoading(true);
+  //   let requestData = {
+  //     restaurant_id: restaurant?._id,
+  //   };
+  //   console.log('requestData----restaurantOffers', requestData);
+  //   try {
+  //     const res = await agent.restaurantOffers(requestData);
+  //     console.log('restaurantOffers Res : ', res);
+  //     if (res?.statusCode == 200) {
+  //       // useToast(res?.message, 1);
+  //       handleLoading(false);
+  //       this.restaurentOfferCoupan = res?.data;
+  //       return res?.data;
+  //     } else {
+  //       const message = res?.message ? res?.message : res?.data?.message;
+  //       // useToast(message, 0);
+  //       handleLoading(false);
+  //       this.restaurentOfferCoupan = [];
+  //       return [];
+  //     }
+  //   } catch (error) {
+  //     console.log('error restaurantOffers:', error);
+  //     handleLoading(false);
+  //     const m = error?.data?.message
+  //       ? error?.data?.message
+  //       : 'Something went wrong';
+  //     // useToast(m, 0);
+  //     return [];
+  //   }
+  // };
+
+
+  getRestaurantOffers = async (cart, handleLoading) => {
+    console.log("cart--getRestaurantOffers", cart);
+
     handleLoading(true);
     let requestData = {
-      restaurant_id: restaurant?._id,
+      cart_id: cart?._id,
     };
-    console.log('requestData----restaurantOffers', requestData);
+    console.log('requestData----restaurantOffersData', requestData);
     try {
-      const res = await agent.restaurantOffers(requestData);
-      console.log('restaurantOffers Res : ', res);
+      const res = await agent.restaurantOffersData(requestData);
+      console.log('restaurantOffersData Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
+        useToast(res?.message, 1);
         handleLoading(false);
-        this.restaurentOfferCoupan = res?.data;
-        return res?.data;
+        this.restaurentOfferCoupan = res?.data?.vendor_offers ?? [];
+        return res?.data?.vendor_offers;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
+        useToast(message, 0);
         handleLoading(false);
         this.restaurentOfferCoupan = [];
         return [];
@@ -180,10 +215,11 @@ export default class DashboardStore {
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
-      // useToast(m, 0);
+      useToast(m, 0);
       return [];
     }
   };
+
 
   applyCoupon = async (cart, coupan, handleLoading, onSucces) => {
     handleLoading(true);
@@ -481,7 +517,7 @@ export default class DashboardStore {
     }
   };
 
-  userLogout = async (handleLoading,isSuccess,onError) => {
+  userLogout = async (handleLoading, isSuccess, onError) => {
     handleLoading(true)
     let requestData = {
       // userId: appUser?._id

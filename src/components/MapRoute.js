@@ -127,10 +127,12 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
         )),
       };
-      setMapRegion(newRegion);
-      // if (mapRef?.current) {
-      //   mapRef?.current?.animateToRegion(newRegion, 1000);
-      //   }
+      if (mapRegion?.latitude !== newRegion?.latitude) {
+        setMapRegion(newRegion);
+      }
+      if (mapRef?.current) {
+        mapRef?.current?.animateToRegion(newRegion, 1000);
+      }
     }
   }, [origin]);
 
@@ -147,9 +149,13 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           )
         ),
       };
-      setMapRegion(newRegion);
-      intervalId = setTimeout(() => {
+      if (mapRegion?.latitude !== newRegion?.latitude) {
         setMapRegion(newRegion);
+      }
+      intervalId = setTimeout(() => {
+        if (mapRegion?.latitude !== newRegion?.latitude) {
+          setMapRegion(newRegion);
+        }
         if (mapRef?.current) {
           mapRef?.current?.animateToRegion(newRegion, 1000);
         }
@@ -216,7 +222,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     ) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 2000);
+      }, 1000);
     } else {
       setTimeout(() => {
         setIsMapReady(true);

@@ -442,7 +442,6 @@ export default function SideMenu({ navigation }) {
     setLoading(v)
   }
   const isSuccess = () => {
-
     setTimeout(async () => {
       let query = {
         user_id: appUser?._id,
