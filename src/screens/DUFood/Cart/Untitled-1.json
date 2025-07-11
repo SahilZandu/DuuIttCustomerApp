@@ -1,0 +1,1100 @@
+{
+    "__v": 50,
+    "_id": "6788fee87dcbadd89696ecc0",
+    "about": "restaurant about kjdslkjkljls",
+    "address": "Haider Nagar Jalalpur, Uttar Pradesh, India",
+    "assets": [],
+    "banner": "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/banner-1750759987370-985555451",
+    "createdAt": "2025-01-16T12:43:20.781Z",
+    "date_of_founding": "2000-06-02",
+    "deletedAt": null,
+    "dist": {
+        "calculated": 3495.7810372080557,
+        "location": {
+            "coordinates": [Array
+            ],
+            "type": "Point"
+        }
+    },
+    "distanceInKm": 3.4957810372080558,
+    "email": "vickyrestaurant@gmail.com",
+    "extras": [],
+    "gst_percentage": 18,
+    "is_online": true,
+    "landmark": "landmarkkmnjlkj",
+    "likedRestaurant": true,
+    "location": {
+        "coordinates": [
+            77.553344,
+            29.4477983
+        ],
+        "type": "Point"
+    },
+    "minimum_order_preparation_time": 32,
+    "minimum_order_value": 52,
+    "name": "vicky's Hotels & Restro",
+    "phone": 9879879878,
+    "reason_to_offline": "",
+    "remarks": "remarkskjkl",
+    "restaurant_charge": 20,
+    "timeInHours": 0.05826301728680093,
+    "timings": {
+        "all_days": {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        "is_all_day": false,
+        "specified": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ]
+    },
+    "updatedAt": "2025-06-24T10:29:31.048Z",
+    "veg_non_veg": "non-veg",
+    "vendor": {
+        "__v": 1,
+        "_id": "6788fee87dcbadd89696ecbe",
+        "addresses": [],
+        "bank_detail": {
+            "account_number": "85465423548542",
+            "bank_name": "Punjab bank",
+            "ifsc_code": "PUNB0047640",
+            "status": "approved"
+        },
+        "createdAt": "2025-01-16T12:43:20.759Z",
+        "date_of_birth": "1990-09-09T00:00:00.000Z",
+        "email": "z@mailinator.com",
+        "fcm_token": "ffjurlDcQtqhipRL19p6V4:APA91bHS8zYnEKvWVmvSBGBi-kDRtAA3Ys4BhzD7oWk2vnrLV8qIum4vRRSsPu_2Z3lQLE9G4iAoqZs2qdOAasIEEK2ogEJoYXlt5M6Sf0_pIw42mbPc2Pc",
+        "fssai_detail": {
+            "account_number": "87546454646845",
+            "expiration_date": "2028-02-05",
+            "image": "public/uploads/vendor/documents/6788fee87dcbadd89696ecbe/image-1738583547460-586559988.png",
+            "status": "approved"
+        },
+        "gender": "male",
+        "gstn_detail": {
+            "expiration_date": "2043-02-05",
+            "gstn_number": "04AAACC4175D1Z8",
+            "image": "public/uploads/vendor/documents/6788fee87dcbadd89696ecbe/image-1738583603337-31867307.png",
+            "status": "approved"
+        },
+        "is_active": true,
+        "is_deleted": false,
+        "is_kyc_completed": true,
+        "name": "Mohd Gullu Malik",
+        "no_of_tries": 0,
+        "otp": null,
+        "otp_expires_at": null,
+        "pan_detail": {
+            "image": "public/uploads/vendor/documents/6788fee87dcbadd89696ecbe/image-1738583676430-485248299.png",
+            "pan_number": "AALPN1520W",
+            "status": "approved"
+        },
+        "password": "b0456a71ace9899329a3acc95b4999ed:336f04556388357691f57969eff3e9bc:2cb344fc17f41538807d57f2fde6f411b16c1379afc2519efe19872d93c894db",
+        "permissions": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+        "phone": 8006386138,
+        "profile_pic": null,
+        "role": "vendor",
+        "updatedAt": "2025-06-24T09:54:48.154Z"
+    },
+    "vendor_id": "6788fee87dcbadd89696ecbe"
+} 
+{
+    "all_days": {
+        "outlet_status": false,
+        "timings": []
+    },
+    "is_all_day": false,
+    "specified": [
+        {
+            "outlet_status": true,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": true,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        }
+    ]
+}
+ [
+    {
+        "outlet_status": true,
+        "timings": [
+            [Object
+            ]
+        ]
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": [
+            [Object
+            ],
+            [Object
+            ]
+        ]
+    },
+    {
+        "outlet_status": true,
+        "timings": [
+            [Object
+            ]
+        ]
+    },
+    {
+        "outlet_status": false,
+        "timings": [
+            [Object
+            ]
+        ]
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    }
+] 
+{
+    "outlet_status": false,
+    "timings": []
+}
+
+
+
+        {
+    "all_days": {
+        "outlet_status": true,
+        "timings": [
+            {
+                "_id": "683ff477bf2a366f11382e4c",
+                "close_time": "15:53",
+                "days_of_week": 3,
+                "is_edit_delete": true,
+                "open_times": "12:10"
+            },
+        ]
+    },
+    "is_all_day": false,
+    "specified": [
+        {
+            "outlet_status": true,
+            "timings": [
+                {
+                    "_id": "683ff477bf2a366f11382e4c",
+                    "close_time": "15:53",
+                    "days_of_week": 3,
+                    "is_edit_delete": true,
+                    "open_times": "12:53"
+                },
+                {
+                    "_id": "6842b55ce6215641689bf999",
+                    "close_time": "12:52",
+                    "days_of_week": 3,
+                    "is_edit_delete": true,
+                    "open_times": "07:00"
+                }
+            ]
+        },
+        {
+            "outlet_status": true,
+            "timings": [
+                {
+                    "_id": "683ff477bf2a366f11382e4c",
+                    "close_time": "15:53",
+                    "days_of_week": 3,
+                    "is_edit_delete": true,
+                    "open_times": "12:53"
+                },
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [
+                {
+                    "_id": "683ff477bf2a366f11382e4c",
+                    "close_time": "15:53",
+                    "days_of_week": 3,
+                    "is_edit_delete": true,
+                    "open_times": "12:53"
+                },
+            ]
+        },
+        {
+            "outlet_status": true,
+            "timings": [
+                {
+                    "_id": "683ff477bf2a366f11382e4c",
+                    "close_time": "15:53",
+                    "days_of_week": 3,
+                    "is_edit_delete": true,
+                    "open_times": "12:53"
+                },
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": []
+        },
+        {
+            "outlet_status": true,
+            "timings": []
+        },
+        {
+            "outlet_status": true,
+            "timings": [
+                {
+                    "_id": "683ff477bf2a366f11382e4c",
+                    "close_time": "15:53",
+                    "days_of_week": 3,
+                    "is_edit_delete": true,
+                    "open_times": "12:53"
+                },
+            ]
+        },
+    ]
+}
+
+
+          [
+    {
+        "__v": 0,
+        "_id": "685bc2c3b4d7c81582ee7093",
+        "createdAt": "2025-06-25T09:34:59.970Z",
+        "description": "Tempore vel quidem ",
+        "discount_price": 10,
+        "discount_type": "percentage",
+        "is_vendor_specific": true,
+        "max_usage_limit": 0,
+        "recomended": false,
+        "referral_code": "FSA42SF",
+        "status": true,
+        "title": "Dewali Discount Offer",
+        "updatedAt": "2025-06-25T09:38:55.424Z",
+        "usage_conditions": {
+            "_id": "685bc3afb4d7c81582ee709f",
+            "delivery_only": false,
+            "first_order_of_day": true,
+            "min_order_value": 24,
+            "new_users_only": true,
+            "one_time_per_user": true,
+            "pickup_only": false,
+            "specific_category": "6836de1ddc9bf4df8e5db8c5",
+            "specific_user_ids": [Array
+            ],
+            "time_window_end": "2025-06-29T22:25",
+            "time_window_start": "2025-06-25T05:58",
+            "valid_days": [Array
+            ]
+        },
+        "used_count": 0,
+        "vendor_id": "6788fee87dcbadd89696ecbe"
+    }
+]
+
+
+
+
+         [
+    {
+        "__v": 0,
+        "_id": "685bc2c3b4d7c81582ee7093",
+        "createdAt": "2025-06-25T09:34:59.970Z",
+        "description": "Tempore vel quidem ",
+        "discount_price": 10,
+        "discount_type": "percentage",
+        "is_vendor_specific": true,
+        "max_usage_limit": 0,
+        "recomended": false,
+        "recommended": false,
+        "referral_code": "FSA42SF",
+        "status": true,
+        "title": "Dewali Discount Offer",
+        "type": "admin",
+        "updatedAt": "2025-06-25T09:38:55.424Z",
+        "usage_conditions": {
+            "_id": "685bc3afb4d7c81582ee709f",
+            "delivery_only": false,
+            "first_order_of_day": true,
+            "min_order_value": 24,
+            "new_users_only": true,
+            "one_time_per_user": true,
+            "pickup_only": false,
+            "specific_category": "6836de1ddc9bf4df8e5db8c5",
+            "specific_user_ids": [Array
+            ],
+            "time_window_end": "2025-06-29T22:25",
+            "time_window_start": "2025-06-25T05:58"
+        },
+        "used_count": 0,
+        "vendor_id": "6788fee87dcbadd89696ecbe"
+    },
+    {
+        "__v": 0,
+        "_id": "685bc2deb4d7c81582ee7099",
+        "createdAt": "2025-06-25T09:35:26.195Z",
+        "description": "Deleniti qui ipsam l",
+        "discount_price": 299,
+        "discount_type": "price",
+        "is_vendor_specific": false,
+        "max_usage_limit": 0,
+        "recomended": false,
+        "recommended": false,
+        "referral_code": "Recusand5wq",
+        "status": true,
+        "title": "Velit at ipsa modi",
+        "type": "admin",
+        "updatedAt": "2025-06-25T09:35:26.195Z",
+        "usage_conditions": {
+            "_id": "685bc2deb4d7c81582ee709a",
+            "delivery_only": false,
+            "first_order_of_day": true,
+            "min_order_value": 81,
+            "new_users_only": false,
+            "one_time_per_user": false,
+            "pickup_only": true,
+            "specific_category": "679cb68117961b01a2c96a05",
+            "specific_user_ids": [Array
+            ],
+            "time_window_end": "2012-04-02T22:37",
+            "time_window_start": "1976-05-13T09:01"
+        },
+        "used_count": 0,
+        "vendor_id": null
+    },
+    {
+        "__v": 0,
+        "_id": "685bd1d8b4c055504dbeb6c4",
+        "createdAt": "2025-06-25T10:39:20.479Z",
+        "description": "Sed nostrud vel proi",
+        "discount_price": 656,
+        "discount_type": "price",
+        "is_vendor_specific": true,
+        "max_usage_limit": 0,
+        "recomended": false,
+        "recommended": false,
+        "referral_code": "Placeat23",
+        "status": true,
+        "title": "Placeat et quod aut",
+        "type": "restaurant",
+        "updatedAt": "2025-07-07T08:11:01.905Z",
+        "usage_conditions": {
+            "_id": "686b81157f45ae3f0b5cb484",
+            "delivery_only": false,
+            "first_order_of_day": false,
+            "min_order_value": 48,
+            "new_users_only": false,
+            "one_time_per_user": false,
+            "pickup_only": false,
+            "specific_category": "6836de1ddc9bf4df8e5db8c5",
+            "specific_user_ids": [Array
+            ],
+            "valid_from": "2025-07-07T00:00:00.000Z",
+            "valid_until": "2025-07-17T00:00:00.000Z"
+        },
+        "used_count": 0,
+        "vendor_id": "68340eae78204d21ac741af6"
+    },
+    {
+        "__v": 0,
+        "_id": "686b79e31372f70966dd07d0",
+        "createdAt": "2025-07-07T07:40:19.702Z",
+        "description": "Reprehenderit ea ea ",
+        "discount_price": 870,
+        "discount_type": "price",
+        "is_vendor_specific": false,
+        "max_usage_limit": 62,
+        "recommended": false,
+        "referral_code": "Facilis5zds",
+        "status": true,
+        "title": "Ut ipsum perspiciat",
+        "type": "admin",
+        "updatedAt": "2025-07-07T08:10:00.374Z",
+        "usage_conditions": {
+            "_id": "686b80d87f45ae3f0b5cb47a",
+            "delivery_only": true,
+            "first_order_of_day": false,
+            "min_order_value": 1,
+            "new_users_only": false,
+            "one_time_per_user": true,
+            "pickup_only": true,
+            "specific_category": "679cb68117961b01a2c96a05",
+            "specific_user_ids": [Array
+            ],
+            "valid_from": "2025-07-07T00:00:00.000Z",
+            "valid_until": "2025-07-17T00:00:00.000Z"
+        },
+        "used_count": 0,
+        "vendor_id": null
+    }
+]
+
+
+{
+    "addon_notes": "",
+    "admin_pay_amt": 90,
+    "after_discount_sub_amt": 90,
+    "amount_recived": 100,
+    "cart_id": "6867bb9c45bacd05c70091f1",
+    "cart_items": [
+        {
+            "_id": "686ba207f50bce34eb400911",
+            "add_on_amount": 0,
+            "food_item_id": "68345f68a4f61887e2e1d587",
+            "food_item_price": 852,
+            "quantity": 2,
+            "varient_price": 0
+        }
+    ],
+    "cooking_time": "45 minutes",
+    "coupon_amount": 5,
+    "coupon_code": "FSA42SF",
+    "customer_id": "674004448c0213057bd1519c",
+    "delivery_address": {
+        "_id": "674007348c0213057bd15204",
+        "address": "Sector 35, Chandigarh, 160022, India",
+        "address_detail": "shi",
+        "geo_location": {
+            "lat": "30.7265231",
+            "lng": "76.7588581"
+        },
+        "landmark": "TDIs",
+        "location_id": "ChIJ5SlaUWDuDzkRTcF1ntXXEzk",
+        "name": "Sam",
+        "phone": 9876789654,
+        "title": "Work"
+    },
+    "delivery_instructions": {
+        "audio": "Add instructions for delivery partner",
+        "instructions": []
+    },
+    "delivery_time": "2025-02-15T14:30:00Z",
+    "dilevery_time": "2025-02-15T14:30:00Z",
+    "distance_from_customer": "5.2",
+    "invoice_no": "INV123456",
+    "item_sub_total_amount": 100.5,
+    "notified": 0,
+    "order_id": "ORD98765",
+    "org_pay_amt": 95,
+    "otp": "123456",
+    "packing_fee": 5,
+    "payment_method_id": "credit_card",
+    "reason_of_cancellation": "Customer changed mind",
+    "refund_amt": 0,
+    "refund_status": "norefund",
+    "remaining_balance_amt": 0,
+    "restaurant_id": "6788fee87dcbadd89696ecc0",
+    "review_skipped": 0,
+    "status": "waiting_for_confirmation",
+    "tax_amount": 10,
+    "total_amount": 1729,
+    "transaction_id": "pay_Qq9xS24xDmCZG8",
+    "verification_code": "VER12345"
+}
+
+
+
+ {
+    "__v": 0,
+    "_id": "686bb26bf50bce34eb4009f4",
+    "cart_items": [
+        {
+            "_id": "686bb26bf50bce34eb4009f2",
+            "food_item_id": "68345f68a4f61887e2e1d587",
+            "food_item_price": 852,
+            "quantity": 1
+        }
+    ],
+    "createdAt": "2025-07-07T11:41:31.073Z",
+    "food_item": [
+        {
+            "__v": 0,
+            "_id": "68345f68a4f61887e2e1d587",
+            "addon": [Array
+            ],
+            "base_price": "852",
+            "combinations": [Array
+            ],
+            "createdAt": "2025-05-26T12:32:40.499Z",
+            "description": "Hdbdbd d bdbd",
+            "dish_category_id": "679cb68117961b01a2c96a05",
+            "image": "public/uploads/vendor/6788fee87dcbadd89696ecbe/food-item/image-1748262758176-4590703.png",
+            "in_stock": true,
+            "name": "Sussi",
+            "product_timing": "full_time",
+            "product_type": "simple",
+            "quantity": 1,
+            "recomended": true,
+            "restaurant_id": "6788fee87dcbadd89696ecc0",
+            "selected_add_on": [Array
+            ],
+            "selling_price": 852,
+            "status": true,
+            "tag": "Chef's Special",
+            "updatedAt": "2025-05-26T12:32:40.499Z",
+            "variants": [Array
+            ],
+            "veg_nonveg": "egg"
+        }
+    ],
+    "grand_total": 852,
+    "offer": {
+        "__v": 0,
+        "_id": "685bd1d8b4c055504dbeb6c4",
+        "createdAt": "2025-06-25T10:39:20.479Z",
+        "description": "Sed nostrud vel proi",
+        "discount_price": 656,
+        "discount_type": "price",
+        "is_vendor_specific": true,
+        "max_usage_limit": 0,
+        "recomended": false,
+        "referral_code": "Placeat23",
+        "status": true,
+        "title": "Placeat et quod aut",
+        "type": "restaurant",
+        "updatedAt": "2025-07-07T08:11:01.905Z",
+        "usage_conditions": {
+            "_id": "686b81157f45ae3f0b5cb484",
+            "delivery_only": false,
+            "first_order_of_day": false,
+            "min_order_value": 48,
+            "new_users_only": false,
+            "one_time_per_user": false,
+            "pickup_only": false,
+            "specific_category": "6836de1ddc9bf4df8e5db8c5",
+            "specific_user_ids": [Array
+            ],
+            "valid_from": "2025-07-07T00:00:00.000Z",
+            "valid_until": "2025-07-17T00:00:00.000Z"
+        },
+        "vendor_id": "68340eae78204d21ac741af6"
+    },
+    "offer_id": "685bd1d8b4c055504dbeb6c4",
+    "restaurant": {
+        "__v": 50,
+        "_id": "6788fee87dcbadd89696ecc0",
+        "about": "restaurant about kjdslkjkljls",
+        "address": "Haider Nagar Jalalpur, Uttar Pradesh, India",
+        "assets": [],
+        "banner": "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/banner-1750759987370-985555451",
+        "createdAt": "2025-01-16T12:43:20.781Z",
+        "date_of_founding": "2000-06-02",
+        "deletedAt": null,
+        "email": "vickyrestaurant@gmail.com",
+        "extras": [],
+        "gst_percentage": 18,
+        "is_online": true,
+        "landmark": "landmarkkmnjlkj",
+        "location": {
+            "coordinates": [Array
+            ],
+            "type": "Point"
+        },
+        "minimum_order_preparation_time": 32,
+        "minimum_order_value": 52,
+        "name": "vicky's Hotels & Restro",
+        "phone": 9879879878,
+        "reason_to_offline": "",
+        "remarks": "remarkskjkl",
+        "restaurant_charge": 20,
+        "timings": {
+            "all_days": [Object
+            ],
+            "is_all_day": false,
+            "specified": [Array
+            ]
+        },
+        "updatedAt": "2025-06-24T10:29:31.048Z",
+        "veg_non_veg": "non-veg",
+        "vendor_id": "6788fee87dcbadd89696ecbe"
+    },
+    "restaurant_id": "6788fee87dcbadd89696ecc0",
+    "sub_total": 852,
+    "updatedAt": "2025-07-07T12:38:53.203Z",
+    "user_id": "674004448c0213057bd1519c"
+}
+
+
+{
+    "__v": 0,
+    "_id": "686cb034f50bce34eb40181c",
+    "cart_items": [
+        {
+            "_id": "686cb034f50bce34eb40181a",
+            "food_item_id": "6842bb4ae6215641689bfa73",
+            "food_item_price": 652,
+            "quantity": 1,
+            "selected_add_on": [Array
+            ]
+        }
+    ],
+    "createdAt": "2025-07-08T05:44:20.348Z",
+    "grand_total": 652,
+    "offer_id": null,
+    "restaurant_id": "6788fee87dcbadd89696ecc0",
+    "sub_total": 652,
+    "updatedAt": "2025-07-08T05:44:20.348Z",
+    "user_id": "674004448c0213057bd1519c"
+}
+
+
+
+{
+    "__v": 0,
+    "_id": "686f967e2984835f6232b61a",
+    "cart_items": [
+        {
+            "_id": "686f967e2984835f6232b618",
+            "food_item_id": "68345f68a4f61887e2e1d587",
+            "food_item_price": 852,
+            "quantity": 1
+        }
+    ],
+    "createdAt": "2025-07-10T10:31:26.206Z",
+    "food_item": [
+        {
+            "__v": 0,
+            "_id": "68345f68a4f61887e2e1d587",
+            "addon": [Array
+            ],
+            "base_price": "852",
+            "combinations": [Array
+            ],
+            "createdAt": "2025-05-26T12:32:40.499Z",
+            "description": "Hdbdbd d bdbd",
+            "dish_category_id": "679cb68117961b01a2c96a05",
+            "image": "public/uploads/vendor/6788fee87dcbadd89696ecbe/food-item/image-1748262758176-4590703.png",
+            "in_stock": true,
+            "name": "Sussi",
+            "product_timing": "full_time",
+            "product_type": "simple",
+            "quantity": 1,
+            "recomended": true,
+            "restaurant_id": "6788fee87dcbadd89696ecc0",
+            "selected_add_on": [Array
+            ],
+            "selling_price": 852,
+            "status": true,
+            "tag": "Chef's Special",
+            "updatedAt": "2025-05-26T12:32:40.499Z",
+            "variants": [Array
+            ],
+            "veg_nonveg": "egg"
+        }
+    ],
+    "grand_total": 766.8,
+    "is_offer_applied": true,
+    "offer": {
+        "__v": 0,
+        "_id": "685bc2c3b4d7c81582ee7093",
+        "createdAt": "2025-06-25T09:34:59.970Z",
+        "description": "Tempore vel quidem ",
+        "discount_price": 10,
+        "discount_type": "percentage",
+        "is_vendor_accepted": false,
+        "is_vendor_specific": true,
+        "recomended": false,
+        "referral_code": "FSA42SF",
+        "status": true,
+        "title": "Dewali Discount Offer",
+        "updatedAt": "2025-07-09T06:03:25.773Z",
+        "usage_conditions": {
+            "_id": "685bc3afb4d7c81582ee709f",
+            "delivery_only": false,
+            "first_order_of_day": true,
+            "min_order_value": 24,
+            "new_users_only": true,
+            "one_time_per_user": true,
+            "pickup_only": false,
+            "specific_category": "6836de1ddc9bf4df8e5db8c5",
+            "time_window_end": "2025-06-29T22:25",
+            "time_window_start": "2025-06-25T05:58"
+        },
+        "vendor_id": "6788fee87dcbadd89696ecbe"
+    },
+    "offer_details": {
+        "coupon_added_date": "2025-07-10T11:02:44.229Z",
+        "coupon_name": "Dewali Discount Offer",
+        "coupon_type": "percentage",
+        "discount_value": 10,
+        "end_date": null,
+        "offer_id": "685bc2c3b4d7c81582ee7093",
+        "start_date": null,
+        "type": null
+    },
+    "offer_id": "685bc2c3b4d7c81582ee7093",
+    "restaurant": {
+        "__v": 50,
+        "_id": "6788fee87dcbadd89696ecc0",
+        "about": "restaurant about kjdslkjkljls ",
+        "address": "Phase 5, Sector 59, Sahibzada Ajit Singh Nagar, Punjab, India",
+        "assets": [],
+        "banner": "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/banner-1752134676166-463229560",
+        "createdAt": "2025-01-16T12:43:20.781Z",
+        "date_of_founding": "2000-06-02",
+        "deletedAt": null,
+        "email": "vickyrestaurant@gmail.com",
+        "extras": [],
+        "gst_percentage": 18,
+        "is_online": true,
+        "landmark": "landmarkkmnjlkj",
+        "location": {
+            "coordinates": [Array
+            ],
+            "type": "Point"
+        },
+        "minimum_order_preparation_time": 32,
+        "minimum_order_value": 52,
+        "name": "vicky's Hotels & Restro",
+        "phone": 9879879878,
+        "reason_to_offline": "",
+        "remarks": "remarkskjkl",
+        "restaurant_charge": 20,
+        "timings": {
+            "all_days": [Object
+            ],
+            "is_all_day": true,
+            "specified": [Array
+            ]
+        },
+        "updatedAt": "2025-07-10T10:31:00.701Z",
+        "veg_non_veg": "non-veg",
+        "vendor_id": "6788fee87dcbadd89696ecbe"
+    },
+    "restaurant_id": "6788fee87dcbadd89696ecc0",
+    "sub_total": 852,
+    "total_pay": 766.8,
+    "updatedAt": "2025-07-10T11:02:44.229Z",
+    "user_id": "674004448c0213057bd1519c"
+}
+
+
+
+{
+    "config": {
+        "adapter": [
+            "xhr",
+            "http",
+            "fetch"
+        ],
+        "baseURL": "https://duuitt.hashsoftware.com/",
+        "data": "{\"invoice_no\":\"INV123456\",\"customer_id\":\"674004448c0213057bd1519c\",\"status\":\"waiting_for_confirmation\",\"item_sub_total_amount\":100.5,\"after_discount_sub_amt\":90,\"total_amount\":647,\"coupon_code\":\"Recusand5wq\",\"tax_amount\":10,\"coupon_amount\":5,\"packing_fee\":5,\"payment_method_id\":\"credit_card\",\"amount_recived\":100,\"transaction_id\":\"pay_QrM6CmHYasPRyW\",\"order_id\":\"ORD98765\",\"restaurant_id\":\"6788fee87dcbadd89696ecc0\",\"otp\":\"123456\",\"reason_of_cancellation\":\"Customer changed mind\",\"delivery_time\":\"2025-02-15T14:30:00Z\",\"notified\":0,\"distance_from_customer\":\"5.2\",\"dilevery_time\":\"2025-02-15T14:30:00Z\",\"cooking_time\":\"45 minutes\",\"verification_code\":\"VER12345\",\"refund_amt\":0,\"refund_status\":\"norefund\",\"review_skipped\":0,\"remaining_balance_amt\":0,\"org_pay_amt\":95,\"admin_pay_amt\":90,\"cart_items\":[{\"_id\":\"686fa09d2984835f6232b964\",\"food_item_id\":\"6842bb66e6215641689bfa79\",\"food_item_price\":956,\"quantity\":1}],\"cart_id\":\"686fa09d2984835f6232b966\",\"delivery_instructions\":{\"audio\":\"Add instructions for delivery partner\",\"instructions\":[]},\"addon_notes\":\"\",\"delivery_address\":{\"geo_location\":{\"lat\":\"30.7265231\",\"lng\":\"76.7588581\"},\"name\":\"Sam\",\"phone\":9876789654,\"title\":\"Work\",\"address\":\"Sector 35, Chandigarh, 160022, India\",\"address_detail\":\"shi\",\"location_id\":\"ChIJ5SlaUWDuDzkRTcF1ntXXEzk\",\"landmark\":\"TDIs\",\"_id\":\"674007348c0213057bd15204\"}}",
+        "env": {
+            "Blob": [Function Blob
+            ],
+            "FormData": [Function FormData
+            ]
+        },
+        "headers": [Object
+        ],
+        "maxBodyLength": -1,
+        "maxContentLength": -1,
+        "method": "post",
+        "timeout": 10000,
+        "transformRequest": [
+            [Function transformRequest
+            ]
+        ],
+        "transformResponse": [
+            [Function transformResponse
+            ]
+        ],
+        "transitional": {
+            "clarifyTimeoutError": false,
+            "forcedJSONParsing": true,
+            "silentJSONParsing": true
+        },
+        "url": "food-order",
+        "validateStatus": [Function validateStatus
+        ],
+        "xsrfCookieName": "XSRF-TOKEN",
+        "xsrfHeaderName": "X-XSRF-TOKEN"
+    },
+    "data": {
+        "data": null,
+        "message": "cart_items.0.property _id should not exist",
+        "status": "faliure",
+        "statusCode": 400
+    },
+    "headers": {
+        "access-control-allow-origin": "*",
+        "connection": "Keep-Alive",
+        "content-length": "104",
+        "content-security-policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+        "content-type": "application/json; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "date": "Thu, 10 Jul 2025 11:55:17 GMT",
+        "etag": "W/\"68-VBJ3DhGasT2lAHLSYOdktgmho54\"",
+        "keep-alive": "timeout=5, max=99",
+        "origin-agent-cluster": "?1",
+        "referrer-policy": "no-referrer",
+        "server": "Apache/2.4.58 (Ubuntu)",
+        "strict-transport-security": "max-age=15552000; includeSubDomains",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-download-options": "noopen",
+        "x-frame-options": "SAMEORIGIN",
+        "x-permitted-cross-domain-policies": "none",
+        "x-ratelimit-limit": "100",
+        "x-ratelimit-remaining": "99",
+        "x-ratelimit-reset": "60",
+        "x-xss-protection": "0"
+    },
+    "request": {
+        "DONE": 4,
+        "HEADERS_RECEIVED": 2,
+        "LOADING": 3,
+        "OPENED": 1,
+        "UNSENT": 0,
+        "_aborted": false,
+        "_cachedResponse": undefined,
+        "_hasError": false,
+        "_headers": {
+            "accept": "application/json, text/plain, */*",
+            "authorization": "Bearer 1635adf25321aa73d9e0a06dae1328dd:50544a2e7c21b2133d9d57ebcd2f626ba2a824714e8c081ef9eb7744164f6ab7f61347d38e520236b14a3051174ec8fb3ed2bd4c9264217105d95dbc43056a9c227d74c1ccffb1cc5458134da391e6a72099a577419b8573ae0444ded9a6e3a7c1f66ff2eb54f84dbbd944c57aef69edbff31c7104057cabab9dfd16d4549a53b514ccbff0fb2c6eff68db716fac1d3541073cb7a66ae6effa1ec0caefe2ceddd01088a415bb0c28c1e3006b83704a8fe548deae332729d37cbb3bf067dc957161ef64674f2b1eace9c6ec1b0e1006876e869daa0239c371d3048eff749fe285b8e1337c66b1f3cd366a5a4d0148a72e",
+            "content-type": "application/json"
+        },
+        "_incrementalEvents": false,
+        "_lowerCaseResponseHeaders": {
+            "access-control-allow-origin": "*",
+            "connection": "Keep-Alive",
+            "content-length": "104",
+            "content-security-policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+            "content-type": "application/json; charset=utf-8",
+            "cross-origin-opener-policy": "same-origin",
+            "cross-origin-resource-policy": "same-origin",
+            "date": "Thu, 10 Jul 2025 11:55:17 GMT",
+            "etag": "W/\"68-VBJ3DhGasT2lAHLSYOdktgmho54\"",
+            "keep-alive": "timeout=5, max=99",
+            "origin-agent-cluster": "?1",
+            "referrer-policy": "no-referrer",
+            "server": "Apache/2.4.58 (Ubuntu)",
+            "strict-transport-security": "max-age=15552000; includeSubDomains",
+            "x-content-type-options": "nosniff",
+            "x-dns-prefetch-control": "off",
+            "x-download-options": "noopen",
+            "x-frame-options": "SAMEORIGIN",
+            "x-permitted-cross-domain-policies": "none",
+            "x-ratelimit-limit": "100",
+            "x-ratelimit-remaining": "99",
+            "x-ratelimit-reset": "60",
+            "x-xss-protection": "0"
+        },
+        "_method": "POST",
+        "_perfKey": "network_XMLHttpRequest_https://duuitt.hashsoftware.com/food-order",
+        "_performanceLogger": {
+            "_closed": false,
+            "_extras": [Object
+            ],
+            "_pointExtras": [Object
+            ],
+            "_points": [Object
+            ],
+            "_timespans": [Object
+            ]
+        },
+        "_requestId": null,
+        "_response": "{\"statusCode\":400,\"message\":\"cart_items.0.property _id should not exist\",\"data\":null,\"status\":\"faliure\"}",
+        "_responseType": "",
+        "_sent": true,
+        "_subscriptions": [],
+        "_timedOut": false,
+        "_trackingName": "unknown",
+        "_url": "https://duuitt.hashsoftware.com/food-order",
+        "readyState": 4,
+        "responseHeaders": {
+            "Access-Control-Allow-Origin": "*",
+            "Connection": "Keep-Alive",
+            "Content-Length": "104",
+            "Content-Security-Policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+            "Content-Type": "application/json; charset=utf-8",
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Resource-Policy": "same-origin",
+            "Date": "Thu, 10 Jul 2025 11:55:17 GMT",
+            "Etag": "W/\"68-VBJ3DhGasT2lAHLSYOdktgmho54\"",
+            "Keep-Alive": "timeout=5, max=99",
+            "Origin-Agent-Cluster": "?1",
+            "Referrer-Policy": "no-referrer",
+            "Server": "Apache/2.4.58 (Ubuntu)",
+            "Strict-Transport-Security": "max-age=15552000; includeSubDomains",
+            "X-Content-Type-Options": "nosniff",
+            "X-DNS-Prefetch-Control": "off",
+            "X-Download-Options": "noopen",
+            "X-Frame-Options": "SAMEORIGIN",
+            "X-Permitted-Cross-Domain-Policies": "none",
+            "X-RateLimit-Limit": "100",
+            "X-RateLimit-Remaining": "99",
+            "X-RateLimit-Reset": "60",
+            "X-XSS-Protection": "0"
+        },
+        "responseURL": "https://duuitt.hashsoftware.com/food-order",
+        "status": 201,
+        "timeout": 10000,
+        "upload": {},
+        "withCredentials": true
+    },
+    "status": 201,
+    "statusText": undefined
+}
+
+
+{
+    "__v": 0,
+    "_id": "686fa09d2984835f6232b966",
+    "cart_items": [
+        {
+            "_id": "686fa09d2984835f6232b964",
+            "food_item_id": "6842bb66e6215641689bfa79",
+            "food_item_price": 956,
+            "quantity": 1
+        }
+    ],
+    "createdAt": "2025-07-10T11:14:37.907Z",
+    "food_item": [
+        {
+            "__v": 0,
+            "_id": "6842bb66e6215641689bfa79",
+            "addon": [Array
+            ],
+            "base_price": "956",
+            "combinations": [Array
+            ],
+            "createdAt": "2025-06-06T09:56:54.171Z",
+            "description": "Hdhdudvdhdh dhdh",
+            "dish_category_id": "679cb68117961b01a2c96a05",
+            "image": "public/uploads/vendor/6788fee87dcbadd89696ecbe/food-item/image-1749203813974-129156084.png",
+            "in_stock": true,
+            "name": "Sussi",
+            "product_timing": "full_time",
+            "product_type": "simple",
+            "quantity": 1,
+            "recomended": true,
+            "restaurant_id": "6788fee87dcbadd89696ecc0",
+            "selected_add_on": [Array
+            ],
+            "selling_price": 956,
+            "status": true,
+            "tag": "Mostly Order",
+            "updatedAt": "2025-06-06T09:56:54.171Z",
+            "variants": [Array
+            ],
+            "veg_nonveg": "non-veg"
+        }
+    ],
+    "grand_total": 956,
+    "is_offer_applied": false,
+    "restaurant": {
+        "__v": 50,
+        "_id": "6788fee87dcbadd89696ecc0",
+        "about": "restaurant about kjdslkjkljls ",
+        "address": "Phase 5, Sector 59, Sahibzada Ajit Singh Nagar, Punjab, India",
+        "assets": [],
+        "banner": "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/banner-1752134676166-463229560",
+        "createdAt": "2025-01-16T12:43:20.781Z",
+        "date_of_founding": "2000-06-02",
+        "deletedAt": null,
+        "email": "vickyrestaurant@gmail.com",
+        "extras": [],
+        "gst_percentage": 18,
+        "is_online": true,
+        "landmark": "landmarkkmnjlkj",
+        "location": {
+            "coordinates": [Array
+            ],
+            "type": "Point"
+        },
+        "minimum_order_preparation_time": 32,
+        "minimum_order_value": 52,
+        "name": "vicky's Hotels & Restro",
+        "phone": 9879879878,
+        "reason_to_offline": "",
+        "remarks": "remarkskjkl",
+        "restaurant_charge": 20,
+        "timings": {
+            "all_days": [Object
+            ],
+            "is_all_day": true,
+            "specified": [Array
+            ]
+        },
+        "updatedAt": "2025-07-10T10:31:00.701Z",
+        "veg_non_veg": "non-veg",
+        "vendor_id": "6788fee87dcbadd89696ecbe"
+    },
+    "restaurant_id": "6788fee87dcbadd89696ecc0",
+    "sub_total": 956,
+    "total_pay": 956,
+    "updatedAt": "2025-07-10T11:53:12.869Z",
+    "user_id": "674004448c0213057bd1519c"
+}

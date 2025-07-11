@@ -423,8 +423,8 @@ const MapLocationRoute = ({
   const debounceTimeout = useRef(null);
   const debounceRef = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin && Number(origin?.lat) || 30.7400,
-    longitude: origin && Number(origin?.lng) || 76.7900,
+    latitude: (origin && Number(origin?.lat)) ? Number(origin?.lat) : 30.7400 ,
+    longitude: (origin && Number(origin?.lng)) ?Number(origin?.lng) : 76.7900,
     ...getMpaDalta(),
   });
   const [isMapReady, setIsMapReady] = useState(false);
@@ -436,12 +436,14 @@ const MapLocationRoute = ({
         longitude: Number(origin?.lng),
         ...getMpaDalta(),
       };
-      if (mapRegion?.latitude !== newRegion?.latitude) {
-        setMapRegion(newRegion);
-      }
-      if (mapRef?.current && mapRegion?.latitude !== newRegion?.latitude) {
-        mapRef.current?.animateToRegion(newRegion, 1000);
-      }
+      setTimeout(() => {
+        if (mapRegion?.latitude !== newRegion?.latitude) {
+          setMapRegion(newRegion);
+        }
+        if (mapRef?.current && mapRegion?.latitude !== newRegion?.latitude) {
+          mapRef.current?.animateToRegion(newRegion, 1000);
+        }
+      },500)
     }
 
   }, [origin]);
@@ -467,6 +469,7 @@ const MapLocationRoute = ({
   // };
 
   const handleRegionChangeComplete = useCallback((region) => {
+
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -474,8 +477,8 @@ const MapLocationRoute = ({
     debounceTimeout.current = setTimeout(() => {
       setMapRegion(region);
       onTouchLocation({
-        latitude: region.latitude,
-        longitude: region.longitude,
+        latitude: region?.latitude,
+        longitude: region?.longitude,
       });
       // Optional bounds check
       // if (!isWithinBounds(region?.latitude, region?.longitude)) {
@@ -487,7 +490,8 @@ const MapLocationRoute = ({
       //   };
       //   mapRef.current?.animateToRegion(fallbackRegion, 1000);
       // }
-    }, 500); // Adjust delay if needed
+    }, Platform.OS == 'ios' ? 50 : 500);
+    // Adjust delay if needed
   }, [onTouchLocation]);
 
 
@@ -526,8 +530,6 @@ const MapLocationRoute = ({
   //   },
   //   [],
   // );
-
-
 
 
   return (

@@ -170,6 +170,7 @@ const ProductCard = ({
                 {item?.quantity ? item?.quantity : 0}
               </Text>
               <Pressable
+                disabled={!isResOpen}
                 onPress={() => {
                   if (getIsVarient() || getIsAddons()) {
                     onDetail();
@@ -223,6 +224,7 @@ const ProductCard = ({
       key={item?._id?.toString()}
       style={styles.container}>
       <Pressable
+        disabled={!isResOpen}
         // onPress={onDetail}
         style={styles.innerContainer}>
         {item?.in_stock !== true && (

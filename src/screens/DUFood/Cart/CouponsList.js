@@ -1,4 +1,4 @@
-import React, {useEffect, useState,useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,26 +7,26 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {currencyFormat} from '../../../halpers/currencyFormat';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { currencyFormat } from '../../../halpers/currencyFormat';
 import Header from '../../../components/header/Header';
-import {useFocusEffect} from '@react-navigation/native';
-import {colors} from '../../../theme/colors';
+import { useFocusEffect } from '@react-navigation/native';
+import { colors } from '../../../theme/colors';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import CouponDetail from '../Components/CouponDetail';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 
-const CouponsList = ({navigation, route}) => {
-  const {restaurant, selectedOffers, onCoupanSelected,couponList,getCartTotal} = route.params;
-  const {getRestaurantOffers} = rootStore.dashboardStore;
+const CouponsList = ({ navigation, route }) => {
+  const { restaurant, selectedOffers, onCoupanSelected, couponList, getCartTotal } = route.params;
+  const { getRestaurantOffers } = rootStore.dashboardStore;
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [offerList, setOfferList] = useState(couponList ?? []);
@@ -36,20 +36,19 @@ const CouponsList = ({navigation, route}) => {
     useCallback(() => {
       handleAndroidBackButton(navigation);
       // onCheckIsSelected();
-      if(selectedOffers && couponList?.length > 0){
+      if (selectedOffers && couponList?.length > 0) {
         setOfferList(couponList)
         onSelectedItem(selectedOffers)
-      }else{
+      } else {
         getRestaurantOffersData();
       }
-    }, [couponList,selectedOffers]),
+    }, [couponList, selectedOffers]),
   );
 
-  console.log("getCartTotal--",getCartTotal);
+  console.log("getCartTotal--", getCartTotal);
 
   const getRestaurantOffersData = async () => {
     const restaurantCoupans = await getRestaurantOffers(
-      restaurant,
       handleLoading,
     );
     if (restaurantCoupans?.length > 0) {
@@ -71,28 +70,28 @@ const CouponsList = ({navigation, route}) => {
     const newList = offersList?.map((item, i) => {
       if (item?.status == 1) {
         setActiveOffer(item);
-        return {...item, status: 1};
+        return { ...item, status: 1 };
       } else {
-        return {...item, status: 0};
+        return { ...item, status: 0 };
       }
     });
     setOfferList([...newList]);
   };
 
   const onSelectedItem = (data) => {
-    console.log("offerList---",offerList,data);
+    console.log("offerList---", offerList, data);
     const newOfferList = offerList?.map((item, i) => {
       if (item?._id == data?._id) {
         setActiveOffer(item);
-        return {...item, status: true};
+        return { ...item, status: true };
       } else {
-        return {...item, status: false};
+        return { ...item, status: false };
       }
     });
     setOfferList([...newOfferList]);
   };
 
-  const renderCoupansItem = ({item, index}) => {
+  const renderCoupansItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         key={index}
@@ -108,14 +107,9 @@ const CouponsList = ({navigation, route}) => {
               <Text numberOfLines={1} style={styles.percentText}>
                 Get{' '}
                 {item?.discount_type === 'percentage'
-                  ? `${item?.discount_percentage}%`
-                  : currencyFormat(
-                      Number(item?.discount_percentage),
-                    )}{' '}
-                OFF up to{' '}
-                {currencyFormat(
-                  Number(item?.discount_percentage),
-                )}
+                  ? `${item?.discount_price}%`
+                  : currencyFormat(Number(item?.discount_price))}{' '}
+                OFF up to {currencyFormat(Number(item?.usage_conditions?.min_order_value))}
               </Text>
             </View>
             <SvgXml
@@ -133,6 +127,9 @@ const CouponsList = ({navigation, route}) => {
             {currencyFormat(Number(item?.discount_price ?? item?.discount))}{' '}
             with this code
           </Text>
+          {item?.title?.length !== 0 && <Text style={styles.titleText}>
+          {item?.title}
+          </Text>}
           <Text style={styles.referalCodeText}>
             {item?.referral_code}
           </Text>
@@ -155,11 +152,11 @@ const CouponsList = ({navigation, route}) => {
       {loading ? (
         <AnimatedLoader type={'coupansListLoader'} />
       ) : (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           {offerList?.length > 0 ? (
             <FlatList
               showsVerticalScrollIndicator={false}
-              style={{marginTop: '2%'}}
+              style={{ marginTop: '2%' }}
               data={offerList}
               renderItem={renderCoupansItem}
               keyExtractor={item => item?.id}
@@ -174,7 +171,7 @@ const CouponsList = ({navigation, route}) => {
         </View>
       )}
       <CouponDetail
-      
+
         onApply={() => {
           onCoupanSelected(activeOffer);
           setVisible(false);
@@ -237,10 +234,17 @@ const styles = StyleSheet.create({
     marginLeft: '8%',
     marginTop: '2%',
   },
+  titleText: {
+    color: colors.black85,
+    fontFamily: fonts.medium,
+    fontSize: RFValue(11),
+    marginLeft: '8%',
+    marginTop: '2%',
+  },
   referalCodeText: {
     marginLeft: '8%',
     borderRadius: 12,
-    width: wp('26%'),
+    width: wp('30%'),
     marginTop: '3%',
     textAlign: 'center',
     color: colors.colorAF,

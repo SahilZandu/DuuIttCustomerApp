@@ -142,18 +142,18 @@ const EditOrderLocation = ({ navigation, route }) => {
         if (
             (newItem?.location_id || newItem?.geo_location) &&
             pickDrop === 'pick' &&
-            parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
+           (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)
-            || newItem?.location_id === orderItem?.receiver_address?.location_id
+            || newItem?.location_id === orderItem?.receiver_address?.location_id)
         ) {
             alert("You can't choose the same location. Please choose another location.");
             return;
         } else if (
             (newItem?.location_id || newItem?.geo_location) &&
             pickDrop !== 'pick' &&
-            parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
+           ( parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)
-            || newItem?.location_id === orderItem?.sender_address?.location_id
+            || newItem?.location_id === orderItem?.sender_address?.location_id)
         ) {
             alert("You can't choose the same location. Please choose another location.");
             return;

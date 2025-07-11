@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,22 +8,22 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImages} from '../../../commons/AppImages';
-import {currencyFormat} from '../../../halpers/currencyFormat';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImages } from '../../../commons/AppImages';
+import { currencyFormat } from '../../../halpers/currencyFormat';
 import Header from '../../../components/header/Header';
-import {usePayment} from '../../../halpers/usePayment';
+import { usePayment } from '../../../halpers/usePayment';
 import CartItems from './CartItems';
 import CartCoupanApply from './CartCoupanApply';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import CartItemUpdate from './CartItemUpdate';
-import {colors} from '../../../theme/colors';
+import { colors } from '../../../theme/colors';
 import BillSummary from '../Components/BillSummary';
 import AddNote from '../Components/AddNote';
 import DeliveryInstructions from '../Components/DeliveryInstructions';
@@ -38,13 +38,13 @@ import IncompletedAppRule from '../../../halpers/IncompletedAppRule';
 let itemForEdit = null;
 let idForUpdate = null;
 let allCompleteMealList = [];
-const Cart = ({navigation, route}) => {
-  const {restaurant} = route.params;
-  const {setCart, getCart, updateCart, selectedAddress} = rootStore.cartStore;
-  const {appUser} = rootStore.commonStore;
-  const {foodOrder, getCompleteMealItems, mealOrderList} =
+const Cart = ({ navigation, route }) => {
+  const { restaurant } = route.params;
+  const { setCart, getCart, updateCart, selectedAddress } = rootStore.cartStore;
+  const { appUser } = rootStore.commonStore;
+  const { foodOrder, getCompleteMealItems, mealOrderList } =
     rootStore.foodDashboardStore;
-  const {getRestaurantOffers, restaurentOfferCoupan, applyCoupon,} =
+  const { getRestaurantOffers, restaurentOfferCoupan, applyCoupon, removeCoupan } =
     rootStore.dashboardStore;
   const [isPlaying, setIsPLayig] = useState(false);
   const [appCart, setAppCart] = useState({
@@ -66,13 +66,11 @@ const Cart = ({navigation, route}) => {
   const [isOpenNote, setIsOpenNote] = useState(false);
   const [isInstruction, setIsInstruction] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState(
-     selectedAddress?.address?.length > 0
+    selectedAddress?.address?.length > 0
       ? selectedAddress
       : appUser?.addresses[0] ?? {},
   );
-  const [appUserData ,setAppUserData]=useState(appUser ?? {})
-
-  // const [cartBillG, setCartBillG] = useState(null);
+  const [appUserData, setAppUserData] = useState(appUser ?? {})
   const [cartBillG, setCartBillG] = useState({
     cartTotal: 0,
     platformFree: 0,
@@ -99,7 +97,7 @@ const Cart = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      const {appUser} = rootStore.commonStore;
+      const { appUser } = rootStore.commonStore;
       handleAndroidBackButton(navigation);
       getUserCart();
       // if (restaurant) {
@@ -112,25 +110,29 @@ const Cart = ({navigation, route}) => {
       );
       allCompleteMealList = mealOrderList;
       setAppUserData(appUser)
-    }, [selectedAddress]),
+      if (restaurentOfferCoupan?.length == 0) {
+        getRestaurantOffersData();
+      }
+
+    }, [selectedAddress, restaurentOfferCoupan]),
   );
 
   // console.log("appUser cart --",appUser);
 
   useEffect(() => {
-    if(cartList?._id?.length > 0){
-    getRestaurantOffersData();
-    }
     if (restaurant) {
       getCompMealList();
     }
-  }, [restaurant,cartList]);
+  }, [restaurant]);
+
+  // useEffect(() => {
+  //   // if(cartList?._id?.length > 0){
+  //   getRestaurantOffersData();
+  //   // }
+  // }, [])
 
   const getRestaurantOffersData = async () => {
-    const restaurantCoupans = await getRestaurantOffers(
-      cartList,
-      handleOffersLoading,
-    );
+    const restaurantCoupans = await getRestaurantOffers(handleOffersLoading);
     console.log('restaurantCoupans--', restaurantCoupans);
     if (restaurantCoupans?.length > 0) {
       console.log('restaurantCoupans--', restaurantCoupans);
@@ -173,7 +175,7 @@ const Cart = ({navigation, route}) => {
 
   const handleSuccess = data => {
     setCartEmpty();
-    navigation.navigate('orderPlaced', {orderData: data});
+    navigation.navigate('orderPlaced', { orderData: data });
   };
 
   const handleLoading = v => {
@@ -188,7 +190,7 @@ const Cart = ({navigation, route}) => {
       item_sub_total_amount: 100.5,
       after_discount_sub_amt: 90.0,
       total_amount: cartBillG?.topay,
-      coupon_code: 'DISCOUNT20',
+      coupon_code: activeOffer?.referral_code ?? 'DISCOUNT20',
       tax_amount: 10.0,
       coupon_amount: 5.0,
       packing_fee: 5.0,
@@ -211,6 +213,14 @@ const Cart = ({navigation, route}) => {
       remaining_balance_amt: 0.0,
       org_pay_amt: 95.0,
       admin_pay_amt: 90.0,
+      // cart_items: [
+      //   {
+
+      //     food_item_id: "6842bb66e6215641689bfa79",
+      //     food_item_price: 956,
+      //     quantity: 1
+      //   }
+      // ],
       cart_items: cartList?.cart_items,
       cart_id: cartList?._id,
       delivery_instructions: {
@@ -251,7 +261,7 @@ const Cart = ({navigation, route}) => {
 
   const getUserCart = async () => {
     const cart = await getCart();
-    // console.log('getUserCart:-cart', cart);
+    console.log('getUserCart:-cart', cart);
     // console.log('user cart', cart);
     setCartList(cart ?? {});
     if (cart?.food_item?.length > 0) {
@@ -278,9 +288,11 @@ const Cart = ({navigation, route}) => {
         platformFree: 5,
         deliveryFree: 10,
         gstRestorentCharges: 20,
-        grandTotal: cart?.grand_total + 5 + 10 + 20,
+        grandTotal: cart?.grand_total,
+        //  + 5 + 10 + 20,
         couponDiscount: 100,
-        topay: cart?.grand_total + 5 + 10 + 20 - 10,
+        topay: cart?.grand_total - 10,
+        //  + 5 + 10 + 20 - 10,
       });
       // getUserOrgDistance(cart?.org_id);
     } else {
@@ -304,7 +316,7 @@ const Cart = ({navigation, route}) => {
 
     let updatedCartList = cartList?.cart_items?.map(data => {
       if (data?.food_item_id == item?._id) {
-        return {...data, quantity: quan};
+        return { ...data, quantity: quan };
       }
       return {
         ...data,
@@ -356,34 +368,34 @@ const Cart = ({navigation, route}) => {
       completeMealAllList,
     );
     if (foodItemArray?.length > 0 && allCompleteMealList?.length > 0) {
-      let mealListData = (allCompleteMealList ?? []).map(item => {
+      let mealListData = (allCompleteMealList ?? [])?.map(item => {
         const exactItem = foodItemArray?.find(
           data => data?._id === item?.food_items?._id,
         );
         return exactItem
           ? {
-              ...item,
-              food_items: {
-                ...item.food_items, // Keep existing properties
-                quantity: exactItem?.quantity, // ✅ Update quantity inside `item.food_items`
-              },
-            }
+            ...item,
+            food_items: {
+              ...item.food_items, // Keep existing properties
+              quantity: exactItem?.quantity, // ✅ Update quantity inside `item.food_items`
+            },
+          }
           : {
-              ...item,
-              food_items: {
-                ...item.food_items, // Keep existing properties
-                quantity: 0, // ✅ Update quantity inside `item.food_items`
-              },
-            };
+            ...item,
+            food_items: {
+              ...item.food_items, // Keep existing properties
+              quantity: 0, // ✅ Update quantity inside `item.food_items`
+            },
+          };
       });
       // console.log('mealListData--', mealListData);
       // Ensure a state update with a new reference
       if (mealListData?.length > 3) {
         const mealList = mealListData || [];
-        const middleIndex = Math.ceil(mealList.length / 2);
+        const middleIndex = Math.ceil(mealList?.length / 2);
         // Splitting into two parts
-        const firstHalf = mealList.slice(0, middleIndex);
-        const secondHalf = mealList.slice(middleIndex);
+        const firstHalf = mealList?.slice(0, middleIndex);
+        const secondHalf = mealList?.slice(middleIndex);
         // console.log('firstHalf,secondHalf', firstHalf, secondHalf);
         setCompleteMealList(firstHalf);
         setMissedSomeList(secondHalf);
@@ -423,7 +435,7 @@ const Cart = ({navigation, route}) => {
     };
 
     // console.log('item,quan,handleAddRemove', item, quan,newItem,item?.restaurant_id || item?.item?.restaurant_id, item?.item?.restaurant_id);
-    const getCartList = {...cartList};
+    const getCartList = { ...cartList };
 
     // console.log('getCartList handleAddRemove:-', getCartList, item, restaurant,item?.restaurant_id || item?.item?.restaurant_id,item?.item?.restaurant_id);
 
@@ -446,7 +458,7 @@ const Cart = ({navigation, route}) => {
       if (checkAvailabilityById) {
         updatedCartList = getCartList?.cart_items?.map(data => {
           if (data?.food_item_id == item?.food_items?._id) {
-            return {...data, quantity: quan};
+            return { ...data, quantity: quan };
           }
           return {
             ...data,
@@ -494,7 +506,7 @@ const Cart = ({navigation, route}) => {
     }
   };
 
-  const renderCartItem = ({item, index}) => {
+  const renderCartItem = ({ item, index }) => {
     // console.log('item---renderCartItem', item);
     return (
       <CompleteMealComp
@@ -505,7 +517,7 @@ const Cart = ({navigation, route}) => {
     );
   };
 
-  const PlaceOrderBtn = ({}) => {
+  const PlaceOrderBtn = ({ }) => {
     return (
       <PaymentBtn
         // onPressPay={() => {
@@ -548,7 +560,7 @@ const Cart = ({navigation, route}) => {
 
   const onApplyOffer = async item => {
     if (activeOffer?._id == item?._id) {
-      await applyCoupon(cartList, null, handleLoadingOffer, onSucces);
+      await removeCoupan(cartList, null, handleLoadingOffer, onSucces);
     } else {
       await applyCoupon(cartList, item, handleLoadingOffer, onSucces);
     }
@@ -574,7 +586,7 @@ const Cart = ({navigation, route}) => {
 
   const onPressLocation = () => {
     // console.log('onPressLocation---');
-    navigation.navigate('myAddress', {screenName: 'cart'});
+    navigation.navigate('myAddress', { screenName: 'cart' });
   };
 
   const hanldeSelectAddNote = item => {
@@ -632,6 +644,7 @@ const Cart = ({navigation, route}) => {
             onApply={item => {
               onApplyOffer(item);
             }}
+            activeOffer={activeOffer}
             applyTitle={activeOffer?.referral_code ? 'Remove' : 'Apply'}
             onMoreCoupan={() => {
               navigation.navigate('couponsList', {
@@ -821,28 +834,25 @@ const Cart = ({navigation, route}) => {
         product={itemForEdit?.addon}
       /> */}
 
-      {(appUser?.profile_pic?.length > 0 ||
-        appUser?.email?.length > 0 ||
-        appUser?.phone?.length > 0) ? 
-          null :(
-          <IncompletedAppRule
-            title={'App Confirmation'}
-            message={' Please add your address first.'}
-            onHanlde={() => onPressLocation()}
-          />
-        )}
-        
-      {(appUserData?.profile_pic == null || 
-       appUserData?.profile_pic?.length === 0) && (
+      {(appUser?.addresses && appUser?.addresses?.length == 0) &&
         <IncompletedAppRule
           title={'App Confirmation'}
-          message={'Please complete your profile first.'}
-          onHanlde={() => navigation.navigate('profile',{screenName:'foodRoute'})}
+          message={' Please add your address first.'}
+          onHanlde={() => onPressLocation()}
         />
-      )}
+      }
+
+      {/* {(appUserData?.profile_pic == null ||
+        appUserData?.profile_pic?.length === 0) && (
+          <IncompletedAppRule
+            title={'App Confirmation'}
+            message={'Please complete your profile first.'}
+            onHanlde={() => navigation.navigate('profile', { screenName: 'foodRoute' })}
+          />
+        )} */}
 
 
-      {( Object.keys(deliveryAddress)?.length === 0) && (
+      {(Object.keys(deliveryAddress)?.length === 0) && (
         <IncompletedAppRule
           title={'App Confirmation'}
           message={'Please add your address first.'}
@@ -875,7 +885,7 @@ const Cart = ({navigation, route}) => {
             add_on_items: addons ?? [],
           };
 
-          const getCartList = {...cartList};
+          const getCartList = { ...cartList };
           console.log(
             'getCartList OrderCustomization:-',
             getCartList,
@@ -901,7 +911,7 @@ const Cart = ({navigation, route}) => {
             if (checkAvailabilityById) {
               updatedCartList = getCartList?.cart_items?.map(data => {
                 if (data?.food_item_id == updatedCustomizeItem?._id) {
-                  return {...data, quantity: quan, food_item_price: sellAmount};
+                  return { ...data, quantity: quan, food_item_price: sellAmount };
                 }
                 return {
                   ...data,
@@ -990,7 +1000,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
   },
   comMealListView: {
     marginTop: '2%',
@@ -1004,7 +1014,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
     marginTop: '4%',
   },
   addNewListView: {

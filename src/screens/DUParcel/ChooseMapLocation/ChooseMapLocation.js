@@ -54,7 +54,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
   const [LocationId, setLocationId] = useState('')
-  const [loading ,setLoading] =useState(false)
+  const [loading, setLoading] = useState(false)
 
   const onPressAddress = (data, details) => {
     console.log('data ,details 333', data, details);
@@ -63,7 +63,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     // console.log("shortAddress----",shortAddress);
     setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
-    setLocationId(details?.place_id)
+    setLocationId(details?.place_id);
   };
 
   const mohaliChandigarhBounds = {
@@ -172,10 +172,9 @@ const ChooseMapLocation = ({ navigation, route }) => {
     if (
       (newItem?.location_id || newItem?.geo_location) &&
       pickDrop === 'pick' &&
-      parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
-      parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
-       ||
-      newItem?.location_id ===receiverAddress?.location_id
+      (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+        parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
+        || newItem?.location_id === receiverAddress?.location_id)
     ) {
       setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
@@ -183,10 +182,9 @@ const ChooseMapLocation = ({ navigation, route }) => {
     } else if (
       (newItem?.location_id || newItem?.geo_location) &&
       pickDrop !== 'pick' &&
-      parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
-      parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
-       || 
-       newItem?.location_id === senderAddress?.location_id
+      (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+        parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
+        || newItem?.location_id === senderAddress?.location_id)
     ) {
       setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
@@ -230,7 +228,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       } else {
         navigation.navigate('setLocationHistory');
       }
-    },800);
+    }, 800);
   };
 
   const handleCurrentAddress = async () => {
@@ -333,7 +331,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
                 />
                 <Spacer space={'12%'} />
                 <CTA
-                loading={loading}
+                  loading={loading}
                   onPress={() => {
                     // onHandleConfirm();
                     handleRegionChangeComplete(geoLocation);

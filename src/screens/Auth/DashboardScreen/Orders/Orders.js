@@ -27,7 +27,7 @@ const tabs = [
   { text: 'All Orders' },
   { text: 'Ride' },
   { text: 'Parcel' },
-  // { text: 'Food' },
+  { text: 'Food' },
 ];
 
 let defaultType = 'All Orders';

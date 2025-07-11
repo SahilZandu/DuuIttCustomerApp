@@ -34,6 +34,7 @@ import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import Url from '../../../api/Url';
 import PopUp from '../../../components/appPopUp/PopUp';
+import { getTodayRestaurantTimings } from '../../../halpers/OpenCloseStatusRestaurant';
 
 let filterType = 'all';
 
@@ -66,15 +67,17 @@ const ResturantProducts = memo(({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [removeCart, setRemoveCart] = useState(false);
   const [isResOpen, setIsResOpen] = useState(true);
+  const [isOpenCloseTime, setIsOpenCloseTime] = useState('')
   const [orgOffers, setOrgOffers] = useState([]);
   const [selectedCartList, setSelectedCartList] = useState({});
   const [isRemoveCart, setIsRemoveCart] = useState(false);
   const [clickItem, setClickItem] = useState({});
+  const [openCloseItem, setOpenCloseItem] = useState(false)
 
   const scrollViewRef = useRef(null);
   const groupRefs = useRef([]);
 
-  // console.log('item---item?._id', item, item?.id);
+  console.log('item---item?._id', item, item?._id, item?.timings?.all_days?.timings, item?.timings?.specified[2]?.timings)
 
   useFocusEffect(
     useCallback(() => {
@@ -88,10 +91,20 @@ const ResturantProducts = memo(({ navigation, route }) => {
     }, []),
   );
 
+
   useEffect(() => {
     if (item) {
       getRestCategoryList();
       setRestaurant(item ?? {});
+      const todayTimings = getTodayRestaurantTimings(item?.timings ?? {});
+      console.log("todayTimings--", todayTimings);
+      if (todayTimings === 'Closed') {
+        setIsResOpen(false)
+        setIsOpenCloseTime('')
+      } else {
+        setIsResOpen(true)
+        setIsOpenCloseTime(todayTimings)
+      }
     }
   }, [item]);
 
@@ -357,17 +370,32 @@ const ResturantProducts = memo(({ navigation, route }) => {
     console.log('deleteCartData--', deleteCartData);
     if (deleteCartData?.restaurant_id?.length > 0) {
       setIsRemoveCart(false);
+      setOpenCloseItem(false)
       const resSetCart = await setCart([clickItem], appUser, restaurant);
       if (resSetCart?.restaurant_id?.length > 0) {
       }
       getUserCart(groupProducts);
     } else {
+      setOpenCloseItem(false)
       setIsRemoveCart(false);
     }
     // console.log('setCart--new Rest data', appUser, restaurant, [clickItem]);
     // setTimeout(() => {
     //   getUserCart(groupProducts);
     // }, 1000);
+  };
+
+  const onDeleteCartItem = async showPopUp => {
+    const deleteCartData = await deleteCart(isCart, showPopUp);
+    console.log('onDeleteCartItem--', deleteCartData);
+    if (deleteCartData?.restaurant_id?.length > 0) {
+      setIsRemoveCart(false);
+      setOpenCloseItem(false)
+      getUserCart(groupProducts);
+    } else {
+      setOpenCloseItem(false)
+      setIsRemoveCart(false);
+    }
   };
 
   const onRemoveCart = async orgId => {
@@ -510,13 +538,13 @@ const ResturantProducts = memo(({ navigation, route }) => {
             resizeMode={FastImage.resizeMode.cover}
           />
           <TouchableOpacity
+            activeOpacity={0.8}
             hitSlop={styles.btnHitSlot}
             style={styles.btnTouch}
             onPress={() => {
               navigation.goBack();
             }}>
             <SvgXml
-              style={styles.backBtnImage}
               xml={appImagesSvg.whitebackArrow}
             />
           </TouchableOpacity>
@@ -526,6 +554,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
           <OrgCard
             org={restaurant}
             isResOpen={isResOpen}
+            openCloseTime={isOpenCloseTime}
             // offerData={offerData}
             // isResOpenSoon={isResOpenSoon}
             orgOffers={orgOffers}
@@ -539,7 +568,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
             nestedScrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingRight: '45%' }}>
-            <View style={styles.filterMainView}>
+            <View style={[styles.filterMainView, { opacity: isResOpen ? 1 : 0.5 }]}>
               <View style={[styles.filterView, { opacity: showFilters ? 1 : 0 }]}>
                 <SvgXml xml={appImagesSvg.filter} />
                 <Text style={styles.filterText}>
@@ -562,7 +591,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
         {loading == true ? (
           <AnimatedLoader type="restaurantItemLoader" />
         ) : (
-          <View style={[styles.categoryFlatlistView]}>
+          <View style={[styles.categoryFlatlistView, { opacity: isResOpen ? 1 : 0.5 }]}>
             {groupProducts?.length > 0 ? (
               <>
                 <Text style={styles.menuText}>Menu</Text>
@@ -597,7 +626,17 @@ const ResturantProducts = memo(({ navigation, route }) => {
       {isCart?.food_item?.length > 0 && !loading && (
         <ViewCartBtn
           isCart={isCart}
-          viewCart={() => navigation.navigate('cart', { restaurant })}
+          viewCart={() => {
+            if (restaurant?.timings) {
+              const openCloaseRes = getTodayRestaurantTimings(restaurant?.timings);
+              if (openCloaseRes === "Closed") {
+                setOpenCloseItem(true);
+              } else {
+                navigation.navigate('cart', { restaurant })
+              }
+            }
+
+          }}
         />
       )}
       {/* {isOtherCart && !loading && (
@@ -754,6 +793,19 @@ const ResturantProducts = memo(({ navigation, route }) => {
           onDeleteCart(false);
         }}
       />
+
+      <PopUp
+        visible={openCloseItem}
+        type={'delete'}
+        onClose={() => setOpenCloseItem(false)}
+        title={'Confirm Cart Clearance'}
+        text={
+          "The restaurant you added items from is currently closed. You can clear your cart and choose another restaurant. This action cannot be undone."
+        }
+        onDelete={() => {
+          onDeleteCartItem(false);
+        }}
+      />
     </View>
   );
 });
@@ -788,11 +840,11 @@ const styles = StyleSheet.create({
   },
   btnTouch: {
     position: 'absolute',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-  },
-  backBtnImage: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     top: hp('2%'),
     left: wp('4%'),
+    borderRadius: 5,
+    padding: '0.7%'
   },
   restaurantScrollViewHold: {
     backgroundColor: colors.white,

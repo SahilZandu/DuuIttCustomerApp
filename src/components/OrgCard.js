@@ -22,6 +22,7 @@ const OrgCard = ({
   isResOpenSoon,
   orgOffers,
   onReviews,
+  openCloseTime,
 }) => {
   function calculateTime(distance, speed) {
     if (distance) {
@@ -53,7 +54,8 @@ const OrgCard = ({
         </Text>
         <Text
           style={styles.timeText}>
-          | 12:30 pm - 12:00 am
+          | {openCloseTime}
+          {/* 12:30 pm - 12:00 am */}
         </Text>
       </View>
     );
@@ -134,7 +136,7 @@ const OrgCard = ({
 
   const Offline = () => {
     return (
-      <View style={{justifyContent:'center',marginTop:'3%'}}>
+      <View style={{ justifyContent: 'center', marginTop: '3%' }}>
         {/* <Image
           source={isResOpenSoon ? resOpenSoonIcon : resClosedIcon}
           style={{
@@ -163,7 +165,7 @@ const OrgCard = ({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onReviews}>
-      <View style={styles.container}>
+      <View style={[styles.container, { opacity: isResOpen ? 1 : 0.5 }]}>
         {/* {isResOpen !== false && <Offline />} */}
         <View style={{ flexDirection: 'row' }}>
           <Text numberOfLines={2} style={[styles.title, { flex: 1 }]}>
@@ -268,11 +270,11 @@ const styles = StyleSheet.create({
     marginLeft: '2%',
   },
   offlineText: {
-    color: colors.black,
+    color: colors.red,
     fontFamily: fonts.medium,
     fontSize: RFValue(12),
     width: wp('90%'),
-    textTransform:'capitalize'
+    textTransform: 'capitalize'
   }
 
 });

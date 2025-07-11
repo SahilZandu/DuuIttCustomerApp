@@ -34,6 +34,7 @@ import { colors } from '../../../theme/colors';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import OnlineFoodUnavailable from '../../../components/OnlineFoodUnavailable';
 import DashboardHeader3 from '../../../components/header/DashboardHeader3';
+import { getTodayRestaurantTimings } from '../../../halpers/OpenCloseStatusRestaurant';
 
 
 let geoLocation = {
@@ -70,6 +71,7 @@ export default function FoodHome({ navigation }) {
   );
   const [categoryList, setCategoryList] = useState(allCategoryList ?? []);
   const [cartItems, setcartItems] = useState({});
+  const [openCloseItem, setOpenCloseItem] = useState(false)
   const [restaurantList, setRestaurantList] = useState(restaurentList ?? []);
   const [loadingMore, setLoadingMore] = useState(false);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
@@ -316,6 +318,7 @@ export default function FoodHome({ navigation }) {
 
   const topRestaurentItem = ({ item }) => {
     return (
+   
       <RestaurantsCard
         item={item}
         navigation={navigation}
@@ -392,8 +395,10 @@ export default function FoodHome({ navigation }) {
     // console.log('deleteCartData--', deleteCartData);
     if (deleteCartData?.restaurant_id?.length > 0) {
       setIsRemoveCart(false);
+      setOpenCloseItem(false)
       getCartItemsCount();
     } else {
+      setOpenCloseItem(false)
       setIsRemoveCart(false);
       getCartItemsCount();
     }
@@ -553,7 +558,10 @@ export default function FoodHome({ navigation }) {
           );
 
           if (resUpdateCart?.statusCode == 200) {
-            getCartItemsCount();
+            // getCartItemsCount();
+            navigation.navigate('resturantProducts', {
+              item: item?.restaurant,
+            });
           }
         }
       } else {
@@ -607,31 +615,23 @@ export default function FoodHome({ navigation }) {
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles.mainScreen}
-            // stickyHeaderIndices={
-            //   (repeatOrdersList?.length ?? 0) > 2 &&
-            //     (recomendedList?.length ?? 0) > 2
-            //     ? [3]
-            //     : (repeatOrdersList?.length ?? 0) > 2 ||
-            //       (recomendedList?.length ?? 0) > 2
-            //       ? [2]
-            //       : [1]
-            // }
-            stickyHeaderIndices={[3]}
+            stickyHeaderIndices={
+              (repeatOrdersList?.length ?? 0) > 2 &&
+                (recomendedList?.length ?? 0) > 2
+                ? [3]
+                : (repeatOrdersList?.length ?? 0) > 2 ||
+                  (recomendedList?.length ?? 0) > 2
+                  ? [2]
+                  : [1]
+            }
+            // stickyHeaderIndices={[3]}
             contentContainerStyle={{
               flexGrow: 1,
-              paddingBottom: hp('10%'),
+              paddingBottom: hp('5%'),
             }}>
-            {/* <View style={styles.sliderMainView}>
-              <View style={styles.sliderInnerView}>
-                <FoodSlider
-                  data={sliderItems}
-                  imageWidth={wp('78%')}
-                  imageHeight={hp('16%')}
-                />
-              </View>
-            </View> */}
+            
 
-            {repeatOrdersList?.length > 0 && (
+            {repeatOrdersList?.length > 2 && (
               <View style={styles.orderMainView}>
                 <RepeatOrder
                   data={repeatOrdersList}
@@ -645,7 +645,7 @@ export default function FoodHome({ navigation }) {
               </View>
             )}
 
-            {recomendedList?.length > 0 && (
+            {recomendedList?.length > 2 && (
               <View style={styles.orderMainView}>
                 <RecommendedOrder
                   data={recomendedList}
@@ -677,7 +677,7 @@ export default function FoodHome({ navigation }) {
               {restaurantList?.length > 0 ? (
                 <FlatList
                   scrollEnabled={false}
-                  // nestedScrollEnabled={true}
+                  nestedScrollEnabled={true}
                   data={restaurantList}
                   renderItem={topRestaurentItem}
                   keyExtractor={item => item.id}
@@ -700,6 +700,66 @@ export default function FoodHome({ navigation }) {
 
 
           </ScrollView>
+          <View style={styles.restaurantMainView}>
+          {/* <FlatList
+         
+            stickyHeaderIndices={[2]}
+
+            ListHeaderComponent={
+              <View>
+                {repeatOrdersList?.length > 0 && (
+                  <View style={styles.orderMainView}>
+                    <RepeatOrder
+                      data={repeatOrdersList}
+                      onPress={item => {
+                        onPressRepeatOrder(item);
+                      }}
+                      onPressLikeDislike={item => {
+                        handleLikeDislikeRepeated(item);
+                      }}
+                    />
+                  </View>
+                )}
+               
+                {recomendedList?.length > 0 && (
+                  <View style={styles.orderMainView}>
+                    <RecommendedOrder
+                      data={recomendedList}
+                      onAddDec={handleAddDecRecommended}
+                    />
+                  </View>
+                )}
+              
+                <View style={styles.orderMainView}>
+                  <CategoryCard data={categoryList} navigation={navigation} />
+                </View>
+
+                <View style={styles.exploreView}>
+                  <Text style={styles.titleText}>Top Restaurants to explore</Text>
+                  <DashboardFilters
+                    data={filters}
+                    onChange={f => {
+                      // console.log('f>', f);
+                      selectedFilter = f;
+                      getRestaurantList();
+                      // getLocationCurrent();
+                    }} />
+                </View>
+                
+              </View>
+            }
+            showsVerticalScrollIndicator={false}
+            data={restaurantList}
+            renderItem={topRestaurentItem}
+            keyExtractor={item => item?._id}
+            onEndReached={loadMoredata}
+            onEndReachedThreshold={0.5}
+            contentContainerStyle={{
+              paddingBottom:
+                cartItems?.food_item?.length > 0 ? hp('35%') : hp('25%'),
+            }}
+          /> */}
+          </View>
           {(restaurantList?.length == 0 && loading == false) && <OnlineFoodUnavailable
             appUserData={appUserInfo}
             navigation={navigation} />}
@@ -719,9 +779,19 @@ export default function FoodHome({ navigation }) {
                 cartData={cartItems}
                 onViewCart={() => {
                   //   navigation.navigate('trackOrderPreparing')
-                  navigation.navigate('cart', {
-                    restaurant: cartItems?.restaurant,
-                  });
+                  if (cartItems?.restaurant?.timings) {
+                    const openCloseRes = getTodayRestaurantTimings(cartItems?.restaurant?.timings)
+                    if (openCloseRes === "Closed") {
+                      setIsRemoveCart(true);
+                      setOpenCloseItem(true)
+                    } else {
+                      setOpenCloseItem(false)
+                      navigation.navigate('cart', {
+                        restaurant: cartItems?.restaurant,
+                      });
+                    }
+                  }
+
                 }}
                 onDeletePress={async () => {
                   // setRemoveCart(true);
@@ -744,15 +814,18 @@ export default function FoodHome({ navigation }) {
       <PopUp
         visible={isRemoveCart}
         type={'delete'}
-        onClose={() => setIsRemoveCart(false)}
+        onClose={() => { setIsRemoveCart(false), setOpenCloseItem(false) }}
         title={'Confirm Cart Clearance'}
         text={
-          'Are you sure you want to remove all items from your cart? This action cannot be undone.'
+          openCloseItem ?
+            "The restaurant you added items from is currently closed. You can clear your cart and choose another restaurant. This action cannot be undone." :
+            'Are you sure you want to remove all items from your cart? This action cannot be undone.'
         }
         onDelete={() => {
           onDeleteCart(true);
         }}
       />
+
       <PopUp
         visible={isRemoveCartOtherRes}
         type={'delete'}

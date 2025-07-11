@@ -51,6 +51,7 @@ export default {
     restaurantOffers: 'offers/recomended-offer',
     restaurantOffersData:'cart/customer-offers',
     applyCoupon: 'cart/apply-coupon',
+    removeCoupan:'cart/remove-coupon',
     appFeedback: 'orders/app-feedback',
 
 

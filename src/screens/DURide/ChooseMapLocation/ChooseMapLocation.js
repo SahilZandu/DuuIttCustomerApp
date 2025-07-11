@@ -176,9 +176,9 @@ const ChooseMapLocation = ({ navigation, route }) => {
     if (
       (newItem?.location_id || newItem?.geo_location) &&
       pickDrop === 'pick' &&
-      parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
-      parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
-      || newItem?.location_id === receiverAddress?.location_id
+      (parseFloat(newItem?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
+        parseFloat(newItem?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
+        || newItem?.location_id === receiverAddress?.location_id)
     ) {
       setLoading(false)
       alert("You can't choose the same location. Please choose another location.");
@@ -186,9 +186,9 @@ const ChooseMapLocation = ({ navigation, route }) => {
     } else if (
       (newItem?.location_id || newItem?.geo_location) &&
       pickDrop !== 'pick' &&
-      parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
-      parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
-      || newItem?.location_id === senderAddress?.location_id
+      (parseFloat(newItem?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
+        parseFloat(newItem?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
+        || newItem?.location_id === senderAddress?.location_id)
     ) {
       setLoading(false)
       alert("You can't choose the same location. Please choose another location.");

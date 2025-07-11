@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     paddingBottom: '2%',
   },
   restaurantMainView: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     marginTop: '3%',
   },

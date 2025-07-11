@@ -146,9 +146,7 @@ const DashboardCartBtn = ({
     <View style={styles.main(bottom)}>
       <Surface elevation={3} style={styles.upperSurfaceView}></Surface>
       <TouchableOpacity
-        onPress={() => {
-          // navigation.navigate('trackingOrder');
-        }}
+        onPress={onViewCart}
         activeOpacity={1}>
         <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
           <View style={styles.mainInnerView}>

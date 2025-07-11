@@ -152,8 +152,9 @@ export const agent = {
   completeMealItems: body => requests.post(Url.completeMealItems, body),
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
   applyCoupon: body => requests.post(Url.applyCoupon, body),
+  removeCoupan: body => requests.post(Url.removeCoupan, body),
   appFeedback: body => requests.post(Url.appFeedback, body),
-  restaurantOffersData: body =>  requests.post(Url.restaurantOffersData, body),
+  restaurantOffersData: () =>  requests.get(Url.restaurantOffersData),
   wallet: body => requests.get(`${Url.wallet}/${body?.userId}`),
   walletUpdateBalance: body => requests.patch(Url.walletUpdateBalance, body),
   transactionHistory: body =>
@@ -176,7 +177,6 @@ export const agent = {
   updateOrderArrivedTime: body => requests.post(Url.updateOrderArrivedTime, body),
   userLogout: body => requests.post(Url.userLogout, body),
   
-
 };
 
 const requests = {

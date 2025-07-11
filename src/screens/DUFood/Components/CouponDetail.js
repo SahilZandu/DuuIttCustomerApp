@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Modal,
@@ -13,15 +13,15 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
 import DotedLine from './DotedLine';
-import {colors} from '../../../theme/colors';
+import { colors } from '../../../theme/colors';
 import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
-import {currencyFormat} from '../../../halpers/currencyFormat';
+import { currencyFormat } from '../../../halpers/currencyFormat';
 
 const CouponDetail = ({
   visible,
@@ -52,7 +52,7 @@ const CouponDetail = ({
     },
     {
       id: '3',
-      title: `Applicable maximum ${item?.time ?? 1} times in a day.`,
+      title: `Applicable maximum ${item?.max_usage_limit ?? 1} times in a day.`,
     },
     {
       id: '4',
@@ -72,14 +72,14 @@ const CouponDetail = ({
         <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
           <Image
             resizeMode="contain"
-            style={{height: 45, width: 45}}
+            style={{ height: 45, width: 45 }}
             source={appImages.crossClose} // Your icon image
           />
         </Pressable>
         <View style={styles.mainWhiteView}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: '5%'}}>
+            contentContainerStyle={{ paddingBottom: '5%' }}>
             <View style={styles.innerMainView}>
               <View style={styles.coupanDetailView}>
                 <Text numberOfLines={1} style={styles.coupanText}>
@@ -96,12 +96,9 @@ const CouponDetail = ({
                       <Text style={styles.getText}>
                         Get{' '}
                         {item?.discount_type === 'percentage'
-                          ? `${item?.discount_percentage}%`
-                          : currencyFormat(
-                              Number(item?.discount_percentage),
-                            )}{' '}
-                        OFF up to{' '}
-                        {currencyFormat(Number(item?.discount_percentage))}
+                          ? `${item?.discount_price}%`
+                          : currencyFormat(Number(item?.discount_price))}{' '}
+                        OFF up to {currencyFormat(Number(item?.usage_conditions?.min_order_value))}
                       </Text>
                     </View>
 
@@ -215,7 +212,7 @@ const styles = StyleSheet.create({
   refralCodeText: {
     marginLeft: '10%',
     borderRadius: 12,
-    width: wp('26%'),
+    width: wp('30%'),
     marginTop: '3%',
     textAlign: 'center',
     paddingVertical: '0.8%',

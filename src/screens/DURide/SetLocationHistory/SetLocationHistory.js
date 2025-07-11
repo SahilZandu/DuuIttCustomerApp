@@ -235,10 +235,12 @@ const SetLocationHistory = ({ navigation }) => {
       (item?.location_id || item?.geo_location) &&
       ((pickDrop === 'pick' && item?.location_id === receiverAddress?.location_id) ||
         (parseFloat(item?.geo_location?.lat) === parseFloat(receiverAddress?.geo_location?.lat) &&
-          parseFloat(item?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)) ||
+          parseFloat(item?.geo_location?.lng) === parseFloat(receiverAddress?.geo_location?.lng)
+          || item?.location_id === receiverAddress?.location_id) ||
         (pickDrop !== 'pick' && item?.location_id === senderAddress?.location_id) ||
         (parseFloat(item?.geo_location?.lat) === parseFloat(senderAddress?.geo_location?.lat) &&
-          parseFloat(item?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)));
+          parseFloat(item?.geo_location?.lng) === parseFloat(senderAddress?.geo_location?.lng)
+          || item?.location_id === senderAddress?.location_id));
 
     if (isSameLocation) {
       alert("You can't choose the same location. Please choose another location.");

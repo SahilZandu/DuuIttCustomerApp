@@ -174,6 +174,7 @@ import { fonts } from '../theme/fonts/fonts';
 import { colors } from '../theme/colors';
 import { SvgXml } from 'react-native-svg';
 import { appImagesSvg } from '../commons/AppImages';
+import { useToast } from '../halpers/useToast';
 
 
 
@@ -221,9 +222,12 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
     if (pickDrop == 'pick') {
       setSenderAddress(newData);
       // navigation.navigate('setLocationHistory');
+       useToast("Sender address updated successfully", 1);
       onClose();
+
     } else {
       setReceiverAddress(newData);
+      useToast("Receiver address updated successfully", 1);
       onClose();
       // navigation.navigate('priceDetails');
     }
@@ -299,7 +303,9 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
               marginTop={'8%'}
               borderWidth={1}
               inputLabel={
-                pickDrop == 'pick' ? "Sender's Name (Optional)" : "Receiver's Name (Optional)"
+                pickDrop == 'pick' 
+                ? "Sender's Name (Optional)" 
+                : "Receiver's Name (Optional)"
               }
               name={'name'}
               maxLength={50}

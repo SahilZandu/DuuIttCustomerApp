@@ -240,7 +240,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.appBackground,
     justifyContent: 'center',
+    alignItems: 'center',
     marginTop: '5%',
+    alignSelf: 'center',
   },
   logoImageView: {
     borderRadius: 15,
@@ -394,6 +396,7 @@ const styles = StyleSheet.create({
     width: wp('60%'),
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
     paddingTop: '2%',
     zIndex: 1, // Lower zIndex than logoImageView
     elevation: 1, // Android shadow

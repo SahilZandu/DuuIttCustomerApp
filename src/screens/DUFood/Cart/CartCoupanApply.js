@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Pressable,
   View,
@@ -7,16 +7,16 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImagesSvg} from '../../../commons/AppImages';
-import {currencyFormat} from '../../../halpers/currencyFormat';
-import {colors} from '../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImagesSvg } from '../../../commons/AppImages';
+import { currencyFormat } from '../../../halpers/currencyFormat';
+import { colors } from '../../../theme/colors';
 
 const CartCoupanApply = ({
   item,
@@ -25,6 +25,7 @@ const CartCoupanApply = ({
   onMoreCoupan,
   btnTitle,
   getCartTotal,
+  activeOffer,
 }) => {
   // console.log('getCartTotal---', getCartTotal, item);
   const [cartTotal, setCartTotal] = useState(getCartTotal);
@@ -41,16 +42,16 @@ const CartCoupanApply = ({
         <SvgXml xml={appImagesSvg.offerOff} />
         <Text style={styles.coupanText}>{item?.referral_code}</Text>
         <TouchableOpacity
-          disabled={cartTotal?.cartTotal <= item?.discount_price ? true : false}
+          disabled={cartTotal?.cartTotal <= item?.discount_price ? activeOffer?.referral_code ? false : true : false}
           onPress={() => {
             onApply(item);
           }}
           activeOpacity={0.8}
-          hitSlop={{top: 2, left: 10, right: 10, bottom: 10}}>
+          hitSlop={{ top: 2, left: 10, right: 10, bottom: 10 }}>
           <Text
             style={[
               styles.applyText,
-              {opacity: cartTotal?.cartTotal <= item?.discount_price ? 0.5 : 1},
+              { opacity: cartTotal?.cartTotal <= item?.discount_price ? activeOffer?.referral_code ? 1 : 0.5 : 1 },
             ]}>
             {applyTitle}
           </Text>
@@ -58,16 +59,16 @@ const CartCoupanApply = ({
       </View>
       <Text style={styles.offText}>
         {item?.discount_type === 'percentage'
-          ? `${item?.discount_percentage}%`
-          : currencyFormat(Number(item?.discount_percentage))}{' '}
-        off up to {currencyFormat(Number(item?.discount_price))}
+          ? `${item?.discount_price}%`
+          : currencyFormat(Number(item?.discount_price))}{' '}
+        OFF up to {currencyFormat(Number(item?.usage_conditions?.min_order_value))}
       </Text>
 
       <TouchableOpacity
         onPress={onMoreCoupan}
         activeOpacity={0.8}
         style={styles.moreBtnView}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Text style={styles.moreBtnText}>
             View more coupons
             {/* {btnTitle} */}
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
   },
   upperView: {
     flexDirection: 'row',

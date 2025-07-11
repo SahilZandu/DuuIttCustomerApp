@@ -186,25 +186,19 @@ export default class DashboardStore {
   // };
 
 
-  getRestaurantOffers = async (cart, handleLoading) => {
-    console.log("cart--getRestaurantOffers", cart);
-
-    handleLoading(true);
-    let requestData = {
-      cart_id: cart?._id,
-    };
-    console.log('requestData----restaurantOffersData', requestData);
+  getRestaurantOffers = async (handleLoading) => {
+   
     try {
-      const res = await agent.restaurantOffersData(requestData);
-      console.log('restaurantOffersData Res : ', res);
+      const res = await agent.restaurantOffersData();
+      console.log('restaurantOffersData Res : ', res,res?.data?.offer);
       if (res?.statusCode == 200) {
-        useToast(res?.message, 1);
+        // useToast(res?.message, 1);
+        this.restaurentOfferCoupan = res?.data?.offers ?? [];
         handleLoading(false);
-        this.restaurentOfferCoupan = res?.data?.vendor_offers ?? [];
-        return res?.data?.vendor_offers;
+        return res?.data?.offers;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        useToast(message, 0);
+        // useToast(message, 0);
         handleLoading(false);
         this.restaurentOfferCoupan = [];
         return [];
@@ -215,7 +209,7 @@ export default class DashboardStore {
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
-      useToast(m, 0);
+      // useToast(m, 0);
       return [];
     }
   };
@@ -244,6 +238,38 @@ export default class DashboardStore {
       }
     } catch (error) {
       console.log('error applyCoupon:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+  };
+
+  removeCoupan= async (cart, coupan, handleLoading, onSucces) => {
+    handleLoading(true);
+    let requestData = {
+      cart_id: cart?._id,
+      // offer_id: coupan ? coupan?._id : '',
+    };
+    console.log('requestData----removeCoupan', cart, coupan, requestData);
+    try {
+      const res = await agent.removeCoupan(requestData);
+      console.log('removeCoupan Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        onSucces();
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error removeCoupan:', error);
       handleLoading(false);
       const m = error?.data?.message
         ? error?.data?.message
