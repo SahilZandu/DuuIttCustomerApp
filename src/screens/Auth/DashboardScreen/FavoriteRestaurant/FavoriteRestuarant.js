@@ -14,10 +14,6 @@ import { SvgXml } from 'react-native-svg';
 import DotedLine from '../../../DUFood/Components/DotedLine';
 import FastImage from 'react-native-fast-image';
 import Url from '../../../../api/Url';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fonts } from '../../../../theme/fonts/fonts';
-import { colors } from '../../../../theme/colors';
-import Spacer from '../../../../halpers/Spacer';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 
 export default function FavoriteRestaurant({ navigation }) {
@@ -55,8 +51,8 @@ export default function FavoriteRestaurant({ navigation }) {
               styles.restImage
             }
             source={
-              item?.restaurant?.logo
-                ? { uri: Url?.Image_Url + item?.restaurant?.logo }
+              item?.restaurant?.banner
+                ? { uri: Url?.Image_Url + item?.restaurant?.banner }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
@@ -81,7 +77,7 @@ export default function FavoriteRestaurant({ navigation }) {
               <SvgXml width={15} height={15} xml={appImagesSvg.yellowStar} />
               <Text
                 style={styles.ratingText}>
-                {'3.9'}
+                {item?.restaurant?.food_rating_avg ?? '0.0'}
               </Text>
             </View>
 
@@ -90,7 +86,7 @@ export default function FavoriteRestaurant({ navigation }) {
               <SvgXml xml={appImagesSvg.yellowLocation} />
               <Text
                 style={styles.kmText}>
-                {'5 KM'}
+                {'0 KM'}
               </Text>
 
               <SvgXml
@@ -99,7 +95,7 @@ export default function FavoriteRestaurant({ navigation }) {
               />
               <Text
                 style={styles.minText}>
-                {'33 min'}
+                {'0 min'}
               </Text>
             </View>
           </View>
@@ -124,9 +120,11 @@ export default function FavoriteRestaurant({ navigation }) {
         <View style={styles.flatListView}>
           {likeRestaurant?.length > 0 ? (
             <FlatList
+            showsVerticalScrollIndicator={favoriteRestaurantList}
               data={likeRestaurant}
               renderItem={renderItem}
               keyExtractor={item => item._id}
+              contentContainerStyle={{paddingBottom:'20%'}}
             />
           ) : (
             <View style={styles.noDataView}>

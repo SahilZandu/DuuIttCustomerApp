@@ -105,8 +105,9 @@ const ReviewsRatingComp = ({
         type: type,
         order_id: data?._id,
         restaurant_id: data?.restaurant?._id,
-        rider_id: data?.rider_id,
-        review_to_rider: reviewToRider
+        rider_id: data?.rider?._id ?? data?.rider_id,
+        review_to_rider: reviewToRider,
+        user_id: data?.customer?._id,
       };
     } else {
       payload = {
@@ -114,22 +115,30 @@ const ReviewsRatingComp = ({
         rating: values?.rating,
         type: type,
         order_id: data?._id,
-        rider_id: data?.rider_id,
-        review_to_rider: reviewToRider
+        rider_id: data?.rider?._id ?? data?.rider_id,
+        review_to_rider: reviewToRider,
+        user_id: data?.customer?._id,
       };
     }
-    const res = await addReviews(payload, handleLoading);
+    const res = await addReviews(payload, handleLoading, onSuccess);
     console.log('res---', res);
     // handleLoading(false);
   };
 
   const handleLoading = v => {
     onHandleLoading(v);
-    if (v === false) {
-      setRatingShow(0)
-      onClose();
-    }
+    // if (v === false) {
+    //   setRatingShow(0)
+    //   onClose();
+    // }
   };
+
+  const onSuccess = () => {
+    setRatingShow(0)
+    onClose();
+  }
+
+
   return (
     <ModalPopUpTouch
       avoidKeyboard={true}

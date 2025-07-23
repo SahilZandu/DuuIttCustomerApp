@@ -28,14 +28,17 @@ import NoInternet from '../../../../components/NoInternet';
 import messaging from '@react-native-firebase/messaging';
 import { getUniqueId } from 'react-native-device-info';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
+import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
 
 
 
 export default function Home({ navigation }) {
   const { appUser } = rootStore.commonStore;
-  const { saveFcmToken, getCheckDeviceId } = rootStore.dashboardStore;
+  const { saveFcmToken, getCheckDeviceId,getRestaurantBanners } = rootStore.dashboardStore;
   useNotifications(navigation);
   const [internet, setInternet] = useState(true);
+  const [bannerList ,setBannerList]=useState([])
+  
   useFocusEffect(
     useCallback(() => {
       requestUserNotificationPermission();
@@ -46,8 +49,17 @@ export default function Home({ navigation }) {
       checkInternet()
       checkNotificationPer()
       initFCM();
+      getRestaurantBannersData();
     }, []),
   );
+
+
+  const getRestaurantBannersData = async()=>{
+   const res = await getRestaurantBanners();
+   setBannerList(res)
+  //  console.log("res---getRestaurantBannersData",res);
+   
+  }
 
 
   async function requestUserNotificationPermission() {
@@ -182,6 +194,14 @@ export default function Home({ navigation }) {
             <AppInputScroll
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
+               {bannerList?.length > 0 && (
+                <CustomerHomeSlider
+                bannerList= {bannerList}
+                data={bannerList[0]?.image_urls}
+                paginationList={true}
+                imageHeight={hp('20%')}/>
+               )} 
+
               <View style={styles.innerView}>
                 <ChangeRoute data={homeCS} navigation={navigation} />
                 {/* <RenderOffer data={mainArray} /> */}

@@ -30,8 +30,8 @@ import TextRender from './TextRender';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 
 const CardOrderDetails = ({ item }) => {
-  // console.log('item -- ', item);
-
+  console.log('item -- CardOrderDetails', item);
+  let today = new Date();
   const setStatusData = status => {
     switch (status) {
       case 'cancelled':
@@ -62,14 +62,23 @@ const CardOrderDetails = ({ item }) => {
   let disFare = item?.total_amount - (item?.billing_detail?.delivery_fee + item?.billing_detail?.platform_fee + item?.billing_detail?.gst_fee);
 
   const billDetails = [
+   
+    {
+      id: '0',
+      name: 'Item Fee',
+      price: item?.billing_detail?. item_sub_total_amount ?? 0,
+      coupanCode: '',
+      bottomLine: false,
+      gstIcon: false,
+      isShow: item?.order_type == 'food' ? true : false,
+    },
     {
       id: '1',
       name: 'Distance Fee',
-      price: disFare ? disFare : item?.billing_detail?.distance_fee ?? 0,
+      price: item?.billing_detail?.distance_fee ?? 0,
       coupanCode: '',
-      // bottomLine: item?.order_type !== 'food' ? true : false,
       bottomLine: false,
-      isShow: true,
+      isShow: item?.order_type !== 'food' ? true : false,
       gstIcon: false,
     },
     {
@@ -115,7 +124,7 @@ const CardOrderDetails = ({ item }) => {
     {
       id: '5',
       name: 'Grand Total',
-      price: 230,
+      price: item?.billing_detail?.total_amount - item?.billing_detail?.discount ?? 0,
       coupanCode: '',
       bottomLine: false,
       isShow: item?.order_type == 'food' ? true : false,
@@ -124,8 +133,8 @@ const CardOrderDetails = ({ item }) => {
     {
       id: '6',
       name: 'Restaurant Coupon',
-      price: 30,
-      coupanCode: 'DUIT75',
+      price: item?.billing_detail?.discount ?? 0,
+      coupanCode: item?.billing_detail?.coupon_code ?? '',
       bottomLine: false,
       isShow: item?.order_type == 'food' ? true : false,
       gstIcon: false,
@@ -169,6 +178,20 @@ const CardOrderDetails = ({ item }) => {
     }
   };
 
+  const setTypeImage = status => {
+    switch (status) {
+      case 'veg':
+        return appImagesSvg.vegSvg;
+      case 'non-veg':
+        return appImagesSvg.nonVeg;
+      case 'egg':
+        return appImagesSvg.eggSvg;
+      default:
+        return appImagesSvg.vegSvg;
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} Pb={hp('25%')}>
@@ -188,10 +211,10 @@ const CardOrderDetails = ({ item }) => {
             </View>
             <View style={styles.trackTextView}>
               <Text numberOfLines={1} style={styles.trackIdText}>
-                {item?.name ? item?.name : `ID:${item?.order_id}`}
+                {`ID:${item?.order_id ?? '1234567890'}`}
               </Text>
               <Text style={styles.dateText}>
-                {dateTimeFormat(item?.createdAt)}
+                {dateTimeFormat(item?.createdAt ?? today)}
               </Text>
               <View style={styles.statusView}>
                 <Text
@@ -220,14 +243,7 @@ const CardOrderDetails = ({ item }) => {
             </View>
           </View>
           <View style={{ marginTop: '3%' }}>
-            <View style={{ flexDirection: 'row' }}>
-              {/* <Text style={styles.riderNameText}>{'Rider'}:</Text>
-              <Text
-                numberOfLines={1}
-                style={[styles.riderNameText, { color: colors.black }]}>
-                {' '}
-                {item?.rider?.name ?? 'No Rider'}{' '}
-              </Text> */}
+            {item?.order_type !== 'food' ? <View style={{ flexDirection: 'row' }}>
               <Text style={styles.riderNameText}>{'Distance'}:</Text>
               <Text
                 numberOfLines={1}
@@ -235,8 +251,17 @@ const CardOrderDetails = ({ item }) => {
                 {' '}
                 {item?.distance?.toFixed(2) ?? 0}{' '}
               </Text>
-              
-            </View>
+
+            </View> :
+              <>
+                <Text
+                  numberOfLines={1}
+                  style={[styles.riderNameText, { color: colors.black, textTransform: 'capitalize' }]}>
+                  {' '}
+                  {item?.restaurant?.name}{' '}
+                </Text>
+              </>}
+
             {item?.order_type !== 'food' ? (
               <PickDropComp
                 item={{
@@ -257,32 +282,44 @@ const CardOrderDetails = ({ item }) => {
                 }
               />
             ) : (
-              <>
-                {/* {item?.sender_address?.map((value, i) => {
-                return (
-                  <View key={i} style={{flexDirection: 'row', marginTop: '4%'}}>
-                    <SvgXml
-                      xml={
-                        value?.type == 'veg'
-                          ? appImagesSvg.vegSvg
-                          : appImagesSvg.nonVeg
-                      }
-                    />
-                    <Text
-                      numberOfLines={1}
-                      style={{
+              <View>
+                {item?.cartItems?.slice(0, 3)?.map((value, i) => {
+                  return (
+                    <View key={i} style={{ flexDirection: 'row', marginTop: '4%' }}>
+                      <SvgXml
+                        xml={setTypeImage(value?.veg_nonveg)}
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
+
+                          fontSize: RFValue(13),
+                          fontFamily: fonts.regular,
+                          color: colors.black,
+                          marginLeft: '2%',
+
+                        }}> {value?.quantity} X </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          flex: 1,
+                          fontSize: RFValue(13),
+                          fontFamily: fonts.regular,
+
+                        }}>
+                        {value?.varient_name}
+                      </Text>
+
+                      <Text style={{
                         fontSize: RFValue(13),
                         fontFamily: fonts.regular,
-                        marginLeft: '2%',
-                        width: wp('75%'),
-                      }}>
-                      {value?.name}
-                      <Text style={{color: '#646464'}}> x {value?.qty}</Text>
-                    </Text>
-                  </View>
-                );
-              })} */}
-              </>
+                        color: colors.black,
+                        right: '10%'
+                      }}> {currencyFormat(value?.varient_price)}</Text>
+                    </View>
+                  );
+                })}
+              </View>
             )}
           </View>
 

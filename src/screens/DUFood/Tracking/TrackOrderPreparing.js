@@ -15,6 +15,7 @@ import {SvgXml} from 'react-native-svg';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import MapRoute from '../../../components/MapRoute';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
+import ReviewsRatingFoodComp from '../../../components/ReviewRatingFoodComp';
 
 export default function TrackOrderPreparing({navigation,route}) {
   const {item}=route.params
@@ -26,18 +27,31 @@ export default function TrackOrderPreparing({navigation,route}) {
   const [loadingRating, setLoadingRating] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log('setOrderStep cooking 30 second.');
+    if(item?.status === 'waiting_for_confirmation'){
+      setOrderStep(0);
+    }else if( item?.status === "cooking" ||item?.status === "packing_processing" || item?.status === "ready_to_pickup"){
       setOrderStep(1);
+    }else if(item?.status === "picked"){
+      setOrderStep(2);
       setTimeout(() => {
-        console.log('setOrderStep prepared 30 second.');
-        setTimeout(()=>{
-          setIsReviewRider(true)
-        },5000)
-        setOrderStep(2);
-      }, 10000);
-    }, 10000);
-  }, []);
+      setIsReviewRider(true)
+      },5000)
+    }else {
+      setIsReviewRider(true)
+    }
+    // 
+    // setTimeout(() => {
+    //   console.log('setOrderStep cooking 30 second.');
+    //   setOrderStep(1);
+    //   setTimeout(() => {
+    //     console.log('setOrderStep prepared 30 second.');
+    //     // setTimeout(()=>{
+    //     //   setIsReviewRider(true)
+    //     // },5000)
+    //     setOrderStep(2);
+    //   }, 10000);
+    // }, 10000);
+  }, [item]);
 
   // useEffect(() => {
   //   if (!isReviewRider) {
@@ -53,13 +67,13 @@ export default function TrackOrderPreparing({navigation,route}) {
       <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
         <View>
           <View style={styles.restaurantConatiner}>
-            {orderStep == 2 ? (
+            {/* {orderStep == 2 ? (
               <MapRoute
                 origin={origin}
                 destination={{}}
                 mapContainerView={{height: hp('45%')}}
               />
-            ) : (
+            ) : ( */}
               <FastImage
                 style={styles.topImage}
                 source={
@@ -71,7 +85,7 @@ export default function TrackOrderPreparing({navigation,route}) {
                 }
                 resizeMode={FastImage.resizeMode.cover}
               />
-            )}
+            {/* )} */}
             <View style={styles.upperLightGreenView}>
               <View style={styles.chefTextView}>
                 <Text style={styles.chefText}>
@@ -190,11 +204,11 @@ export default function TrackOrderPreparing({navigation,route}) {
         setLoadingRating(v)
       }}
       />
-      <ReviewsRatingComp
+      <ReviewsRatingFoodComp
        data={item}
        type={'FOOD'}
        reviewToRider={false}
-      title={'Did you enjoy your meal?'}
+      title={'Did you enjoy your meal?*'}
       isVisible={isReviewStar}
       onClose={()=>{setIsReviewStar(false)}}
       loading={loadingRating}

@@ -1,19 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {Text, TouchableOpacity, View, Image, StyleSheet} from 'react-native';
-import {currencyFormat} from '../../../halpers/currencyFormat';
-import {fonts} from '../../../theme/fonts/fonts';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import React, { useState, useEffect } from 'react';
+import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import { currencyFormat } from '../../../halpers/currencyFormat';
+import { fonts } from '../../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
 import DotedLine from '../Components/DotedLine';
-import {colors} from '../../../theme/colors';
+import { colors } from '../../../theme/colors';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
 
-let renderText =''
+let renderText = ''
 
 const DeliveryCart = ({
   DeliveryInMint,
@@ -34,12 +34,12 @@ const DeliveryCart = ({
   txtInstArray,
 }) => {
   console.log('txtInstArray--', txtInstArray);
-  useEffect(()=>{
-    if(txtInstArray){
-     renderText = txtInstArray?.join(', ');
+  useEffect(() => {
+    if (txtInstArray) {
+      renderText = txtInstArray?.join(', ');
       console.log(renderText);
     }
-  },[txtInstArray])
+  }, [txtInstArray])
 
 
   const AddInstruction = () => {
@@ -53,23 +53,23 @@ const DeliveryCart = ({
           style={styles.resImage}
           source={appImages.retaurentNote}
         />
-        <View style={{ width:wp("65%"),flexDirection:'row',flexWrap:'wrap',}}>
-        {txtInstArray?.length > 0 ? (
-                <Text style={styles.instructionText}>{renderText}</Text>
-        ) : (
-          <>
-         {!isAudio && (<Text style={styles.instructionText}>{instuctions}</Text>)}
-         </>
-        )}
-        {/* {isTxtInst && <Text style={styles.instructionText}>{instuctions}</Text>} */}
-        {isAudio && (
-          <View style={styles.audioView}>
-            <SvgXml
-              xml={isPlaying ? appImagesSvg.stopRed : appImagesSvg.playRed}
-            />
-            <Text style={styles.audioInstText}>{audioInstuctions}</Text>
-          </View>
-        )}
+        <View style={{ width: wp("65%"), flexDirection: 'row', flexWrap: 'wrap', }}>
+          {txtInstArray?.length > 0 ? (
+            <Text style={styles.instructionText}>{renderText}</Text>
+          ) : (
+            <>
+              {!isAudio && (<Text style={styles.instructionText}>{instuctions}</Text>)}
+            </>
+          )}
+          {/* {isTxtInst && <Text style={styles.instructionText}>{instuctions}</Text>} */}
+          {isAudio && (
+            <View style={styles.audioView}>
+              <SvgXml
+                xml={isPlaying ? appImagesSvg.stopRed : appImagesSvg.playRed}
+              />
+              <Text style={styles.audioInstText}>{audioInstuctions}</Text>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -126,14 +126,14 @@ const DeliveryCart = ({
               <View style={styles.totalBillRatetView}>
                 <View style={styles.totalBillWithRate}>
                   <Text style={styles.totalBillText}>{totalBill}</Text>
-                  <Text style={styles.crossLineText}>
+                 {cartBillG?.couponDiscount > 0 && <Text style={styles.crossLineText}>
                     {currencyFormat(cartBillG?.grandTotal)}
                     {''}
-                  </Text>
+                  </Text>}
                   <Text style={styles.totalRateText}>
-                    {currencyFormat(cartBillG?.topay)}
+                    {(currencyFormat(cartBillG?.topay))}
                   </Text>
-                  <Text style={styles.saveYouText}>You saved ₹10</Text>
+                  {/* <Text style={styles.saveYouText}>Saved {currencyFormat(cartBillG?.couponDiscount)}</Text> */}
                 </View>
                 <Text numberOfLines={2} style={styles.taxesText}>
                   Incl. taxes and charges
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
   },
   deliveryInMintText: {
     fontFamily: fonts.medium,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
   },
   deliveryAddressView: {
     width: wp('84%'),
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
   addressView: {
     marginLeft: '2.5%',
     justifyContent: 'center',
+    marginTop: '-0.5%'
   },
   addressText: {
     alignSelf: 'flex-start',
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
   },
   resImage: {
     width: wp('5%'),
@@ -276,6 +277,7 @@ const styles = StyleSheet.create({
   nameWithNumberView: {
     marginLeft: '2.5%',
     justifyContent: 'center',
+    marginTop: '-0.5%'
   },
   nameWithNumber: {
     alignSelf: 'flex-start',
@@ -310,6 +312,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '-0.5%'
   },
   totalBillText: {
     alignSelf: 'flex-start',

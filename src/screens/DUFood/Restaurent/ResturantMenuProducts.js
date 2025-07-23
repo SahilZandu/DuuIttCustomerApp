@@ -227,6 +227,9 @@ const ResturantProducts = memo(({ navigation, route }) => {
       quantity: quan,
       food_item_id: item?._id,
       food_item_price: item?.selling_price,
+      varient_name: item?.name,
+      varient_price: item?.selling_price,
+      selected_add_on: item?.selected_add_on ?? []
     };
 
     // console.log('item,quan,handleAddRemove', item, quan, restaurant, newItem);
@@ -252,7 +255,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
         if (checkAvailabilityById) {
           updatedCartList = getCartList?.cart_items?.map(data => {
             if (data?.food_item_id == item?._id) {
-              return { ...data, quantity: quan };
+              return { ...data, quantity: quan, selected_add_on: checkAvailabilityById?.selected_add_on };
             }
             return {
               ...data,
@@ -532,7 +535,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
             ]}
             source={
               restaurant?.banner?.length > 0
-                ? { uri: Url.Image_Url + restaurant?.banner }
+                ? { uri: Url?.Image_Url + restaurant?.banner }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}
@@ -703,6 +706,8 @@ const ResturantProducts = memo(({ navigation, route }) => {
             food_item_id: CustomizeItem?._id,
             food_item_price: sellAmount,
             selected_add_on: addons ?? [],
+            varient_name: vcName,
+            varient_price: sellAmount,
           };
 
           if (Array?.isArray(getCartList?.cart_items)) {
@@ -721,6 +726,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
                       ...data,
                       quantity: quan,
                       food_item_price: sellAmount,
+                      selected_add_on: addons
                     };
                   }
                   return {

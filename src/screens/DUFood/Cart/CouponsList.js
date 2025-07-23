@@ -171,7 +171,6 @@ const CouponsList = ({ navigation, route }) => {
         </View>
       )}
       <CouponDetail
-
         onApply={() => {
           onCoupanSelected(activeOffer);
           setVisible(false);

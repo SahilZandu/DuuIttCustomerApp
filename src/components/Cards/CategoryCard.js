@@ -30,10 +30,10 @@ const CategoryCard = ({ data, onPress, navigation }) => {
       <View style={[styles.itemContainer(index)]}>
         <Image
           source={
-            //  (item?.image && item?.image?.length > 0)
-            //     ? {uri: Url.Image_Url + item?.image}
-            //     : appImages.burgerImage
-            appImages.burgerImage
+             (item?.image && item?.image?.length > 0)
+                ? {uri: Url.Image_Url + item?.image}
+                : appImages.burgerImage
+            // appImages.burgerImage
           }
           resizeMode="cover"
           style={styles.image}

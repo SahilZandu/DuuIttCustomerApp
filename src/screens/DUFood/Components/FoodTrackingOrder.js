@@ -42,10 +42,10 @@ const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
             />
             <View style={styles.riderIdView}>
               <Text numberOfLines={1} style={styles.riderText}>
-                Rider is on the way
+               {trackedArray[0]?.status === 'picked' ? "Rider is on the way" : "Your order is cooking"}
               </Text>
               <Text numberOfLines={1} style={styles.trackId}>
-                Tracking ID:{trackedArray[0]?.order_id}
+                Tracking ID:#{trackedArray[0]?.order_id ?? "1234567890"}
               </Text>
             </View>
             <View style={styles.tarckOrderView}>

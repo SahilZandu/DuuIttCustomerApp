@@ -1,19 +1,19 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import {Surface} from 'react-native-paper';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { Surface } from 'react-native-paper';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {appImages, appImagesSvg} from '../commons/AppImages';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
+import { SvgXml } from 'react-native-svg';
+import { appImages, appImagesSvg } from '../commons/AppImages';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
 import moment from 'moment';
 import Url from '../api/Url';
 
-const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
+const TrackingFoodDetailsComp = ({ onViewDetails, item, xml, index }) => {
   const setTrackImage = status => {
     switch (status) {
       case 'food':
@@ -26,8 +26,8 @@ const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
         return appImages.order1;
     }
   };
-  const dateFormate = () => {
-    const formattedDate = moment().format('MMM D, YYYY - hh:mm A');
+  const dateFormate = (date) => {
+    const formattedDate = moment(date).format('MMM D, YYYY - hh:mm A');
     // console.log(formattedDate);
     return formattedDate;
   };
@@ -57,6 +57,9 @@ const TrackingFoodDetailsComp = ({onViewDetails, item, xml, index}) => {
             <View style={styles.trackIdView}>
               <Text numberOfLines={1} style={styles.trackName}>
                 {item?.restaurant?.name}
+              </Text>
+              <Text numberOfLines={1} style={styles.orderText}>
+                #:{item?.order_id}
               </Text>
               <Text numberOfLines={1} style={styles.dateText}>
                 {dateFormate(item?.updatedAt)}
@@ -109,11 +112,18 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: wp('45%'),
   },
+  orderText: {
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black,
+    marginTop: '2%',
+    width: wp('45%'),
+  },
   dateText: {
     fontSize: RFValue(10),
     fontFamily: fonts.medium,
     color: colors.color72,
-    marginTop: '4%',
+    marginTop: '2%',
     width: wp('45%'),
   },
   viewDetailsView: {

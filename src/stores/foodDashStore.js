@@ -225,7 +225,7 @@ export default class FoodDashStore {
       ...payload,
     };
 
-    console.log('requestData----foodOrder', requestData, payload);
+    console.log('requestData----foodOrder', requestData?.cart_items[0]?.selected_add_on, payload);
 
     try {
       const res = await agent.foodOrder(requestData);
@@ -286,6 +286,7 @@ export default class FoodDashStore {
       return [];
     }
   };
+
 
   getRecomendedItems = async (geoLocation, handleLoading) => {
     let requestData = {
@@ -366,5 +367,39 @@ export default class FoodDashStore {
   setChangeLiveLocation = (data) => {
     this.changeLiveLocation = data
   }
+
+
+  getRestaurantFoodReviews = async (restaurant, perPage, handleLoading) => {
+
+    let request = {
+      restaurant_id: restaurant?._id,
+      limit: perPage
+    }
+
+    console.log("request===", request);
+
+    try {
+      const res = await agent.getRestaurantFoodReviews(request);
+      console.log('getRestaurantFoodReviews Res : ', res);
+      if (res?.statusCode == 200) {
+        handleLoading(false);
+        // useToast(res?.message, 1);
+        return res?.data?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return [];
+      }
+    } catch (error) {
+      console.log('error getRestaurantFoodReviews:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+  };
 
 }

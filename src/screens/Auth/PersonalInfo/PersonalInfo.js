@@ -47,7 +47,7 @@ export default function PersonalInfo({ navigation, route }) {
    };
  
    const handleLogoutLoading = (v) => {
-     setLoading(v)
+    console.log('v--', v);
    }
    const isSuccess = () => {
    

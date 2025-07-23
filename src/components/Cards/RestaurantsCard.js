@@ -108,7 +108,7 @@ const RestaurantsCard = ({ item, navigation, isHorizontal, onLike }) => {
                     color: isResOpen ? colors.white : colors.black75,
                   },
                 ]}>
-                3.9
+                {item?.food_rating_avg ?? 0.0}
               </Text>
             </View>
             <View style={styles.mintMainView}>
@@ -120,7 +120,7 @@ const RestaurantsCard = ({ item, navigation, isHorizontal, onLike }) => {
                   },
                 ]}>
                 {/* 25-30  */}
-                {item?.minimum_order_preparation_time - 5 ?? 0} - {item?.minimum_order_preparation_time ?? 0} Min
+                {item?.minimum_order_preparation_time > 5 ? item?.minimum_order_preparation_time - 5 : 0} - {item?.minimum_order_preparation_time ?? 0} Min
               </Text>
             </View>
             <View style={styles.kmMainView}>
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: fonts.medium,
     fontSize: RFValue(12),
+    marginLeft: '2%'
   },
   mintMainView: {
     flexDirection: 'row',

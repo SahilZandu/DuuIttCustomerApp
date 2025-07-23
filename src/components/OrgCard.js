@@ -181,7 +181,7 @@ const OrgCard = ({
             />
             <Text
               style={styles.ratingText}>
-              {3.8}
+              {org?.food_rating_avg ?? 0.0}
             </Text>
           </View>
         </View>

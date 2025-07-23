@@ -25,7 +25,7 @@ import Url from '../../../../api/Url';
 import Spacer from '../../../../halpers/Spacer';
 
 const OrgReviewCard = ({item, index, isDishRating}) => {
-  // console.log('item---OrgReviewCard', item);
+  console.log('item---OrgReviewCard', item);
   function getDateMonthsAgo(dateString) {
     const formatAgo = moment(dateString);
     const formattedDate = formatAgo.fromNow(); // Example: "in 5 months" or "5 months ago"
@@ -39,15 +39,15 @@ const OrgReviewCard = ({item, index, isDishRating}) => {
           resizeMode="cover"
           style={styles.logoImage}
           source={
-            item?.customer_info?.profile_pic
-              ? {uri: Url?.Image_Url + item?.customer_info?.profile_pic}
+            item?.customer?.profile_pic
+              ? {uri: Url?.Image_Url + item?.customer?.profile_pic}
               : appImages.foodIMage
             // appImages.foodIMage
           }
         />
         <View style={styles.nameDateView}>
           <Text numberOfLines={1} style={styles.nameText}>
-            {item?.customer_info?.name ?? 'No Name Added'}
+            {item?.customer?.name ?? 'No Name Added'}
           </Text>
           <Text style={styles.dateText}>
             {getDateMonthsAgo(item?.createdAt)}
@@ -66,7 +66,7 @@ const OrgReviewCard = ({item, index, isDishRating}) => {
       <View style={{marginTop: '-1%', marginHorizontal: 10}}>
         <Ratings
           mainStyle={styles.starRatingImage}
-          rateFormat={Number(item?.rating)}
+          rateFormat={Number(item?.food_rating)}
           starHeight={18}
         />
       </View>
@@ -96,7 +96,7 @@ const OrgReviewCard = ({item, index, isDishRating}) => {
     <View style={styles.container}>
       {rateWithDishes()}
       {rating()}
-      <Text style={styles.descriptionText}>{item?.review}</Text>
+      <Text style={styles.descriptionText}>{item?.food_review}</Text>
       <Spacer space={'3%'} />
       {item?.dish_items?.length > 0 && (
         <FlatList

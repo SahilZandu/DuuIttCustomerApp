@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   },
   mainWhiteView: {
     backgroundColor: colors.white,
-    height: hp('50%'),
+    height: hp('52%'),
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     borderColor: colors.colorF9,

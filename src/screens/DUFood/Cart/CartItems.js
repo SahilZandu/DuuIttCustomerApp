@@ -70,10 +70,21 @@ const CartItems = ({
     }
   };
 
+
+  const getTotalAddonsPrice = (addonsData) => {
+    const totalAddonPrice = addonsData?.reduce((total, item) => total + item.addon_price, 0);
+    console.log("totalAddonPrice===", totalAddonPrice);
+
+    return totalAddonPrice
+  }
+
+
+
   return (
     <View style={styles.container}>
       {appCart?.cartitems?.map((item, key) => {
         console.log('item--CartItem', item, key);
+        console.log("item?.selected_add_on---", item?.selected_add_on);
         return (
           <View key={key} style={styles.cartItemView}>
             <View style={styles.cartItemPriceView}>
@@ -169,6 +180,13 @@ const CartItems = ({
                         {/* ))} */}
                         {i === item?.selected_add_on?.length - 1 && (
                           <EditBtn item={item} />
+                        )}
+
+                        {i === item?.selected_add_on?.length - 1 && (
+                          <>
+                            <Text style={{ flex: 1 }}></Text>
+                            <Text style={styles.addonsPriceText} >{currencyFormat(getTotalAddonsPrice(item?.selected_add_on))}</Text>
+                          </>
                         )}
                       </Fragment>
                     ))}
@@ -366,6 +384,12 @@ const styles = StyleSheet.create({
     fontSize: RFValue(11),
     fontFamily: fonts.medium,
   },
+  addonsPriceText: {
+    fontSize: RFValue(12),
+    fontFamily: fonts.medium,
+    color: colors.black
+  }
+
 });
 
 const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">

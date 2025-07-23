@@ -45,6 +45,7 @@ export default {
     recomendedItems: 'food-order/recomended-items',
     getFoodOrderTracking: 'food-order/get-tracking-order',
     addReviews: 'reviews',
+     foodOrderReviews:"reviews/create-food-order",
     completeMealItems: 'food-item/complete-your-meal-items',
     restaurantReview: 'reviews/restaurant-review',
     // restaurantOffers:'offers/all'
@@ -53,6 +54,7 @@ export default {
     applyCoupon: 'cart/apply-coupon',
     removeCoupan:'cart/remove-coupon',
     appFeedback: 'orders/app-feedback',
+    calculateDeliveryFee:"cart/calculate-delivery-fee",
 
 
     wallet: 'wallet',
@@ -71,6 +73,11 @@ export default {
     unseenMessages: 'chat/unseen-messages',
     updateOrderArrivedTime: "orders/update-order-arrived-time",
     userLogout: "customers/logout",
+    reorderCart:"cart/reorder-from-order",
+    getRestaurantFoodReviews:'reviews/restaurant-food-reviews',
+    getRestaurantBanners :"restaurant/get-banners"
+
+   
 
 }
 

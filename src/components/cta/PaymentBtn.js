@@ -20,7 +20,7 @@ import BTN from './BTN';
 
 
 const PaymentBtn = ({
-    onPressPay,payText,onPressBuyNow,buyNowText
+    onPressPay,payText,onPressBuyNow,buyNowText,disable
 }) => (
     <View style={styles.bottomButtonView}>
     <Surface elevation={3} style={styles.bottomBtnSurface}>
@@ -45,6 +45,7 @@ const PaymentBtn = ({
 
         <View style={styles.buyBtnView}>
           <BTN
+          disable={disable}
             width={wp('45%')}
             title={buyNowText}
             onPress={

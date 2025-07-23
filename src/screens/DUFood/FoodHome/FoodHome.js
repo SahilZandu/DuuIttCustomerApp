@@ -73,6 +73,7 @@ export default function FoodHome({ navigation }) {
   const [cartItems, setcartItems] = useState({});
   const [openCloseItem, setOpenCloseItem] = useState(false)
   const [restaurantList, setRestaurantList] = useState(restaurentList ?? []);
+  const [restaurantShow, setRestaurantShow] = useState(restaurentList?.length > 0 ? false : true)
   const [loadingMore, setLoadingMore] = useState(false);
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [internet, setInternet] = useState(true);
@@ -116,9 +117,37 @@ export default function FoodHome({ navigation }) {
       perPage,
       handleLoading,
     );
-    setRestaurantList(res);
-    setLoadingMore(false);
+    if (res?.length > 0) {
+      setRestaurantList(res);
+      setLoadingMore(false);
+      setRestaurantShow(false)
+    } else {
+      setRestaurantList(res);
+      setLoadingMore(false);
+      setRestaurantShow(true)
+    }
   };
+
+
+  const getRestaurantFilterList = async () => {
+    const res = await restaurentAll(
+      geoLocation,
+      selectedFilter,
+      perPage,
+      handleLoading,
+    );
+    if (res?.length > 0) {
+      setRestaurantList(res);
+      setLoadingMore(false);
+      setRestaurantShow(false)
+    } else {
+      setRestaurantList(res);
+      setLoadingMore(false);
+    }
+
+  };
+
+
 
   const handleLoading = v => {
     setLoading(v);
@@ -318,7 +347,7 @@ export default function FoodHome({ navigation }) {
 
   const topRestaurentItem = ({ item }) => {
     return (
-   
+
       <RestaurantsCard
         item={item}
         navigation={navigation}
@@ -494,6 +523,9 @@ export default function FoodHome({ navigation }) {
       quantity: quan,
       food_item_id: item?._id,
       food_item_price: item?.item?.selling_price,
+      varient_name: item?.item?.name,
+      varient_price: item?.item?.selling_price,
+      selected_add_on: item?.item?.selected_add_on ?? []
     };
 
     // console.log('item,quan,handleAddRemove', item, quan,newItem,item?.restaurant_id || item?.item?.restaurant_id, item?.item?.restaurant_id);
@@ -522,7 +554,7 @@ export default function FoodHome({ navigation }) {
         if (checkAvailabilityById) {
           updatedCartList = getCartList?.cart_items?.map(data => {
             if (data?.food_item_id == item?._id) {
-              return { ...data, quantity: quan };
+              return { ...data, quantity: quan, selected_add_on: checkAvailabilityById?.selected_add_on };
             }
             return {
               ...data,
@@ -580,6 +612,20 @@ export default function FoodHome({ navigation }) {
     }
   };
 
+  const handleRecommendedTouch = async (item) => {
+    // console.log(
+    //   'item ,quantity---',
+    //   item,
+    // );
+    // return
+
+    navigation.navigate('resturantProducts', {
+      item: item?.restaurant,
+    });
+
+
+  };
+
   return (
     <View style={[styles.container]}>
       {internet == false ? (
@@ -629,7 +675,7 @@ export default function FoodHome({ navigation }) {
               flexGrow: 1,
               paddingBottom: hp('5%'),
             }}>
-            
+
 
             {repeatOrdersList?.length > 2 && (
               <View style={styles.orderMainView}>
@@ -650,6 +696,7 @@ export default function FoodHome({ navigation }) {
                 <RecommendedOrder
                   data={recomendedList}
                   onAddDec={handleAddDecRecommended}
+                  handleRecommendedTouch={handleRecommendedTouch}
                 />
               </View>
             )}
@@ -666,7 +713,7 @@ export default function FoodHome({ navigation }) {
                   onChange={f => {
                     // console.log('f>', f);
                     selectedFilter = f;
-                    getRestaurantList();
+                    getRestaurantFilterList();
                     // getLocationCurrent();
                   }}
                 />
@@ -701,7 +748,7 @@ export default function FoodHome({ navigation }) {
 
           </ScrollView>
           <View style={styles.restaurantMainView}>
-          {/* <FlatList
+            {/* <FlatList
          
             stickyHeaderIndices={[2]}
 
@@ -760,7 +807,7 @@ export default function FoodHome({ navigation }) {
             }}
           /> */}
           </View>
-          {(restaurantList?.length == 0 && loading == false) && <OnlineFoodUnavailable
+          {(restaurantShow === true) && <OnlineFoodUnavailable
             appUserData={appUserInfo}
             navigation={navigation} />}
 

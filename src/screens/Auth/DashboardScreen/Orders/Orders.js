@@ -22,6 +22,7 @@ import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader
 import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import { colors } from '../../../../theme/colors';
+import IndicatorLoader from '../../../../halpers/IndicatorLoader';
 
 const tabs = [
   { text: 'All Orders' },
@@ -51,42 +52,45 @@ export default function Orders({ navigation, route }) {
       ? false : true,
   );
   const [internet, setInternet] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false)
 
   // console.log('tabText--', tabText,defaultType);
-  useEffect(() => {
-    setLoading(
-      (orderHistoryList?.length > 0
-        && tabText === "All Orders")
-        ? false : true)
-    if (tabText == 'Food') {
-      defaultType = 'Food';
-      setType('Food');
-      // setOrderList([])
-      getOrderList();
-    } else if (tabText == 'Ride') {
-      defaultType = 'Ride';
-      setType('Ride');
-      // setOrderList([])
-      getOrderList();
-    } else if (tabText == 'Parcel') {
-      defaultType = 'Parcel';
-      setType('Parcel');
-      // setOrderList([])
-      getOrderList();
-    } else {
-      defaultType = 'All Orders';
-      setType('All Orders');
-      setOrderList(orderHistoryList || [])
-      getOrderList();
-    }
-    setTimeout(() => {
-      setLoading(false);
-    }, 15000);
+  
+  // useEffect(() => {
+  //   setLoading(
+  //     (orderHistoryList?.length > 0
+  //       && tabText === "All Orders")
+  //       ? false : true)
+  //   if (tabText == 'Food') {
+  //     defaultType = 'Food';
+  //     setType('Food');
+  //     // setOrderList([])
+  //     getOrderList();
+  //   } else if (tabText == 'Ride') {
+  //     defaultType = 'Ride';
+  //     setType('Ride');
+  //     // setOrderList([])
+  //     getOrderList();
+  //   } else if (tabText == 'Parcel') {
+  //     defaultType = 'Parcel';
+  //     setType('Parcel');
+  //     // setOrderList([])
+  //     getOrderList();
+  //   } else {
+  //     defaultType = 'All Orders';
+  //     setType('All Orders');
+  //     setOrderList(orderHistoryList || [])
+  //     getOrderList();
+  //   }
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 15000);
 
-  }, [tabText])
+  // }, [tabText])
 
   useFocusEffect(
     useCallback(() => {
+      getCheckFilterData()
       getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation, tabText);
@@ -98,6 +102,35 @@ export default function Orders({ navigation, route }) {
       }
     }, [tabText]),
   );
+
+  const getCheckFilterData =()=>{
+    setLoading(
+      (orderHistoryList?.length > 0
+        && tabText === "All Orders")
+        ? false : true)
+    if (tabText == 'Food') {
+      defaultType = 'Food';
+      setType('Food');
+      getOrderList();
+    } else if (tabText == 'Ride') {
+      defaultType = 'Ride';
+      setType('Ride');
+      getOrderList();
+    } else if (tabText == 'Parcel') {
+      defaultType = 'Parcel';
+      setType('Parcel');
+      getOrderList();
+    } else {
+      defaultType = 'All Orders';
+      setType('All Orders');
+      setOrderList(orderHistoryList || [])
+      getOrderList();
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 15000);
+
+  }
 
 
 
@@ -121,19 +154,19 @@ export default function Orders({ navigation, route }) {
   };
 
   const getOrderList = async () => {
-    const res = await parcelsOfUser("All Orders", perPage, handleLoading);
+    const res = await parcelsOfUser(defaultType, perPage, handleLoading);
     console.log('res---parcelsOfUser', res);
     if (res?.length > 0) {
       setOrderList(res);
       setLoadingMore(false);
-      setTimeout(() => {
-        handleTabPress(defaultType);
-      }, 1000)
+      // setTimeout(() => {
+      //   handleTabPress(defaultType);
+      // }, 1000)
 
     } else {
-      setTimeout(() => {
-        handleTabPress(defaultType);
-      }, 1000)
+      // setTimeout(() => {
+      //   handleTabPress(defaultType);
+      // }, 1000)
       setOrderList([]);
       setLoadingMore(false);
     }
@@ -155,9 +188,11 @@ export default function Orders({ navigation, route }) {
 
   const handleLoading = v => {
     if (v == false) {
-      setTimeout(() => {
-        setLoading(v);
-      }, 8000)
+      setLoading(v);
+      setFilterLoading(false)
+      // setTimeout(() => {
+      //   setLoading(v);
+      // }, 8000)
     } else {
       setLoading(v);
     }
@@ -166,11 +201,12 @@ export default function Orders({ navigation, route }) {
 
   const loadMoredata = () => {
     console.log('load more');
-    if (!loadingMore && (orderList?.length >= perPage || tabText !== "All Orders")) {
+    if (!loadingMore && (orderList?.length >= perPage
+      // || tabText !== "All Orders"
+    )) {
       perPage = perPage + 20;
       setLoadingMore(true);
       getMoreOrderList();
-      // getOrderList();
     }
   };
 
@@ -197,10 +233,11 @@ export default function Orders({ navigation, route }) {
     setType(text);
     if (flatListRef?.current) {
       flatListRef?.current?.scrollToIndex({ animated: true, index: 0 });
-    }
-    const filter = await getOrderHistorybyFilters(text);
-    //  console.log('filter--', filter, defaultType, text);
-    setOrderList(filter);
+    } setFilterLoading(true)
+    getOrderList();
+    // const filter = await getOrderHistorybyFilters(text);
+    // //  console.log('filter--', filter, defaultType, text);
+    // setOrderList(filter);
   };
 
   return (
@@ -241,11 +278,12 @@ export default function Orders({ navigation, route }) {
                   />
                 ) : (
                   <View style={styles.NoDataView}>
-                    <Text style={styles.NoDataText}>No Record Found</Text>
+                    {(loading == false && orderList?.length == 0) && <Text style={styles.NoDataText}>No Record Found</Text>}
                   </View>
                 )}
               </View>
             )}
+            {filterLoading && <IndicatorLoader />}
           </View>
         </>
       )}

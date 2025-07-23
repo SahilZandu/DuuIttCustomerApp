@@ -26,6 +26,7 @@ import { rootStore } from '../../../stores/rootStore';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import Url from '../../../api/Url';
 
 let asestsArray = [
   {
@@ -56,31 +57,33 @@ export default function RestaurantDetail({ navigation, route }) {
   const day = new Date();
   let today = day.getDay();
   const { restaurantData } = route?.params;
+  const { appUser } = rootStore.commonStore;
+  const { getRestaurantFoodReviews } = rootStore.foodDashboardStore;
   // console.log('restaurant----', restaurantData);
-  const { getRestaurantReview } = rootStore.dashboardStore;
   const [fullImage, setFullImage] = useState(false);
   const [imageUriIndex, setImageUriIndex] = useState(0);
   const [orgReviews, setOrgReviews] = useState([]);
   const [restaurant, setRestaurant] = useState(restaurantData ?? {});
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log('restaurant----', restaurant, restaurantData);
+  console.log('restaurant----', restaurant, restaurantData,);
+  console.log("appUser---restaurant", appUser)
 
   const packageMoneyData = [
     {
       id: '0',
       name: 'Taste',
-      rate: '3.0',
+      rate: restaurantData?.taste_rating_avg?.toString() ?? 0,
     },
     {
       id: '1',
       name: 'Packaging',
-      rate: '4.5',
+      rate: restaurantData?.packaging_rating_avg?.toString() ?? 0,
     },
     {
       id: '2',
       name: 'Value for money',
-      rate: '3.5',
+      rate: restaurantData?.value_rating_avg?.toString() ?? 0,
     },
   ];
 
@@ -95,6 +98,7 @@ export default function RestaurantDetail({ navigation, route }) {
   //     });
   //   }
   // }, [restaurant]);
+
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation)
@@ -107,11 +111,12 @@ export default function RestaurantDetail({ navigation, route }) {
   }, []);
 
   const getReviews = async () => {
-    const reviews = await getRestaurantReview(
+    const reviews = await getRestaurantFoodReviews(
       restaurant,
       perPage,
       handleLoading,
     );
+
     console.log('get org Reviews:', reviews);
     if (reviews?.length > 0) {
       setOrgReviews(reviews);
@@ -152,54 +157,57 @@ export default function RestaurantDetail({ navigation, route }) {
           style={styles.assetsImage}
           source={
             appImages.foodIMage
-            // uri: Base_Image_Url?.Base_Image_Assets_Url + item?.file_name,
+            // uri: Url?.Image_Url + item?.file_name,
           }
         />
       </TouchableOpacity>
     );
   };
 
-  const TimeFormat = d => {
-    if (d) {
-      return moment(d, 'HHmmss').format('hh:mm a');
-    } else {
-      return '';
-    }
-  };
+  // const TimeFormat = d => {
+  //   if (d) {
+  //     return moment(d, 'HHmmss').format('hh:mm a');
+  //   } else {
+  //     return '';
+  //   }
+  // };
 
-  const getOpenTiming = data => {
-    let dayData = 'Close';
-    data?.map((item, i) => {
-      if (item?.days_of_week == today) {
-        dayData = ` ${TimeFormat(item?.open_times)} - ${TimeFormat(
-          item?.close_time,
-        )}`;
-      }
-    });
-    return dayData;
-  };
-  const getProductList = (item, i) => {
-    return (
-      <>
-        <Text
-          style={[
-            styles.restaurantProductText,
-            { marginLeft: i == 0 ? 0 : '1%' },
-          ]}>
-          {item?.title}{' '}
-          {(i + 1) % restaurant?.product?.slice(0, 3)?.length == 0 ? '' : '|'}
-        </Text>
-      </>
-    );
-  };
+  // const getOpenTiming = data => {
+  //   let dayData = 'Close';
+  //   data?.map((item, i) => {
+  //     if (item?.days_of_week == today) {
+  //       dayData = ` ${TimeFormat(item?.open_times)} - ${TimeFormat(
+  //         item?.close_time,
+  //       )}`;
+  //     }
+  //   });
+  //   return dayData;
+  // };
+  // const getProductList = (item, i) => {
+  //   return (
+  //     <>
+  //       <Text
+  //         style={[
+  //           styles.restaurantProductText,
+  //           { marginLeft: i == 0 ? 0 : '1%' },
+  //         ]}>
+  //         {item?.title}{' '}
+  //         {(i + 1) % restaurant?.product?.slice(0, 3)?.length == 0 ? '' : '|'}
+  //       </Text>
+  //     </>
+  //   );
+  // };
 
   const onRateWidth = rate => {
     if (rate >= 0 && rate <= 1) {
       return wp('10%');
-    } else if (rate > 1 && rate <= 3) {
+    } else if (rate > 1 && rate <= 2) {
       return wp('20%');
-    } else if (rate > 3 && rate <= 4) {
+    }
+    else if (rate > 2 && rate <= 3) {
       return wp('30%');
+    } else if (rate > 3 && rate <= 4) {
+      return wp('35%');
     } else if (rate > 4 && rate < 5) {
       return wp('40%');
     } else if (rate == 5) {
@@ -228,15 +236,28 @@ export default function RestaurantDetail({ navigation, route }) {
     );
   };
 
+
+  const RatingText = rate => {
+    if (rate >= 0 && rate <= 2) {
+      return 'Very Low'
+    } else if (rate > 2 && rate <= 3) {
+      return "Medium";
+    } else if (rate > 3 && rate <= 4) {
+      return "Good";
+    } else {
+      return "Very Good";
+    }
+  };
+
   const DisRating = dishes => {
     return (
       <View style={styles.ratingTextView}>
         <View style={styles.ratingView}>
-          <Text style={styles.ratingValue}>3.5</Text>
-          <Text style={styles.ratingText}>Very Good</Text>
+          <Text style={styles.ratingValue}>{restaurantData?.food_rating_avg ?? 0}</Text>
+          <Text style={styles.ratingText}>{RatingText(restaurantData?.food_rating_avg ?? 0)}</Text>
           <Ratings
             mainStyle={styles.starRatingImage}
-            rateFormat={Number(3.5)}
+            rateFormat={Number(restaurantData?.food_rating_avg ?? 0)}
             starHeight={20}
           />
         </View>
@@ -249,22 +270,22 @@ export default function RestaurantDetail({ navigation, route }) {
     );
   };
 
-  const OrgReviewsList = () => {
-    return (
-      <View style={styles.mainReviewsView}>
-        <View style={styles.reviewsView}>
-          <Text style={styles.reviewsText}>Reviews</Text>
-        </View>
-        <View>
-          {orgReviews?.map((item, index) => (
-            <View key={index}>
-              <OrgReviewCard item={item} isDishRating={false} />
-            </View>
-          ))}
-        </View>
-      </View>
-    );
-  };
+  // const OrgReviewsList = () => {
+  //   return (
+  //     <View style={styles.mainReviewsView}>
+  //       <View style={styles.reviewsView}>
+  //         <Text style={styles.reviewsText}>Reviews</Text>
+  //       </View>
+  //       <View>
+  //         {orgReviews?.map((item, index) => (
+  //           <View key={index}>
+  //             <OrgReviewCard item={item} isDishRating={false} />
+  //           </View>
+  //         ))}
+  //       </View>
+  //     </View>
+  //   );
+  // };
   const renderFooter = () => {
     return loadingMore ? (
       <View style={{ paddingVertical: 20 }}>
@@ -280,9 +301,9 @@ export default function RestaurantDetail({ navigation, route }) {
           <FastImage
             style={styles.logoImage}
             source={
-              // restaurant?.logo
-              //   ? {uri: Base_Image_Url?.Base_Image_Url + restaurant?.logo}
-              //   : AppImages.orgPlaceholder
+              // restaurant?.banner
+              //   ? {uri: Url?.Image_Url + restaurant?.banner}
+              //   :  appImages?.mapImg
               appImages?.mapImg
             }
             resizeMode={FastImage.resizeMode.cover}

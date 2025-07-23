@@ -7,9 +7,9 @@ import {
   runInAction,
   makeAutoObservable,
 } from 'mobx';
-import {useEffect, usestate} from 'react';
-import {agent} from '../api/agent';
-import {useToast} from '../halpers/useToast';
+import { useEffect, usestate } from 'react';
+import { agent } from '../api/agent';
+import { useToast } from '../halpers/useToast';
 
 export default class CartStore {
   selectedAddress = {};
@@ -343,20 +343,24 @@ export default class CartStore {
     }
   };
 
-  updateCart = async (cartArray, appUser, restaurant, cart,addOnData) => {
+  updateCart = async (cartArray, appUser, restaurant, cart, addOnData) => {
     let filterData = cartArray?.filter(item => item?.quantity >= 1) || [];
     console.log('filterData--', filterData);
-    let addonsData={
+    let addonsData = {
       ...addOnData
-      }
+    }
+    console.log('addonsData--', addonsData?.add_on_items);
 
     let requestData = {
       restaurant_id: restaurant?._id,
       user_id: appUser?._id,
       cart_items: filterData,
       cart_id: cart?._id,
-      selected_add_on:addonsData ?? {},
+      selected_add_on: addonsData ?? {},
     };
+
+    console.log('requestData,addonsData--', requestData, addonsData?.add_on_items);
+
     console.log(
       'requestData updateCart: ',
       requestData,
@@ -408,7 +412,7 @@ export default class CartStore {
     }
   };
 
-  deleteCart = async (cart,showPopUp) => {
+  deleteCart = async (cart, showPopUp) => {
     let requestData = {
       cart_id: cart?._id,
     };
@@ -417,7 +421,7 @@ export default class CartStore {
       const res = await agent.deleteCart(requestData);
       console.log('deleteCart Res : ', res);
       if (res?.statusCode == 200) {
-       if(showPopUp){ useToast(res?.message, 1)};
+        if (showPopUp) { useToast(res?.message, 1) };
         return res?.data;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
@@ -459,8 +463,48 @@ export default class CartStore {
     }
   };
 
-setSelectedAddress =async(data)=>{
- this.selectedAddress = data
-}
+  setSelectedAddress = async (data) => {
+    this.selectedAddress = data
+  }
+
+
+  calculateDeliveryFee = async (address, cartList) => {
+    // console.log("address,cartList-", address, cartList);
+    // console.log("address,cartList-", address?.geo_location, cartList?.restaurant?.location);
+    let requestData = {
+      cart_id: cartList?._id,
+      customer_location: address?.geo_location,
+      rest_location: {
+        lat: cartList?.restaurant?.location?.coordinates[1],
+        lng: cartList?.restaurant?.location?.coordinates[0],
+      }
+
+    };
+    console.log(
+      'requestData calculateDeliveryFee: ',
+      requestData,
+    );
+    //  return
+    try {
+      const res = await agent.calculateDeliveryFee(requestData);
+      console.log('calculateDeliveryFee Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        return res?.data;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        return [];
+      }
+    } catch (error) {
+      console.log('error calculateDeliveryFee:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return [];
+    }
+  };
+
 
 }

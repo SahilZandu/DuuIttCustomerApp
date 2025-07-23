@@ -7,7 +7,7 @@ export const reviewRatingValidations = () => {
     ),
     ['feedback']: Yup.string('Enter your feedback')
     // .required('Enter your feedback')
-    .notRequired()
+    .notRequired('Enter your feedback')
     .min(10 ,'Feedback must be at least 10 characters long')
     .max(350,'Feedback cannot exceed 350 characters'),
     

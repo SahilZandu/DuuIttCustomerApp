@@ -148,11 +148,13 @@ export const agent = {
   getFoodOrderTracking: () => requests.get(Url.getFoodOrderTracking),
 
   addReviews: body => requests.post(Url.addReviews, body),
+  foodOrderReviews : body => requests.post(Url.foodOrderReviews, body),
   restaurantReview: body => requests.post(Url.restaurantReview, body),
   completeMealItems: body => requests.post(Url.completeMealItems, body),
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
   applyCoupon: body => requests.post(Url.applyCoupon, body),
   removeCoupan: body => requests.post(Url.removeCoupan, body),
+  calculateDeliveryFee: body => requests.post(Url.calculateDeliveryFee, body),
   appFeedback: body => requests.post(Url.appFeedback, body),
   restaurantOffersData: () =>  requests.get(Url.restaurantOffersData),
   wallet: body => requests.get(`${Url.wallet}/${body?.userId}`),
@@ -176,6 +178,9 @@ export const agent = {
   unseenMessages: body => requests.post(Url.unseenMessages, body),
   updateOrderArrivedTime: body => requests.post(Url.updateOrderArrivedTime, body),
   userLogout: body => requests.post(Url.userLogout, body),
+  getRestaurantFoodReviews: body => requests.post(Url.getRestaurantFoodReviews, body),
+  reorderCart: body => requests.post(Url.reorderCart, body),
+  getRestaurantBanners:body => requests.get(Url.getRestaurantBanners),
   
 };
 

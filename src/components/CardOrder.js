@@ -28,7 +28,8 @@ import {
 import { rootStore } from '../stores/rootStore';
 
 const CardOrder = ({ item, index, handleDetails, navigation }) => {
-  // console.log('item -- ', item);
+  console.log('item --CardOrder ', item);
+  let today = new Date();
   const { addReOrderRequestParcelRide } = rootStore.parcelStore;
   const [selectedId, setSelectedId] = useState('')
 
@@ -84,6 +85,19 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
     }
   };
 
+  const setTypeImage = status => {
+    switch (status) {
+      case 'veg':
+        return appImagesSvg.vegSvg;
+      case 'non-veg':
+        return appImagesSvg.nonVeg;
+        case 'egg':
+          return appImagesSvg.eggSvg;
+      default:
+        return appImagesSvg.vegSvg;
+    }
+  };
+
 
   const handleReOrder = async (item) => {
     console.log('item--handleReOrder', item);
@@ -114,74 +128,194 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
 
   return (
     <Surface elevation={2} style={styles.container}>
-      <TouchableOpacity
-        key={index}
-        activeOpacity={0.8}
-        style={styles.innerView}>
-        <View style={styles.imageDateView}>
-          <View style={styles.imageView}>
-            <Image
-              resizeMode="cover"
-              style={styles.image}
-              source={
-                setImageIcon(item?.order_type)
-                // item?.rider?.profile_pic?.length > 0
-                //   ? {uri: Url.Image_Url + item?.rider?.profile_pic}
-                //   : setImageIcon(item?.order_type)
-              }
-            />
-          </View>
-          <View style={styles.nameDateView}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              {item?.name ? item?.name : `ID:${item?.order_id}`}
-            </Text>
-            <Text style={styles.dateText}>
-              {dateTimeFormat(item?.createdAt)}
-            </Text>
-            <View style={styles.statusView}>
-              <Text
-                style={[
-                  styles.statusText,
-                  {
-                    color: item?.status == 'cancelled' ? '#E70000' : '#28B056',
-                  },
-                ]}>
-                {setStatusData(item?.status)}
+      {item?.order_type == 'food' ?
+        <TouchableOpacity
+          key={index}
+          activeOpacity={0.8}
+          style={styles.innerViewFood}>
+          <View style={[styles.imageDateView, { paddingHorizontal: '5%' }]}>
+            <View style={styles.imageView}>
+              <Image
+                resizeMode="cover"
+                style={styles.image}
+                source={
+                  setImageIcon(item?.order_type)
+                }
+              />
+            </View>
+            <View style={styles.nameDateView}>
+              <Text numberOfLines={1} style={styles.nameText}>
+                {`ID:${item?.order_id ?? "1234567890"}`}
               </Text>
-              <View style={{ flex: 1, marginLeft: '2%' }}>
-                <SvgXml
-                  xml={
-                    item?.status == 'cancelled'
-                      ? appImagesSvg.crossRedSvg
-                      : appImagesSvg.rightSvg
-                  }
-                />
+              <Text style={styles.dateText}>
+                {dateTimeFormat(item?.createdAt ?? today)}
+              </Text>
+              <View style={styles.statusView}>
+                <Text
+                  style={[
+                    styles.statusText,
+                    {
+                      color: item?.status == 'cancelled' ? '#E70000' : '#28B056',
+                    },
+                  ]}>
+                  {setStatusData(item?.status)}
+                </Text>
+                <View style={{ flex: 1, marginLeft: '2%' }}>
+                  <SvgXml
+                    xml={
+                      item?.status == 'cancelled'
+                        ? appImagesSvg.crossRedSvg
+                        : appImagesSvg.rightSvg
+                    }
+                  />
+                </View>
+                <Text style={styles.amountText}>
+                  {currencyFormat(item?.total_amount)}
+                </Text>
               </View>
-              <Text style={styles.amountText}>
-                {currencyFormat(item?.total_amount)}
-              </Text>
             </View>
           </View>
-        </View>
 
-        <View style={styles.orderItemView}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.riderNameText}>{'Distance'}:</Text>
+          <View style={{ marginHorizontal: 15 }}>
             <Text
               numberOfLines={1}
-              style={[styles.riderNameText, { color: colors.black }]}>
+              style={[styles.riderNameText, { color: colors.black, textTransform: 'capitalize' }]}>
               {' '}
-              {item?.distance?.toFixed(2) ?? 0}{' '}
+              {item?.restaurant?.name}{' '}
             </Text>
-            {/* <Text style={styles.riderNameText}>{'Rider'}:</Text>
-            <Text
-              numberOfLines={1}
-              style={[styles.riderNameText, {color: colors.black}]}>
-              {' '}
-              {item?.rider?.name ?? 'No Rider'}{' '}
-            </Text> */}
           </View>
-          {item?.order_type !== 'food' ? (
+
+          <View style={styles.orderItemViewFood}>
+
+            <View>
+              {item?.cartItems?.slice(0, 3)?.map((value, i) => {
+                return (
+                  <View key={i} style={{flexDirection: 'row', marginTop: '4%' }}>
+                    <SvgXml
+                      xml={setTypeImage(value?.veg_nonveg)}
+                    />
+                    <Text
+                      numberOfLines={1}
+                      style={{
+
+                        fontSize: RFValue(13),
+                        fontFamily: fonts.regular,
+                        color: colors.black,
+                        marginLeft: '2%',
+
+                      }}> {value?.quantity} X </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        flex: 1,
+                        fontSize: RFValue(13),
+                        fontFamily: fonts.regular,
+
+                      }}>
+                      {value?.varient_name}
+                    </Text>
+
+                    <Text style={{
+                      fontSize: RFValue(13),
+                      fontFamily: fonts.regular,
+                      color: colors.black,
+                      right: '10%'
+                    }}> {currencyFormat(value?.varient_price)}</Text>
+                  </View>
+                );
+              })}
+            </View>
+
+            <View style={styles.bottomBtn}>
+              <BTN
+                backgroundColor={colors.white}
+                labelColor={colors.main}
+                width={screenWidth(38)}
+                title={setDetailsBtn(item?.order_type)}
+                onPress={() => {
+                  handleDetails(item);
+                }}
+                bottomCheck={15}
+                textTransform={'capitalize'}
+              />
+
+              <BTN
+                loading={selectedId == item?._id}
+                width={screenWidth(38)}
+                title={setProgressBtn(item?.order_type)}
+                onPress={() => {
+                  setSelectedId(item?._id),
+                    handleReOrder(item)
+                }}
+                bottomCheck={15}
+                textTransform={'capitalize'}
+              />
+
+            </View>
+          </View>
+        </TouchableOpacity>
+        :
+        <TouchableOpacity
+          key={index}
+          activeOpacity={0.8}
+          style={styles.innerView}>
+          <View style={styles.imageDateView}>
+            <View style={styles.imageView}>
+              <Image
+                resizeMode="cover"
+                style={styles.image}
+                source={
+                  setImageIcon(item?.order_type)
+                  // item?.rider?.profile_pic?.length > 0
+                  //   ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                  //   : setImageIcon(item?.order_type)
+                }
+              />
+            </View>
+            <View style={styles.nameDateView}>
+              <Text numberOfLines={1} style={styles.nameText}>
+                {item?.name ? item?.name : `ID:${item?.order_id ?? "1234567890"}`}
+              </Text>
+              <Text style={styles.dateText}>
+                {dateTimeFormat(item?.createdAt ?? today)}
+              </Text>
+              <View style={styles.statusView}>
+                <Text
+                  style={[
+                    styles.statusText,
+                    {
+                      color: item?.status == 'cancelled' ? '#E70000' : '#28B056',
+                    },
+                  ]}>
+                  {setStatusData(item?.status)}
+                </Text>
+                <View style={{ flex: 1, marginLeft: '2%' }}>
+                  <SvgXml
+                    xml={
+                      item?.status == 'cancelled'
+                        ? appImagesSvg.crossRedSvg
+                        : appImagesSvg.rightSvg
+                    }
+                  />
+                </View>
+                <Text style={styles.amountText}>
+                  {currencyFormat(item?.total_amount)}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.orderItemView}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.riderNameText}>{'Distance'}:</Text>
+              <Text
+                numberOfLines={1}
+                style={[styles.riderNameText, { color: colors.black }]}>
+                {' '}
+                {item?.distance?.toFixed(2) ?? 0}{' '}
+              </Text>
+            </View>
+
             <PickDropComp
               item={{
                 id: 1,
@@ -198,76 +332,22 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
               }
               lineHeight={70}
             />
-          ) : (
-            <>
-              {/* {item?.sender_address?.map((value, i) => {
-                return (
-                  <View key={i} style={{flexDirection: 'row', marginTop: '4%'}}>
-                    <SvgXml
-                      xml={
-                        value?.type == 'veg'
-                          ? appImagesSvg.vegSvg
-                          : appImagesSvg.nonVeg
-                      }
-                    />
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: RFValue(13),
-                        fontFamily: fonts.regular,
-                        marginLeft: '2%',
-                        width: wp('75%'),
-                      }}>
-                      {value?.name}
-                      <Text style={{color: '#646464'}}> x {value?.qty}</Text>
-                    </Text>
-                  </View>
-                );
-              })} */}
-            </>
-          )}
 
-          <View style={styles.bottomBtn}>
-            {item?.order_type == 'food' ?
-            <>
-            <BTN
-              backgroundColor={colors.white}
-              labelColor={colors.main}
-              width={screenWidth(38)}
-              title={setDetailsBtn(item?.order_type)}
-              onPress={() => {
-                handleDetails(item);
-              }}
-              bottomCheck={15}
-              textTransform={'capitalize'}
-            />
-
-            <BTN
-              loading={selectedId == item?._id}
-              width={screenWidth(38)}
-              title={setProgressBtn(item?.order_type)}
-              onPress={() => {
-                setSelectedId(item?._id),
-                  handleReOrder(item)
-              }}
-              bottomCheck={15}
-              textTransform={'capitalize'}
-            />
-             </>:
-            <BTN
-            backgroundColor={colors.white}
-            labelColor={colors.main}
-            width={screenWidth(80)}
-            title={setDetailsBtn(item?.order_type)}
-            onPress={() => {
-              handleDetails(item);
-            }}
-            bottomCheck={15}
-            textTransform={'capitalize'}
-          />}
+            <View style={styles.bottomBtn}>
+              <BTN
+                backgroundColor={colors.white}
+                labelColor={colors.main}
+                width={screenWidth(80)}
+                title={setDetailsBtn(item?.order_type)}
+                onPress={() => {
+                  handleDetails(item);
+                }}
+                bottomCheck={15}
+                textTransform={'capitalize'}
+              />
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>}
     </Surface>
   );
 };
@@ -282,6 +362,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: screenWidth(90),
     marginTop: '5%',
+  },
+  innerViewFood: {
+    justifyContent: 'center',
+    borderRadius: 10,
   },
   innerView: {
     alignSelf: 'center',
@@ -343,6 +427,10 @@ const styles = StyleSheet.create({
   },
   orderItemView: {
     marginHorizontal: 10,
+    marginTop: '0%',
+  },
+  orderItemViewFood: {
+    marginHorizontal: 20,
     marginTop: '0%',
   },
   bottomBtn: {

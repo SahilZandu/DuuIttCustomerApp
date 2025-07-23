@@ -34,13 +34,14 @@ import Url from '../../../api/Url';
 import OrderCustomization from '../../../components/OrderCustomization';
 import CompleteMealComp from '../../../components/CompleteMealComp';
 import IncompletedAppRule from '../../../halpers/IncompletedAppRule';
+import IndicatorLoader from '../../../halpers/IndicatorLoader';
 
 let itemForEdit = null;
 let idForUpdate = null;
 let allCompleteMealList = [];
 const Cart = ({ navigation, route }) => {
   const { restaurant } = route.params;
-  const { setCart, getCart, updateCart, selectedAddress } = rootStore.cartStore;
+  const { setCart, getCart, updateCart, selectedAddress, calculateDeliveryFee } = rootStore.cartStore;
   const { appUser } = rootStore.commonStore;
   const { foodOrder, getCompleteMealItems, mealOrderList } =
     rootStore.foodDashboardStore;
@@ -117,6 +118,56 @@ const Cart = ({ navigation, route }) => {
     }, [selectedAddress, restaurentOfferCoupan]),
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      if ((deliveryAddress?.geo_location?.lng &&
+        cartList?.restaurant?.location?.coordinates?.length > 0)) {
+        getCalculateDeliveryFee(deliveryAddress, cartList)
+      }
+    }, 100)
+
+  }, [deliveryAddress]);
+
+  const getCalculateDeliveryFee = async (address, cartList) => {
+    const updateCart = await calculateDeliveryFee(address, cartList);
+    console.log("res--getCalculateDeliveryFee", updateCart);
+    if (updateCart?.food_item?.length > 0) {
+      setCartList(updateCart ?? {});
+
+      setAppCart({
+        cartitems: updateCart?.food_item,
+      });
+      setTimeout(() => {
+        onCheckMealItem(updateCart?.food_item);
+      }, 500);
+      if (
+        updateCart?.grand_total < activeOffer?.discount_price &&
+        updateCart?.offer?._id?.length > 0
+      ) {
+        // setActiveOffer({});
+        onApplyOffer(updateCart?.offer);
+      }
+      if (updateCart?.offer?._id?.length > 0) {
+        setActiveOffer(updateCart?.offer);
+      } else {
+        setActiveOffer({});
+      }
+      setCartBillG({
+        cartTotal: updateCart?.sub_total ?? updateCart?.grand_total,
+        platformFree: updateCart?.platform_fee ?? 0,
+        deliveryFree: updateCart?.delivery_fee ?? 0,
+        gstRestorentCharges: (updateCart?.tax_amount + updateCart?.restaurant_charge_amount) ?? 0,
+        grandTotal: updateCart?.grand_total + (updateCart?.discount_amount ?? 0) ?? 0,
+        couponDiscount: updateCart?.discount_amount ?? 0,
+        topay: updateCart?.grand_total ?? 0,
+      });
+
+    }
+
+  }
+
+
+
   // console.log("appUser cart --",appUser);
 
   useEffect(() => {
@@ -178,9 +229,6 @@ const Cart = ({ navigation, route }) => {
     navigation.navigate('orderPlaced', { orderData: data });
   };
 
-  const handleLoading = v => {
-    setLoading(v);
-  };
 
   const setFoodOrderData = async paymentId => {
     let payload = {
@@ -190,7 +238,8 @@ const Cart = ({ navigation, route }) => {
       item_sub_total_amount: 100.5,
       after_discount_sub_amt: 90.0,
       total_amount: cartBillG?.topay,
-      coupon_code: activeOffer?.referral_code ?? 'DISCOUNT20',
+      coupon_code: activeOffer?.referral_code ?? '',
+      is_offer_applied: activeOffer?.referral_code ? true : false,
       tax_amount: 10.0,
       coupon_amount: 5.0,
       packing_fee: 5.0,
@@ -237,11 +286,15 @@ const Cart = ({ navigation, route }) => {
     await foodOrder(payload, handleLoading, navigation);
   };
 
+  const handleLoading = v => {
+    setLoading(v);
+  };
+
   const onSuccess = data => {
     console.log('onSuccess---', data);
     let paymentId = data?.razorpay_payment_id;
 
-    setFoodOrderData(data?.razorpay_payment_id);
+    setFoodOrderData(data?.razorpay_payment_id ?? paymentId);
 
     // navigation.navigate('orderPlaced', {
     //   restaurant: [],
@@ -284,15 +337,13 @@ const Cart = ({ navigation, route }) => {
         setActiveOffer({});
       }
       setCartBillG({
-        cartTotal: cart?.grand_total,
-        platformFree: 5,
-        deliveryFree: 10,
-        gstRestorentCharges: 20,
-        grandTotal: cart?.grand_total,
-        //  + 5 + 10 + 20,
-        couponDiscount: 100,
-        topay: cart?.grand_total - 10,
-        //  + 5 + 10 + 20 - 10,
+        cartTotal: cart?.sub_total ?? cart?.grand_total,
+        platformFree: cart?.platform_fee ?? 0,
+        deliveryFree: cart?.delivery_fee ?? 0,
+        gstRestorentCharges: (cart?.tax_amount + cart?.restaurant_charge_amount) ?? 0,
+        grandTotal: cart?.grand_total + (cart?.discount_amount ?? 0) ?? 0,
+        couponDiscount: cart?.discount_amount ?? 0,
+        topay: cart?.grand_total ?? 0,
       });
       // getUserOrgDistance(cart?.org_id);
     } else {
@@ -316,7 +367,7 @@ const Cart = ({ navigation, route }) => {
 
     let updatedCartList = cartList?.cart_items?.map(data => {
       if (data?.food_item_id == item?._id) {
-        return { ...data, quantity: quan };
+        return { ...data, quantity: quan, selected_add_on: item?.selected_add_on };
       }
       return {
         ...data,
@@ -432,6 +483,11 @@ const Cart = ({ navigation, route }) => {
       quantity: quan,
       food_item_id: item?.food_items?._id,
       food_item_price: item?.food_items?.selling_price,
+      varient_name: item?.food_items?.name,
+      varient_price: item?.food_items?.selling_price,
+      selected_add_on: item?.food_items?.selected_add_on ?? []
+
+
     };
 
     // console.log('item,quan,handleAddRemove', item, quan,newItem,item?.restaurant_id || item?.item?.restaurant_id, item?.item?.restaurant_id);
@@ -458,7 +514,7 @@ const Cart = ({ navigation, route }) => {
       if (checkAvailabilityById) {
         updatedCartList = getCartList?.cart_items?.map(data => {
           if (data?.food_item_id == item?.food_items?._id) {
-            return { ...data, quantity: quan };
+            return { ...data, quantity: quan, selected_add_on: checkAvailabilityById?.selected_add_on };
           }
           return {
             ...data,
@@ -523,6 +579,7 @@ const Cart = ({ navigation, route }) => {
         // onPressPay={() => {
         //   navigation.navigate('trackingFoodOrderList');
         // }}
+        disable={cartBillG?.topay > 0 ? false : true}
         payText={'Google Pay'}
         onPressBuyNow={() => {
           handleOrderCreate();
@@ -899,6 +956,8 @@ const Cart = ({ navigation, route }) => {
             food_item_id: itemForEdit?._id,
             food_item_price: sellAmount,
             selected_add_on: addons ?? [],
+            varient_name: vcName,
+            varient_price: sellAmount,
           };
 
           if (Array?.isArray(getCartList?.cart_items)) {
@@ -911,7 +970,7 @@ const Cart = ({ navigation, route }) => {
             if (checkAvailabilityById) {
               updatedCartList = getCartList?.cart_items?.map(data => {
                 if (data?.food_item_id == updatedCustomizeItem?._id) {
-                  return { ...data, quantity: quan, food_item_price: sellAmount };
+                  return { ...data, quantity: quan, food_item_price: sellAmount, selected_add_on: addons };
                 }
                 return {
                   ...data,
@@ -969,6 +1028,7 @@ const Cart = ({ navigation, route }) => {
           }
         }}
       />
+      {loading && <IndicatorLoader />}
     </View>
   );
 };

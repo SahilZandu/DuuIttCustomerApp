@@ -92,7 +92,7 @@ export default class DashboardStore {
     }
   };
 
-  addReviews = async (payload, handleLoading) => {
+  addReviews = async (payload, handleLoading, onSuccess) => {
     handleLoading(true);
     let requestData = {
       ...payload,
@@ -104,6 +104,7 @@ export default class DashboardStore {
       if (res?.statusCode == 200) {
         useToast(res?.message, 1);
         handleLoading(false);
+        onSuccess();
         return res;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
@@ -122,36 +123,68 @@ export default class DashboardStore {
     }
   };
 
-  getRestaurantReview = async (restaurant, perPage, handleLoading) => {
+  addFoodOrderReviews = async (payload, handleLoading, onSuccess) => {
     handleLoading(true);
     let requestData = {
-      restaurant_id: restaurant?._id,
-      limit: perPage,
+      ...payload,
     };
-    console.log('requestData----restaurantReview', requestData);
+    console.log('requestData----addFoodOrderReviews', requestData, payload);
     try {
-      const res = await agent.restaurantReview(requestData);
-      console.log('restaurantReview Res : ', res);
+      const res = await agent.foodOrderReviews(requestData);
+      console.log('addFoodOrderReviews Res : ', res);
       if (res?.statusCode == 200) {
-        // useToast(res?.message, 1);
+        useToast(res?.message, 1);
         handleLoading(false);
-        return res?.data;
+        onSuccess();
+        return res;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
-        // useToast(message, 0);
+        useToast(message, 0);
         handleLoading(false);
         return [];
       }
     } catch (error) {
-      console.log('error restaurantReview:', error);
+      console.log('error addFoodOrderReviews:', error);
       handleLoading(false);
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
-      // useToast(m, 0);
+      useToast(m, 0);
       return [];
     }
   };
+
+  // getRestaurantReview = async (restaurant, perPage, handleLoading) => {
+  //   handleLoading(true);
+  //   let requestData = {
+  //     restaurant_id: restaurant?._id,
+  //     limit: perPage,
+  //   };
+  //   console.log('requestData----restaurantReview', requestData);
+  //   try {
+  //     const res = await agent.restaurantReview(requestData);
+  //     console.log('restaurantReview Res : ', res);
+  //     if (res?.statusCode == 200) {
+  //       // useToast(res?.message, 1);
+  //       handleLoading(false);
+  //       return res?.data;
+  //     } else {
+  //       const message = res?.message ? res?.message : res?.data?.message;
+  //       // useToast(message, 0);
+  //       handleLoading(false);
+  //       return [];
+  //     }
+  //   } catch (error) {
+  //     console.log('error restaurantReview:', error);
+  //     handleLoading(false);
+  //     const m = error?.data?.message
+  //       ? error?.data?.message
+  //       : 'Something went wrong';
+  //     // useToast(m, 0);
+  //     return [];
+  //   }
+  // };
+
 
   // getRestaurantOffers = async (restaurant, handleLoading) => {
   //   handleLoading(true);
@@ -187,10 +220,10 @@ export default class DashboardStore {
 
 
   getRestaurantOffers = async (handleLoading) => {
-   
+
     try {
       const res = await agent.restaurantOffersData();
-      console.log('restaurantOffersData Res : ', res,res?.data?.offer);
+      console.log('restaurantOffersData Res : ', res, res?.data?.offer);
       if (res?.statusCode == 200) {
         // useToast(res?.message, 1);
         this.restaurentOfferCoupan = res?.data?.offers ?? [];
@@ -247,7 +280,7 @@ export default class DashboardStore {
     }
   };
 
-  removeCoupan= async (cart, coupan, handleLoading, onSucces) => {
+  removeCoupan = async (cart, coupan, handleLoading, onSucces) => {
     handleLoading(true);
     let requestData = {
       cart_id: cart?._id,
@@ -573,6 +606,34 @@ export default class DashboardStore {
       return []
     }
   };
+
+  getRestaurantBanners = async () => {
+
+    let requestData = {
+      // userId: appUser?._id
+    };
+    console.log('getRestaurantBanners requestData', requestData);
+    try {
+      const res = await agent.getRestaurantBanners(requestData);
+      console.log('getRestaurantBanners Res :', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        return res?.data
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        return []
+      }
+    } catch (error) {
+      console.log('error getRestaurantBanners:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return []
+    }
+
+  }
 
 
 }

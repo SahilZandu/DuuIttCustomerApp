@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,23 +13,23 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { SvgXml } from 'react-native-svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {fonts} from '../theme/fonts/fonts';
-import {appImagesSvg, appImages} from '../commons/AppImages';
+import { fonts } from '../theme/fonts/fonts';
+import { appImagesSvg, appImages } from '../commons/AppImages';
 import Action from '../components/Action';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { RFValue } from 'react-native-responsive-fontsize';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import {currencyFormat} from '../halpers/currencyFormat';
+import { currencyFormat } from '../halpers/currencyFormat';
 import OrderVarientsComponent from '../components/OrderVarientsComponent';
 import OrderAddonComponent from '../components/OrderAddonComponents';
-import {useFocusEffect} from '@react-navigation/native';
-import {Snackbar} from 'react-native-paper';
-import {colors} from '../theme/colors';
+import { useFocusEffect } from '@react-navigation/native';
+import { Snackbar } from 'react-native-paper';
+import { colors } from '../theme/colors';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 import Ratings from '../halpers/Ratings';
 import Url from '../api/Url';
@@ -62,6 +62,7 @@ export default function OrderCustomization(props) {
     isResOpen,
   } = props;
   const inputRef = useRef(null);
+  let textInput = '';
   // console.log('OrderCustomization item:--', item, appCart);
   const [quan, setQuan] = useState(item?.quantity >= 1 ? item?.quantity : 1);
   const [sellAmount, setSellAmount] = useState(item?.selling_price);
@@ -69,7 +70,7 @@ export default function OrderCustomization(props) {
   const [vcName, setVcName] = useState(null);
   const [update, setUpdate] = useState(false);
   const [addons, setAddons] = useState([]);
-  let textInput = '';
+
   const [textInputt, setTextInput] = useState('');
   const [visibleSnack, setVisibleSnack] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -106,14 +107,14 @@ export default function OrderCustomization(props) {
     setQuan(item?.quantity >= 1 ? item?.quantity : 1);
     setVcId(null);
     setVcName(null);
-    setAddons(null);
+    setAddons([]);
     if (item?.combinations && item?.combinations.length > 0) {
       setVcId(item?.combinations[0]?.price);
       setSellAmount(item?.combinations[0]?.price);
       let vName = item?.combinations[0]?.second_gp
         ? item?.combinations[0]?.first_gp +
-          ' - ' +
-          item?.combinations[0]?.second_gp
+        ' - ' +
+        item?.combinations[0]?.second_gp
         : item?.combinations[0]?.first_gp;
 
       setVcName(vName);
@@ -128,16 +129,27 @@ export default function OrderCustomization(props) {
   );
 
   useEffect(() => {
-    if (!appCart?.food_item || !item) return;
-    const selectedFoodItem = appCart?.food_item?.find(
-      data => item?._id === data?._id,
+    if (!appCart?.cart_items || !item) return;
+    // const selectedFoodItem = appCart?.food_item?.find(
+    //   data => item?._id === data?._id,
+    // );
+    // console.log(
+    //   'selectedFoodItem?.selected_add_on--',
+    //   selectedFoodItem,
+    //   selectedFoodItem?.selected_add_on,
+    // );
+    setAddons([])
+    const selectedFoodItem = appCart?.cart_items?.find(
+      data => item?._id === data?.food_item_id,
     );
-    console.log(
-      'selectedFoodItem?.selected_add_on--',
-      selectedFoodItem,
-      selectedFoodItem?.selected_add_on,
-    );
-    setSellAmount(selectedFoodItem?.selling_price ?? item?.selling_price);
+    // console.log(
+    //   'selectedFoodItem?.selected_add_on--',
+    //   selectedFoodItem,
+    //   selectedFoodItem?.selected_add_on,
+    //   item,
+    //   appCart
+    // );
+    setSellAmount((selectedFoodItem?.varient_price || selectedFoodItem?.food_item_price) ?? item?.selling_price);
     setAddons(selectedFoodItem?.selected_add_on ?? []);
   }, [item, appCart, visible]);
 
@@ -196,8 +208,8 @@ export default function OrderCustomization(props) {
     let isAddons = addons && addons?.length > 0 ? true : false;
     let getaddonId = isAddons
       ? addons.reduce((total, item) => {
-          return total + item.addon_prod_id;
-        }, 0)
+        return total + item.addon_prod_id;
+      }, 0)
       : null;
     let addonId = getaddonId && getaddonId > 0 ? getaddonId : null;
 
@@ -233,7 +245,7 @@ export default function OrderCustomization(props) {
           <TouchableOpacity onPress={close} style={styles.crossConatiner}>
             <Image
               resizeMode="contain"
-              style={{height: 45, width: 45}}
+              style={{ height: 45, width: 45 }}
               source={appImages.crossClose} // Your icon image
             />
           </TouchableOpacity>
@@ -246,12 +258,12 @@ export default function OrderCustomization(props) {
               <View style={styles.orderCustomizationConatiner}>
                 <Pressable
                   style={styles.imageView}
-                  // onPress={() => {
-                  //   close(),
-                  //     setTimeout(() => {
-                  //       setFullImage(true);
-                  //     }, 1);
-                  // }}
+                // onPress={() => {
+                //   close(),
+                //     setTimeout(() => {
+                //       setFullImage(true);
+                //     }, 1);
+                // }}
                 >
                   <Image
                     resizeMode={'cover'}
@@ -259,7 +271,7 @@ export default function OrderCustomization(props) {
                     source={
                       // appImages.foodIMage
                       item?.image?.length > 0
-                        ? {uri: Url?.Image_Url + item?.image}
+                        ? { uri: Url?.Image_Url + item?.image }
                         : appImages.foodIMage
                       // appImages.noImage
                     }
@@ -321,13 +333,16 @@ export default function OrderCustomization(props) {
                   appCart={appCart}
                   onSelect={data => {
                     console.log('data>', data);
-                    setAddons(data);
+                    if (data?.length > 0) {
+                      setAddons([...data]);
+                    } else {
+                      setAddons([])
+                    }
                   }}
                   onLimitOver={limit => {
                     console.log('press');
                     setSnackMessage(
-                      `You can only select up to ${limit} option${
-                        limit > 1 ? 's' : ''
+                      `You can only select up to ${limit} option${limit > 1 ? 's' : ''
                       } `,
                     );
                     setVisibleSnack(true);
@@ -538,7 +553,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 20,
     shadowColor: colors.black, // Shadow color (black)
-    shadowOffset: {width: 0, height: 2}, // Horizontal and vertical offset
+    shadowOffset: { width: 0, height: 2 }, // Horizontal and vertical offset
     shadowOpacity: 0.3, // Opacity of the shadow
     shadowRadius: 5, // Blur radius of the shadow
     elevation: 5, // Android shadow (elevation must be set to display shadow on Android)

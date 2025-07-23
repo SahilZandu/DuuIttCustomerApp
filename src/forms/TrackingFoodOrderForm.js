@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -13,20 +13,20 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../theme/fonts/fonts';
-import {Surface} from 'react-native-paper';
-import {colors} from '../theme/colors';
-import {appImages, appImagesSvg} from '../commons/AppImages';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../theme/fonts/fonts';
+import { Surface } from 'react-native-paper';
+import { colors } from '../theme/colors';
+import { appImages, appImagesSvg } from '../commons/AppImages';
 import DriverTrackingProfileComp from '../components/DriverTrackingProfileComp';
 import DriverTrackingComp from '../components/DriverTrackingComp';
 import TextRender from '../components/TextRender';
-import {currencyFormat} from '../halpers/currencyFormat';
-import {FlatList} from 'react-native-gesture-handler';
-import {rootStore} from '../stores/rootStore';
+import { currencyFormat } from '../halpers/currencyFormat';
+import { FlatList } from 'react-native-gesture-handler';
+import { rootStore } from '../stores/rootStore';
 import AnimatedLoader from '../components/AnimatedLoader/AnimatedLoader';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import OtpShowComp from '../components/OtpShowComp';
 import ModalPopUp from '../components/ModalPopUp';
 import MapRoute from '../components/MapRoute';
@@ -46,12 +46,12 @@ const trackArray = [
   {
     id: 1,
     name: 'Picked',
-    status: 'completed',
+    status: 'packing_processing',
   },
   {
     id: 2,
     name: 'Arrived to destination',
-    status: 'waiting_for_confirmation',
+    status: 'cooking',
   },
   {
     id: 3,
@@ -60,14 +60,14 @@ const trackArray = [
   },
 ];
 
-const TrackingFoodOrderForm = ({navigation}) => {
-  const {getFoodOrderTracking, foodOrderTrackingList} =
+const TrackingFoodOrderForm = ({ navigation }) => {
+  const { getFoodOrderTracking, foodOrderTrackingList } =
     rootStore.foodDashboardStore;
-  const {appUser} = rootStore.commonStore;
+  const { appUser } = rootStore.commonStore;
   const [loading, setLoading] = useState(
     foodOrderTrackingList?.length?.length > 0 ? false : true,
   );
-  const [isSelected, setIsSelected] = useState(0);
+  const [isSelected, setIsSelected] = useState(null);
   const [trackedArray, setTrackedArray] = useState(foodOrderTrackingList);
   const [trackingArray, setTrackingArray] = useState(trackArray);
   const [isModalTrack, setIsModalTrack] = useState(false);
@@ -140,7 +140,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
 
   const getSocketLocation = async (socketServices, trackItem) => {
     console.log('trackItem---', trackItem);
-    const {appUser} = rootStore.commonStore;
+    const { appUser } = rootStore.commonStore;
     let query = {
       lat: getLocation('lat')?.toString(),
       lng: getLocation('lng')?.toString(),
@@ -188,12 +188,12 @@ const TrackingFoodOrderForm = ({navigation}) => {
     setLoading(v);
   };
 
-  const hanldeLinking = type => {
+  const hanldeLinking = (item, type) => {
     if (type) {
       if (type == 'email') {
-        Linking.openURL(`mailto:${'DuuItt@gmail.com'}`);
+        Linking.openURL(`mailto:${item?.rider?.email ?? 'DuuItt@gmail.com'}`);
       } else {
-        Linking.openURL(`tel:${'1234567890'}`);
+        Linking.openURL(`tel:${item?.rider?.phone ?? '1234567890'}`);
       }
     }
   };
@@ -201,6 +201,12 @@ const TrackingFoodOrderForm = ({navigation}) => {
   const setTrackStatus = status => {
     switch (status) {
       case 'waiting_for_confirmation':
+        return 0;
+      case 'cooking':
+        return 0;
+      case 'packing_processing':
+        return 0;
+      case 'ready_to_pickup':
         return 0;
       case 'picked':
         return 1;
@@ -213,15 +219,40 @@ const TrackingFoodOrderForm = ({navigation}) => {
     }
   };
 
+  useEffect(() => {
+
+    if (trackedArray?.length > 0) {
+      onViewDetailsStatus();
+    }
+
+  }, [trackedArray])
+
+  const onViewDetailsStatus = () => {
+    setIsSelected(0);
+    const res = setTrackStatus(trackedArray[0]?.status);
+    // console.log('res--', res);
+    const updatedTrackArray = trackingArray?.map((item, i) => {
+      if (i <= res) {
+        return { ...item, status: 'completed' };
+      } else {
+        return { ...item, status: 'waiting_for_confirmation' };
+      }
+    });
+
+    setTrackingArray([...updatedTrackArray]);
+  };
+
+
+
   const onViewDetails = (status, index) => {
     setIsSelected(prev => (prev === index ? null : index));
     const res = setTrackStatus(status);
     // console.log('res--', res);
     const updatedTrackArray = trackingArray?.map((item, i) => {
       if (i <= res) {
-        return {...item, status: 'completed'};
+        return { ...item, status: 'completed' };
       } else {
-        return {...item, status: 'waiting_for_confirmation'};
+        return { ...item, status: 'waiting_for_confirmation' };
       }
     });
 
@@ -241,15 +272,14 @@ const TrackingFoodOrderForm = ({navigation}) => {
     }
   };
 
-  const renderItem = ({item, index}) => {
-    // console.log('item--', item, index);
+  const renderItem = ({ item, index }) => {
+    console.log('item--renderItem', item, index, item?.rider);
     if (index == 0) {
       setTrackItem(item);
       //   setOrigin(item?.sender_address?.geo_location);
     }
-
     return (
-      <View style={{marginHorizontal: 20}}>
+      <View style={{ marginHorizontal: 20 }}>
         <TrackingFoodDetailsComp
           onViewDetails={onViewDetails}
           item={item}
@@ -265,7 +295,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
             elevation={3}
             style={[
               styles.trackingSurfaceView,
-              {height: item?.rider?._id?.length > 0 ? hp('53%') : hp('46%')},
+              { height: item?.rider?._id?.length > 0 ? hp('53%') : hp('46%') },
             ]}>
             <View style={styles.innerTrackingView}>
               {item?.rider?._id?.length > 0 && (
@@ -280,13 +310,13 @@ const TrackingFoodOrderForm = ({navigation}) => {
                       name: item?.rider?.name
                         ? item?.rider?.name
                         : 'DuuItt Rider',
-                      rating: '4.5',
+                      rating: item?.rider?.riderReviews?.average_rating ?? '4.5',
                     }}
                     onMessage={() => {
-                      hanldeLinking('email');
+                      hanldeLinking(item, 'email');
                     }}
                     onCall={() => {
-                      hanldeLinking('call');
+                      hanldeLinking(item, 'call');
                     }}
                   />
                   <View style={styles.lineView} />
@@ -295,7 +325,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
               <DriverTrackingComp
                 data={trackingArray}
                 image={appImages.routeFood}
-                //   bottomLine={true}
+              //   bottomLine={true}
               />
               <View style={styles.lineView} />
               <TextRender
@@ -315,7 +345,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
               <View style={styles.lineView} />
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('trackOrderPreparing', {item: item});
+                  navigation.navigate('trackOrderPreparing', { item: item });
                   setTrackItem(item);
                   // setIsModalTrack(true);
                 }}
@@ -329,7 +359,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
                     </Text>
                   </View>
                   <Image
-                  resizeMode={'contain'}
+                    resizeMode={'contain'}
                     style={styles.tarckImage}
                     source={appImages.mapTrackImage}
                   />
@@ -347,7 +377,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
       {loading == true && trackedArray?.length == 0 ? (
         <AnimatedLoader type={'trackingOrderLoader'} />
       ) : (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           {trackedArray?.length > 0 ? (
             <FlatList
               initialNumToRender={20}
@@ -355,7 +385,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
               renderItem={renderItem}
               keyExtractor={item => item?._id?.toString()}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom: hp('10%')}}
+              contentContainerStyle={{ paddingBottom: hp('10%') }}
             />
           ) : (
             <View style={styles.noDataView}>
@@ -375,7 +405,7 @@ const TrackingFoodOrderForm = ({navigation}) => {
             <MapRoute
               origin={origin}
               destination={trackItem?.receiver_address?.geo_location}
-              mapContainerView={{height: hp('60%')}}
+              mapContainerView={{ height: hp('60%') }}
             />
           </View>
         </View>
