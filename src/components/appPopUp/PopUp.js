@@ -16,6 +16,7 @@ const PopUp = ({visible, onDelete, type, text, title, onClose, CTATitle}) => {
       return appImagesSvg?.popUpwarning;
     } else if (type == 'logout') {
       return appImagesSvg?.logoutSvg;
+      // return appImagesSvg?.crossIconBackRed;
     } else if (type == 'continue') {
       return appImagesSvg?.logoutSvg;
     } else {
@@ -30,11 +31,13 @@ const PopUp = ({visible, onDelete, type, text, title, onClose, CTATitle}) => {
           styles.iconView,
           {
             backgroundColor:
-              type == 'delete' || type == 'logout' || type == 'continue'
+              type == 'delete' ||
+               type == 'logout' ||
+                type == 'continue'
                 ? '#CB2F2F'
                 : type == 'warning'
                 ? 'rgba(254, 240, 199, 1)'
-                : '#1D721E',
+                :  type == 'logout' ? 'transparent' : '#1D721E',
           },
         ]}>
         <SvgXml xml={getIconXml()} />

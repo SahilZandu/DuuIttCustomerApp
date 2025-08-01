@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { TouchableOpacity, View, Image, Dimensions } from 'react-native';
+import { TouchableOpacity, View, Image, Dimensions ,SafeAreaView, StatusBar} from 'react-native';
 import { colors } from '../../theme/colors';
 import {
     heightPercentageToDP as hp,
@@ -24,28 +24,28 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
     const renderItem = ({ item }) => {
         // console.log("item--renderItem",item);
         return (
-            <>
+            <View>
                 <TouchableOpacity
                     onPress={onSliderPress}
                     activeOpacity={0.8}
                     style={{
                         alignSelf: 'center',
-                        // borderRadius: 10,
-                        // borderColor: colors.main,
-                        // borderWidth: 0.3
                     }}>
                     <Image
                         resizeMode='stretch'
-                        style={{ width: imageWidth ? imageWidth : wp('100%'), height: imageHeight ? imageHeight : hp('18%')}}
+                        style={{
+                            width: imageWidth ? imageWidth : wp('100%'),
+                            height: imageHeight ? imageHeight : hp('18%')
+                        }}
                         source={{ uri: Url?.Image_Url + item }}
                     />
 
                 </TouchableOpacity>
-                <Text numberOfLines={2} style={{
+                {/* <Text numberOfLines={2} style={{
                     fontFamily: fonts.bold, fontSize: RFValue(12),
                     color: colors.black, marginHorizontal: 22, marginTop: '2%'
-                }}>{bannerList[0]?.title}</Text>
-            </>
+                }}>{bannerList[0]?.title}</Text> */}
+            </View>
         )
     };
 
@@ -90,7 +90,9 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
 
 
     return (
-        <View style={{justifyContent: 'center', alignItems: 'center' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+         <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Carousel
                 ref={carouselRef}
                 data={data}
@@ -105,7 +107,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
             />
             {paginationList && pagination()}
         </View>
-
+        </SafeAreaView>
     );
 };
 

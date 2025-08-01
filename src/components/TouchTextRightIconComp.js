@@ -20,7 +20,6 @@ const TouchTextRightIconComp = ({data,firstIcon}) => {
                 style={styles.textIconView(index,firstIcon)}>
               {firstIcon == true && <SvgXml height={22} width={22} xml={item?.icon} />}
                 <Text style={styles.titleText}>{item?.title}</Text>
-
                 {item?.title != 'Logout' && (
                   <SvgXml
                     height={22}
@@ -30,7 +29,7 @@ const TouchTextRightIconComp = ({data,firstIcon}) => {
                   />
                 )}
               </TouchableOpacity>
-              <View style={styles.bottomLine(data, index)} />
+            <View style={styles.bottomLine(data, index)} />
             </View>
           ),
       )}
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
   },
   textIconView:(index,firstIcon) => ({
     flexDirection: 'row',
-    marginTop:firstIcon == true ?  index == 0 ? '4%' : '6%' :'6%',
+    marginTop:firstIcon == true ? index == 0 ? '4%' : '6%' :'6%',
   }),
   titleText: {
     fontSize: RFValue(14),
@@ -62,6 +61,8 @@ const styles = StyleSheet.create({
   bottomLine: (data, index) => ({
     height: 2,
     backgroundColor: data?.length - 1 == index ? 'transparent' : colors.colorD9,
-    marginTop: '5%',
+    marginTop:'5%',
   }),
+  
+
 });

@@ -234,7 +234,7 @@ export default class FoodDashStore {
         useToast(res?.message, 1);
         handleLoading(false);
         navigation.navigate('orderPlaced', {
-          restaurant: [],
+          orderData:res?.data,
         });
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
@@ -401,5 +401,100 @@ export default class FoodDashStore {
       return [];
     }
   };
+
+
+  foodReorder = async (item, navigation, handleLoading) => {
+    handleLoading(true);
+    let requestData = {
+      order_id: item?._id
+    };
+
+    console.log('requestData:-foodReorder', requestData);
+    try {
+      const res = await agent.foodReorder(requestData);
+      console.log('foodReorder API Res:', res);
+      if (res?.statusCode == 200) {
+        useToast(res.message, 1);
+        // navigation.navigate('food', { screen: 'home' });
+        navigation.navigate('food', {
+          screen: 'cart',
+          params: {
+            restaurant: item?.restaurant,
+          }
+        });
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+      handleLoading(false);
+    } catch (error) {
+      console.log('error:foodReorder', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
+
+  cancelFoodOrderByCustomer = async (item, navigation, handleLoading) => {
+    handleLoading(true);
+    let requestData = {
+      order_id: item?._id
+    };
+
+    console.log('requestData:-cancelFoodOrderByCustomer', requestData);
+    try {
+      const res = await agent.cancelFoodOrderByCustomer(requestData);
+      console.log('cancelFoodOrderByCustomer API Res:', res);
+      if (res?.statusCode == 200) {
+        useToast(res.message, 1);
+        navigation.navigate('food', { screen: 'home' });
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+      }
+      handleLoading(false);
+    } catch (error) {
+      console.log('error:cancelFoodOrderByCustomer', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
+  cancelFoodOrderCustomer = async (item, handleLoading, onSuccess, onError) => {
+    handleLoading(true);
+    let requestData = {
+      order_id: item?._id
+    };
+
+    console.log('requestData:-cancelFoodOrderCustomer', requestData);
+    try {
+      const res = await agent.cancelFoodOrderByCustomer(requestData);
+      console.log('cancelFoodOrderCustomer API Res:', res);
+      if (res?.statusCode == 200) {
+        useToast(res.message, 1);
+        onSuccess();
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        onError()
+      }
+      handleLoading(false);
+    } catch (error) {
+      console.log('error:cancelFoodOrderCustomer', error);
+      onError()
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+    }
+  };
+
 
 }

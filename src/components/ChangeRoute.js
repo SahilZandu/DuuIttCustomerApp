@@ -153,9 +153,16 @@ const ChangeRoute = ({ data, navigation }) => {
     setParcelTrackingOrder,
     setParcelOrderInProgress,
   } = rootStore.orderStore;
+  const { getCart, cartItemData } = rootStore.cartStore;
+  const {
+    getFoodOrderTracking,
+    foodOrderTrackingList,
+  } = rootStore.foodDashboardStore;
   const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
   const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
+  const [foodTrackedArray, setFoodTrackedArray] = useState(foodOrderTrackingList ?? [])
+  const [cartItems, setCartItems] = useState(cartItemData ?? {})
 
 
   useFocusEffect(
@@ -193,12 +200,32 @@ const ChangeRoute = ({ data, navigation }) => {
       await Promise.all([
         getIncompleteParcelOrder(),
         getTrackingParcelOrder(),
-        getIncompleteRideOrder()
+        getIncompleteRideOrder(),
+        getFoodTrackingOrder(),
+        getCartItemsFood()
       ]);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
   };
+
+  const getCartItemsFood = async () => {
+    const cart = await getCart();
+    console.log('user cart', cart);
+    if (cart?.cart_items?.length > 0) {
+      setCartItems(cart);
+    }
+  };
+
+  const getFoodTrackingOrder = async () => {
+    const res = await getFoodOrderTracking(handleTrackingLoading);
+    setFoodTrackedArray(res);
+  };
+
+  const handleTrackingLoading =(v)=>{
+    console.log("v",v);
+    
+  }
 
 
   const getIncompleteParcelOrder = async () => {
@@ -260,15 +287,15 @@ const ChangeRoute = ({ data, navigation }) => {
   };
 
 
-  const setIndicatorShow = (name, ride, parcel, parcelTrack) => {
+  const setIndicatorShow = (name, ride, parcel, parcelTrack,foodCart,foodTarcking) => {
     if (ride?.length > 0 && name == "RIDE") {
       return true
     } else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "PARCEL") {
       return true
     }
-    // else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "FOOD") {
-    //   return true
-    // }
+    else if ((foodCart?.cart_items?.length > 0 || foodTarcking?.length > 0) && name == "FOOD") {
+      return true
+    }
     else {
       return false
     }
@@ -409,7 +436,7 @@ const ChangeRoute = ({ data, navigation }) => {
             </TouchableOpacity>
           )}
         </Surface>
-        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <CornerTriangle onPress={() => { onRoutePress(item) }} />}
+        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder,cartItems,foodTrackedArray) && <CornerTriangle onPress={() => { onRoutePress(item) }} />}
         {/* {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <OrderIndicator
           onPress={() => { onRoutePress(item); }}
           isHashOrders={s => console.log('s', s)}

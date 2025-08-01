@@ -78,7 +78,8 @@ export const colors = {
     colorFE:'#FEF0F3',
     colorC9:'#C9FFDB',
     grey:'#7D7D7D',
-    colorE8:'#E8E7E7'
+    colorE8:'#E8E7E7',
+    colorE7:'#E70000',
     
    
   

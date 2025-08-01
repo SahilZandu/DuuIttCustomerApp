@@ -38,9 +38,10 @@ const ReviewsRatingFoodComp = ({
     type,
     reviewToRider
 }) => {
-    const { addReviews,addFoodOrderReviews } = rootStore.dashboardStore;
-    console.log("data--ReviewsRatingFoodComp",data);
-    
+    const { addReviews, addFoodOrderReviews } = rootStore.dashboardStore;
+    const { appUser } = rootStore.commonStore;
+    console.log("data--ReviewsRatingFoodComp", data);
+
     const [initialValues, setInitialValues] = useState({
         rating: "",
         taste_rating: "",
@@ -71,9 +72,9 @@ const ReviewsRatingFoodComp = ({
     const onRestaurantRating3 = item => {
         setRatingShow3(item);
     };
-    
-    
-    
+
+
+
 
 
 
@@ -209,22 +210,22 @@ const ReviewsRatingFoodComp = ({
     const handleUpdate = async values => {
         console.log('values---', values);
         let payload = {
-            food_review:  values?.feedback ?? '',
-            food_rating:values?.rating,
+            food_review: values?.feedback ?? '',
+            food_rating: values?.rating,
             type: "Food-Rest",
-            user_id: data?.customer?._id,
-            order_id:data?._id,
+            user_id: data?.customer?._id ?? appUser?._id,
+            order_id: data?._id,
             rider_id: data?.rider?._id ?? data?.rider_id,
-            restaurant_id:data?.restaurant?._id,
+            restaurant_id: data?.restaurant?._id,
             images: [],
             taste_rating: values?.taste_rating,
             packaging_rating: values?.packaging_rating,
             value_rating: values?.money_rating
         };
 
-        console.log("payload---handleUpdate",payload);
-            // return 
-        const res = await addFoodOrderReviews(payload, handleLoading,onSuccess);
+        console.log("payload---handleUpdate", payload);
+        // return 
+        const res = await addFoodOrderReviews(payload, handleLoading, onSuccess);
         console.log('res---', res);
         // handleLoading(false);
     };
@@ -240,7 +241,7 @@ const ReviewsRatingFoodComp = ({
         // }
     };
 
-    const onSuccess = ()=>{
+    const onSuccess = () => {
         setRatingShow(0)
         setRatingShow1(0)
         setRatingShow2(0)

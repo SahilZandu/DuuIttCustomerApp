@@ -545,7 +545,6 @@ export default class DashboardStore {
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
-
       return []
     }
   };
@@ -596,14 +595,13 @@ export default class DashboardStore {
         onError()
       }
     } catch (error) {
-      console.log('error paymentsVerify:', error);
+      console.log('error userLogout:', error);
       handleLoading(false);
       onError()
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
-      return []
     }
   };
 

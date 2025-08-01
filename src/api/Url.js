@@ -16,6 +16,7 @@ export default {
     myAddress: 'customers/address',
     getMyAddress: 'customers/detail',
     parcelsRides: 'orders',
+    foodReorder :"cart/reorder-from-order",
     editParcelsRides: "orders/update-order-details",
     parcels_Cancel: 'orders/cancel',
     parcels_find_rider: 'orders/find-rider',
@@ -75,7 +76,8 @@ export default {
     userLogout: "customers/logout",
     reorderCart:"cart/reorder-from-order",
     getRestaurantFoodReviews:'reviews/restaurant-food-reviews',
-    getRestaurantBanners :"restaurant/get-banners"
+    getRestaurantBanners :"restaurant/get-banners",
+    cancelFoodOrderByCustomer:'food-order/cancel-food-order-by-customer'
 
    
 

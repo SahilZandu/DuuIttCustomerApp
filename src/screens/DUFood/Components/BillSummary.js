@@ -13,23 +13,17 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
 import DotedLine from './DotedLine';
-import {currencyFormat} from '../../../halpers/currencyFormat';
-import {colors} from '../../../theme/colors';
+import { currencyFormat } from '../../../halpers/currencyFormat';
+import { colors } from '../../../theme/colors';
 import TextRender from '../../../components/TextRender';
 
-const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
-  // cartTotal: cart?.grand_total,
-  // platformFree: 5,
-  // deliveryFree: 10,
-  // gstRestorentCharges: 20,
-  // grandTotal: cart?.grand_total + 5 + 10 + 20,
-  // couponDiscount: 100,
-  // topay: cart?.grand_total + 5 + 10 + 20 - 10,
+const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
+
   const billDetails = [
     {
       id: '1',
@@ -45,36 +39,43 @@ const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
       coupanCode: '',
       bottomLine: false,
     },
+    // {
+    //   id: '3',
+    //   name: 'Packing Charges',
+    //   price: cartBillG?.platformFree,
+    //   coupanCode: '',
+    //   bottomLine: false,
+    // },
     {
-      id: '3',
+      id: '4',
       name: 'Platform fee',
       price: cartBillG?.platformFree,
       coupanCode: '',
       bottomLine: false,
     },
     {
-      id: '4',
+      id: '5',
       name: 'GST and Restaurant Charges',
       price: cartBillG?.gstRestorentCharges,
       coupanCode: '',
       bottomLine: true,
     },
     {
-      id: '5',
+      id: '6',
       name: 'Grand Total',
       price: cartBillG?.grandTotal,
       coupanCode: '',
       bottomLine: false,
     },
     {
-      id: '6',
+      id: '7',
       name: 'Restaurant Coupon',
       price: cartBillG?.couponDiscount,
-      coupanCode: 'DUIT75',
-      bottomLine: false,
+      coupanCode: cartBillG?.coupanCode ?? '',
+      bottomLine: true,
     },
     {
-      id: '7',
+      id: '8',
       name: 'To Pay',
       price: cartBillG?.topay,
       coupanCode: '',
@@ -96,22 +97,18 @@ const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
         <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
           <Image
             resizeMode="contain"
-            style={{height: 45, width: 45}}
+            style={{ height: 45, width: 45 }}
             source={appImages.crossClose} // Your icon image
           />
         </Pressable>
         <View style={styles.mainWhiteView}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: '10%'}}>
+            contentContainerStyle={{ paddingBottom: '10%' }}>
             <View style={styles.scrollInnerView}>
               <Text
                 numberOfLines={1}
-                style={{
-                  fontFamily: fonts.bold,
-                  fontSize: RFValue(15),
-                  color: colors.black,
-                }}>
+                style={styles.billingText}>
                 Bill Summary
               </Text>
 
@@ -145,7 +142,7 @@ const BillSummary = ({visible, cartBillG, onClose, menu, onSelectMenu}) => {
                       value={currencyFormat(Number(item?.price))}
                       bottomLine={false}
                     />
-                    {i == 3 && <DotedLine />}
+                    {item?.bottomLine && <DotedLine />}
                   </View>
                 );
               })}
@@ -183,7 +180,7 @@ const styles = StyleSheet.create({
   },
   mainWhiteView: {
     backgroundColor: colors.white,
-    height: hp('53%'),
+    height: hp('55%'),
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     borderColor: colors.colorF9,
@@ -192,6 +189,12 @@ const styles = StyleSheet.create({
   scrollInnerView: {
     marginHorizontal: 20,
     justifyContent: 'center',
+  },
+  billingText:{
+    fontFamily: fonts.bold,
+    fontSize: RFValue(15),
+    color: colors.black,
+    marginTop:'1%'
   },
   billDetailRenderView: {
     paddingHorizontal: 10,

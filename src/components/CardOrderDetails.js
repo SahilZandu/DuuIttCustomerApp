@@ -28,6 +28,7 @@ import {
 } from 'react-native-responsive-screen';
 import TextRender from './TextRender';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
+import OrdersInstrucationsComp from './OrderInstructionsComp';
 
 const CardOrderDetails = ({ item }) => {
   console.log('item -- CardOrderDetails', item);
@@ -39,7 +40,7 @@ const CardOrderDetails = ({ item }) => {
       case 'completed':
         return 'Completed';
       default:
-        return 'Completed';
+        return 'Processing';
     }
   };
 
@@ -53,20 +54,14 @@ const CardOrderDetails = ({ item }) => {
         return 'Ride Amount';
     }
   };
-  // billing_detail:
-  // delivery_fee: 7
-  // discount: 0
-  // distance_fee: 27
-  // gst_fee: 6.2496
-  // platform_fee: 1.5
+
   let disFare = item?.total_amount - (item?.billing_detail?.delivery_fee + item?.billing_detail?.platform_fee + item?.billing_detail?.gst_fee);
 
   const billDetails = [
-   
     {
       id: '0',
       name: 'Item Fee',
-      price: item?.billing_detail?. item_sub_total_amount ?? 0,
+      price: item?.billing_detail?.item_sub_total_amount ? item?.billing_detail?.item_sub_total_amount : disFare ?? 0,
       coupanCode: '',
       bottomLine: false,
       gstIcon: false,
@@ -75,7 +70,7 @@ const CardOrderDetails = ({ item }) => {
     {
       id: '1',
       name: 'Distance Fee',
-      price: item?.billing_detail?.distance_fee ?? 0,
+      price: disFare ? disFare : item?.billing_detail?.distance_fee ?? 0,
       coupanCode: '',
       bottomLine: false,
       isShow: item?.order_type !== 'food' ? true : false,
@@ -83,28 +78,35 @@ const CardOrderDetails = ({ item }) => {
     },
     {
       id: '2',
-      name: 'Management Fare',
+      name: item?.order_type == 'food' ? 'Delivery Fee' : 'Management Fare',
       price: item?.billing_detail?.delivery_fee ?? 0,
       coupanCode: '',
       bottomLine: false,
-      // isShow: item?.order_type == 'food' ? true : false,
       isShow: true,
       gstIcon: false,
     },
     {
       id: '3',
-      name: 'Platform fee',
+      name: 'Packing fee',
+      price: item?.billing_detail?.packing_fee ?? item?.packing_fee ?? 0,
+      coupanCode: '',
+      bottomLine: false,
+      isShow: item?.order_type == 'food' ? true : false,
+      gstIcon: false,
+    },
+    {
+      id: '4',
+      name: 'Platform Charges',
       price: item?.billing_detail?.platform_fee ?? 0,
       coupanCode: '',
-      // bottomLine: item?.order_type !== 'food' ? true : false,
       bottomLine: false,
       isShow: true,
       gstIcon: false,
     },
     {
-      id: '4',
+      id: '5',
       name: item?.order_type == 'food' ? 'GST and Restaurant Charges' : 'GST',
-      price: item?.billing_detail?.gst_fee ?? 0,
+      price: item?.billing_detail?.gst_fee + item?.billing_detail?.restaurant_charge_amount ?? 0,
       coupanCode: '',
       bottomLine: true,
       // isShow: item?.order_type == 'food' ? true : false,
@@ -112,7 +114,7 @@ const CardOrderDetails = ({ item }) => {
       gstIcon: true,
     },
     {
-      id: '5',
+      id: '6',
       name: setTitleText(item?.order_type),
       price: item?.total_amount,
       coupanCode: '',
@@ -122,7 +124,7 @@ const CardOrderDetails = ({ item }) => {
     },
 
     {
-      id: '5',
+      id: '7',
       name: 'Grand Total',
       price: item?.billing_detail?.total_amount - item?.billing_detail?.discount ?? 0,
       coupanCode: '',
@@ -131,7 +133,7 @@ const CardOrderDetails = ({ item }) => {
       gstIcon: false,
     },
     {
-      id: '6',
+      id: '8',
       name: 'Restaurant Coupon',
       price: item?.billing_detail?.discount ?? 0,
       coupanCode: item?.billing_detail?.coupon_code ?? '',
@@ -140,7 +142,7 @@ const CardOrderDetails = ({ item }) => {
       gstIcon: false,
     },
     {
-      id: '7',
+      id: '9',
       name: 'Total Paid',
       price: item?.status == 'cancelled' ? 0 : item?.total_amount,
       coupanCode: '',
@@ -170,11 +172,13 @@ const CardOrderDetails = ({ item }) => {
   const setImageIcon = status => {
     switch (status) {
       case 'food':
-        return appImages.order1;
+        return appImages.foodOrderImage;
       case 'parcel':
-        return appImages.order2;
+        return appImages.parcelOrderImage;
       case 'ride':
-        return appImages.order3;
+        return appImages.rideOrderImage;
+      default:
+        return appImages.foodOrderImage;
     }
   };
 
@@ -201,17 +205,17 @@ const CardOrderDetails = ({ item }) => {
               <Image
                 resizeMode="cover"
                 style={styles.image}
-                source={
-                  setImageIcon(item?.order_type)
-                  // item?.rider?.profile_pic?.length > 0
-                  //   ? { uri: Url.Image_Url + item?.rider?.profile_pic }
-                  //   : setImageIcon(item?.order_type)
+                source=
+                // setImageIcon(item?.order_type)
+                {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
+                  ? { uri: Url?.Image_Url + (item?.restaurant?.banner || item?.restaurant?.logo) }
+                  : setImageIcon(item?.order_type)
                 }
               />
             </View>
             <View style={styles.trackTextView}>
               <Text numberOfLines={1} style={styles.trackIdText}>
-                {`ID:${item?.order_id ?? '1234567890'}`}
+                {`ID:${item?.order_id ?? item?._id}`}
               </Text>
               <Text style={styles.dateText}>
                 {dateTimeFormat(item?.createdAt ?? today)}
@@ -243,20 +247,26 @@ const CardOrderDetails = ({ item }) => {
             </View>
           </View>
           <View style={{ marginTop: '3%' }}>
-            {item?.order_type !== 'food' ? <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row' }}>
               <Text style={styles.riderNameText}>{'Distance'}:</Text>
               <Text
                 numberOfLines={1}
                 style={[styles.riderNameText, { color: colors.black }]}>
                 {' '}
-                {item?.distance?.toFixed(2) ?? 0}{' '}
+                {item?.distance?.toFixed(2) ?? item?.restaurantToCustomerKm?.toFixed(2) ?? 0}{' '}
               </Text>
 
-            </View> :
+            </View>
+            {item?.order_type == 'food' &&
               <>
                 <Text
                   numberOfLines={1}
-                  style={[styles.riderNameText, { color: colors.black, textTransform: 'capitalize' }]}>
+                  style={[styles.riderNameText,
+                  {
+                    color: colors.black,
+                    textTransform: 'capitalize',
+                    marginTop: '2%'
+                  }]}>
                   {' '}
                   {item?.restaurant?.name}{' '}
                 </Text>
@@ -283,40 +293,54 @@ const CardOrderDetails = ({ item }) => {
               />
             ) : (
               <View>
-                {item?.cartItems?.slice(0, 3)?.map((value, i) => {
+                {item?.cartItems?.map((value, i) => {
                   return (
-                    <View key={i} style={{ flexDirection: 'row', marginTop: '4%' }}>
-                      <SvgXml
-                        xml={setTypeImage(value?.veg_nonveg)}
-                      />
-                      <Text
-                        numberOfLines={1}
-                        style={{
+                    <>
+                      <View key={i} style={{ flexDirection: 'row', marginTop: '4%' }}>
+                        <SvgXml
+                          xml={setTypeImage(value?.veg_nonveg)}
+                        />
+                        <Text
+                          numberOfLines={1}
+                          style={{
 
+                            fontSize: RFValue(13),
+                            fontFamily: fonts.regular,
+                            color: colors.black,
+                            marginLeft: '2%',
+
+                          }}> {value?.quantity} X </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            flex: 1,
+                            fontSize: RFValue(13),
+                            fontFamily: fonts.regular,
+
+                          }}>
+                          {value?.varient_name ? value?.varient_name : value?.food_item_name}
+                        </Text>
+
+                        <Text style={{
                           fontSize: RFValue(13),
                           fontFamily: fonts.regular,
                           color: colors.black,
-                          marginLeft: '2%',
-
-                        }}> {value?.quantity} X </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          flex: 1,
-                          fontSize: RFValue(13),
-                          fontFamily: fonts.regular,
-
-                        }}>
-                        {value?.varient_name}
-                      </Text>
-
-                      <Text style={{
-                        fontSize: RFValue(13),
-                        fontFamily: fonts.regular,
-                        color: colors.black,
-                        right: '10%'
-                      }}> {currencyFormat(value?.varient_price)}</Text>
-                    </View>
+                          right: '10%'
+                        }}> {currencyFormat(value?.varient_price ? value?.varient_price : value?.food_item_price)}</Text>
+                      </View>
+                      {value?.selected_add_on?.length > 0 && (
+                        <View style={styles.addonsView}>
+                          <Text numberOfLines={2} style={styles.addonsName}>
+                            {value?.selected_add_on?.map(item => item?.addon_name).join(', ')}
+                          </Text>
+                          <Text style={styles.addonsPrice}>
+                            {currencyFormat(
+                              value?.selected_add_on?.reduce((acc, item) => acc + Number(item?.addon_price || 0), 0)
+                            )}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   );
                 })}
               </View>
@@ -372,6 +396,7 @@ const CardOrderDetails = ({ item }) => {
               );
             })}
           </View>
+          <OrdersInstrucationsComp item={item} />
         </TouchableOpacity>
       </AppInputScroll>
       {/* <View
@@ -479,4 +504,25 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
     color: colors.color64,
   },
+  addonsView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: '1%'
+  },
+  addonsName: {
+    flex: 1,
+    flexWrap: 'wrap',
+    fontFamily: fonts.medium,
+    fontSize: RFValue(11),
+    color: colors.black85
+  },
+  addonsPrice: {
+    marginLeft: 10,
+    fontFamily: fonts.medium,
+    fontSize: RFValue(11),
+    color: colors.black
+  }
+
+
 });

@@ -33,6 +33,7 @@ import { colors } from '../theme/colors';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 import Ratings from '../halpers/Ratings';
 import Url from '../api/Url';
+import OtpVerify from 'react-native-otp-verify';
 
 const size = Dimensions.get('window').height;
 
@@ -179,11 +180,16 @@ export default function OrderCustomization(props) {
 
   const getTotalPrice = () => {
     if (addons && addons?.length > 0) {
+      // let addonsTotalPrice = addons?.reduce((total, item) => {
+      //   console.log("total,item", total, item);
+      //   return item?.addon_price
+      //     ? total + item?.addon_price ?? 0
+      //     : total + item?.price ?? 0;
+      // }, 0);
       let addonsTotalPrice = addons?.reduce((total, item) => {
-        return item?.addon_price
-          ? total + item?.addon_price
-          : total + item?.price;
-      }, 0);
+        // console.log("total,item", total, item);
+        return total + (item?.addon_price ?? item?.price ?? 0);
+    }, 0);
       console.log('getTotal', addonsTotalPrice, addons);
       return currencyFormat(
         parseInt(sellAmount) * quan + parseInt(addonsTotalPrice),

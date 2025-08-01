@@ -14,6 +14,8 @@ import Cart from '../screens/DUFood/Cart/Cart';
 import CouponsList from '../screens/DUFood/Cart/CouponsList';
 import TrackingFoodOrderList from '../screens/DUFood/TrackingFoodOrderList/TrackingFoodOrderList';
 import AddRestaurantLocation from '../screens/CommonScreens/AddRestaurantLocation/AddRestaurantLocation';
+import CustomerSupport from '../screens/CommonScreens/CustomerSupport/CustomerSupport';
+import OrderDetails from '../screens/Auth/DashboardScreen/OrderDetails/OrderDetails';
 // import CouponDetail from '../screens/DUFood/Components/CouponDetail';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +44,8 @@ export default function FoodRoutes(props) {
        <Stack.Screen name="addMyAddress" component={AddMyAddress} />
        <Stack.Screen name="trackingFoodOrderList" component={TrackingFoodOrderList} />
        <Stack.Screen name="addRestaurantLocation" component={AddRestaurantLocation} />
+       <Stack.Screen name="customerSupport" component={CustomerSupport} /> 
+        <Stack.Screen name="orderDetails" component={OrderDetails} />  
 
 
        

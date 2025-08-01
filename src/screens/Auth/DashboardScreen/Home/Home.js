@@ -5,6 +5,8 @@ import {
   PermissionsAndroid,
   Platform,
   DeviceEventEmitter,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import { appImages } from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
@@ -29,16 +31,17 @@ import messaging from '@react-native-firebase/messaging';
 import { getUniqueId } from 'react-native-device-info';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
+import { colors } from '../../../../theme/colors';
 
 
 
 export default function Home({ navigation }) {
   const { appUser } = rootStore.commonStore;
-  const { saveFcmToken, getCheckDeviceId,getRestaurantBanners } = rootStore.dashboardStore;
+  const { saveFcmToken, getCheckDeviceId, getRestaurantBanners } = rootStore.dashboardStore;
   useNotifications(navigation);
   const [internet, setInternet] = useState(true);
-  const [bannerList ,setBannerList]=useState([])
-  
+  const [bannerList, setBannerList] = useState([])
+
   useFocusEffect(
     useCallback(() => {
       requestUserNotificationPermission();
@@ -54,23 +57,23 @@ export default function Home({ navigation }) {
   );
 
 
-  const getRestaurantBannersData = async()=>{
-   const res = await getRestaurantBanners();
-   setBannerList(res)
-  //  console.log("res---getRestaurantBannersData",res);
-   
+  const getRestaurantBannersData = async () => {
+    const res = await getRestaurantBanners();
+    setBannerList(res)
+    //  console.log("res---getRestaurantBannersData",res);
+
   }
 
 
   async function requestUserNotificationPermission() {
-      const settings = await notifee.requestPermission();
-  
-      if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-        console.log('Permission settings:', settings);
-      } else {
-        console.log('User declined permissions');
-      }
+    const settings = await notifee.requestPermission();
+
+    if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+      console.log('Permission settings:', settings);
+    } else {
+      console.log('User declined permissions');
     }
+  }
 
   const checkNotificationPer = () => {
     notifee.setBadgeCount(0).then(() => console.log('Badge count removed'));
@@ -130,7 +133,7 @@ export default function Home({ navigation }) {
     // };
     // initFCM();
   }, [appUser]);
-  
+
 
   const initFCM = async () => {
     await requestUserPermission();
@@ -181,42 +184,49 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      {internet == false ? (
-        <NoInternet />
-      ) : (
-        <>
-          <DashboardHeader title={'Home'}
-            appUserInfo={appUser}
-            navigation={navigation}
-            showProfile={true} />
-          <View style={styles.mainView}>
-            <AppInputScroll
-              padding={true}
-              keyboardShouldPersistTaps={'handled'}>
-               {bannerList?.length > 0 && (
-                <CustomerHomeSlider
-                bannerList= {bannerList}
-                data={bannerList[0]?.image_urls}
-                paginationList={true}
-                imageHeight={hp('20%')}/>
-               )} 
+      <View style={styles.container}>
+        {internet == false ? (
+          <NoInternet />
+        ) : (
+          <>
+           <DashboardHeader title={'Home'}
+              appUserInfo={appUser}
+              navigation={navigation}
+              showProfile={true} /> 
 
-              <View style={styles.innerView}>
-                <ChangeRoute data={homeCS} navigation={navigation} />
-                {/* <RenderOffer data={mainArray} /> */}
-              </View>
-              <View style={styles.bottomImageView}>
-                <Image
-                  resizeMode='contain'
-                  style={styles.bottomImage}
-                  source={appImages.mainHomeBootmImage}
-                />
-              </View>
-            </AppInputScroll>
-          </View>
-        </>
-      )}
-    </View>
+            <View style={styles.mainView}>
+              <AppInputScroll
+                padding={true}
+                keyboardShouldPersistTaps={'handled'}>
+                {bannerList?.length > 0 && (
+                  <CustomerHomeSlider
+                    bannerList={bannerList}
+                    data={bannerList[0]?.image_urls}
+                    paginationList={true}
+                    imageHeight={hp('20%')} />
+                )}
+                {/* <View style={{ position:'absolute',width:wp("100%"),top:-4}}>
+                <DashboardHeader title={'Home'}
+              appUserInfo={appUser}
+              navigation={navigation}
+              showProfile={true} /> 
+               </View> */}
+
+                <View style={styles.innerView}>
+                  <ChangeRoute data={homeCS} navigation={navigation} />
+                  {/* <RenderOffer data={mainArray} /> */}
+                </View>
+                <View style={styles.bottomImageView}>
+                  <Image
+                    resizeMode='contain'
+                    style={styles.bottomImage}
+                    source={appImages.mainHomeBootmImage}
+                  />
+                </View>
+              </AppInputScroll>
+            </View>
+          </>
+        )}
+      </View>
   );
 }

@@ -35,6 +35,7 @@ import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import OnlineFoodUnavailable from '../../../components/OnlineFoodUnavailable';
 import DashboardHeader3 from '../../../components/header/DashboardHeader3';
 import { getTodayRestaurantTimings } from '../../../halpers/OpenCloseStatusRestaurant';
+import ReviewsRatingFoodComp from '../../../components/ReviewRatingFoodComp';
 
 
 let geoLocation = {
@@ -44,6 +45,7 @@ let geoLocation = {
 
 let perPage = 20;
 let recommendedData = [];
+let ratingData = {}
 export default function FoodHome({ navigation }) {
   const { appUser } = rootStore.commonStore;
   const { deleteCart, getCart, setCart, updateCart } = rootStore.cartStore;
@@ -95,7 +97,6 @@ export default function FoodHome({ navigation }) {
   );
   const [clickItem, setClickItem] = useState({});
   const [trackedArray, setTrackedArray] = useState(foodOrderTrackingList ?? []);
-  const [isReviewStar, setIsReviewStar] = useState(true);
   const [loadingRating, setLoadingRating] = useState(false);
 
   console.log("changeLiveLocation---", changeLiveLocation);
@@ -109,6 +110,10 @@ export default function FoodHome({ navigation }) {
   };
   const [isRemoveCart, setIsRemoveCart] = useState(false);
   const [isRemoveCartOtherRes, setIsRemoveCartOtherRes] = useState(false);
+  const [isReviewRider, setIsReviewRider] = useState(false);
+  const [isReviewFoodStar, setIsReviewFoodStar] = useState(false);
+
+
 
   const getRestaurantList = async () => {
     const res = await restaurentAll(
@@ -306,6 +311,22 @@ export default function FoodHome({ navigation }) {
       setInternet(event == 'noInternet' ? false : true);
       console.log('internet event');
     });
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data --Food ', data);
+      if (data?.order_type == 'food') {
+        ratingData = data;
+        setTimeout(() => {
+          setIsReviewRider(true);
+        }, 300);
+        getTrackingOrder();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const checkInternet = () => {
@@ -622,9 +643,17 @@ export default function FoodHome({ navigation }) {
     navigation.navigate('resturantProducts', {
       item: item?.restaurant,
     });
-
-
   };
+
+
+  const onCloseFood = () => {
+    setIsReviewFoodStar(false)
+  }
+
+  const onHandleLoadingFood = (v) => {
+    setLoadingRating(v)
+
+  }
 
   return (
     <View style={[styles.container]}>
@@ -886,14 +915,35 @@ export default function FoodHome({ navigation }) {
         }}
       />
 
-      {/* <ReviewsRatingComp 
-       type={'FOOD'}
-      title={'Did you enjoy your meal?'}
-      isVisible={isReviewStar}
-      onClose={()=>{setIsReviewStar(false)}}
-      loading={loadingRating}
-      onHandleLoading={(v)=>{setLoadingRating(v)}}
-      /> */}
+      <ReviewsRatingComp
+        data={ratingData}
+        type={'FOOD'}
+        reviewToRider={true}
+        title={'How was your delivery experience?'}
+        isVisible={isReviewRider}
+        onClose={() => {
+          setIsReviewRider(false),
+            setTimeout(() => {
+              setIsReviewFoodStar(true);
+            }, 500);
+
+        }}
+        loading={loadingRating}
+        onHandleLoading={(v) => {
+          setLoadingRating(v)
+        }}
+      />
+      <ReviewsRatingFoodComp
+        data={ratingData}
+        type={'FOOD'}
+        reviewToRider={false}
+        title={'Did you enjoy your meal?*'}
+        isVisible={isReviewFoodStar}
+        onClose={() => { onCloseFood() }}
+        loading={loadingRating}
+        onHandleLoading={(v) => { onHandleLoadingFood(v) }}
+      />
+
     </View>
   );
 }

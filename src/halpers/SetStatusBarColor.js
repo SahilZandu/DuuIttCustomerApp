@@ -1,6 +1,8 @@
 import { colors } from '../theme/colors';
 
-const primaryScreens = ['splash'];
+const primaryScreens = ['splash',
+  // 'home','tab1'
+];
 
 const authScreens = ['login', 'forgotPass', 'setPass', 'verifyOtp', 'test', 'customerSupport'];
 

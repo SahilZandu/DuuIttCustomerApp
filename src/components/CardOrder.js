@@ -31,6 +31,7 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
   console.log('item --CardOrder ', item);
   let today = new Date();
   const { addReOrderRequestParcelRide } = rootStore.parcelStore;
+  const { foodReorder } = rootStore.foodDashboardStore;
   const [selectedId, setSelectedId] = useState('')
 
 
@@ -66,11 +67,13 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
   const setImageIcon = status => {
     switch (status) {
       case 'food':
-        return appImages.order1;
+        return appImages.foodOrderImage;
       case 'parcel':
-        return appImages.order2;
+        return appImages.parcelOrderImage;
       case 'ride':
-        return appImages.order3;
+        return appImages.rideOrderImage;
+      default:
+        return appImages.foodOrderImage;
     }
   };
 
@@ -91,8 +94,8 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
         return appImagesSvg.vegSvg;
       case 'non-veg':
         return appImagesSvg.nonVeg;
-        case 'egg':
-          return appImagesSvg.eggSvg;
+      case 'egg':
+        return appImagesSvg.eggSvg;
       default:
         return appImagesSvg.vegSvg;
     }
@@ -119,6 +122,14 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
     // navigation.navigate('priceConfirmed',{item:newdata});
   };
 
+  const handleFoodReOrder = async (item) => {
+
+    const resFoodReorder = await foodReorder(item, navigation, handleLoading);
+    setSelectedId('')
+    console.log('item--handleFoodReOrder', resFoodReorder, item);
+
+  }
+
   handleLoading = v => {
     if (v == false) {
       setSelectedId('')
@@ -138,14 +149,17 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
               <Image
                 resizeMode="cover"
                 style={styles.image}
-                source={
-                  setImageIcon(item?.order_type)
+                source=
+                // setImageIcon(item?.order_type)
+                {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
+                  ? { uri: Url?.Image_Url + (item?.restaurant?.banner || item?.restaurant?.logo) }
+                  : setImageIcon(item?.order_type)
                 }
               />
             </View>
             <View style={styles.nameDateView}>
               <Text numberOfLines={1} style={styles.nameText}>
-                {`ID:${item?.order_id ?? "1234567890"}`}
+                {`ID:${item?.order_id ?? item?._id}`}
               </Text>
               <Text style={styles.dateText}>
                 {dateTimeFormat(item?.createdAt ?? today)}
@@ -155,7 +169,7 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
                   style={[
                     styles.statusText,
                     {
-                      color: item?.status == 'cancelled' ? '#E70000' : '#28B056',
+                      color: item?.status == 'cancelled' ? colors.colorE7 : colors.green,
                     },
                   ]}>
                   {setStatusData(item?.status)}
@@ -190,38 +204,52 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
             <View>
               {item?.cartItems?.slice(0, 3)?.map((value, i) => {
                 return (
-                  <View key={i} style={{flexDirection: 'row', marginTop: '4%' }}>
-                    <SvgXml
-                      xml={setTypeImage(value?.veg_nonveg)}
-                    />
-                    <Text
-                      numberOfLines={1}
-                      style={{
+                  <>
+                    <View key={i} style={{ flexDirection: 'row', marginTop: '4%' }}>
+                      <SvgXml
+                        xml={setTypeImage(value?.veg_nonveg)}
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
 
+                          fontSize: RFValue(13),
+                          fontFamily: fonts.regular,
+                          color: colors.black,
+                          marginLeft: '2%',
+
+                        }}> {value?.quantity} X </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          flex: 1,
+                          fontSize: RFValue(13),
+                          fontFamily: fonts.regular,
+
+                        }}>
+                        {value?.varient_name}
+                      </Text>
+
+                      <Text style={{
                         fontSize: RFValue(13),
                         fontFamily: fonts.regular,
                         color: colors.black,
-                        marginLeft: '2%',
-
-                      }}> {value?.quantity} X </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        flex: 1,
-                        fontSize: RFValue(13),
-                        fontFamily: fonts.regular,
-
-                      }}>
-                      {value?.varient_name}
-                    </Text>
-
-                    <Text style={{
-                      fontSize: RFValue(13),
-                      fontFamily: fonts.regular,
-                      color: colors.black,
-                      right: '10%'
-                    }}> {currencyFormat(value?.varient_price)}</Text>
-                  </View>
+                        right: '10%'
+                      }}> {currencyFormat(value?.varient_price)}</Text>
+                    </View>
+                    {value?.selected_add_on?.length > 0 && (
+                      <View style={styles.addonsView}>
+                        <Text numberOfLines={2} style={styles.addonsName}>
+                          {value?.selected_add_on?.map(item => item?.addon_name).join(', ')}
+                        </Text>
+                        <Text style={styles.addonsPrice}>
+                          {currencyFormat(
+                            value?.selected_add_on?.reduce((acc, item) => acc + Number(item?.addon_price || 0), 0)
+                          )}
+                        </Text>
+                      </View>
+                    )}
+                  </>
                 );
               })}
             </View>
@@ -244,8 +272,13 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
                 width={screenWidth(38)}
                 title={setProgressBtn(item?.order_type)}
                 onPress={() => {
-                  setSelectedId(item?._id),
-                    handleReOrder(item)
+                  if (item?.order_type == 'food') {
+                    setSelectedId(item?._id),
+                      handleFoodReOrder(item)
+                  } else {
+                    setSelectedId(item?._id),
+                      handleReOrder(item)
+                  }
                 }}
                 bottomCheck={15}
                 textTransform={'capitalize'}
@@ -439,4 +472,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: hp('0.2%'),
   },
+  addonsView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: '1%'
+  },
+  addonsName: {
+    flex: 1,
+    flexWrap: 'wrap',
+    fontFamily: fonts.medium,
+    fontSize: RFValue(11),
+    color: colors.black85
+  },
+  addonsPrice: {
+    marginLeft: 10,
+    fontFamily: fonts.medium,
+    fontSize: RFValue(11),
+    color: colors.black
+  }
 });

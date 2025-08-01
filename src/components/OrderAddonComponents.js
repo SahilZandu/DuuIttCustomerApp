@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {appImagesSvg} from '../commons/AppImages';
-import {colors} from '../theme/colors';
+import { appImagesSvg } from '../commons/AppImages';
+import { colors } from '../theme/colors';
 
-import {fonts} from '../theme/fonts/fonts';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
+import { fonts } from '../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
 // import Spacer from './Spacer';
-import {currencyFormat} from '../halpers/currencyFormat';
+import { currencyFormat } from '../halpers/currencyFormat';
 
 export default function OrderAddonComponent({
   item,
@@ -26,16 +26,19 @@ export default function OrderAddonComponent({
     isAddons && isAddons.length > 0 ? isAddons : [],
   );
 
-  // console.log('addonData--', item, addonData, appCart, addons, isAddons);
+  console.log('addonData--', item, addonData, appCart, addons, isAddons);
   let addonId = 0;
 
   const checkAddonThere = (arr, id) => {
-    // console.log('arr, id', arr, id);
+    console.log('arr, id', arr, id);
     return arr?.find(item => (item?._id || item?.addon_prod_id) == id);
   };
 
   const getGroupLength = (a, gid) => {
+    console.log("a, gid", a, gid);
+
     let f = a?.filter(item => item?.addon_group_id === gid);
+    console.log("f--getGroupLength", f);
     return f?.length;
   };
 
@@ -78,10 +81,11 @@ export default function OrderAddonComponent({
     onSelect([...updatedSelect]);
   }, [appCart, addonData]);
 
+
   const onPressVC = (item, value) => {
     let arr = addons;
 
-    // console.log('item:--onPressVC', item, arr, value);
+    console.log('item:--onPressVC', item, arr, value);
 
     let limit = item?.max_selection ? item?.max_selection : item?.addon?.length;
 
@@ -92,27 +96,12 @@ export default function OrderAddonComponent({
       addon_group_id: item?._id,
     };
 
-    if (checkAddonThere(arr, value?._id)) {
-      let filterData = arr?.filter(
-        item => (item?._id || item?.addon_prod_id) !== value?._id,
-      );
-      // console.log('filterData', filterData);
-      const resFilter = filterData?.map((value, i) => {
-        return {
-          addon_prod_id: value._id ?? value?.addon_prod_id,
-          addon_name: value.name ?? value?.addon_name,
-          addon_price: value.price ?? value?.addon_price,
-          addon_group_id: item?._id ?? item?.addon_group_id,
-        };
-      });
-      setaddons(filterData);
-      // console.log('resFilter--', resFilter);
-      onSelect(resFilter);
-    } else {
-      if (getGroupLength(arr, value?.group_id) < limit) {
-        setaddons([...addons, obj]);
-        arr = [...addons, obj];
-        const resData = arr?.map((value, i) => {
+      if (checkAddonThere(arr, value?._id)) {
+        let filterData = arr?.filter(
+          item => (item?._id || item?.addon_prod_id) !== value?._id,
+        );
+        // console.log('filterData', filterData);
+        const resFilter = filterData?.map((value, i) => {
           return {
             addon_prod_id: value._id ?? value?.addon_prod_id,
             addon_name: value.name ?? value?.addon_name,
@@ -120,12 +109,28 @@ export default function OrderAddonComponent({
             addon_group_id: item?._id ?? item?.addon_group_id,
           };
         });
-        // console.log('arrrrr', arr,resData);
-        onSelect(resData);
+        setaddons(filterData);
+        // console.log('resFilter--', resFilter);
+        onSelect(resFilter);
       } else {
-        onLimitOver(limit);
+        if (getGroupLength(arr, item?._id ?? value?.group_id) < limit) {
+          setaddons([...addons, obj]);
+          arr = [...addons, obj];
+          const resData = arr?.map((value, i) => {
+            return {
+              addon_prod_id: value._id ?? value?.addon_prod_id,
+              addon_name: value.name ?? value?.addon_name,
+              addon_price: value.price ?? value?.addon_price,
+              addon_group_id: item?._id ?? item?.addon_group_id,
+            };
+          });
+          // console.log('arrrrr', arr,resData);
+          onSelect(resData);
+        } else {
+          onLimitOver(limit);
+        }
       }
-    }
+  
   };
 
   const getSelectionLimit = item => {
@@ -137,7 +142,7 @@ export default function OrderAddonComponent({
   return (
     <View
       pointerEvents={isResOpen ? 'auto' : 'none'}
-      style={{opacity: isResOpen ? 1 : 0.6}}>
+      style={{ opacity: isResOpen ? 1 : 0.6 }}>
       {addonData && addonData?.length > 0 && (
         <View>
           {addonData?.map((item, index) => {
@@ -191,7 +196,7 @@ export default function OrderAddonComponent({
                           {currencyFormat(value?.price)}
                         </Text>
                         {addons?.length > 0 &&
-                        checkAddonThere(addons, value?._id) ? (
+                          checkAddonThere(addons, value?._id) ? (
                           <SvgXml xml={check} />
                         ) : (
                           <SvgXml xml={uncheck} />
@@ -216,7 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     shadowOffset: true,
     shadowColor: colors.black, // Shadow color (black)
-    shadowOffset: {width: 0, height: 2}, // Horizontal and vertical offset
+    shadowOffset: { width: 0, height: 2 }, // Horizontal and vertical offset
     shadowOpacity: 0.3, // Opacity of the shadow
     shadowRadius: 5, // Blur radius of the shadow
     elevation: 5, // Android shadow (elevation must be set to display shadow on Android)

@@ -90,14 +90,14 @@
 //   },
 // });
 
-import React, {useState} from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {appImages} from '../commons/AppImages';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
-import Popover, {PopoverPlacement} from 'react-native-popover-view';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { appImages } from '../commons/AppImages';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
+import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const TextRender = ({
   title,
@@ -107,6 +107,9 @@ const TextRender = ({
   valueStyle,
   lineStyle,
   gstShow,
+  valueCancelletion,
+  showCancel,
+  valueCancelStyle,
 }) => {
   const [showPopover, setShowPopover] = useState(false);
   return (
@@ -122,7 +125,7 @@ const TextRender = ({
             <View style={styles.innerViewHover}>
               <Text
                 numberOfLines={1}
-                style={[styles.title, {flex: 0}, titleStyle]}>
+                style={[styles.title, { flex: 0 }, titleStyle]}>
                 {title}
               </Text>
               <Popover
@@ -132,11 +135,11 @@ const TextRender = ({
                 from={
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    style={{right: wp('4%')}}
-                    hitSlop={{left: 15, right: 15, top: 15, bottom: 15}}
+                    style={{ right: wp('4%') }}
+                    hitSlop={{ left: 15, right: 15, top: 15, bottom: 15 }}
                     onPress={() => setShowPopover(true)}>
                     <Image
-                      style={{height: 20, width: 20}}
+                      style={{ height: 20, width: 20 }}
                       source={appImages.infoIcon}
                     />
                   </TouchableOpacity>
@@ -157,11 +160,12 @@ const TextRender = ({
         ) : (
           <Text
             numberOfLines={1}
-            style={[styles.title, {flex: gstShow == true ? 0 : 1}, titleStyle]}>
+            style={[styles.title, { flex: gstShow == true ? 0 : 1 }, titleStyle]}>
             {title}
           </Text>
         )}
         <Text style={[styles.value, valueStyle]}>{value}</Text>
+        {showCancel && <Text style={[styles.value,valueCancelStyle]}> {' '}{valueCancelletion}</Text>}
       </View>
       {bottomLine && <View style={[styles.bottomLine, lineStyle]} />}
     </>

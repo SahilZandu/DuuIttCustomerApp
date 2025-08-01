@@ -1,112 +1,273 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, DeviceEventEmitter, Linking } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {fonts} from '../../../theme/fonts/fonts';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {colors} from '../../../theme/colors';
+import { fonts } from '../../../theme/fonts/fonts';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { colors } from '../../../theme/colors';
 import FoodSlider from '../../../components/slider/foodSlider';
-import {silderArrayOrder} from '../../../stores/DummyData/Home';
+import { silderArrayOrder } from '../../../stores/DummyData/Home';
 import FastImage from 'react-native-fast-image';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import MapRoute from '../../../components/MapRoute';
 import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import ReviewsRatingFoodComp from '../../../components/ReviewRatingFoodComp';
+import Url from '../../../api/Url';
+import socketServices from '../../../socketIo/SocketServices';
+import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
+import { rootStore } from '../../../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function TrackOrderPreparing({navigation,route}) {
-  const {item}=route.params
+
+export default function TrackOrderPreparing({ navigation, route }) {
+  const { item } = route.params
+  const { appUser } = rootStore.commonStore;
   const [sliderItems, setSliderItems] = useState(silderArrayOrder);
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
   const [orderStep, setOrderStep] = useState(0);
   const [origin, setOrigin] = useState({});
-  const [isReviewRider, setIsReviewRider] = useState(false);
-  const [isReviewStar, setIsReviewStar] = useState(false);
-  const [loadingRating, setLoadingRating] = useState(false);
+  const [destination, setDestination] = useState({});
+  const [itemDetails, setItemDetails] = useState(item ?? {})
+
+  // console.log("item,itemDetails-----", item, itemDetails);
 
   useEffect(() => {
-    if(item?.status === 'waiting_for_confirmation'){
-      setOrderStep(0);
-    }else if( item?.status === "cooking" ||item?.status === "packing_processing" || item?.status === "ready_to_pickup"){
-      setOrderStep(1);
-    }else if(item?.status === "picked"){
-      setOrderStep(2);
-      setTimeout(() => {
-      setIsReviewRider(true)
-      },5000)
-    }else {
-      setIsReviewRider(true)
+    if (item) {
+      setItemDetails(item)
+      setOrigin(item?.rider?.current_location ?? item?.sender_address?.geo_location)
+      setDestination(item?.receiver_address?.geo_location ?? {})
+
+      switch (item?.status) {
+        case 'waiting_for_confirmation':
+          setOrderStep(0);
+          break;
+        case 'cooking':
+        case 'packing_processing':
+        case 'ready_to_pickup':
+          setOrderStep(1);
+          break;
+        case 'picked':
+          setOrderStep(2);
+          break;
+        default:
+          setOrderStep(0)
+      }
     }
-    // 
-    // setTimeout(() => {
-    //   console.log('setOrderStep cooking 30 second.');
-    //   setOrderStep(1);
-    //   setTimeout(() => {
-    //     console.log('setOrderStep prepared 30 second.');
-    //     // setTimeout(()=>{
-    //     //   setIsReviewRider(true)
-    //     // },5000)
-    //     setOrderStep(2);
-    //   }, 10000);
-    // }, 10000);
+
   }, [item]);
 
-  // useEffect(() => {
-  //   if (!isReviewRider) {
-  //     setTimeout(() => {
-  //       setIsReviewStar(true);
-  //       alert("yes")
-  //     },500);
-  //   }
-  // }, [isReviewRider]); 
+  useEffect(() => {
+    if (itemDetails) {
+      setOrigin(itemDetails?.rider?.current_location ?? itemDetails?.sender_address?.geo_location)
+      setDestination(itemDetails?.receiver_address?.geo_location)
+      switch (itemDetails?.status) {
+        case 'waiting_for_confirmation':
+          setOrderStep(0);
+          break;
+        case 'cooking':
+        case 'packing_processing':
+        case 'ready_to_pickup':
+          setOrderStep(1);
+          break;
+        case 'picked':
+          setOrderStep(2);
+          break;
+        default:
+          setOrderStep(0)
+      }
+
+    }
+
+  }, [itemDetails])
+
+
+  useFocusEffect(
+    useCallback(() => {
+      socketServices.initailizeSocket();
+      setCurrentLocation();
+      if (itemDetails?.rider?._id?.length > 0) {
+        const intervalId = setInterval(() => {
+          setCurrentLocation();
+          setTimeout(() => {
+            getSocketLocation(socketServices, itemDetails);
+          }, 1500);
+        }, 10000);
+        return () => {
+          // This will run when the screen is unfocused
+          clearInterval(intervalId);
+        };
+      }
+    }, [itemDetails]),
+  );
+
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      let query = {
+        lat: getLocation('lat')?.toString(),
+        lng: getLocation('lng')?.toString(),
+        user_id: appUser?._id,
+        user_type: 'customer',
+        fcm_token: appUser?.fcm_token,
+      };
+      if (itemDetails?.rider?._id?.length > 0) {
+        socketServices.emit('update-location', query);
+        socketServices.on('getremainingdistance', data => {
+          console.log(
+            'Remaining distance data-- tracking:',
+            data,
+            data?.location,
+          );
+          if (data && data?.location) {
+            setOrigin(data?.location);
+          }
+        });
+        socketServices.on('testevent', data => {
+          console.log('test event tracking food order', data);
+        });
+      }
+
+    }, 2000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+
+  const getSocketLocation = async (socketServices, trackItem) => {
+    // console.log('trackItem---', trackItem);
+    const { appUser } = rootStore.commonStore;
+    let query = {
+      lat: getLocation('lat')?.toString(),
+      lng: getLocation('lng')?.toString(),
+      user_id: appUser?._id,
+      user_type: 'customer',
+      fcm_token: appUser?.fcm_token,
+    };
+    socketServices.emit('update-location', query);
+
+    let request = {
+      lat: getLocation('lat')?.toString(),
+      lng: getLocation('lng')?.toString(),
+      rider_id: trackItem?.rider?._id,
+      customer_id: appUser?._id,
+      user_type: 'customer',
+    };
+    // console.log(
+    //   'Socket state tracking:',
+    //   socketServices?.socket?.connected,
+    //   request,
+    // );
+    socketServices.emit('remaining-distance', request);
+  };
+
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('dropped', data => {
+      console.log('dropped data Food -- ', data);
+      // setIsReviewRider(true)
+      if (data?.order_type == 'food') {
+        setTimeout(() => {
+          navigation?.goBack();
+        }, 100)
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('foodOrderUpdate', data => {
+      console.log('foodOrderUpdate data -- ', data);
+      if (data?.order_type == 'food') {
+        setItemDetails(data)
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('picked', data => {
+      console.log('picked data --Food ', data);
+      if (data?.order_type == 'food') {
+        setItemDetails(data)
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+
+  const hanldeLinking = (type, item) => {
+    if (type) {
+      if (type == 'email') {
+        Linking.openURL(`mailto:${'DuuItt@gmail.com'}`);
+      } else {
+        Linking.openURL(`tel:${item?.rider?.phone ?? '1234567890'}`);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
         <View>
           <View style={styles.restaurantConatiner}>
-            {/* {orderStep == 2 ? (
+            {((origin?.lng && destination?.lng) && orderStep == 2) ? (
               <MapRoute
                 origin={origin}
-                destination={{}}
-                mapContainerView={{height: hp('45%')}}
+                destination={destination}
+                mapContainerView={{ height: hp('45%') }}
               />
-            ) : ( */}
+            ) : (
               <FastImage
                 style={styles.topImage}
                 source={
-                  orderStep === 1
-                    ? appImages.cookingFood
-                    : // : orderStep === 2
-                      // ? appImages.preparedFood
-                      appImages.preparingFood
+                  orderStep === 0
+                    ? appImages.preparingFood
+                    : appImages.cookingFood
+
                 }
                 resizeMode={FastImage.resizeMode.cover}
               />
-            {/* )} */}
+            )}
             <View style={styles.upperLightGreenView}>
               <View style={styles.chefTextView}>
                 <Text style={styles.chefText}>
                   {orderStep === 1
                     ? 'Chef is cooking the food'
                     : orderStep === 2
-                    ? 'Chef prepared the food'
-                    : 'Chef is preparing the food'}
+                      ? 'Chef prepared the food'
+                      : 'Chef is preparing the food'}
                 </Text>
                 <Text numberOfLines={2} style={styles.waitingForText}>
                   {orderStep === 1
                     ? 'Making the best quality food for you'
                     : orderStep === 2
-                    ? 'Waiting for the delivery partner for pickup'
-                    : 'Making the best quality food for you'}
+                      ? 'Waiting for the delivery partner for pickup'
+                      : 'Making the best quality food for you'}
                 </Text>
               </View>
               <View style={styles.arivalInMainView}>
                 <View style={styles.arivalInView}>
                   <Text style={styles.arriveInText}>Arival in</Text>
-                  <Text style={styles.mintText}>25 - 30 min</Text>
+                  <Text style={styles.mintText}> {itemDetails?.arrival_time ?? '00:00'} min</Text>
                 </View>
                 <Text style={styles.onTimeView}>On time</Text>
               </View>
@@ -117,26 +278,35 @@ export default function TrackOrderPreparing({navigation,route}) {
             <View style={styles.riderMainView}>
               <Image
                 resizeMode="cover"
-                source={appImages.avtarImage}
+                source={
+                  (item?.rider && item?.rider?.profile_pic?.length > 0) ? {
+                    uri: Url?.Image_Url + item?.rider?.profile_pic
+                  } :
+                    appImages.avtarImage
+                }
                 style={styles.riderImage}
               />
               <View style={styles.nameRateView}>
-                <Text style={styles.riderName}>Felicia Cudmore</Text>
+                <Text numberOfLines={1} style={styles.riderName}>{itemDetails?.rider?.name}</Text>
                 <View style={styles.ratingView}>
                   <SvgXml xml={appImagesSvg.whiteStar} />
-                  <Text style={styles.ratingText}>4.5</Text>
+                  <Text style={styles.ratingText}>{(itemDetails?.rider?.riderReviews?.average_rating?.toFixed(1)) ?? 0}</Text>
                 </View>
               </View>
               <View style={styles.phoneMsgImage}>
                 <TouchableOpacity activeOpacity={0.8}>
                   <Image
+                    onPress={() => { hanldeLinking('email', itemDetails) }}
                     resizeMode="contain"
-                    style={{width: 34, height: 34}}
+                    style={{ width: 34, height: 34 }}
                     source={appImages.chat}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8}>
+                <TouchableOpacity
+                  onPress={() => { hanldeLinking('call', itemDetails) }}
+                  activeOpacity={0.8}>
                   <SvgXml xml={appImagesSvg.phone} />
+
                 </TouchableOpacity>
               </View>
             </View>
@@ -185,35 +355,6 @@ export default function TrackOrderPreparing({navigation,route}) {
           </TouchableOpacity>
         </View>
       </AppInputScroll>
-      <ReviewsRatingComp
-       data={item}
-      type={'FOOD'}
-      reviewToRider={true}
-      title={'How was your delivery experience?'}
-      isVisible={isReviewRider}
-      onClose={()=>{
-        setIsReviewRider(false),
-        setTimeout(() => {
-          setIsReviewStar(true);
-          // alert("yes")
-        },500);
-       
-      }}
-      loading={loadingRating}
-      onHandleLoading={(v)=>{
-        setLoadingRating(v)
-      }}
-      />
-      <ReviewsRatingFoodComp
-       data={item}
-       type={'FOOD'}
-       reviewToRider={false}
-      title={'Did you enjoy your meal?*'}
-      isVisible={isReviewStar}
-      onClose={()=>{setIsReviewStar(false)}}
-      loading={loadingRating}
-      onHandleLoading={(v)=>{setLoadingRating(v)}}
-      />
     </View>
   );
 }
@@ -267,7 +408,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 2,
     padding: wp('5%'),
-    shadowOffset: {width: -1, height: 6},
+    shadowOffset: { width: -1, height: 6 },
   },
   arriveInText: {
     fontFamily: fonts.bold,
@@ -297,15 +438,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 20,
-    padding: 10,
+    // margin: 20,
+    // padding: 10,
+    height: hp("10%"),
     borderRadius: 10,
+    marginTop: "4%",
     elevation: 4,
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    paddingHorizontal: wp('6%'),
-    shadowOffset: {width: 0, height: 6},
+    paddingHorizontal: wp('4%'),
+    shadowOffset: { width: 0, height: 6 },
+    marginBottom: '3%',
+    marginHorizontal: 20
+
   },
   riderImage: {
     borderRadius: 100,
@@ -315,7 +461,7 @@ const styles = StyleSheet.create({
   nameRateView: {
     paddingStart: 10,
     paddingEnd: 10,
-    width: wp('40%'),
+    width: wp('47%'),
   },
   riderName: {
     fontFamily: fonts.bold,
@@ -325,7 +471,7 @@ const styles = StyleSheet.create({
   ratingView: {
     marginTop: 4,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     borderRadius: 20,
     width: wp('13%'),
     flexDirection: 'row',
@@ -356,7 +502,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     paddingHorizontal: wp('6%'),
-    shadowOffset: {width: 0, height: 6},
+    shadowOffset: { width: 0, height: 6 },
   },
   getDriverInnerView: {
     paddingStart: 10,

@@ -111,6 +111,7 @@ export const agent = {
   myAddress: body => requests.post(Url.myAddress, body),
   getMyAddress: () => requests.get(Url.getMyAddress),
   parcelsRides: body => requests.post(Url.parcelsRides, body),
+  foodReorder : body => requests.post(Url.foodReorder, body),
   editParcelsRides: (body, orderId) => requests.post(`${Url.editParcelsRides}/${orderId?.order_id}`, body),
   parcels_Cancel: body => requests.post(Url.parcels_Cancel, body),
   parcels_find_rider: body => requests.post(Url.parcels_find_rider, body),
@@ -181,6 +182,7 @@ export const agent = {
   getRestaurantFoodReviews: body => requests.post(Url.getRestaurantFoodReviews, body),
   reorderCart: body => requests.post(Url.reorderCart, body),
   getRestaurantBanners:body => requests.get(Url.getRestaurantBanners),
+  cancelFoodOrderByCustomer: body => requests.post(Url.cancelFoodOrderByCustomer, body),
   
 };
 

@@ -17,15 +17,19 @@ const TrackingFoodDetailsComp = ({ onViewDetails, item, xml, index }) => {
   const setTrackImage = status => {
     switch (status) {
       case 'food':
-        return appImages.order1;
+        return appImages.foodOrderImage;
       case 'parcel':
-        return appImages.order2;
+        return appImages.parcelOrderImage;
       case 'ride':
-        return appImages.order3;
+        return appImages.rideOrderImage;
       default:
-        return appImages.order1;
+        return appImages.foodOrderImage;
     }
   };
+
+console.log("item---TrackingFoodDetailsComp",item);
+
+
   const dateFormate = (date) => {
     const formattedDate = moment(date).format('MMM D, YYYY - hh:mm A');
     // console.log(formattedDate);
@@ -48,10 +52,11 @@ const TrackingFoodDetailsComp = ({ onViewDetails, item, xml, index }) => {
             <Image
               resizeMode='cover'
               style={styles.image}
-              source={setTrackImage(item?.order_type)
-                // item?.restaurant?.banner?.length > 0
-                //   ? {uri: Url?.Image_Url +  item?.restaurant?.banner}
-                //   : setTrackImage(item?.order_type)
+              source=
+              // {setTrackImage(item?.order_type)
+                {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
+                  ? {uri: Url?.Image_Url + (item?.restaurant?.banner || item?.restaurant?.logo)}
+                  : setTrackImage(item?.order_type)
               }
             />
             <View style={styles.trackIdView}>

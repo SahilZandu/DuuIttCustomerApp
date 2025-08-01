@@ -33,10 +33,16 @@ export function DashboardBottomNavigator() {
     parcelOrderInProgress,
     rideOrderInProgress,
   } = rootStore.orderStore;
+  const { cartItemData } = rootStore.cartStore;
+  const {
+    foodOrderTrackingList,
+  } = rootStore.foodDashboardStore;
   const [update, setUpdate] = useState(true);
   const [parcelOrdTrack, setParcelOrdTrack] = useState(orderTrackingList)
   const [parcelOrdInProgess, setParcelOrdInProgess] = useState(parcelOrderInProgress)
   const [rideOrdInProgess, setRideOrdInProgess] = useState(rideOrderInProgress)
+  const [foodCartList, setFoodCartList] = useState(cartItemData);
+  const [foodTrackingOrder, setFoodTackingOrder] = useState(foodOrderTrackingList)
 
 
   const handleAnimation = () => {
@@ -53,10 +59,16 @@ export function DashboardBottomNavigator() {
         parcelOrderInProgress,
         rideOrderInProgress,
       } = rootStore.orderStore;
+      const { cartItemData } = rootStore.cartStore;
+      const {
+        foodOrderTrackingList,
+      } = rootStore.foodDashboardStore;
       setParcelOrdTrack(orderTrackingList)
       setParcelOrdInProgess(parcelOrderInProgress)
       setRideOrdInProgess(rideOrderInProgress)
-    }, [orderTrackingList, parcelOrderInProgress, rideOrderInProgress])
+      setFoodCartList(cartItemData)
+      setFoodTackingOrder(foodOrderTrackingList)
+    }, [orderTrackingList, parcelOrderInProgress, rideOrderInProgress, foodOrderTrackingList, cartItemData])
   )
 
   return (
@@ -109,6 +121,8 @@ export function DashboardBottomNavigator() {
               {(route.name == "tab1" &&
                 (parcelOrdTrack?.length > 0 ||
                   parcelOrdInProgess?.length > 0 ||
+                  foodCartList?.cart_items?.length > 0 ||
+                  foodTrackingOrder?.length > 0 ||
                   rideOrdInProgess?.length > 0)) &&
                 <View style={{
                   position: 'absolute',

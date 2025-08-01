@@ -14,7 +14,6 @@ let data = {};
 
 export function useNotifications(navigation) {
   const { setAddParcelInfo } = rootStore.parcelStore;
-  const { chatNotificationStatus } = rootStore.chatStore;
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -34,9 +33,9 @@ export function useNotifications(navigation) {
       const newa = remoteMessage.notification;
 
       data = remoteMessage?.data;
-
+      // await notifee.displayNotification(newa);
       if (remoteMessage?.data?.route == 'chat') {
-        let chatData = JSON.parse(remoteMessage?.data?.notification_data);
+        let chatData = JSON.parse(remoteMessage?.data?.notification_data ?? {});
         console.log('chatData notification', chatData);
         DeviceEventEmitter.emit('chatData', chatData);
         if (chatNotificationStatus === true) {
@@ -46,7 +45,7 @@ export function useNotifications(navigation) {
         // console.log('JSON.parse notification',JSON.parse(remoteMessage?.data?.notification_data));
         await notifee.displayNotification(newa);
         if (remoteMessage?.data?.route == "searchingRide") {
-          let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data)
+          let acceptedDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
           setAddParcelInfo(acceptedDetails)
           console.log('JSON.parse searchingRide notification', acceptedDetails);
           // navigation.navigate('newOrder');
@@ -54,27 +53,61 @@ export function useNotifications(navigation) {
         }
 
         if (remoteMessage?.data?.route == "home") {
-          let cancelDetails = JSON.parse(remoteMessage?.data?.notification_data)
+          let cancelDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
           setAddParcelInfo(cancelDetails)
           console.log('JSON.parse cancelDetails notification', cancelDetails);
           // navigation.navigate('newOrder');
           DeviceEventEmitter.emit('cancelOrder', cancelDetails)
         }
         if (remoteMessage?.data?.route == "picked") {
-          let pickedDetails = JSON.parse(remoteMessage?.data?.notification_data)
+          let pickedDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
           setAddParcelInfo(pickedDetails)
           console.log('JSON.parse picked notification', pickedDetails);
           // navigation.navigate('newOrder');
           DeviceEventEmitter.emit('picked', pickedDetails)
         }
         if (remoteMessage?.data?.route == "dropped") {
-          let droppedDetails = JSON.parse(remoteMessage?.data?.notification_data)
+          let droppedDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
           //  setAddParcelInfo({})
           console.log('JSON.parse notification', droppedDetails);
           // navigation.navigate('newOrder');
           DeviceEventEmitter.emit('dropped', droppedDetails)
         }
 
+        if (remoteMessage?.data?.route == "foodOrderReadyToPickup") {
+          let acceprtFoodOrderDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('acceprtFoodOrderDetails notification', acceprtFoodOrderDetails);
+          DeviceEventEmitter.emit('acceptedFoodOrder', acceprtFoodOrderDetails)
+        }
+        if (remoteMessage?.data?.route == "foodOrderPicked") {
+          let pickupFoodOrderDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('pickupFoodOrderDetails notification', pickupFoodOrderDetails);
+          DeviceEventEmitter.emit('picked', pickupFoodOrderDetails)
+        }
+        if (remoteMessage?.data?.route == "foodOrderCompleted") {
+          let droppedFoodOrderDetails = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('droppedFoodOrderDetails notification', droppedFoodOrderDetails);
+          DeviceEventEmitter.emit('dropped', droppedFoodOrderDetails)
+        }
+
+        if (remoteMessage?.data?.route == "foodOrderStatusUpdate") {
+          let foodOrderStatusUpdate = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('foodOrderStatusUpdate notification', foodOrderStatusUpdate);
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderStatusUpdate)
+        }
+
+        if (remoteMessage?.data?.route == "foodOrderCooking") {
+          let foodOrderCooking = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('foodOrderCooking notification', foodOrderCooking);
+          // DeviceEventEmitter.emit('picked', pickupFoodOrderDetails)
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderCooking)
+        }
+        if (remoteMessage?.data?.route == "foodOrderPacking") {
+          let foodOrderPacking = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('foodOrderPacking notification', foodOrderPacking);
+          // DeviceEventEmitter.emit('dropped', droppedFoodOrderDetails)
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderPacking)
+        }
 
       }
 
@@ -197,10 +230,10 @@ export function useNotifications(navigation) {
         console.log('User pressed notification', detail.notification);
         detail.notification.data = data;
         let notificationData = JSON.parse(detail.notification?.data?.notification_data)
-        const route = (notificationData?.order_type) == 'parcel' ? 'parcel' : "ride"
+        const route = (notificationData?.order_type) == 'parcel' ? 'parcel' : notificationData?.order_type == 'ride' ? "ride" : "food"
 
         if (detail?.notification?.data?.route == "searchingRide") {
-          let acceptedDetails = JSON.parse(detail.notification?.data?.notification_data)
+          let acceptedDetails = JSON.parse(detail.notification?.data?.notification_data ?? {})
           setAddParcelInfo(acceptedDetails)
           console.log('searchingRide notification newOrder', acceptedDetails);
           navigation.navigate(route, {
@@ -213,7 +246,7 @@ export function useNotifications(navigation) {
         }
 
         if (detail?.notification?.data?.route == "home") {
-          let cancelDetails = JSON.parse(detail.notification?.data?.notification_data)
+          let cancelDetails = JSON.parse(detail.notification?.data?.notification_data ?? {})
           setAddParcelInfo(cancelDetails)
           console.log('cancelDetails notification cancelOrder', cancelDetails);
           // navigation.navigate(route, { screen: 'home' });
@@ -221,7 +254,7 @@ export function useNotifications(navigation) {
           DeviceEventEmitter.emit('cancelOrder', cancelDetails)
         }
         if (detail?.notification?.data?.route == "picked") {
-          let pickedDetails = JSON.parse(detail.notification?.data?.notification_data)
+          let pickedDetails = JSON.parse(detail.notification?.data?.notification_data ?? {})
           setAddParcelInfo(pickedDetails)
           console.log('picked notification picked', pickedDetails);
           if (route == "ride") {
@@ -237,7 +270,7 @@ export function useNotifications(navigation) {
           DeviceEventEmitter.emit('picked', pickedDetails)
         }
         if (detail?.notification?.data?.route == "dropped") {
-          let droppedDetails = JSON.parse(detail.notification?.data?.notification_data)
+          let droppedDetails = JSON.parse(detail.notification?.data?.notification_data ?? {})
           setAddParcelInfo({})
           console.log('notification dropped', droppedDetails);
           // navigation.navigate(route, { screen: 'home' });
@@ -245,7 +278,7 @@ export function useNotifications(navigation) {
           DeviceEventEmitter.emit('dropped', droppedDetails)
         }
         if (detail?.notification?.data?.route == 'chat') {
-          let chatData = JSON.parse(detail.notification?.data?.notification_data);
+          let chatData = JSON.parse(detail.notification?.data?.notification_data ?? {});
           setAddParcelInfo(chatData)
           console.log('chatPage notification', chatData);
           if (route == "ride") {
@@ -268,6 +301,46 @@ export function useNotifications(navigation) {
           }
           DeviceEventEmitter.emit('chatPage', chatData);
         }
+
+        if (detail?.notification?.data?.route == "foodOrderReadyToPickup") {
+          let acceprtFoodOrderDetails = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('acceprtFoodOrderDetails notification', acceprtFoodOrderDetails);
+          DeviceEventEmitter.emit('acceptedFoodOrder', acceprtFoodOrderDetails)
+          navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+        }
+        if (detail?.notification?.data?.route == "foodOrderPicked") {
+          let pickupFoodOrderDetails = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('pickupFoodOrderDetails notification', pickupFoodOrderDetails);
+          DeviceEventEmitter.emit('picked', pickupFoodOrderDetails)
+          navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+        }
+        if (detail?.notification?.data?.route == "foodOrderCompleted") {
+          let droppedFoodOrderDetails = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('droppedFoodOrderDetails notification', droppedFoodOrderDetails);
+          DeviceEventEmitter.emit('dropped', droppedFoodOrderDetails)
+          navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
+        }
+
+        if (detail?.notification?.data?.route == "foodOrderStatusUpdate") {
+          let foodOrderStatusUpdate = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('foodOrderStatusUpdate notification', foodOrderStatusUpdate);
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderStatusUpdate)
+          navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+        }
+
+        if (detail?.notification?.data?.route == "foodOrderCooking") {
+          let foodOrderCooking = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('foodOrderCooking notification', foodOrderCooking);
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderCooking)
+          navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+        }
+        if (detail?.notification?.data?.route == "foodOrderPacking") {
+          let foodOrderPacking = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('foodOrderPacking notification', foodOrderPacking);
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderPacking)
+          navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+        }
+
       }
     });
     return unsubscribe;
@@ -303,9 +376,10 @@ export function useNotifications(navigation) {
     const routeType = notification?.payload?.route;
     // console.log("route---", route);
     let data = JSON.parse(notification?.payload?.notification_data)
-    let route = data?.order_type == 'parcel' ? 'parcel' : "ride"
+    // let route = data?.order_type == 'parcel' ? 'parcel' : "ride"
+    const route = data?.order_type == 'parcel' ? 'parcel' : data?.order_type == 'ride' ? "ride" : "food"
     if (routeType === "searchingRide") {
-      let acceptedDetails = JSON.parse(notification?.payload?.notification_data)
+      let acceptedDetails = JSON.parse(notification?.payload?.notification_data ?? {})
       setAddParcelInfo(acceptedDetails)
       console.log('searchingRide notification newOrder', acceptedDetails);
       navigation.navigate(route, {
@@ -318,7 +392,7 @@ export function useNotifications(navigation) {
     }
 
     if (routeType === "home") {
-      let cancelDetails = JSON.parse(notification?.payload?.notification_data)
+      let cancelDetails = JSON.parse(notification?.payload?.notification_data ?? {})
       setAddParcelInfo(cancelDetails)
       console.log('cancelDetails notification cancelOrder', cancelDetails);
       // navigation.navigate(route, { screen: 'home' });
@@ -326,7 +400,7 @@ export function useNotifications(navigation) {
       DeviceEventEmitter.emit('cancelOrder', cancelDetails)
     }
     if (routeType === "picked") {
-      let pickedDetails = JSON.parse(notification?.payload?.notification_data)
+      let pickedDetails = JSON.parse(notification?.payload?.notification_data ?? {})
       setAddParcelInfo(pickedDetails)
       console.log('picked notification picked', pickedDetails);
       if (route == "ride") {
@@ -343,7 +417,7 @@ export function useNotifications(navigation) {
     }
 
     if (routeType === "dropped") {
-      let droppedDetails = JSON.parse(notification?.payload?.notification_data)
+      let droppedDetails = JSON.parse(notification?.payload?.notification_data ?? {})
       //  setAddParcelInfo({})
       console.log('notification dropped', droppedDetails);
       // navigation.navigate(route, { screen: 'home' });
@@ -352,7 +426,7 @@ export function useNotifications(navigation) {
     }
 
     if (routeType === 'chat') {
-      let chatData = JSON.parse(notification?.payload?.notification_data);
+      let chatData = JSON.parse(notification?.payload?.notification_data ?? {});
       setAddParcelInfo(chatData)
       console.log('chatPage notification', chatData);
       if (route == "ride") {
@@ -375,6 +449,46 @@ export function useNotifications(navigation) {
         navigation.navigate(route, { screen: 'trackingOrder' });
       }
       DeviceEventEmitter.emit('chatPage', chatData);
+    }
+
+    if (routeType == "foodOrderReadyToPickup") {
+      let acceprtFoodOrderDetails = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('acceprtFoodOrderDetails notification', acceprtFoodOrderDetails);
+      DeviceEventEmitter.emit('acceptedFoodOrder', acceprtFoodOrderDetails)
+      navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+    }
+    if (routeType == "foodOrderPicked") {
+      let pickupFoodOrderDetails = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('pickupFoodOrderDetails notification', pickupFoodOrderDetails);
+      DeviceEventEmitter.emit('picked', pickupFoodOrderDetails)
+      navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+    }
+    if (routeType == "foodOrderCompleted") {
+      let droppedFoodOrderDetails = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('droppedFoodOrderDetails notification', droppedFoodOrderDetails);
+      DeviceEventEmitter.emit('dropped', droppedFoodOrderDetails)
+      navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
+    }
+
+    if (routeType == "foodOrderStatusUpdate") {
+      let foodOrderStatusUpdate = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('foodOrderStatusUpdate notification', foodOrderStatusUpdate);
+      DeviceEventEmitter.emit('foodOrderUpdate', foodOrderStatusUpdate)
+      navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+    }
+
+    if (routeType == "foodOrderCooking") {
+      let foodOrderCooking = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('foodOrderCooking notification', foodOrderCooking);
+      DeviceEventEmitter.emit('foodOrderUpdate', foodOrderCooking)
+      navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+    }
+
+    if (routeType == "foodOrderPacking") {
+      let foodOrderPacking = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('foodOrderPacking notification', foodOrderPacking);
+      DeviceEventEmitter.emit('foodOrderUpdate', foodOrderPacking)
+      navigation.navigate(route, { screen: 'trackingFoodOrderList' });
     }
 
 

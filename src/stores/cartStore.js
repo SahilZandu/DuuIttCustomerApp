@@ -13,6 +13,7 @@ import { useToast } from '../halpers/useToast';
 
 export default class CartStore {
   selectedAddress = {};
+  cartItemData = {}
   constructor() {
     // this.setTokenFromStorage();
     // this.setAppUserFromStorage();
@@ -325,11 +326,13 @@ export default class CartStore {
       if (res?.statusCode == 200) {
         // useToast(res?.message, 1);
         // handleLoading(false);
+        this.cartItemData == res?.data ?? {}
         return res?.data;
       } else {
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
         // handleLoading(false);
+        this.cartItemData == {}
         return [];
       }
     } catch (error) {

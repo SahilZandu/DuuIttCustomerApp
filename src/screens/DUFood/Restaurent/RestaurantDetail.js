@@ -28,29 +28,30 @@ import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import Url from '../../../api/Url';
 
-let asestsArray = [
-  {
-    item: '',
-  },
-  {
-    item: '',
-  },
-  {
-    item: '',
-  },
-  {
-    item: '',
-  },
-  {
-    item: '',
-  },
-  {
-    item: '',
-  },
-  {
-    item: '',
-  },
-];
+let asestsArray =[];
+//  [
+//   {
+//     item: '',
+//   },
+//   {
+//     item: '',
+//   },
+//   {
+//     item: '',
+//   },
+//   {
+//     item: '',
+//   },
+//   {
+//     item: '',
+//   },
+//   {
+//     item: '',
+//   },
+//   {
+//     item: '',
+//   },
+// ];
 
 let perPage = 10;
 export default function RestaurantDetail({ navigation, route }) {
@@ -87,17 +88,20 @@ export default function RestaurantDetail({ navigation, route }) {
     },
   ];
 
-  // useEffect(() => {
-  //   asestsArray = [];
-  //   if (restaurant?.assets?.length > 0) {
-  //     restaurant?.assets?.map((item, i) => {
-  //       let object = {
-  //         uri: Base_Image_Url?.Base_Image_Assets_Url + item?.file_name,
-  //       };
-  //       asestsArray.push(object);
-  //     });
-  //   }
-  // }, [restaurant]);
+  useEffect(() => {
+    asestsArray = [];
+    if (restaurant?.assets && restaurant?.assets?.length > 0) {
+      // restaurant?.assets?.map((item, i) => {
+      //   let object = {
+      //     uri:Url?.Image_Url + item?.file_name,
+      //   };
+      //   asestsArray.push(object);
+      // });
+      asestsArray=restaurant?.assets
+    }else{
+      asestsArray = [];
+    }
+  }, [restaurant]);
 
   useFocusEffect(
     useCallback(() => {
@@ -143,7 +147,7 @@ export default function RestaurantDetail({ navigation, route }) {
   console.log('orgReviews--', orgReviews);
 
   const photoList = (item, i) => {
-    // console.log('item', item);
+    console.log('item photoList', item);
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -156,8 +160,8 @@ export default function RestaurantDetail({ navigation, route }) {
           resizeMode="cover"
           style={styles.assetsImage}
           source={
-            appImages.foodIMage
-            // uri: Url?.Image_Url + item?.file_name,
+            // appImages.foodIMage
+           { uri: Url?.Image_Url + item}
           }
         />
       </TouchableOpacity>

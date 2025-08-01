@@ -33,7 +33,12 @@ export default function OrderDetails({navigation, route}) {
   return (
     <View style={styles.container}>
          <Header
-      onPress={()=>{navigation.goBack()}}
+       onPress={()=>{ 
+        // navigation.navigate('tab3', { 
+        // tabText: item?.order_type?.toUpperCase() 
+        // })
+       navigation.goBack();
+      }}
       title={'Order Details'}
        backArrow={true} />
       <CardOrderDetails item={item} />

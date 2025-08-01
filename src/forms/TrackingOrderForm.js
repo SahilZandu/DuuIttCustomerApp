@@ -90,6 +90,7 @@ const TrackingOrderForm = ({ navigation }) => {
       handleAndroidBackButton(navigation);
       getTrackingOrder();
       socketServices.initailizeSocket();
+       setCurrentLocation();
     }, []),
   );
 

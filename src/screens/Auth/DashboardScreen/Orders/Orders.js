@@ -55,7 +55,7 @@ export default function Orders({ navigation, route }) {
   const [filterLoading, setFilterLoading] = useState(false)
 
   // console.log('tabText--', tabText,defaultType);
-  
+
   // useEffect(() => {
   //   setLoading(
   //     (orderHistoryList?.length > 0
@@ -90,11 +90,11 @@ export default function Orders({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      getCheckFilterData()
+      // getCheckFilterData();
       getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation, tabText);
-      if (orderHistoryList?.length > 0) {
+      if (orderHistoryList?.length == 0) {
         getOrderList();
         setTimeout(() => {
           setLoading(false);
@@ -103,7 +103,11 @@ export default function Orders({ navigation, route }) {
     }, [tabText]),
   );
 
-  const getCheckFilterData =()=>{
+  useEffect(() => {
+    getCheckFilterData();
+  }, [tabText])
+
+  const getCheckFilterData = () => {
     setLoading(
       (orderHistoryList?.length > 0
         && tabText === "All Orders")
@@ -131,7 +135,6 @@ export default function Orders({ navigation, route }) {
     }, 15000);
 
   }
-
 
 
   const getCheckDevice = async () => {

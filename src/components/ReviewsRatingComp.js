@@ -39,6 +39,7 @@ const ReviewsRatingComp = ({
   reviewToRider
 }) => {
   const { addReviews } = rootStore.dashboardStore;
+  const {appUser}=rootStore.commonStore;
   const [initialValues, setInitialValues] = useState({
     rating: 0,
     feedback: '',
@@ -107,7 +108,7 @@ const ReviewsRatingComp = ({
         restaurant_id: data?.restaurant?._id,
         rider_id: data?.rider?._id ?? data?.rider_id,
         review_to_rider: reviewToRider,
-        user_id: data?.customer?._id,
+        user_id: data?.customer?._id ?? appUser?._id,
       };
     } else {
       payload = {
@@ -117,7 +118,7 @@ const ReviewsRatingComp = ({
         order_id: data?._id,
         rider_id: data?.rider?._id ?? data?.rider_id,
         review_to_rider: reviewToRider,
-        user_id: data?.customer?._id,
+        user_id: data?.customer?._id ?? appUser?._id,
       };
     }
     const res = await addReviews(payload, handleLoading, onSuccess);

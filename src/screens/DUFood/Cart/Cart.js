@@ -80,9 +80,11 @@ const Cart = ({ navigation, route }) => {
     grandTotal: 0,
     couponDiscount: 0,
     topay: 0,
+    coupanCode:'',
   });
   const [userOrgDistance, setUserOrgDistance] = useState(null);
   const [cartList, setCartList] = useState({});
+  const [cartListRefresh, setCartListRefresh] = useState({});
   const [completeMealAllList, setCompleteMealAllList] = useState(
     mealOrderList ?? [],
   );
@@ -124,16 +126,14 @@ const Cart = ({ navigation, route }) => {
         cartList?.restaurant?.location?.coordinates?.length > 0)) {
         getCalculateDeliveryFee(deliveryAddress, cartList)
       }
-    }, 100)
-
-  }, [deliveryAddress]);
+    }, 500)
+  }, [deliveryAddress, cartListRefresh, restaurant]);
 
   const getCalculateDeliveryFee = async (address, cartList) => {
     const updateCart = await calculateDeliveryFee(address, cartList);
     console.log("res--getCalculateDeliveryFee", updateCart);
     if (updateCart?.food_item?.length > 0) {
       setCartList(updateCart ?? {});
-
       setAppCart({
         cartitems: updateCart?.food_item,
       });
@@ -160,6 +160,7 @@ const Cart = ({ navigation, route }) => {
         grandTotal: updateCart?.grand_total + (updateCart?.discount_amount ?? 0) ?? 0,
         couponDiscount: updateCart?.discount_amount ?? 0,
         topay: updateCart?.grand_total ?? 0,
+        coupanCode:updateCart?.offer?.referral_code ?? '',
       });
 
     }
@@ -317,6 +318,7 @@ const Cart = ({ navigation, route }) => {
     console.log('getUserCart:-cart', cart);
     // console.log('user cart', cart);
     setCartList(cart ?? {});
+    setCartListRefresh(!cartListRefresh)
     if (cart?.food_item?.length > 0) {
       setAppCart({
         cartitems: cart?.food_item,
@@ -344,6 +346,7 @@ const Cart = ({ navigation, route }) => {
         grandTotal: cart?.grand_total + (cart?.discount_amount ?? 0) ?? 0,
         couponDiscount: cart?.discount_amount ?? 0,
         topay: cart?.grand_total ?? 0,
+        coupanCode:cart?.offer?.referral_code ?? '',
       });
       // getUserOrgDistance(cart?.org_id);
     } else {
@@ -779,6 +782,7 @@ const Cart = ({ navigation, route }) => {
 
       <BillSummary
         // menu={orgMenu}
+        activeOffer={activeOffer}
         visible={isBillDetail}
         cartBillG={cartBillG}
         onClose={() => setIsBillDetail(false)}

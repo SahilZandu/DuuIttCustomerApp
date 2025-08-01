@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
     backgroundColor: colors.white,
     borderRadius: 10,
-    minHeight: screenHeight(13),
+    minHeight: screenHeight(11),
     marginTop: '4%',
     justifyContent: 'center',
     marginHorizontal: 20,

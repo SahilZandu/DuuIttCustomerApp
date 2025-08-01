@@ -41,6 +41,7 @@ export default function DashboardRoutes(props) {
         headerBackTitleVisible: false,
         gestureEnabled: false,
       }}
+      
       initialRouteName="home"> 
        <Stack.Screen name="home" component={DashboardBottomNavigator} />
        <Stack.Screen name="profile" component={Profile} />

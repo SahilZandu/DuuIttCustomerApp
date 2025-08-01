@@ -66,14 +66,13 @@ export default PaymentBtn;
 const styles =StyleSheet.create({
     bottomButtonView: {
         position: 'absolute',
-        bottom: '-0.4%',
+        bottom:Platform.OS == 'ios' ?  '-0.4%' :'0%',
         backgroundColor: colors.white,
       },
       bottomBtnSurface: {
         shadowColor: Platform.OS == 'ios' ? colors.black50 : colors.black,
         backgroundColor: colors.white,
         alignSelf: 'center',
-        borderRadius: 10,
         width: wp('100%'),
         height: hp('9%'),
         borderWidth: 0.5,
@@ -90,7 +89,7 @@ const styles =StyleSheet.create({
         alignItems: 'center',
         width: wp('46%'),
         height: hp('6%'),
-        marginTop: hp('1.5%'),
+        marginTop: hp('0.2%'),
       },
       paymentTitle: {
         marginLeft: '5%',
@@ -100,6 +99,6 @@ const styles =StyleSheet.create({
       },
       buyBtnView: {
         justifyContent: 'center',
-        marginTop: hp('4%'),
+        marginTop: hp('3.1%'),
       },
 })
