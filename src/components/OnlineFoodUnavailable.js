@@ -12,6 +12,7 @@ import BTN from './cta/BTN';
 import Spacer from '../halpers/Spacer';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fonts } from '../theme/fonts/fonts';
+import AppInputScroll from '../halpers/AppInputScroll';
 
 
 const OnlineFoodUnavailable = ({ appUserData, navigation }) => {
@@ -26,33 +27,38 @@ const OnlineFoodUnavailable = ({ appUserData, navigation }) => {
     );
 
     return (
-        <View style={styles.mainView}>
-            <View style={styles.subView}>
-              
-                <View style={styles.innerScreen}>
-                    <Image style={styles.mainImage}
-                        resizeMode='contain'
-                        source={appImages.onlineUnavailable} />
-                    <Text style={styles.onlineText}>Online Ordering Unavailable</Text>
-                    <Text style={styles.currentlyLocation}>Online Ordering is currently not available at your location</Text>
-                    <Spacer space={'10%'} />
-                    <BTN title={"CHECK OTHER OPTIONS"}
-                    onPress={() => {
-                        navigation.goBack();
-                    }} />
-                    <TouchableOpacity
-                    style={styles.tryTouch}
-                        activeOpacity={0.8}
-                        onPress={() => {
-                         navigation.navigate('addRestaurantLocation')
-                        }}
-                      >
-                        <Text style={styles.tryOtherLocationText}>Try another location</Text>
-                    </TouchableOpacity>
+        <AppInputScroll
+            pb={'50%'}
+            padding={true}
+            keyboardShouldPersistTaps={'handled'} >
+            <View style={styles.mainView}>
+                <View style={styles.subView}>
+
+                    <View style={styles.innerScreen}>
+                        <Image style={styles.mainImage}
+                            resizeMode='contain'
+                            source={appImages.onlineUnavailable} />
+                        <Text style={styles.onlineText}>Online Ordering Unavailable</Text>
+                        <Text style={styles.currentlyLocation}>Online Ordering is currently not available at your location</Text>
+                        <Spacer space={'10%'} />
+                        <BTN title={"CHECK OTHER OPTIONS"}
+                            onPress={() => {
+                                navigation.goBack();
+                            }} />
+                        <TouchableOpacity
+                            style={styles.tryTouch}
+                            activeOpacity={0.8}
+                            onPress={() => {
+                                navigation.navigate('addRestaurantLocation')
+                            }}
+                        >
+                            <Text style={styles.tryOtherLocationText}>Try another location</Text>
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
-              
             </View>
-        </View>
+        </AppInputScroll>
     );
 };
 
@@ -63,7 +69,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: wp('100%'),
         height: hp('90%'),
-        marginTop:Platform.OS ==='ios'? hp("13.5%"): hp("14.5%")
+        // marginTop: Platform.OS === 'ios' ? hp("13.5%") : hp("14.5%")
     },
     subView: {
         flex: 1,
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
         color: colors.black65, textAlign: 'center',
         marginTop: '2%'
     },
-    tryTouch:{
+    tryTouch: {
         marginTop: '4%',
     },
     tryOtherLocationText: {

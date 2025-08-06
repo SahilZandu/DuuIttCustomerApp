@@ -52,6 +52,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
     )),
   });
+  const [fitMap, setFitMap] = useState(true)
 
 
   const [isMapReady, setIsMapReady] = useState(false);
@@ -170,8 +171,9 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     };
   }, [coords]);
 
+
   useEffect(() => {
-    if (coords?.length > 1 && mapRef?.current) {
+    if ((coords?.length > 1 && mapRef?.current && fitMap)) {
       const edgePadding = {
         top: 30,
         right: 20,
@@ -183,6 +185,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         animated: true,
       });
 
+      // setFitMap(false)
+
       // Optional: second adjustment after a delay
       const timeout = setTimeout(() => {
         mapRef?.current?.fitToCoordinates(coords, {
@@ -190,8 +194,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           animated: true,
         });
       }, 6000);
-
       return () => clearTimeout(timeout);
+
     }
 
   }, [coords]);
@@ -247,7 +251,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   };
 
   useEffect(() => {
-    if (!origin || !destination || !mapRef.current) return;
+    if (!origin || !destination || !mapRef?.current) return;
 
     // Ensure lat/lng are numbers
     const lat = Number(origin?.lat);
@@ -296,7 +300,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         zoom: 17,
         altitude: 300,
       };
-      if (mapRef.current) {
+      if (mapRef?.current) {
         mapRef.current.animateCamera(camera, { duration: 1000 });
       }
     }, 60000);
@@ -305,6 +309,9 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     return () => clearTimeout(timeout);
 
   }, [origin, destination]);
+
+
+
 
   // useEffect(() => {
   //   if (!origin || !destination || !mapRef.current) return;

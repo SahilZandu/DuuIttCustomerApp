@@ -25,7 +25,7 @@ export default function Settings({ navigation }) {
   const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
   const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
-  const [isProgrss, setIsProgress] = useState(false);
+  const [isProgress, setIsProgress] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -251,12 +251,12 @@ export default function Settings({ navigation }) {
         />
         <PopUpInProgess
           CTATitle={'Cancel'}
-          visible={isProgrss}
+          visible={isProgress}
           type={'warning'}
           onClose={() => setIsProgress(false)}
-          title={'You cannot delete account'}
+          title={"You can't delete account"}
           text={
-            "You cannot delete your account while your order is being processed."
+            "You can't delete your account while your order is being processed."
           }
         />
       </AppInputScroll>

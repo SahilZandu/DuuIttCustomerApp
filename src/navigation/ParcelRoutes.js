@@ -45,7 +45,7 @@ export default function ParcelRoutes(props) {
        <Stack.Screen name="trackingOrder" component={TrackingOrder} />
        <Stack.Screen name="pickSuccessfully" component={PickSuccessfully} />
        <Stack.Screen name="editOrderLocation" component={EditOrderLocation} />
-        <Stack.Screen name="chat" component={Chat} /> 
+       <Stack.Screen name="chat" component={Chat} /> 
        
   
     </Stack.Navigator>

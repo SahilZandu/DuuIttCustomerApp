@@ -105,8 +105,19 @@ export function useNotifications(navigation) {
         if (remoteMessage?.data?.route == "foodOrderPacking") {
           let foodOrderPacking = JSON.parse(remoteMessage?.data?.notification_data ?? {})
           console.log('foodOrderPacking notification', foodOrderPacking);
-          // DeviceEventEmitter.emit('dropped', droppedFoodOrderDetails)
           DeviceEventEmitter.emit('foodOrderUpdate', foodOrderPacking)
+        }
+
+        if (remoteMessage?.data?.route == "riderCancelFoodOrder") {
+          let riderCancelFoodOrder = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('riderCancelFoodOrder notification', riderCancelFoodOrder);
+          DeviceEventEmitter.emit('foodOrderUpdate', riderCancelFoodOrder)
+        }
+
+        if (remoteMessage?.data?.route == "foodOrderDeclined") {
+          let foodOrderDeclined = JSON.parse(remoteMessage?.data?.notification_data ?? {})
+          console.log('foodOrderDeclined notification', foodOrderDeclined);
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderDeclined)
         }
 
       }
@@ -340,6 +351,19 @@ export function useNotifications(navigation) {
           DeviceEventEmitter.emit('foodOrderUpdate', foodOrderPacking)
           navigation.navigate(route, { screen: 'trackingFoodOrderList' });
         }
+        if (detail?.notification?.data?.route == "riderCancelFoodOrder") {
+          let riderCancelFoodOrder = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('riderCancelFoodOrder notification', riderCancelFoodOrder);
+          DeviceEventEmitter.emit('foodOrderUpdate', riderCancelFoodOrder)
+          navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+        }
+
+        if (detail?.notification?.data?.route == "foodOrderDeclined") {
+          let foodOrderDeclined = JSON.parse(detail?.notification?.data?.notification_data ?? {})
+          console.log('foodOrderDeclined notification', foodOrderDeclined);
+          DeviceEventEmitter.emit('foodOrderUpdate', foodOrderDeclined)
+          navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
+        }
 
       }
     });
@@ -489,6 +513,20 @@ export function useNotifications(navigation) {
       console.log('foodOrderPacking notification', foodOrderPacking);
       DeviceEventEmitter.emit('foodOrderUpdate', foodOrderPacking)
       navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+    }
+
+    if (routeType == "riderCancelFoodOrder") {
+      let riderCancelFoodOrder = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('riderCancelFoodOrder notification', riderCancelFoodOrder);
+      DeviceEventEmitter.emit('foodOrderUpdate', riderCancelFoodOrder)
+      navigation.navigate(route, { screen: 'trackingFoodOrderList' });
+    }
+
+    if (routeType == "foodOrderDeclined") {
+      let foodOrderDeclined = JSON.parse(notification?.payload?.notification_data ?? {})
+      console.log('foodOrderDeclined notification', foodOrderDeclined);
+      DeviceEventEmitter.emit('foodOrderUpdate', foodOrderDeclined)
+      navigation.navigate('dashborad', { screen: 'tab3', params: { tabText: 'All Orders' } });
     }
 
 

@@ -16,7 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 import { colors } from '../../../../../theme/colors';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
-import { ScratchCard } from 'rn-scratch-card';
+// import { ScratchCard } from 'rn-scratch-card';
 import { appImages } from '../../../../../commons/AppImages';
 import ModalPopUpTouch from '../../../../../components/ModalPopUpTouch';
 import BTN from '../../../../../components/cta/BTN';
@@ -385,13 +385,13 @@ const Rewards = ({ navigation }) => {
         <View style={styles.modalMainView}>
           <View style={styles.mainScrtView}>
             <Image source={selectedItem?.image} style={styles.modalImage} />
-            <ScratchCard
+            {/* <ScratchCard
               brushWidth={100}
               onScratch={handleScratch}
               // strokeColor="#099DB2"
               source={appImages.scratchImage}
               style={styles.modalImagesrct}
-            />
+            /> */}
           </View>
           <View style={styles.modalMainInnerView}>
             <View style={styles.modalInnerView}>

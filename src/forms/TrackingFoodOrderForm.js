@@ -61,6 +61,7 @@ const TrackingFoodOrderForm = ({ navigation }) => {
   const { getFoodOrderTracking, foodOrderTrackingList } =
     rootStore.foodDashboardStore;
   const { appUser } = rootStore.commonStore;
+  const { unseenMessages, setChatNotificationStatus, setChatData } = rootStore.chatStore;
   const [loading, setLoading] = useState(
     foodOrderTrackingList?.length?.length > 0 ? false : true,
   );
@@ -72,10 +73,12 @@ const TrackingFoodOrderForm = ({ navigation }) => {
   const [isSelectedItem, setIsSelectedIsItem] = useState(foodOrderTrackingList[0] ?? {});
   const [origin, setOrigin] = useState({});
   const [isCancelOrder, setIsCancelOrder] = useState(false)
+  const [checkChatMsg, setCheckChatMsg] = useState([])
 
 
   useFocusEffect(
     useCallback(() => {
+      setChatNotificationStatus(true)
       handleAndroidBackButton(navigation);
       getTrackingOrder();
     }, []),
@@ -129,6 +132,70 @@ const TrackingFoodOrderForm = ({ navigation }) => {
       subscription.remove();
     };
   }, []);
+
+
+  const onChat = (data) => {
+    setChatData([])
+    let newCheckMsg = [...checkChatMsg]
+    const filterCheckMsg = newCheckMsg?.filter((item, i) => {
+      return item?._id !== data?._id
+    })
+
+    let itemData = trackedArray?.filter((item, i) => {
+      return item?._id == data?._id
+    })
+
+    setCheckChatMsg(filterCheckMsg);
+    setTimeout(() => {
+      navigation.navigate("chat", { item: itemData?.length > 0 ? itemData[0] : data })
+    }, 500)
+
+  }
+
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatData', data => {
+      console.log('chatData Order data -- ', data);
+      if (data?.order_type == 'food') {
+        let newMsg = [...checkChatMsg]
+        const checkMsg = newMsg?.find(item => item?.rider?._id === data?.rider?._id);
+        if ((checkMsg && checkMsg?.rider)) {
+          setCheckChatMsg(newMsg)
+        } else {
+          newMsg.push(data)
+          setCheckChatMsg(newMsg)
+        }
+        // checkUnseenMsg(data);
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('chatPage', data => {
+      console.log('chatPagedata -- ', data);
+      if (data?.order_type == 'food') {
+        setTimeout(() => {
+          onChat(data);
+        }, 500);
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const checkUnseenMsg = async (data) => {
+    let req = {
+      orderId: data?._id,
+      senderRole: 'rider'
+    }
+    const res = await unseenMessages(req);
+    console.log("res unseenMessages", res);
+
+  }
 
 
   const getTrackingOrder = async () => {
@@ -303,7 +370,8 @@ const TrackingFoodOrderForm = ({ navigation }) => {
                       rating: item?.rider?.riderReviews?.average_rating ?? '4.5',
                     }}
                     onMessage={() => {
-                      hanldeLinking(item, 'email');
+                      // hanldeLinking(item, 'email');
+                      onChat(item)
                     }}
                     onCall={() => {
                       hanldeLinking(item, 'call');

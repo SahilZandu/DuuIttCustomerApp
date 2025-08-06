@@ -40,6 +40,7 @@ const DashboardHeader3 = ({
     onMicroPhone,
     onFocus,
     onBlur,
+    onPressSearch
 }) => {
     const searchInputRef = useRef(null);
     const { getWallet, welletBalance } = rootStore.dashboardStore
@@ -233,7 +234,10 @@ const DashboardHeader3 = ({
                         marginHorizontal: '4%',
                         marginTop: '4%',
                     }}>
-                    <View
+                    <TouchableOpacity
+                       
+                        activeOpacity={0.8}
+                        onPress={onPressSearch}
                         style={{
                             width: wp('90%'),
                             flexDirection: 'row',
@@ -244,15 +248,15 @@ const DashboardHeader3 = ({
                             borderColor: colors.colorD9,
                             backgroundColor: colors.screenBackground,
                         }}>
-                        <TextInput
+                           <TextInput
+                             pointerEvents="none"
                             ref={searchInputRef}
                             value={value}
                             onChangeText={onChangeText}
-                            // autoFocus={true}
                             placeholderTextColor="#808080"
                             placeholder="Search"
                             style={{
-                                width: wp('73%'),
+                                width: wp('81%'),
                                 height: hp('5%'),
                                 paddingLeft: '4%',
                                 paddingRight: '2%',
@@ -276,21 +280,16 @@ const DashboardHeader3 = ({
                                 />
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity
-                                // onPress={() => {
-                                //   handleSearchButtonPress();
-                                // }}
-                                activeOpacity={0.8}
-                                hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}>
+                            <View>
                                 <SvgXml
                                     width={20}
                                     height={20}
                                     xml={appImagesSvg.searchIcon}
                                     style={{ right: wp('0.7%') }}
                                 />
-                            </TouchableOpacity>
+                            </View>
                         )}
-                        <View
+                        {/* <View
                             style={{
                                 height: 23,
                                 width: 2,
@@ -303,8 +302,8 @@ const DashboardHeader3 = ({
                             hitSlop={{ top: 15, bottom: 10, left: 5, right: 5 }}
                             style={{ left: wp('3%') }}>
                             <SvgXml width={20} height={20} xml={appImagesSvg.microPhoneSvg} />
-                        </TouchableOpacity>
-                    </View>
+                        </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
             )}
         </View>

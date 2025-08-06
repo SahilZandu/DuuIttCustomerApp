@@ -77,7 +77,6 @@
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "^13.12.1",
-    "rn-scratch-card": "^1.2.3",
     "socket.io-client": "4.7.5",
     "yup": "^1.4.0"
   },

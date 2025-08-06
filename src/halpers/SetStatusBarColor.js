@@ -62,6 +62,7 @@ const DashbordScreens = [
   "chat",
   'addRestaurantLocation',
   'about',
+  'searchHome',
 
 ];
 

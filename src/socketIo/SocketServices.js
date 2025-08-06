@@ -1,12 +1,14 @@
-import {io} from 'socket.io-client';
-import {rootStore} from '../stores/rootStore';
+import { io } from 'socket.io-client';
+import { rootStore } from '../stores/rootStore';
+import Url from '../api/Url';
 
-let Source_Url = 'https://duuitt.hashsoft.io/'; // Replace with your server URL
+// let Source_Url = 'https://duuitt.hashsoft.io/'; // Replace with your server URL
+let Source_Url = Url.Base_Url ?? 'https://duuitt.hashsoftware.com/' // Replace with your server URL
 
 class WSServices {
   // Initialize the WebSocket connection
   initailizeSocket = async () => {
-    const {token} = rootStore.commonStore;
+    const { token } = rootStore.commonStore;
     try {
       this.socket = io(Source_Url, {
         auth: {

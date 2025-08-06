@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black,
     width: wp('30%'),
+    textTransform:'capitalize'
   },
   viewContainer: {
     flexDirection: 'row',

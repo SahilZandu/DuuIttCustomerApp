@@ -57,33 +57,6 @@ export default function CategoryViseFoodListing({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [isRemoveCart, setIsRemoveCart] = useState(false);
 
-  const topRestaurentsList = [
-    {
-      id: '1',
-      name: 'Saurya FastFood',
-      imageUrl: appImages.foodIMage,
-      veg_nonveg: 'veg',
-    },
-    {
-      id: '2',
-      name: 'Saurya FastFood',
-      imageUrl: appImages.foodIMage,
-      veg_nonveg: 'veg',
-    },
-    {
-      id: '3',
-      name: 'Saurya FastFood',
-      imageUrl: appImages.foodIMage,
-      veg_nonveg: 'veg',
-    },
-    {
-      id: '4',
-      name: 'Saurya FastFood',
-      imageUrl: appImages.foodIMage,
-      veg_nonveg: 'veg',
-    },
-    // Add more restaurants as needed
-  ];
 
   useFocusEffect(
     useCallback(() => {
@@ -205,10 +178,10 @@ export default function CategoryViseFoodListing({ navigation, route }) {
 
   const loadMoredata = () => {
     console.log('load more');
-    // if (!loadingMore && topRestaurentsList?.length >= perPage) {
+    // if (!loadingMore && relatedRestaurant?.length >= perPage) {
     //   perPage = perPage + 20;
     //   setLoadingMore(true);
-    //   getOrderList();
+    //   getRelatedRestaurantList();
     // }
   };
 

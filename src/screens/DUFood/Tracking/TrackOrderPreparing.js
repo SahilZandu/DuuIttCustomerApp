@@ -39,12 +39,14 @@ export default function TrackOrderPreparing({ navigation, route }) {
   const [origin, setOrigin] = useState({});
   const [destination, setDestination] = useState({});
   const [itemDetails, setItemDetails] = useState(item ?? {})
+  const [arivelTime, setArivelTime] = useState(item?.arrival_time ?? '0 Min')
 
-  // console.log("item,itemDetails-----", item, itemDetails);
+  console.log("item,itemDetails-----", item, itemDetails);
 
   useEffect(() => {
     if (item) {
       setItemDetails(item)
+      setArivelTime(item?.arrival_time == 0 ? '0 Min' : item?.arrival_time ?? '0 Min')
       setOrigin(item?.rider?.current_location ?? item?.sender_address?.geo_location)
       setDestination(item?.receiver_address?.geo_location ?? {})
 
@@ -66,6 +68,43 @@ export default function TrackOrderPreparing({ navigation, route }) {
     }
 
   }, [item]);
+
+
+  const getOrderStatusDetailsTitle = (status) => {
+    switch (status) {
+      case 'waiting_for_confirmation':
+        return 'Waiting for Restaurant Confirm'; 
+      case 'cooking':
+        return 'Your Order is Being Cooked'; 
+      case 'packing_processing':
+        return 'Packing Your Delicious Order'; 
+      case 'ready_to_pickup':
+        return 'Order Ready for Pickup'; 
+      case 'picked':
+        return 'Rider is On the Way'; 
+      default:
+        return 'Your Order Status Updated'; 
+    }
+  };
+
+
+  const getOrderStatusDetailsDes = (status) => {
+    switch (status) {
+      case 'waiting_for_confirmation':
+        return 'The restaurant is reviewing your order. Please wait.';
+      case 'cooking':
+        return 'Your food is being freshly prepared by the chef.';
+      case 'packing_processing':
+        return 'Your order is being safely packed for delivery.';
+      case 'ready_to_pickup':
+        return 'The food is ready and waiting to be picked up.';
+      case 'picked':
+        return 'The rider has picked up your order and is on the way.';
+      default:
+        return 'Your order status has been updated.';
+    }
+  };
+
 
   useEffect(() => {
     if (itemDetails) {
@@ -111,6 +150,60 @@ export default function TrackOrderPreparing({ navigation, route }) {
     }, [itemDetails]),
   );
 
+  // const onChat = (data) => {
+  //     setChatData([])
+  //     let newCheckMsg = [...checkChatMsg]
+  //     const filterCheckMsg = newCheckMsg?.filter((item, i) => {
+  //       return item?._id !== data?._id
+  //     })
+
+  //     let itemData = trackedArray?.filter((item, i) => {
+  //       return item?._id == data?._id
+  //     })
+
+  //     setCheckChatMsg(filterCheckMsg);
+  //     setTimeout(() => {
+  //       navigation.navigate("chat", { item: itemData?.length > 0 ? itemData[0] : data })
+  //     }, 500)
+
+  //   }
+
+
+  //   useEffect(() => {
+  //     const subscription = DeviceEventEmitter.addListener('chatData', data => {
+  //       console.log('chatData Order data -- ', data);
+  //       if (data?.order_type == 'food') {
+  //         let newMsg = [...checkChatMsg]
+  //         const checkMsg = newMsg?.find(item => item?.rider?._id === data?.rider?._id);
+  //         if ((checkMsg && checkMsg?.rider)) {
+  //           setCheckChatMsg(newMsg)
+  //         } else {
+  //           newMsg.push(data)
+  //           setCheckChatMsg(newMsg)
+  //         }
+  //         // checkUnseenMsg(data);
+  //       }
+  //     });
+  //     return () => {
+  //       subscription.remove();
+  //     };
+  //   }, []);
+
+  //   useEffect(() => {
+  //     const subscription = DeviceEventEmitter.addListener('chatPage', data => {
+  //       console.log('chatPagedata -- ', data);
+  //       //  getTrackingOrder();
+  //       if (data?.order_type == 'food') {
+  //         setTimeout(() => {
+  //           onChat(data);
+  //         }, 500);
+  //       }
+  //     });
+  //     return () => {
+  //       subscription.remove();
+  //     };
+  //   }, []);
+
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -121,6 +214,10 @@ export default function TrackOrderPreparing({ navigation, route }) {
         user_type: 'customer',
         fcm_token: appUser?.fcm_token,
       };
+      let data = {
+        order_id: itemDetails?._id ?? item?._id
+      }
+      socketServices.emit('track-order', data);
       if (itemDetails?.rider?._id?.length > 0) {
         socketServices.emit('update-location', query);
         socketServices.on('getremainingdistance', data => {
@@ -133,10 +230,20 @@ export default function TrackOrderPreparing({ navigation, route }) {
             setOrigin(data?.location);
           }
         });
-        socketServices.on('testevent', data => {
-          console.log('test event tracking food order', data);
-        });
       }
+
+      socketServices.on('testevent', data => {
+        console.log('test event tracking food order', data);
+      });
+
+      socketServices.on('track-order-response', data => {
+        console.log('track-order-response food order', data);
+        if (data?.arrival_to_customer?.length > 0) {
+          setArivelTime(data?.arrival_to_customer)
+        } else {
+          setArivelTime('0 Min')
+        }
+      });
 
     }, 2000);
     return () => {
@@ -156,6 +263,11 @@ export default function TrackOrderPreparing({ navigation, route }) {
       fcm_token: appUser?.fcm_token,
     };
     socketServices.emit('update-location', query);
+
+    let data = {
+      order_id: itemDetails?._id ?? item?._id
+    }
+    socketServices.emit('track-order', data);
 
     let request = {
       lat: getLocation('lat')?.toString(),
@@ -224,6 +336,12 @@ export default function TrackOrderPreparing({ navigation, route }) {
     }
   };
 
+  const onChat = (data) => {
+    navigation.navigate("chat", { item: data })
+
+  }
+
+
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
@@ -250,24 +368,27 @@ export default function TrackOrderPreparing({ navigation, route }) {
             <View style={styles.upperLightGreenView}>
               <View style={styles.chefTextView}>
                 <Text style={styles.chefText}>
-                  {orderStep === 1
+                  {getOrderStatusDetailsTitle(itemDetails?.status ?? item?.status)}
+                  {/* {orderStep === 1
                     ? 'Chef is cooking the food'
                     : orderStep === 2
                       ? 'Chef prepared the food'
-                      : 'Chef is preparing the food'}
+                      : 'Chef is preparing the food'} */}
                 </Text>
                 <Text numberOfLines={2} style={styles.waitingForText}>
-                  {orderStep === 1
+                  {getOrderStatusDetailsDes(itemDetails?.status ?? item?.status)}
+                  {/* {orderStep === 1
                     ? 'Making the best quality food for you'
                     : orderStep === 2
                       ? 'Waiting for the delivery partner for pickup'
-                      : 'Making the best quality food for you'}
+                      : 'Making the best quality food for you'} */}
+
                 </Text>
               </View>
               <View style={styles.arivalInMainView}>
                 <View style={styles.arivalInView}>
                   <Text style={styles.arriveInText}>Arival in</Text>
-                  <Text style={styles.mintText}> {itemDetails?.arrival_time ?? '00:00'} min</Text>
+                  <Text style={styles.mintText}> {arivelTime ?? itemDetails?.arrival_time ?? '0 Min'} </Text>
                 </View>
                 <Text style={styles.onTimeView}>On time</Text>
               </View>
@@ -294,9 +415,13 @@ export default function TrackOrderPreparing({ navigation, route }) {
                 </View>
               </View>
               <View style={styles.phoneMsgImage}>
-                <TouchableOpacity activeOpacity={0.8}>
+                <TouchableOpacity
+                  onPress={() => {
+                    //  hanldeLinking('email', itemDetails) 
+                    onChat(itemDetails ?? item)
+                  }}
+                  activeOpacity={0.8}>
                   <Image
-                    onPress={() => { hanldeLinking('email', itemDetails) }}
                     resizeMode="contain"
                     style={{ width: 34, height: 34 }}
                     source={appImages.chat}
@@ -383,8 +508,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   chefTextView: {
-    padding: wp('6%'),
-    width: wp('64%'),
+    // padding: wp('6%'),
+    width: wp('54%'),
+    height: hp('10%'),
+    marginHorizontal: 20,
+    marginTop: '3%'
   },
   chefText: {
     fontFamily: fonts.bold,
@@ -395,6 +523,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     color: colors.color51,
     fontSize: RFValue(11),
+    marginTop: '2%',
+    lineHeight: 20
   },
   arivalInMainView: {
     marginTop: hp('-3%'),
@@ -407,18 +537,22 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     borderRadius: 10,
     elevation: 2,
-    padding: wp('5%'),
+    // padding: wp('5%'),
+    height: hp('10%'),
+    width: wp('30%'),
     shadowOffset: { width: -1, height: 6 },
   },
   arriveInText: {
     fontFamily: fonts.bold,
     color: colors.white,
     fontSize: RFValue(16),
+    marginTop: '7%'
   },
   mintText: {
     fontFamily: fonts.bold,
     color: colors.white,
     fontSize: RFValue(11),
+    marginTop: '5%'
   },
   onTimeView: {
     fontFamily: fonts.bold,

@@ -4541,7 +4541,6 @@ __metadata:
     react-native-vector-icons: ^10.1.0
     react-native-webview: ^13.12.1
     react-test-renderer: 18.2.0
-    rn-scratch-card: ^1.2.3
     socket.io-client: 4.7.5
     typescript: 5.0.4
     yup: ^1.4.0
@@ -11598,16 +11597,6 @@ __metadata:
   bin:
     rimraf: ./bin.js
   checksum: 3ea587b981a19016297edb96d1ffe48af7e6af69660e3b371dbfc73722a73a0b0e9be5c88089fbeeb866c389c1098e07f64929c7414290504b855f54f901ab10
-  languageName: node
-  linkType: hard
-
-"rn-scratch-card@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "rn-scratch-card@npm:1.2.3"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 7ad5cb4c5e5d9030e099beb18c18c0684d16f69ce86369b51be1182916ef328c634369d9484025dfdcffeb9ac0143545a26f4166d85d9dd1d9132dd0091c5168
   languageName: node
   linkType: hard
 

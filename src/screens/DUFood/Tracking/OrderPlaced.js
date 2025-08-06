@@ -81,6 +81,7 @@ export default function OrderPlaced({ navigation, route }) {
             {/* {orderDetails?.status == 'waiting_for_confirmation' &&
               <> */}
             <BTN
+              // disable={orderDetails?.rider?._id?.length > 0 ? true : false}
               textTransform={'auto'}
               title={orderDetails?.status === "waiting_for_confirmation" ? 'Cancel with full refund' : "Cancel with no refund"}
               onPress={() => {

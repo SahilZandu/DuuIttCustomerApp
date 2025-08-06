@@ -39,7 +39,8 @@ const Header = ({ shareSVG, bgColor,
           fontFamily: fonts.semiBold,
           color: colors.black,
           marginLeft: backArrow ? '3%' : '6%',
-          marginRight: '2%'
+          marginRight: '2%',
+          textTransform:'capitalize'
         }}>
         {title}
       </Text>

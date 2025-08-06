@@ -522,9 +522,9 @@ export default function SideMenu({ navigation }) {
               visible={isProgrss}
               type={'warning'}
               onClose={() => setIsProgress(false)}
-              title={'You cannot logout'}
+              title={"You can't logout"}
               text={
-                "You cannot logout your account while your order is being processed."
+                "You can't logout your account while your order is being processed."
               }
             />
 

@@ -74,14 +74,16 @@ export default function Chat({ navigation, route }) {
       socketServices.initailizeSocket();
       setChatNotificationStatus(false);
       handleAndroidBackButton(navigation)
-      getChatList();
-      setTimeout(() => {
-        let Payload = {
-          roomId: `${item?._id}-${item?.rider?._id ?? item?.rider_id}-${item?.customer?._id ?? item?.customer_id}`
-          // roomId:`6821a769260e070d22d9e503-6810a4b37d14572e56d6013d-674004448c0213057bd1519c`
-        }
-        socketServices.emit('roomId', Payload)
-      }, 1000)
+      if (item?._id?.length > 0) {
+        getChatList();
+        setTimeout(() => {
+          let Payload = {
+            roomId: `${item?._id}-${item?.rider?._id ?? item?.rider_id}-${item?.customer?._id ?? item?.customer_id}`
+            // roomId:`6821a769260e070d22d9e503-6810a4b37d14572e56d6013d-674004448c0213057bd1519c`
+          }
+          socketServices.emit('roomId', Payload)
+        }, 1000)
+      }
     }, [item])
   )
 

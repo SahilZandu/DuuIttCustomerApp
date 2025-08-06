@@ -329,6 +329,21 @@ export default function FoodHome({ navigation }) {
     };
   }, []);
 
+
+  useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('foodOrderUpdate', data => {
+      console.log('foodOrderUpdate data --Food ', data);
+      if (data?.order_type == 'food') {
+        getTrackingOrder();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+
   const checkInternet = () => {
     fetch().then(state => {
       setInternet(state.isInternetReachable);
@@ -668,23 +683,30 @@ export default function FoodHome({ navigation }) {
             onPress={() => {
               navigation.goBack();
             }}
+            onPressSearch={() => {
+              if (restaurantList?.length > 0) {
+                navigation.navigate("searchHome")
+              } else {
+                alert('Oops! Please choose a location first.')
+                // alert("Location is required. Kindly select a location to continue.")
+              }
+            }}
             appUserInfo={appUserInfo}
-            autoFocus={isKeyboard}
-            value={searchRes}
+            // value={searchRes}
             onChangeText={t => {
               setSearchRes(t);
               if (t) {
                 hanldeSearch(t);
               }
             }}
-            onMicroPhone={() => {
-              setVisible(true);
-            }}
-            onFocus={() => setIskeyboard(true)}
-            onBlur={() => setIskeyboard(false)}
-            onCancelPress={() => {
-              setSearchRes('');
-            }}
+          // onMicroPhone={() => {
+          //   setVisible(true);
+          // }}
+          // onFocus={() => setIskeyboard(true)}
+          // onBlur={() => setIskeyboard(false)}
+          // onCancelPress={() => {
+          //   setSearchRes('');
+          // }}
           // onRefershData={onRefershData}
           />
           <ScrollView
@@ -704,8 +726,6 @@ export default function FoodHome({ navigation }) {
               flexGrow: 1,
               paddingBottom: hp('5%'),
             }}>
-
-
             {repeatOrdersList?.length > 2 && (
               <View style={styles.orderMainView}>
                 <RepeatOrder
@@ -841,13 +861,13 @@ export default function FoodHome({ navigation }) {
             navigation={navigation} />}
 
           <View style={styles.bottomCartBtnView}>
-            {trackedArray?.length > 0 && (
-              <FoodTrackingOrder
-                bottom={cartItems?.food_item?.length > 0 ? hp('18.3%') : hp('8.5%')}
-                navigation={navigation}
-                trackedArray={trackedArray}
-              />
-            )}
+            {/* {trackedArray?.length > 0 && ( */}
+            <FoodTrackingOrder
+              bottom={cartItems?.food_item?.length > 0 ? hp('18.3%') : hp('8.5%')}
+              navigation={navigation}
+              trackedArray={trackedArray}
+            />
+            {/* )} */}
             {cartItems?.food_item?.length > 0 && (
               <DashboardCartBtn
                 bottom={hp('8.5%')}

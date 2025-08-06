@@ -152,6 +152,7 @@ const CancelOrderPopUp = ({ visible, item, onClose, refershData }) => {
                             })}
                             <Spacer space={hp('8%')} />
                             <BTN
+                                // disable={item?.rider?._id?.length > 0 ? true :false}
                                 loading={loading}
                                 onPress={() => {
                                     onCancelOrder()
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     billDetailRenderView: {
         paddingHorizontal: 10,
         justifyContent: 'center',
-        marginTop:'1%'
+        marginTop: '1%'
     },
     titleText: {
         fontFamily: fonts.medium,
