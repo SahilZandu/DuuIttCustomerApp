@@ -439,6 +439,7 @@ export default function ParcelHome({ navigation }) {
             />
           )}
           {/* <PopUp
+           topIcon={true}
             visible={isDelete}
             type={'delete'}
             onClose={() => setIsDelete(false)}

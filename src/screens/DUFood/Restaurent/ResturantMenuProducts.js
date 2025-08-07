@@ -788,6 +788,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
         }}
       />
       <PopUp
+       topIcon={true}
         visible={isRemoveCart}
         type={'delete'}
         onClose={() => setIsRemoveCart(false)}
@@ -801,6 +802,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
       />
 
       <PopUp
+       topIcon={true}
         visible={openCloseItem}
         type={'delete'}
         onClose={() => setOpenCloseItem(false)}

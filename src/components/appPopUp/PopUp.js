@@ -1,22 +1,23 @@
 import React from 'react';
-import {Text, View, StyleSheet, Pressable} from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import Modal from 'react-native-modal';
-import {SvgXml} from 'react-native-svg';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { RFValue } from 'react-native-responsive-fontsize';
 import DeleteActions from './DeleteActions';
 import CTA from '../cta/CTA';
 import LogoutActions from './LogoutActions';
-import {fonts} from '../../theme/fonts/fonts';
-import {appImagesSvg} from '../../commons/AppImages';
+import { fonts } from '../../theme/fonts/fonts';
+import { appImagesSvg } from '../../commons/AppImages';
 import Spacer from '../../halpers/Spacer';
+import { colors } from '../../theme/colors';
 
-const PopUp = ({visible, onDelete, type, text, title, onClose, CTATitle}) => {
+const PopUp = ({ topIcon, crossIcon, visible, onDelete, type, text, title, onClose, CTATitle }) => {
   const getIconXml = () => {
     if (type == 'warning') {
       return appImagesSvg?.popUpwarning;
     } else if (type == 'logout') {
-      return appImagesSvg?.logoutSvg;
-      // return appImagesSvg?.crossIconBackRed;
+      // return appImagesSvg?.logoutSvg;
+      return appImagesSvg?.crossIconWhite;
     } else if (type == 'continue') {
       return appImagesSvg?.logoutSvg;
     } else {
@@ -32,12 +33,12 @@ const PopUp = ({visible, onDelete, type, text, title, onClose, CTATitle}) => {
           {
             backgroundColor:
               type == 'delete' ||
-               type == 'logout' ||
+                type == 'logout' ||
                 type == 'continue'
-                ? '#CB2F2F'
+                ? colors.colorCB
                 : type == 'warning'
-                ? 'rgba(254, 240, 199, 1)'
-                :  type == 'logout' ? 'transparent' : '#1D721E',
+                  ? 'rgba(254, 240, 199, 1)'
+                  : colors.darkGreen,
           },
         ]}>
         <SvgXml xml={getIconXml()} />
@@ -57,8 +58,8 @@ const PopUp = ({visible, onDelete, type, text, title, onClose, CTATitle}) => {
     <Modal isVisible={visible}>
       <View style={styles.mainView}>
         <View style={styles.subView}>
-          <PopUpIcon />
-          <CloseBtn />
+          {topIcon && <PopUpIcon />}
+          {crossIcon && <CloseBtn />}
           <Text style={styles.titleText}>
             {title ? title : 'You are about to delete an item'}
           </Text>
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subView: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     paddingHorizontal: '5%',
     paddingBottom: '5%',
     width: '85%',
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: RFValue(11),
     textAlign: 'center',
-    color: '#8F8F8F',
+    color: colors.color8F,
   },
   iconView: {
     height: 60,

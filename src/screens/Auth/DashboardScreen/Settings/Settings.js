@@ -19,6 +19,10 @@ export default function Settings({ navigation }) {
     orderTrackingList,
     getPendingForCustomer,
   } = rootStore.orderStore;
+  const {
+    getFoodOrderTracking,
+    foodOrderTrackingList,
+  } = rootStore.foodDashboardStore;
   const [activateSwitch, setActivateSwitch] = useState(true);
   const [switchWallet, setSwitchWallet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
@@ -26,6 +30,7 @@ export default function Settings({ navigation }) {
   const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
   const [isProgress, setIsProgress] = useState(false);
+  const [foodTrackedArray, setFoodTrackedArray] = useState(foodOrderTrackingList ?? [])
 
   useFocusEffect(
     useCallback(() => {
@@ -40,7 +45,8 @@ export default function Settings({ navigation }) {
         await Promise.all([
           getIncompleteParcelOrder(),
           getTrackingParcelOrder(),
-          getIncompleteRideOrder()
+          getIncompleteRideOrder(),
+          getFoodTrackingOrder(),
         ]);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -49,6 +55,17 @@ export default function Settings({ navigation }) {
 
     fetchData();
   }, []);
+
+  const getFoodTrackingOrder = async () => {
+    const res = await getFoodOrderTracking(handleTrackingLoading);
+    setFoodTrackedArray(res);
+  };
+
+  const handleTrackingLoading = (v) => {
+    console.log("v", v);
+
+  }
+
 
 
   const getIncompleteParcelOrder = async () => {
@@ -200,9 +217,10 @@ export default function Settings({ navigation }) {
             title={'Delete Account'}
             text={'Delete your account'}
             onPress={() => {
-              if (incompletedParcelOrder?.length > 0
+              if ((incompletedParcelOrder?.length > 0
                 || incompletedRideOrder?.length > 0
-                || trackedParcelOrder?.length > 0) {
+                || trackedParcelOrder?.length > 0
+                || foodTrackedArray?.length > 0)) {
                 setIsProgress(true)
               } else {
                 setIsDelete(true);
@@ -240,6 +258,7 @@ export default function Settings({ navigation }) {
           /> */}
         </View>
         <PopUp
+          topIcon={true}
           visible={isDelete}
           type={'delete'}
           onClose={() => setIsDelete(false)}
@@ -250,6 +269,7 @@ export default function Settings({ navigation }) {
           onDelete={handleDelete}
         />
         <PopUpInProgess
+          topIcon={true}
           CTATitle={'Cancel'}
           visible={isProgress}
           type={'warning'}

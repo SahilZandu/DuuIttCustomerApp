@@ -271,6 +271,7 @@ export default function CategoryViseFoodListing({ navigation, route }) {
         </>
       )}
       <PopUp
+       topIcon={true}
         visible={isRemoveCart}
         type={'delete'}
         onClose={() => setIsRemoveCart(false)}

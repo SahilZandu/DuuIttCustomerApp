@@ -10,8 +10,9 @@ import { fonts } from '../../theme/fonts/fonts';
 import { appImagesSvg } from '../../commons/AppImages';
 import Spacer from '../../halpers/Spacer';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { colors } from '../../theme/colors';
 
-const PopUpInProgess = ({ visible, onDelete, type, text, title, onClose, CTATitle }) => {
+const PopUpInProgess = ({topIcon,crossIcon, visible, onDelete, type, text, title, onClose, CTATitle }) => {
     const getIconXml = () => {
         if (type == 'warning') {
             return appImagesSvg?.popUpwarning;
@@ -32,10 +33,10 @@ const PopUpInProgess = ({ visible, onDelete, type, text, title, onClose, CTATitl
                     {
                         backgroundColor:
                             type == 'delete' || type == 'logout' || type == 'continue'
-                                ? '#CB2F2F'
+                                ? colors.colorCB
                                 : type == 'warning'
                                     ? 'rgba(254, 240, 199, 1)'
-                                    : '#1D721E',
+                                    : colors.darkGreen,
                     },
                 ]}>
                 <SvgXml xml={getIconXml()} />
@@ -55,14 +56,14 @@ const PopUpInProgess = ({ visible, onDelete, type, text, title, onClose, CTATitl
         <Modal isVisible={visible}>
             <View style={styles.mainView}>
                 <View style={styles.subView}>
-                    <PopUpIcon />
-                    <CloseBtn />
+                    {topIcon &&  <PopUpIcon />}
+                    {crossIcon && <CloseBtn />}
                     <Text style={styles.titleText}>
                         {title ? title : 'You are about to delete an item'}
                     </Text>
                     <Text style={styles.textSecond}>{text}</Text>
                     <Spacer space={hp('4%')} />
-                    <CTA width={wp('45%')}
+                    <CTA width={wp('60%')}
                         onPress={onClose}
                         height={hp('4.5%')}
                         title={CTATitle}
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     subView: {
-        backgroundColor: 'white',
+        backgroundColor: colors.white,
         paddingHorizontal: '5%',
         paddingBottom: '5%',
         width: '85%',
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
         fontFamily: fonts.regular,
         fontSize: RFValue(11),
         textAlign: 'center',
-        color: '#8F8F8F',
+        color: colors.color8F,
     },
     iconView: {
         height: 60,

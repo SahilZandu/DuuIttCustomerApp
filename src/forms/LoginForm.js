@@ -116,6 +116,7 @@ const LoginForm = ({navigation, type}) => {
         <Spacer space={'12%'} />
         <FormButton loading={loading} onPress={handleLogin} />
         <PopUp
+           topIcon={true}
           visible={isDeactive}
           type={'continue'}
           onClose={() => setIsDeactive(false)}

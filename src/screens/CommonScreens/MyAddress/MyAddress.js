@@ -175,6 +175,7 @@ export default function MyAddress({ navigation, route }) {
           )}
 
           <PopUp
+           topIcon={true}
             visible={isDelete}
             type={'delete'}
             onClose={() => setIsDelete(false)}

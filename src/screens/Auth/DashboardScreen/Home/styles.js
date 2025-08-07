@@ -17,7 +17,8 @@ export const styles = StyleSheet.create({
   },
   innerView:{
     justifyContent:'center',
-    marginHorizontal:10
+    marginHorizontal:10,
+
   },
   bottomImageView:{
     marginTop:Platform.OS === 'ios'? '0.5%': '2%'

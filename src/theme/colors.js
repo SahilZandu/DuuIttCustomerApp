@@ -1,6 +1,7 @@
 export const colors = {
     main: '#28B056',
     green:'#28B056',
+    darkGreen:'#1D721E',
     appBackground:'#F1F2F5',
     screenBackground:'#F6F6F6',
     bottomBarColor:'#28B056',
@@ -80,6 +81,8 @@ export const colors = {
     grey:'#7D7D7D',
     colorE8:'#E8E7E7',
     colorE7:'#E70000',
+    colorCB:"#CB2F2F",
+    colorDC:"#DC6803"
     
    
   

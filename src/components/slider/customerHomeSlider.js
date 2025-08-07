@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { TouchableOpacity, View, Image, Dimensions ,SafeAreaView, StatusBar} from 'react-native';
+import { TouchableOpacity, View, Image, Dimensions, SafeAreaView, StatusBar } from 'react-native';
 import { colors } from '../../theme/colors';
 import {
     heightPercentageToDP as hp,
@@ -58,6 +58,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                     alignItems: 'center',
                     marginTop: '4%',
                     flexDirection: 'row',
+                    marginBottom: '3%'
                 }}>
                 {data?.map((item, i) => {
                     return (
@@ -91,22 +92,22 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
-         <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Carousel
-                ref={carouselRef}
-                data={data}
-                renderItem={renderItem}
-                sliderWidth={viewportWidth}
-                itemWidth={viewportWidth}
-                loop={true}
-                autoplay={true}
-                autoplayDelay={1000} // Delay before the autoplay starts
-                autoplayInterval={2000} // Interval of autoplay in milliseconds
-                onSnapToItem={index => setStateIndex(index)}
-            />
-            {paginationList && pagination()}
-        </View>
+            <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Carousel
+                    ref={carouselRef}
+                    data={data}
+                    renderItem={renderItem}
+                    sliderWidth={viewportWidth}
+                    itemWidth={viewportWidth}
+                    loop={true}
+                    autoplay={true}
+                    autoplayDelay={1000} // Delay before the autoplay starts
+                    autoplayInterval={2000} // Interval of autoplay in milliseconds
+                    onSnapToItem={index => setStateIndex(index)}
+                />
+                {paginationList && pagination()}
+            </View>
         </SafeAreaView>
     );
 };

@@ -26,6 +26,11 @@ export default function SideMenu({ navigation }) {
     orderTrackingList,
     getPendingForCustomer,
   } = rootStore.orderStore;
+  const {
+    getFoodOrderTracking,
+    foodOrderTrackingList,
+  } = rootStore.foodDashboardStore;
+
   const [initialValues, setInitialValues] = useState({
     image: '',
     name: '',
@@ -39,6 +44,7 @@ export default function SideMenu({ navigation }) {
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
   const [isProgrss, setIsProgress] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [foodTrackedArray, setFoodTrackedArray] = useState(foodOrderTrackingList ?? [])
 
   const foodOptions = [
     {
@@ -263,26 +269,14 @@ export default function SideMenu({ navigation }) {
       id: '8',
       title: 'Logout',
       onPress: async () => {
-        if (incompletedParcelOrder?.length > 0
+        if ((incompletedParcelOrder?.length > 0
           || incompletedRideOrder?.length > 0
-          || trackedParcelOrder?.length > 0) {
+          || trackedParcelOrder?.length > 0
+          || foodTrackedArray?.length > 0)) {
           setIsProgress(true)
         } else {
           setIsLogout(true);
         }
-        // let query ={
-        //   user_id:appUser?._id
-        //   }
-        // socketServices.emit('remove-user',query)
-        // socketServices.disconnectSocket();
-        // await setToken(null);
-        // await setAppUser(null);
-        // navigation.dispatch(
-        //   CommonActions.reset({
-        //     index: 0,
-        //     routes: [{name: 'auth'}],
-        //   }),
-        // );
       },
       icon: appImagesSvg.logOutSvg,
       show: true,
@@ -319,7 +313,8 @@ export default function SideMenu({ navigation }) {
         await Promise.all([
           getIncompleteParcelOrder(),
           getTrackingParcelOrder(),
-          getIncompleteRideOrder()
+          getIncompleteRideOrder(),
+          getFoodTrackingOrder(),
         ]);
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -328,6 +323,16 @@ export default function SideMenu({ navigation }) {
 
     fetchData();
   }, []);
+
+  const getFoodTrackingOrder = async () => {
+    const res = await getFoodOrderTracking(handleTrackingLoading);
+    setFoodTrackedArray(res);
+  };
+
+  const handleTrackingLoading = (v) => {
+    console.log("v", v);
+
+  }
 
 
   const getIncompleteParcelOrder = async () => {
@@ -507,6 +512,7 @@ export default function SideMenu({ navigation }) {
               <TouchTextRightIconComp firstIcon={true} data={moreOptions} />
             </ReusableSurfaceComp>
             <PopUp
+              topIcon={true}
               visible={isLogout}
               type={'logout'}
               onClose={() => setIsLogout(false)}
@@ -518,6 +524,7 @@ export default function SideMenu({ navigation }) {
             />
 
             <PopUpInProgess
+              topIcon={true}
               CTATitle={'Cancel'}
               visible={isProgrss}
               type={'warning'}

@@ -98,6 +98,7 @@ export default function PersonalInfo({ navigation, route }) {
         </AppInputScroll>
       </KeyboardAvoidingView>
       <PopUp
+        topIcon={true}
         visible={isLogout}
         type={'logout'}
         onClose={() => setIsLogout(false)}

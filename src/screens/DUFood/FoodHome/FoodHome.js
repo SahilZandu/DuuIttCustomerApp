@@ -908,6 +908,7 @@ export default function FoodHome({ navigation }) {
         onSuccessResult={onSuccessResult}
       />
       <PopUp
+       topIcon={true}
         visible={isRemoveCart}
         type={'delete'}
         onClose={() => { setIsRemoveCart(false), setOpenCloseItem(false) }}
@@ -923,6 +924,7 @@ export default function FoodHome({ navigation }) {
       />
 
       <PopUp
+       topIcon={true}
         visible={isRemoveCartOtherRes}
         type={'delete'}
         onClose={() => setIsRemoveCartOtherRes(false)}

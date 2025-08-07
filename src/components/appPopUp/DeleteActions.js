@@ -6,6 +6,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { fonts } from '../../theme/fonts/fonts';
+import { colors } from '../../theme/colors';
 
 
 const DeleteActions = ({onCancle, onDelete, type}) => {
@@ -42,23 +43,23 @@ const DeleteActions = ({onCancle, onDelete, type}) => {
           key={key}
           style={{
             height: hp('4%'),
-            width: wp('20%'),
+            width: wp('30%'),
             alignItems: 'center',
             justifyContent: 'center',
             borderWidth: key == 0 ? 1 : 0,
-            borderRadius: 10,
-            borderColor: '#D9D9D9',
+            borderRadius: 20,
+            borderColor: colors.colorD9,
             backgroundColor:
               key == 0
-                ? 'white'
+                ? colors.white
                 : type == 'delete'
-                ? '#CB2F2F'
+                ? colors.colorCB
                 : 'rgba(254, 240, 199, 1)',
             marginRight: key == 0 ? 15 : 0,
           }}>
           {type == 'delete' && item?.action == 'Delete' ? (
             loading == true ? (
-              <ActivityIndicator size="small" color="#FFFFFF" />
+              <ActivityIndicator size="small" color={colors.white} />
             ) : (
               <Text
                 style={{
@@ -66,10 +67,10 @@ const DeleteActions = ({onCancle, onDelete, type}) => {
                   fontFamily: fonts.medium,
                   color:
                     key == 0
-                      ? '#333333'
+                      ? colors.color33
                       : type == 'delete'
-                      ? 'white'
-                      : '#DC6803',
+                      ? colors.white
+                      : colors.colorDC,
                 }}>
                 {item?.action}
               </Text>
@@ -80,7 +81,7 @@ const DeleteActions = ({onCancle, onDelete, type}) => {
                 fontSize: RFValue(11),
                 fontFamily: fonts.medium,
                 color:
-                  key == 0 ? '#333333' : type == 'delete' ? 'white' : '#DC6803',
+                  key == 0 ?colors.color33: type == 'delete' ? colors.white : colors.colorDC,
               }}>
               {item?.action}
             </Text>
