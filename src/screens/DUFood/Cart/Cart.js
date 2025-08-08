@@ -255,7 +255,7 @@ const Cart = ({ navigation, route }) => {
       notified: 0,
       distance_from_customer: '5.2',
       dilevery_time: '2025-02-15T14:30:00Z',
-      cooking_time: '45 minutes',
+      cooking_time: '20 min',
       verification_code: 'VER12345',
       refund_amt: 0.0,
       refund_status: 'norefund',
