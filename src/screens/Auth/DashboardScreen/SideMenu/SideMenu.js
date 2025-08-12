@@ -18,6 +18,7 @@ import socketServices from '../../../../socketIo/SocketServices';
 import PopUp from '../../../../components/appPopUp/PopUp';
 import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 
+
 export default function SideMenu({ navigation }) {
   const { setToken, setAppUser, appUser } = rootStore.commonStore;
   const { getCheckDeviceId, saveFcmToken, userLogout } = rootStore.dashboardStore;
@@ -69,6 +70,7 @@ export default function SideMenu({ navigation }) {
       disable: false,
     },
   ];
+
   const rideOptions = [
     {
       id: '1',

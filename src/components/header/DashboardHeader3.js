@@ -123,7 +123,7 @@ const DashboardHeader3 = ({
                 backgroundColor: colors.appBackground,
                 justifyContent: 'center',
                 paddingBottom: '3%',
-                marginTop: Platform.OS == 'ios' ? '1%' : '4%',
+                marginTop: Platform.OS == 'ios' ? '1%' : '1%',
                 paddingHorizontal: 20,
                 borderBottomColor: colors.colorD9,
                 borderBottomWidth: 1
@@ -158,6 +158,7 @@ const DashboardHeader3 = ({
                                 fontFamily: fonts.semiBold,
                                 color: colors.black,
                                 maxWidth: wp('62%'),
+                                 textTransform:'capitalize'
                             }}>
                             Hello {appUserInfo?.name}
                         </Text>

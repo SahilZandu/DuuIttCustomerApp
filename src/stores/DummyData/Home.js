@@ -22,7 +22,7 @@ export const homeCS = [
     duIcon: appImagesSvg.duSvg,
     title: 'Daily Needs & Essentials',
   },
- 
+
 ];
 
 export const homeParcelCS = [

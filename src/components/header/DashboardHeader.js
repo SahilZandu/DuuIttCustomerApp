@@ -286,7 +286,7 @@ const DashboardHeader = ({ title,
         backgroundColor: colors.appBackground,
         alignItems: 'center',
         paddingBottom: '2.5%',
-        marginTop: Platform.OS == 'ios' ? '1%' : '4%',
+        marginTop: Platform.OS == 'ios' ? '1%' : '1%',
         paddingHorizontal: 20,
         borderBottomColor: colors.colorD9,
         borderBottomWidth: 1
@@ -299,6 +299,7 @@ const DashboardHeader = ({ title,
             fontSize: RFValue(15),
             fontFamily: fonts.semiBold,
             color: colors.black,
+            textTransform:'capitalize'
           }}>
           {title}
         </Text>

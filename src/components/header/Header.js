@@ -18,7 +18,7 @@ const Header = ({ shareSVG, bgColor,
         backgroundColor: bgColor ? bgColor : colors.appBackground,
         alignItems: 'center',
         paddingBottom: '3%',
-        marginTop: Platform.OS == 'ios' ? '1%' : '4%',
+        marginTop: Platform.OS == 'ios' ? '1%' : '1%',
         // borderBottomColor:colors.colorD9,
         // borderBottomWidth:1
       }}>

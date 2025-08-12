@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -9,17 +9,20 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import Root from './src/navigation/Root';
-import {PaperProvider} from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 import AwesomeIcon from 'react-native-vector-icons/Ionicons';
-import {NavigationContainer} from '@react-navigation/native';
-import {setBarColor, setStatusBar} from './src/halpers/SetStatusBarColor'
+import { NavigationContainer } from '@react-navigation/native';
+import { setBarColor, setStatusBar } from './src/halpers/SetStatusBarColor'
 import { colors } from './src/theme/colors';
 import { NotifierWrapper } from 'react-native-notifier';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternet from './src/components/NoInternet';
 import { rootStore } from './src/stores/rootStore';
 import Toast from 'react-native-toast-message';
+import { hideNavigationBar } from 'react-native-navigation-bar-color';
+import { useSafeAreaInsets, SafeAreaProvider } from 'react-native-safe-area-context';
+
 
 let focusRoute = '';
 
@@ -28,7 +31,14 @@ function App() {
   const [isInternet, setIsInternet] = useState(true);
   const navigationRef = React.createRef();
 
-  useEffect(()=>{
+  const hideIfAndroid15 = () => {
+    if (Platform.OS === 'android' && Platform.Version >= 35) {
+      hideNavigationBar();
+    }
+  };
+
+  useEffect(() => {
+    hideIfAndroid15();
     async function setAppStoarge() {
       await rootStore.commonStore.setAppUserFromStorage();
       await rootStore.commonStore.setTokenFromStorage();
@@ -45,14 +55,14 @@ function App() {
         DeviceEventEmitter.emit(focusRoute, action);
       }
     });
-  
+
     return () => unsubscribe(); // Cleanup listener on unmount
-  },[])
+  }, [])
 
   const getonTab = (screen) => {
-    if(screen == "tab1" || screen == "tab2" ||screen == "tab3"||screen == "tab4"){
+    if (screen == "tab1" || screen == "tab2" || screen == "tab3" || screen == "tab4") {
       return false
-    }else{
+    } else {
       return true
     }
   }
@@ -63,16 +73,16 @@ function App() {
       settings={{
         icon: props => <AwesomeIcon {...props} />,
       }}
-      >
+    >
       <GestureHandlerRootView style={{ flex: 1 }}>
-      <NotifierWrapper >
-        <NavigationContainer
-          ref={navigationRef}
-          onStateChange={() => {
-            focusRoute = navigationRef.current.getCurrentRoute().name;
-            setcurrentScreen(navigationRef.current.getCurrentRoute().name);
-          }}>
-          <SafeAreaView
+        <NotifierWrapper >
+          <NavigationContainer
+            ref={navigationRef}
+            onStateChange={() => {
+              focusRoute = navigationRef.current.getCurrentRoute().name;
+              setcurrentScreen(navigationRef.current.getCurrentRoute().name);
+            }}>
+            {/* <SafeAreaView
             style={{
               flex: 0,
               backgroundColor: setBarColor(currentScreen),
@@ -93,16 +103,53 @@ function App() {
               barStyle={
                 setStatusBar(currentScreen)
               }
-            />
-               {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
-            <Root />
-          </SafeAreaView>
-        </NavigationContainer>
-        <Toast/>
-      </NotifierWrapper>
+            /> */}
+            <SafeAreaInsetsHandler currentScreen={currentScreen}>
+              {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
+              <Root />
+            </SafeAreaInsetsHandler>
+            {/* </SafeAreaView> */}
+          </NavigationContainer>
+          <Toast />
+        </NotifierWrapper>
       </GestureHandlerRootView>
     </PaperProvider>
   );
 }
+
+// Helper component to handle safe area insets
+function SafeAreaInsetsHandler({ children, currentScreen }) {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <>
+      <SafeAreaView
+        style={{
+          flex: 0,
+          backgroundColor: setBarColor(currentScreen),
+          opacity: 1,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor:
+            currentScreen == 'splash'
+              ? colors.bottomBarColor
+              : colors.white,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom
+        }}>
+        <StatusBar
+          animated={true}
+          backgroundColor={setBarColor(currentScreen)}
+          barStyle={setStatusBar(currentScreen)}
+        />
+        {children}
+      </SafeAreaView>
+    </>
+  );
+}
+
 
 export default App;
