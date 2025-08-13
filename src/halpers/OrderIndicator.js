@@ -112,8 +112,8 @@ export default CornerTriangle;
 const styles = StyleSheet.create({
   main: {
     position: 'absolute', // fixed typo here
-    top: Platform.OS == 'ios' ? hp('2.9%') :hp('3.1%'),
-    right: Platform.OS == 'ios' ? wp('0.9%'):wp('1.1%'),
+    top: Platform.OS == 'ios' ? hp('2.9%') : (Platform.OS === 'android' && Platform.Version >= 35)?hp('2.9%'): hp('3.1%'),
+    right: Platform.OS == 'ios' ? wp('0.9%'):(Platform.OS === 'android' && Platform.Version >= 35) ? wp('1.4%') : wp('1.1%'),
     width:wp("20"),
     height:hp("20%"),
     overflow: 'hidden',

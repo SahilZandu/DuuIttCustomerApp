@@ -36,7 +36,8 @@ export function useToast(message, type) {
         topOffset: 60,
       },
       {
-        topOffset: Platform.OS === 'ios' ? 50 : 25,
+        topOffset: Platform.OS === 'ios' ? 50 :
+          (Platform.OS === 'android' && Platform.Version >= 35) ? 28 : 25,
       },
     ),
   });

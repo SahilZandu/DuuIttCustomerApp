@@ -4519,7 +4519,6 @@ __metadata:
     react-native-navigation-bar-color: ^2.0.2
     react-native-new-snap-carousel: ^3.9.3
     react-native-notifications: ^5.1.0
-    react-native-notifier: ^2.0.0
     react-native-otp-entry: ^1.7.0
     react-native-otp-verify: latest
     react-native-paper: ^5.12.3
@@ -10845,17 +10844,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 27a201942fcb9e12c4d96ad9b0cb53f547da833e5864193285c68e2dcf03808601d396ea8292e13f7608228784ca70eb34447a13564758d8b7725492a59fc975
-  languageName: node
-  linkType: hard
-
-"react-native-notifier@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "react-native-notifier@npm:2.0.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-    react-native-gesture-handler: "*"
-  checksum: 759a055cdc4c011c658324b0ebb0f58834e40c7e7095a4e8718f8dd06bf9b82d8bfdd5f2979177617a064d8e25f34bd83166e0ecd2c553d5ccc3420bb5908bbf
   languageName: node
   linkType: hard
 

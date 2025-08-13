@@ -4,8 +4,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  PermissionsAndroid,
-  Platform,
 } from 'react-native';
 import { colors } from '../../../theme/colors';
 import LoginForm from '../../../forms/LoginForm';
@@ -28,21 +26,6 @@ export default function Login({ navigation }) {
     }, []),
   );
 
-  const requestSMSpermission = async () => {
-    const userResponse = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
-    ]);
-    console.log('userResponse', userResponse);
-    return userResponse;
-  };
-
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      setTimeout(() => {
-        requestSMSpermission();
-      }, 1000);
-    }
-  }, []);
 
   const clearInputs = () => {
     setUpdate(false);

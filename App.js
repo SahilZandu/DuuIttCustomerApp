@@ -14,7 +14,6 @@ import AwesomeIcon from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { setBarColor, setStatusBar } from './src/halpers/SetStatusBarColor'
 import { colors } from './src/theme/colors';
-import { NotifierWrapper } from 'react-native-notifier';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternet from './src/components/NoInternet';
@@ -75,7 +74,6 @@ function App() {
       }}
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <NotifierWrapper >
           <NavigationContainer
             ref={navigationRef}
             onStateChange={() => {
@@ -83,13 +81,13 @@ function App() {
               setcurrentScreen(navigationRef.current.getCurrentRoute().name);
             }}>
             {/* <SafeAreaView
-            style={{
-              flex: 0,
-              backgroundColor: setBarColor(currentScreen),
-              opacity: 1,
-            }}
-          />
-          <SafeAreaView
+              style={{
+                flex: 0,
+                backgroundColor: setBarColor(currentScreen),
+                opacity: 1,
+              }}
+            /> */}
+            {/* <SafeAreaView
             style={{
               flex: 1,
               backgroundColor:
@@ -111,7 +109,6 @@ function App() {
             {/* </SafeAreaView> */}
           </NavigationContainer>
           <Toast />
-        </NotifierWrapper>
       </GestureHandlerRootView>
     </PaperProvider>
   );
@@ -136,12 +133,15 @@ function SafeAreaInsetsHandler({ children, currentScreen }) {
           backgroundColor:
             currentScreen == 'splash'
               ? colors.bottomBarColor
-              : colors.white,
+              : Platform.OS == 'ios' ? colors.white :
+                (Platform.OS === 'android' && Platform.Version >= 35) ?
+                  colors.appBackground : colors.white,
           paddingTop: insets.top,
           paddingBottom: insets.bottom
         }}>
         <StatusBar
           animated={true}
+          translucent={true}
           backgroundColor={setBarColor(currentScreen)}
           barStyle={setStatusBar(currentScreen)}
         />

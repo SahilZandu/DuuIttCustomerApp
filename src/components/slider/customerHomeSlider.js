@@ -91,8 +91,12 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
-            <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
+        <>
+        {/* // <SafeAreaView style={{ flex: 1, 
+        // backgroundColor: colors.appBackground 
+        // }}> */}
+            {/* <StatusBar barStyle="dark-content" backgroundColor={colors.white}
+             /> */}
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Carousel
                     ref={carouselRef}
@@ -108,7 +112,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                 />
                 {paginationList && pagination()}
             </View>
-        </SafeAreaView>
+        </>
     );
 };
 
