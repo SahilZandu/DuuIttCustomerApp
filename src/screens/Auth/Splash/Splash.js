@@ -12,7 +12,6 @@ import { colors } from '../../../theme/colors';
 
 
 export default function Splash({ navigation }) {
-  const { setToken,setAppUser} = rootStore.commonStore;
   async function requestUserPermission() {
     const settings = await notifee.requestPermission();
 
@@ -49,8 +48,8 @@ export default function Splash({ navigation }) {
   //     "profile_pic": "public/uploads/customer/685cdb5ab4c055504dbefa6e/profile/profile_pic-1750933090812-763470547.png",
   //     "updatedAt": "2025-06-26T10:46:38.792Z"
   // })
-    requestUserPermission();
-    setCurrentLocation()
+    // requestUserPermission();
+    // setCurrentLocation()
     setTimeout(() => {
       const { token, appUser } = rootStore.commonStore;
       console.log('appUser splash', appUser, token);
