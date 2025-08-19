@@ -35,7 +35,8 @@ export default function OrderPlaced({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      handleAndroidBackButton();
+      // handleAndroidBackButton();
+      handleAndroidBackButton('', 'food', 'food', navigation);
       setOrderDetails(orderData)
     }, []),
   );

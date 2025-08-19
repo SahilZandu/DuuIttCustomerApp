@@ -517,13 +517,13 @@ const styles = StyleSheet.create({
   chefText: {
     fontFamily: fonts.bold,
     color: colors.black,
-    fontSize: RFValue(14),
+    fontSize: RFValue(11),
   },
   waitingForText: {
     fontFamily: fonts.regular,
     color: colors.color51,
-    fontSize: RFValue(11),
-    marginTop: '2%',
+    fontSize: RFValue(10),
+    marginTop: '3%',
     lineHeight: 20
   },
   arivalInMainView: {

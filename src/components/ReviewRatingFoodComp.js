@@ -273,12 +273,13 @@ const ReviewsRatingFoodComp = ({
                             validationSchema={reviewRatingValidations()}>
                             <View style={styles.innerView}>
                                 <Text style={styles.titleText}>{title}</Text>
+                                <Text style={styles.restaurantText}>{"Rating for restaurant"}</Text>
                                 {<RestaurantContainer />}
-                                <Text style={styles.titleText}>{"Rating for taste"}</Text>
+                                <Text style={styles.ratingTitle}>{"Rating for taste"}</Text>
                                 {<TasteRatingContainer />}
-                                <Text style={styles.titleText}>{"Rating for packaging"}</Text>
+                                <Text style={styles.ratingTitle}>{"Rating for packaging"}</Text>
                                 {<PackagingRatingContainer />}
-                                <Text style={styles.titleText}>{"Rating for money"}</Text>
+                                <Text style={styles.ratingTitle}>{"Rating for money"}</Text>
                                 {<MoneyRatingContainer />}
                                 <InputFieldMultiLine
                                     height={hp('13%')}
@@ -308,11 +309,22 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
     },
     innerView: {
-        marginTop: '3%',
+        marginTop: '1%',
         marginHorizontal: 20,
     },
     titleText: {
         fontSize: RFValue(15),
+        fontFamily: fonts.semiBold,
+        color: colors.black,
+    },
+    restaurantText: {
+        fontSize: RFValue(13),
+        fontFamily: fonts.semiBold,
+        color: colors.black,
+        marginTop:'2%'
+    },
+    ratingTitle: {
+        fontSize: RFValue(13),
         fontFamily: fonts.semiBold,
         color: colors.black,
     },

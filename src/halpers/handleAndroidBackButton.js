@@ -51,10 +51,17 @@ function handleAndroidBackButton(navigation, tab, type, goBack) {
   }
 
   const onBackPress = () => {
+    // if (tab && tab == type) {
+    //   goBack.navigate(type, { screen: 'home' });
+    // }
     if (tab && tab == "ride") {
-      goBack.navigate('ride', { screen: 'home' });
-    } else if (tab && tab == "parcel") {
+      goBack.navigate("ride", { screen: 'home' });
+    } 
+    else if (tab && tab == "parcel") {
       goBack.navigate('parcel', { screen: 'home' });
+    }
+    else if (tab && tab == "food") {
+      goBack.navigate('food', { screen: 'home' });
     }
     else if (tab && tab !== "All Orders") {
       navigation.navigate('tab4')

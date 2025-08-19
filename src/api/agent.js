@@ -2,6 +2,7 @@ import Url from './Url';
 import axios from 'axios';
 import { rootStore } from '../stores/rootStore';
 import RNRestart from 'react-native-restart';
+import { InteractionManager } from 'react-native';
 
 const Base_Url = Url.Base_Url;
 
@@ -32,11 +33,14 @@ axios.interceptors.response.use(
     }
 
     if (statusCode === 401) {
-      rootStore.dashboardStore.saveFcmToken(null)
-      rootStore.commonStore.setToken(null);
-      rootStore.commonStore.setAppUser(null);
-      RNRestart.restart();
-      return Promise.reject(response);
+
+   InteractionManager.runAfterInteractions(() => {
+  rootStore.dashboardStore.saveFcmToken(null)
+  rootStore.commonStore.setToken(null);
+  rootStore.commonStore.setAppUser(null);
+  RNRestart.restart();
+  });
+ return Promise.reject(response);
     }
 
     return response;
@@ -59,10 +63,16 @@ axios.interceptors.response.use(
     }
 
     if (status === 401) {
-      rootStore.dashboardStore.saveFcmToken(null);
-      rootStore.commonStore.setToken(null);
-      rootStore.commonStore.setAppUser(null);
-      RNRestart.restart();
+      InteractionManager.runAfterInteractions(() => {
+        rootStore.dashboardStore.saveFcmToken(null)
+        rootStore.commonStore.setToken(null);
+        rootStore.commonStore.setAppUser(null);
+        RNRestart.restart();
+        });
+      // rootStore.dashboardStore.saveFcmToken(null);
+      // rootStore.commonStore.setToken(null);
+      // rootStore.commonStore.setAppUser(null);
+      // RNRestart.restart();
       return Promise.reject(error.response || error);
     }
 

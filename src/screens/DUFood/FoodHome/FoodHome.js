@@ -861,13 +861,13 @@ export default function FoodHome({ navigation }) {
             navigation={navigation} />}
 
           <View style={styles.bottomCartBtnView}>
-            {/* {trackedArray?.length > 0 && ( */}
+            {trackedArray?.length > 0 && (
             <FoodTrackingOrder
               bottom={cartItems?.food_item?.length > 0 ? hp('18.3%') : hp('8.5%')}
               navigation={navigation}
               trackedArray={trackedArray}
             />
-            {/* )} */}
+           )} 
             {cartItems?.food_item?.length > 0 && (
               <DashboardCartBtn
                 bottom={hp('8.5%')}
@@ -908,7 +908,7 @@ export default function FoodHome({ navigation }) {
         onSuccessResult={onSuccessResult}
       />
       <PopUp
-       topIcon={true}
+        topIcon={true}
         visible={isRemoveCart}
         type={'delete'}
         onClose={() => { setIsRemoveCart(false), setOpenCloseItem(false) }}
@@ -924,7 +924,7 @@ export default function FoodHome({ navigation }) {
       />
 
       <PopUp
-       topIcon={true}
+        topIcon={true}
         visible={isRemoveCartOtherRes}
         type={'delete'}
         onClose={() => setIsRemoveCartOtherRes(false)}

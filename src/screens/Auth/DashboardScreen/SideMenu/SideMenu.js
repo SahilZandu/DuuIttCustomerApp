@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, DeviceEventEmitter } from 'react-native';
+import { View, Text, DeviceEventEmitter, Platform, InteractionManager } from 'react-native';
 import { appImagesSvg } from '../../../../commons/AppImages';
 import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
@@ -271,6 +271,7 @@ export default function SideMenu({ navigation }) {
       id: '8',
       title: 'Logout',
       onPress: async () => {
+        // setIsLogout(true);
         if ((incompletedParcelOrder?.length > 0
           || incompletedRideOrder?.length > 0
           || trackedParcelOrder?.length > 0
@@ -448,24 +449,74 @@ export default function SideMenu({ navigation }) {
   const handleLogoutLoading = (v) => {
     setLoading(v)
   }
-  const isSuccess = () => {
-    setTimeout(async () => {
-      let query = {
-        user_id: appUser?._id,
+  // const isSuccess = () => {
+  //   if (Platform.OS === 'ios') {
+  //     setTimeout(async () => {
+  //       let query = {
+  //         user_id: appUser?._id,
+  //       };
+  //       socketServices.emit('remove-user', query);
+  //       socketServices.disconnectSocket();
+  //       await setToken(null);
+  //       await setAppUser(null);
+  //       setIsLogout(false);
+  //       navigation.dispatch(
+  //         CommonActions.reset({
+  //           index: 0,
+  //           routes: [{ name: 'auth' }],
+  //         }),
+  //       );
+  //     }, 1000);
+  //   } else {
+  //     setTimeout(async () => {
+  //       let query = {
+  //         user_id: appUser?._id,
+  //       };
+  //       socketServices.emit('remove-user', query);
+  //       socketServices.disconnectSocket();
+  //       await setToken(null);
+  //       await setAppUser(null);
+  //       setIsLogout(false);
+  //       navigation.dispatch(
+  //         CommonActions.reset({
+  //           index: 0,
+  //           routes: [{ name: 'auth' }],
+  //         }),
+  //       );
+  //     }, 500);
+  //   }
+  // }
+
+  const isSuccess = async () => {
+    try {
+      const query = {
+        user_id: appUser?._id || null,
       };
-      socketServices.emit('remove-user', query);
-      socketServices.disconnectSocket();
+
+      if (query?.user_id) {
+        socketServices?.emit?.('remove-user', query);
+      }
+
+      socketServices?.disconnectSocket?.();
       await setToken(null);
       await setAppUser(null);
       setIsLogout(false);
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'auth' }],
-        }),
-      );
-    }, 500);
-  }
+      // Use InteractionManager to wait until animations & state finish
+      InteractionManager.runAfterInteractions(() => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'auth' }],
+          }),
+        );
+      });
+    } catch (error) {
+      console.log("Logout crash error:", error);
+      setIsLogout(false);
+    }
+  };
+
+
   const onError = () => {
     setIsLogout(false);
   }
