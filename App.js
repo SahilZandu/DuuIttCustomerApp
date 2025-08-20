@@ -133,6 +133,7 @@ function SafeAreaInsetsHandler({ children, currentScreen }) {
           backgroundColor:
             currentScreen == 'splash'
               ? colors.bottomBarColor
+              // : colors.appBackground,
               : Platform.OS == 'ios' ? colors.white :
                 (Platform.OS === 'android' && Platform.Version >= 35) ?
                   colors.appBackground : colors.white,

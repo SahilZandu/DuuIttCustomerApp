@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 #import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTBundleURLProvider.h>
+#import <Firebase.h>
 
 @implementation AppDelegate
 
@@ -28,6 +29,19 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+// ✅ Register APNs token with FCM
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+  [FIRMessaging messaging].APNSToken = deviceToken;
+}
+
+// Needed for iOS 10+ foreground notifications
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
+{
+  completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionBadge);
 }
 
 @end

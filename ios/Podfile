@@ -85,6 +85,15 @@ target 'DuuIttApp' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    
+    # Fix for RCTI18nStrings bundle conflict
+    installer.pods_project.targets.each do |target|
+      if target.name == 'React-Core-RCTI18nStrings'
+        target.build_configurations.each do |config|
+          config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = 'org.reactjs.native.example.$(TARGET_NAME:rfc1034identifier)'
+        end
+      end
+    end
   end
 end
 
