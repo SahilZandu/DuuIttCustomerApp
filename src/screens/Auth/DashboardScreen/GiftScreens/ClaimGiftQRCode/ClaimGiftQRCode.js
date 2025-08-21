@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import Header from '../../../../../components/header/Header';
 import AppInputScroll from '../../../../../halpers/AppInputScroll';
 import DotTextComp from '../../../../../components/DotTextComp';
@@ -11,25 +11,26 @@ import QRCode from 'react-native-qrcode-svg';
 import Share from 'react-native-share';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
-const ClaimGiftQRCode = ({navigation, route}) => {
-  const {item} = route.params;
+const ClaimGiftQRCode = ({ navigation, route }) => {
+  const { item } = route.params;
   const qrCodeRef = useRef();
   const [clainGift, setClaimGift] = useState(item);
   const [base64Image, setBase64Image] = useState(null);
 
   useFocusEffect(
-    useCallback(()=>{
+    useCallback(() => {
       handleAndroidBackButton(navigation)
-    },[])
+    }, [])
   )
 
   useEffect(() => {
-    setTimeout(()=>{
-        setClaimGift(item);
-        generateBarcode();
-    },200)
-    
+    setTimeout(() => {
+      setClaimGift(item);
+      generateBarcode();
+    }, 200)
+
   }, [item]);
 
   let claimDetails = [
@@ -78,8 +79,22 @@ const ClaimGiftQRCode = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.main}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      backArrow={true}
+      title={'Claim Gift Card'}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      shareIcon={true}
+      onPressShare={() => {
+        shareBarcode();
+      }}
+      showHeader
+    >
+      <View style={styles.main}>
+        {/* <Header
         backArrow={true}
         title={'Claim Gift Card'}
         onPress={() => {
@@ -89,40 +104,41 @@ const ClaimGiftQRCode = ({navigation, route}) => {
         onPressShare={() => {
           shareBarcode();
         }}
-      />
-      <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
-        <View style={styles.upperMainView}>
-          {/* Generate Barcode */}
-          <QRCode
-            value="1234567890"
-            size={200}
-            getRef={qrCodeRef} // Get the reference of the QRCode component
-          />
-          <Text
-            style={styles.scanText}>
-            Scan and clam to add the reward in your account
-          </Text>
-        </View>
-        <View style={styles.DetailsView}>
-          <Text
-            style={styles.detailsText}>
-            Details
-          </Text>
-          {claimDetails?.map((item, i) => {
-            return (
-              <View style={{marginHorizontal: -10}}>
-                <DotTextComp
-                  title={item?.title}
-                  index={i}
-                  data={claimDetails}
-                  amount={item?.amount}
-                />
-              </View>
-            );
-          })}
-        </View>
-      </AppInputScroll>
-    </View>
+      /> */}
+        <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
+          <View style={styles.upperMainView}>
+            {/* Generate Barcode */}
+            <QRCode
+              value="1234567890"
+              size={200}
+              getRef={qrCodeRef} // Get the reference of the QRCode component
+            />
+            <Text
+              style={styles.scanText}>
+              Scan and clam to add the reward in your account
+            </Text>
+          </View>
+          <View style={styles.DetailsView}>
+            <Text
+              style={styles.detailsText}>
+              Details
+            </Text>
+            {claimDetails?.map((item, i) => {
+              return (
+                <View style={{ marginHorizontal: -10 }}>
+                  <DotTextComp
+                    title={item?.title}
+                    index={i}
+                    data={claimDetails}
+                    amount={item?.amount}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        </AppInputScroll>
+      </View>
+    </Wrapper>
   );
 };
 

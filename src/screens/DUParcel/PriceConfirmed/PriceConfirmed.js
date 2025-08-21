@@ -417,6 +417,7 @@ import Slider from '@react-native-community/slider';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import BackBtn from '../../../components/cta/BackBtn';
 import { rootStore } from '../../../stores/rootStore';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 let priceArray = [0, 10, 20, 30, 40, 50];
@@ -610,142 +611,146 @@ export default function PriceConfirmed({ navigation, route }) {
   }
 
   return (
-    <View style={styles.container}>
-      <MapRoute
-        origin={pickDropDetails?.sender_address?.geo_location}
-        destination={pickDropDetails?.receiver_address?.geo_location}
-        mapContainerView={{ height: hp('48%') }}
-      />
-      <BackBtn onPress={() => {
-        backToHome();
-      }} />
-      <View style={styles.containerDriverTouch}>
-        <Spacer space={'2%'} />
-        <Formik initialValues={initialValues}>
-          <>
-            <AppInputScroll
-              Pb={hp('25%')}
-              padding={true}
-              keyboardShouldPersistTaps={'handled'}>
-              <View style={{ marginHorizontal: 20, marginTop: hp('1.5%') }}>
-                <PickDropLocation
-                  pickUpLocation={pickUpLocation}
-                  dropLocation={dropLocation}
-                  onPressPickLocation={onPressPickLocation}
-                  onPressDropLocation={onPressDropLocation}
-                />
-                <Surface elevation={3} style={styles.rateSurfaceView}>
-                  <View style={styles.surfaceInnerView}>
-                    <Image
-                      resizeMode="cover"
-                      style={styles.rateImage}
-                      source={appImages.rateIcon}
-                    />
-                    <Text style={styles.rateText}>
-                      {currencyFormat(Number(total))}
-                    </Text>
-                  </View>
-                </Surface>
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+    >
+      <View style={styles.container}>
+        <MapRoute
+          origin={pickDropDetails?.sender_address?.geo_location}
+          destination={pickDropDetails?.receiver_address?.geo_location}
+          mapContainerView={{ height: hp('48%') }}
+        />
+        <BackBtn onPress={() => {
+          backToHome();
+        }} />
+        <View style={styles.containerDriverTouch}>
+          <Spacer space={'2%'} />
+          <Formik initialValues={initialValues}>
+            <>
+              <AppInputScroll
+                Pb={hp('25%')}
+                padding={true}
+                keyboardShouldPersistTaps={'handled'}>
+                <View style={{ marginHorizontal: 20, marginTop: hp('1.5%') }}>
+                  <PickDropLocation
+                    pickUpLocation={pickUpLocation}
+                    dropLocation={dropLocation}
+                    onPressPickLocation={onPressPickLocation}
+                    onPressDropLocation={onPressDropLocation}
+                  />
+                  <Surface elevation={3} style={styles.rateSurfaceView}>
+                    <View style={styles.surfaceInnerView}>
+                      <Image
+                        resizeMode="cover"
+                        style={styles.rateImage}
+                        source={appImages.rateIcon}
+                      />
+                      <Text style={styles.rateText}>
+                        {currencyFormat(Number(total))}
+                      </Text>
+                    </View>
+                  </Surface>
 
-                <View style={styles.homeSliderView}>
-                  <HomeSlider
-                    data={sliderItems}
-                    imageWidth={wp('92%')}
-                    imageHeight={hp('18%')}
+                  <View style={styles.homeSliderView}>
+                    <HomeSlider
+                      data={sliderItems}
+                      imageWidth={wp('92%')}
+                      imageHeight={hp('18%')}
+                    />
+                  </View>
+                </View>
+              </AppInputScroll>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: colors.white,
+                  alignSelf: 'center',
+                  paddingHorizontal: 40,
+                  height: hp('18%'),
+                  bottom: 0.1,
+                  borderTopWidth: 0.3,
+                  borderTopColor: colors.main,
+                }}>
+                <CheckBoxText
+                  data={paymentMethod}
+                  title={'Payment Methods'}
+                  name={'paymentMethods'}
+                  value={initialValues.paymentMethods}
+                />
+                <Spacer space={hp('3.5%')} />
+
+                <BtnForm
+                  onPress={value => {
+                    handleFindRider(value);
+                  }}
+                  onBackPress={() => {
+                    backToHome();
+                  }}
+                />
+              </View>
+            </>
+          </Formik>
+        </View>
+
+        <ModalPopUp
+          isVisible={isPriceModal}
+          onClose={() => {
+            setIsPriceModal(false);
+          }}>
+          <View style={styles.modalMainView}>
+            <View style={styles.modalTitleView}>
+              <Text style={styles.modalTitle}>Raise your fair</Text>
+              <Text style={styles.modalMessage}>
+                We charge no commission. Full amount goes to the rider
+              </Text>
+
+              <Text style={styles.modalAmount}>{currencyFormat(total)}</Text>
+              <Text style={styles.modalFairText}>
+                You can also directly increase the fare
+              </Text>
+              <View style={styles.progessBarView}>
+                <ProgressBarWithGradient progress={selectedCount} />
+                <View style={styles.sliderView}>
+                  <Slider
+                    style={{ width: wp(90), height: hp(5) }}
+                    minimumValue={0}
+                    step={1}
+                    maximumValue={5}
+                    value={fireValue}
+                    onValueChange={val => {
+                      const fixedNum = Number(val?.toFixed(0));
+                      // console.log('val---', fixedNum);
+                      setTimeout(() => {
+                        setFireValue(fixedNum);
+                        if (fireValue < fixedNum) {
+                          onPositive(fixedNum);
+                        } else {
+                          onNegative(fixedNum);
+                        }
+                      });
+                    }}
+                    // thumbImage={Image.resolveAssetSource(appImages.fareBtn)}
+                    // thumbImage={appImages.fareBtn}
+                    thumbTintColor="transparent" // Hide default thumb
+                    minimumTrackTintColor="transparent"
+                    maximumTrackTintColor="transparent"
+                  />
+                  <Image
+                    source={appImages.fareBtn}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      position: 'absolute',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      top: -1,
+                      left: (fireValue / 5) * wp(90) - 19, // Dynamically move thumb
+                    }}
+                    resizeMode="contain"
                   />
                 </View>
-              </View>
-            </AppInputScroll>
-            <View
-              style={{
-                position: 'absolute',
-                backgroundColor: colors.white,
-                alignSelf: 'center',
-                paddingHorizontal: 40,
-                height: hp('18%'),
-                bottom: 0.1,
-                borderTopWidth: 0.3,
-                borderTopColor: colors.main,
-              }}>
-              <CheckBoxText
-                data={paymentMethod}
-                title={'Payment Methods'}
-                name={'paymentMethods'}
-                value={initialValues.paymentMethods}
-              />
-              <Spacer space={hp('3.5%')} />
-
-              <BtnForm
-                onPress={value => {
-                  handleFindRider(value);
-                }}
-                onBackPress={() => {
-                  backToHome();
-                }}
-              />
-            </View>
-          </>
-        </Formik>
-      </View>
-
-      <ModalPopUp
-        isVisible={isPriceModal}
-        onClose={() => {
-          setIsPriceModal(false);
-        }}>
-        <View style={styles.modalMainView}>
-          <View style={styles.modalTitleView}>
-            <Text style={styles.modalTitle}>Raise your fair</Text>
-            <Text style={styles.modalMessage}>
-              We charge no commission. Full amount goes to the rider
-            </Text>
-
-            <Text style={styles.modalAmount}>{currencyFormat(total)}</Text>
-            <Text style={styles.modalFairText}>
-              You can also directly increase the fare
-            </Text>
-            <View style={styles.progessBarView}>
-              <ProgressBarWithGradient progress={selectedCount} />
-              <View style={styles.sliderView}>
-                <Slider
-                  style={{ width: wp(90), height: hp(5) }}
-                  minimumValue={0}
-                  step={1}
-                  maximumValue={5}
-                  value={fireValue}
-                  onValueChange={val => {
-                    const fixedNum = Number(val?.toFixed(0));
-                    // console.log('val---', fixedNum);
-                    setTimeout(() => {
-                      setFireValue(fixedNum);
-                      if (fireValue < fixedNum) {
-                        onPositive(fixedNum);
-                      } else {
-                        onNegative(fixedNum);
-                      }
-                    });
-                  }}
-                  // thumbImage={Image.resolveAssetSource(appImages.fareBtn)}
-                  // thumbImage={appImages.fareBtn}
-                  thumbTintColor="transparent" // Hide default thumb
-                  minimumTrackTintColor="transparent"
-                  maximumTrackTintColor="transparent"
-                />
-                <Image
-                  source={appImages.fareBtn}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    position: 'absolute',
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    top: -1,
-                    left: (fireValue / 5) * wp(90) - 19, // Dynamically move thumb
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-              {/* <ProgressBarWithGradient progress={selectedCount} />
+                {/* <ProgressBarWithGradient progress={selectedCount} />
               <SvgXml
                 style={{
                   position: 'absolute',
@@ -754,48 +759,49 @@ export default function PriceConfirmed({ navigation, route }) {
                 }}
                 xml={appImagesSvg.progessBarIcon}
               /> */}
-            </View>
+              </View>
 
-            <View style={styles.priceRenderView}>
-              {priceArray?.map((item, i) => {
-                return (
-                  <View>
-                    <Text style={styles.priceText}>{item}</Text>
-                  </View>
-                );
-              })}
-            </View>
-            <View style={styles.btnPNView}>
-              <SvgXml
-                onPress={() => {
-                  onNegative('-10');
-                }}
-                width={30}
-                height={30}
-                xml={appImagesSvg.progessNegative}
-              />
-              <SvgXml
-                onPress={() => {
-                  onPositive('+10');
-                }}
-                width={30}
-                height={30}
-                xml={appImagesSvg.progessPositive}
-              />
-            </View>
-            <View style={{ marginTop: '10%' }}>
-              <BTN
-                width={wp('86%')}
-                title={`Book Now for ${currencyFormat(total)}`}
-                textTransform={'capitalize'}
-                onPress={() => {
-                  handlePriceFindRider();
-                }}
-              />
+              <View style={styles.priceRenderView}>
+                {priceArray?.map((item, i) => {
+                  return (
+                    <View>
+                      <Text style={styles.priceText}>{item}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+              <View style={styles.btnPNView}>
+                <SvgXml
+                  onPress={() => {
+                    onNegative('-10');
+                  }}
+                  width={30}
+                  height={30}
+                  xml={appImagesSvg.progessNegative}
+                />
+                <SvgXml
+                  onPress={() => {
+                    onPositive('+10');
+                  }}
+                  width={30}
+                  height={30}
+                  xml={appImagesSvg.progessPositive}
+                />
+              </View>
+              <View style={{ marginTop: '10%' }}>
+                <BTN
+                  width={wp('86%')}
+                  title={`Book Now for ${currencyFormat(total)}`}
+                  textTransform={'capitalize'}
+                  onPress={() => {
+                    handlePriceFindRider();
+                  }}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </ModalPopUp>
-    </View>
+        </ModalPopUp>
+      </View>
+    </Wrapper>
   );
 }

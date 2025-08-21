@@ -15,11 +15,12 @@ import DotedLine from '../../../DUFood/Components/DotedLine';
 import FastImage from 'react-native-fast-image';
 import Url from '../../../../api/Url';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 export default function FavoriteRestaurant({ navigation }) {
-  const { restaurantLikedByCustomer,favoriteRestaurantList } = rootStore.foodDashboardStore;
-  const [loading, setLoading] = useState(favoriteRestaurantList?.length > 0 ? false :true);
-  const [likeRestaurant, setLikeRestaurant] = useState(favoriteRestaurantList  ?? []);
+  const { restaurantLikedByCustomer, favoriteRestaurantList } = rootStore.foodDashboardStore;
+  const [loading, setLoading] = useState(favoriteRestaurantList?.length > 0 ? false : true);
+  const [likeRestaurant, setLikeRestaurant] = useState(favoriteRestaurantList ?? []);
 
   useFocusEffect(
     useCallback(() => {
@@ -107,31 +108,42 @@ export default function FavoriteRestaurant({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Favourites'}
+      backArrow={true}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         onPress={() => {
           navigation.goBack();
         }}
         title={'Favourites'}
         backArrow={true}
-      />
-      {(loading == true && likeRestaurant?.length == 0) ?
-        <AnimatedLoader type={'favoriteRestaurantLoader'} /> :
-        <View style={styles.flatListView}>
-          {likeRestaurant?.length > 0 ? (
-            <FlatList
-            showsVerticalScrollIndicator={favoriteRestaurantList}
-              data={likeRestaurant}
-              renderItem={renderItem}
-              keyExtractor={item => item._id}
-              contentContainerStyle={{paddingBottom:'20%'}}
-            />
-          ) : (
-            <View style={styles.noDataView}>
-              <Text style={styles.noDataText}>No Data Found</Text>
-            </View>
-          )}
-        </View>}
-    </View>
+      /> */}
+        {(loading == true && likeRestaurant?.length == 0) ?
+          <AnimatedLoader type={'favoriteRestaurantLoader'} /> :
+          <View style={styles.flatListView}>
+            {likeRestaurant?.length > 0 ? (
+              <FlatList
+                showsVerticalScrollIndicator={favoriteRestaurantList}
+                data={likeRestaurant}
+                renderItem={renderItem}
+                keyExtractor={item => item._id}
+                contentContainerStyle={{ paddingBottom: '20%' }}
+              />
+            ) : (
+              <View style={styles.noDataView}>
+                <Text style={styles.noDataText}>No Data Found</Text>
+              </View>
+            )}
+          </View>}
+      </View>
+    </Wrapper>
   );
 }

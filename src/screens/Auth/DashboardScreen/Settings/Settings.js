@@ -10,6 +10,7 @@ import { rootStore } from '../../../../stores/rootStore';
 import socketServices from '../../../../socketIo/SocketServices';
 import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 export default function Settings({ navigation }) {
   const { deleteAccount } = rootStore.dashboardStore;
@@ -189,22 +190,32 @@ export default function Settings({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Settings'}
+      backArrow={true}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         bottomLine={true}
         onPress={() => {
           navigation.goBack();
         }}
         title={'Settings'}
         backArrow={true}
-      />
+      /> */}
 
-      <AppInputScroll
-        Pb={'20%'}
-        padding={true}
-        keyboardShouldPersistTaps={'handled'}>
-        <View style={{ marginHorizontal: 20, justifyContent: 'center' }}>
-          {/* <TouchableTextSwitch
+        <AppInputScroll
+          Pb={'20%'}
+          padding={true}
+          keyboardShouldPersistTaps={'handled'}>
+          <View style={{ marginHorizontal: 20, justifyContent: 'center' }}>
+            {/* <TouchableTextSwitch
             toggle={true}
             activateSwitch={activateSwitch}
             onTogglePress={onTogglePress}
@@ -212,31 +223,31 @@ export default function Settings({ navigation }) {
             text={'Define what alerts and notifications you want to see'}
           /> */}
 
-          <TouchableTextSwitch
-            toggle={false}
-            title={'Delete Account'}
-            text={'Delete your account'}
-            onPress={() => {
-              if ((incompletedParcelOrder?.length > 0
-                || incompletedRideOrder?.length > 0
-                || trackedParcelOrder?.length > 0
-                || foodTrackedArray?.length > 0)) {
-                setIsProgress(true)
-              } else {
-                setIsDelete(true);
-              }
+            <TouchableTextSwitch
+              toggle={false}
+              title={'Delete Account'}
+              text={'Delete your account'}
+              onPress={() => {
+                if ((incompletedParcelOrder?.length > 0
+                  || incompletedRideOrder?.length > 0
+                  || trackedParcelOrder?.length > 0
+                  || foodTrackedArray?.length > 0)) {
+                  setIsProgress(true)
+                } else {
+                  setIsDelete(true);
+                }
 
-            }}
-          />
+              }}
+            />
 
-          {/* <TouchableTextSwitch
+            {/* <TouchableTextSwitch
             toggle={true}
             activateSwitch={switchWallet}
             onTogglePress={onToggleWallet}
             title={'Wallet Settings'}
             text={'Show/Hide your wallet on home'}
           /> */}
-          {/* <TouchableTextSwitch
+            {/* <TouchableTextSwitch
             toggle={false}
             title={'Terms and Conditions'}
             text={'You must agree to the Terms & Conditions.'}
@@ -256,30 +267,31 @@ export default function Settings({ navigation }) {
               });
             }}
           /> */}
-        </View>
-        <PopUp
-          topIcon={true}
-          visible={isDelete}
-          type={'delete'}
-          onClose={() => setIsDelete(false)}
-          title={'Are you sure you want to delete your account?'}
-          text={
-            'This action is permanent and will remove all your data. Do you really want to continue?'
-          }
-          onDelete={handleDelete}
-        />
-        <PopUpInProgess
-          topIcon={true}
-          CTATitle={'Cancel'}
-          visible={isProgress}
-          type={'warning'}
-          onClose={() => setIsProgress(false)}
-          title={"You can't delete account"}
-          text={
-            "You can't delete your account while your order is being processed."
-          }
-        />
-      </AppInputScroll>
-    </View>
+          </View>
+          <PopUp
+            topIcon={true}
+            visible={isDelete}
+            type={'delete'}
+            onClose={() => setIsDelete(false)}
+            title={'Are you sure you want to delete your account?'}
+            text={
+              'This action is permanent and will remove all your data. Do you really want to continue?'
+            }
+            onDelete={handleDelete}
+          />
+          <PopUpInProgess
+            topIcon={true}
+            CTATitle={'Cancel'}
+            visible={isProgress}
+            type={'warning'}
+            onClose={() => setIsProgress(false)}
+            title={"You can't delete account"}
+            text={
+              "You can't delete your account while your order is being processed."
+            }
+          />
+        </AppInputScroll>
+      </View>
+    </Wrapper>
   );
 }

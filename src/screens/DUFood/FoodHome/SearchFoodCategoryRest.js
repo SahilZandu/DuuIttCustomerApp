@@ -25,6 +25,7 @@ import SearchButtonInputComp from '../../../components/SearchButtonInputComp';
 import MikePopUp from '../../../components/MikePopUp';
 import CategoryCard from '../../../components/Cards/CategoryCard';
 import SearchCategoryCard from '../../../components/Cards/SearchCategoryCard';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 export default function SearchFoodCategoryRest({ navigation }) {
@@ -97,8 +98,12 @@ export default function SearchFoodCategoryRest({ navigation }) {
 
 
   return (
+     <Wrapper
+          edges={['left', 'right','bottom']}
+          transparentStatusBar
+        >
     <View style={styles.container}>
-      <View style={{}}>
+      <View>
         <SearchButtonInputComp
           onBackPress={() => { navigation.goBack() }}
           value={searchRes}
@@ -133,6 +138,7 @@ export default function SearchFoodCategoryRest({ navigation }) {
 
 
     </View>
+    </Wrapper>
   );
 }
 

@@ -13,9 +13,7 @@ import DashboardHeader from '../../../../components/header/DashboardHeader';
 import { styles } from './styles';
 import { homeCS } from '../../../../stores/DummyData/Home';
 import ChangeRoute from '../../../../components/ChangeRoute';
-import { mainArray } from '../../../../stores/DummyData/Home';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
-import RenderOffer from '../../../../components/RenderOffer';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
 import { rootStore } from '../../../../stores/rootStore';
@@ -32,6 +30,7 @@ import { getUniqueId } from 'react-native-device-info';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
 import { colors } from '../../../../theme/colors';
+import { Wrapper4 } from '../../../../halpers/Wrapper4';
 
 
 
@@ -184,37 +183,39 @@ export default function Home({ navigation }) {
   };
 
   return (
-      <View style={styles.container}>
+    <>
+      {bannerList?.length == 0 ? <Wrapper4
+        edges={['left', 'right']}
+        transparentStatusBar
+        title={appUser?.name ?? "Home"}
+        appUserInfo={appUser}
+        navigation={navigation}
+        showProfile={true}
+        showHeader
+      >
+        {/* <View style={styles.container}> */}
         {internet == false ? (
           <NoInternet />
         ) : (
           <>
-           <DashboardHeader title={appUser?.name ?? "Home"}
+            {/* <DashboardHeader title={appUser?.name ?? "Home"}
               appUserInfo={appUser}
               navigation={navigation}
-              showProfile={true} /> 
+              showProfile={true} />  */}
 
             <View style={styles.mainView}>
               <AppInputScroll
                 padding={true}
                 keyboardShouldPersistTaps={'handled'}>
-                {bannerList?.length > 0 && (
+                {/* {bannerList?.length > 0 && (
                   <CustomerHomeSlider
                     bannerList={bannerList}
                     data={bannerList[0]?.image_urls}
                     paginationList={true}
-                    imageHeight={hp('20%')} />
-                )}
-                {/* <View style={{ position:'absolute',width:wp("100%"),top:-4}}>
-                <DashboardHeader title={'Home'}
-              appUserInfo={appUser}
-              navigation={navigation}
-              showProfile={true} /> 
-               </View> */}
-
+                    imageHeight={hp('30%')} />
+                )} */}
                 <View style={styles.innerView}>
                   <ChangeRoute data={homeCS} navigation={navigation} />
-                  {/* <RenderOffer data={mainArray} /> */}
                 </View>
                 <View style={styles.bottomImageView}>
                   <Image
@@ -227,7 +228,53 @@ export default function Home({ navigation }) {
             </View>
           </>
         )}
-      </View>
+      </Wrapper4> :
+        <View style={styles.container}>
+          <StatusBar
+            animated={true}
+            translucent={true}
+            backgroundColor={
+              colors.whiteThink
+            }
+            barStyle={"light-content"}
+          />
+          {internet == false ? (
+            <NoInternet />
+          ) : (
+            <>
+              <View style={styles.mainView}>
+                <AppInputScroll
+                  padding={true}
+                  keyboardShouldPersistTaps={'handled'}>
+                  {bannerList?.length > 0 && (
+                    <CustomerHomeSlider
+                      bannerList={bannerList}
+                      data={bannerList[0]?.image_urls}
+                      paginationList={true}
+                      imageHeight={hp('30%')} />
+                  )}
+                  <View style={styles.innerView}>
+                    <ChangeRoute data={homeCS} navigation={navigation} />
+                  </View>
+                  <View style={styles.bottomImageView}>
+                    <Image
+                      resizeMode='contain'
+                      style={styles.bottomImage}
+                      source={appImages.mainHomeBootmImage}
+                    />
+                  </View>
+                </AppInputScroll>
+              </View>
+
+            </>
+
+          )}
+        </View>
+      }
+
+    </>
+
+
   );
 }
 

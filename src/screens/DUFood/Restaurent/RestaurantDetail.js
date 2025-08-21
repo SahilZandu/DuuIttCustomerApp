@@ -27,8 +27,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import Url from '../../../api/Url';
+import { Wrapper } from '../../../halpers/Wrapper';
 
-let asestsArray =[];
+let asestsArray = [];
 //  [
 //   {
 //     item: '',
@@ -97,8 +98,8 @@ export default function RestaurantDetail({ navigation, route }) {
       //   };
       //   asestsArray.push(object);
       // });
-      asestsArray=restaurant?.assets
-    }else{
+      asestsArray = restaurant?.assets
+    } else {
       asestsArray = [];
     }
   }, [restaurant]);
@@ -161,7 +162,7 @@ export default function RestaurantDetail({ navigation, route }) {
           style={styles.assetsImage}
           source={
             // appImages.foodIMage
-           { uri: Url?.Image_Url + item}
+            { uri: Url?.Image_Url + item }
           }
         />
       </TouchableOpacity>
@@ -380,8 +381,20 @@ export default function RestaurantDetail({ navigation, route }) {
   }
 
   return (
-    <View style={styles.conatiner}>
-      <Header
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+      title={restaurant?.name}
+      shareSVG={appImagesSvg.share}
+      backArrow={true}
+      shareIcon={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.conatiner}>
+        {/* <Header
         title={restaurant?.name}
         shareSVG={appImagesSvg.share}
         backArrow={true}
@@ -389,24 +402,25 @@ export default function RestaurantDetail({ navigation, route }) {
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      {loading ? <AnimatedLoader type={'restaurantReviewsLoader'} />
-        :
-        <View style={styles.listMainView}>
-          <FlatList
-            contentContainerStyle={{ paddingBottom: '20%' }}
-            showsVerticalScrollIndicator={false}
-            data={orgReviews}
-            renderItem={renderItem}
-            keyExtractor={item => item?._id}
-            onEndReached={loadMoredata}
-            onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
-            ListFooterComponent={renderFooter}
-            ListHeaderComponent={renderHaider}
-            ListEmptyComponent={renderEmptyList}
-          />
-        </View>}
-    </View>
+      /> */}
+        {loading ? <AnimatedLoader type={'restaurantReviewsLoader'} />
+          :
+          <View style={styles.listMainView}>
+            <FlatList
+              contentContainerStyle={{ paddingBottom: '20%' }}
+              showsVerticalScrollIndicator={false}
+              data={orgReviews}
+              renderItem={renderItem}
+              keyExtractor={item => item?._id}
+              onEndReached={loadMoredata}
+              onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
+              ListFooterComponent={renderFooter}
+              ListHeaderComponent={renderHaider}
+              ListEmptyComponent={renderEmptyList}
+            />
+          </View>}
+      </View>
+    </Wrapper>
   );
 }
 

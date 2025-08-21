@@ -102,10 +102,10 @@ function App() {
                 setStatusBar(currentScreen)
               }
             /> */}
-            <SafeAreaInsetsHandler currentScreen={currentScreen}>
+            {/* <SafeAreaInsetsHandler currentScreen={currentScreen}> */}
               {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
               <Root />
-            </SafeAreaInsetsHandler>
+            {/* </SafeAreaInsetsHandler> */}
             {/* </SafeAreaView> */}
           </NavigationContainer>
           <Toast />

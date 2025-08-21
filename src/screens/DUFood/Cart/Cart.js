@@ -35,6 +35,7 @@ import OrderCustomization from '../../../components/OrderCustomization';
 import CompleteMealComp from '../../../components/CompleteMealComp';
 import IncompletedAppRule from '../../../halpers/IncompletedAppRule';
 import IndicatorLoader from '../../../halpers/IndicatorLoader';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let itemForEdit = null;
 let idForUpdate = null;
@@ -80,7 +81,7 @@ const Cart = ({ navigation, route }) => {
     grandTotal: 0,
     couponDiscount: 0,
     topay: 0,
-    coupanCode:'',
+    coupanCode: '',
   });
   const [userOrgDistance, setUserOrgDistance] = useState(null);
   const [cartList, setCartList] = useState({});
@@ -160,7 +161,7 @@ const Cart = ({ navigation, route }) => {
         grandTotal: updateCart?.grand_total + (updateCart?.discount_amount ?? 0) ?? 0,
         couponDiscount: updateCart?.discount_amount ?? 0,
         topay: updateCart?.grand_total ?? 0,
-        coupanCode:updateCart?.offer?.referral_code ?? '',
+        coupanCode: updateCart?.offer?.referral_code ?? '',
       });
 
     }
@@ -346,7 +347,7 @@ const Cart = ({ navigation, route }) => {
         grandTotal: cart?.grand_total + (cart?.discount_amount ?? 0) ?? 0,
         couponDiscount: cart?.discount_amount ?? 0,
         topay: cart?.grand_total ?? 0,
-        coupanCode:cart?.offer?.referral_code ?? '',
+        coupanCode: cart?.offer?.referral_code ?? '',
       });
       // getUserOrgDistance(cart?.org_id);
     } else {
@@ -655,111 +656,121 @@ const Cart = ({ navigation, route }) => {
   // console.log('setAddANote=--', addANote);
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+      title={'Cart'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={'Cart'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
+      /> */}
 
-      {/* {appCart && ( */}
+        {/* {appCart && ( */}
 
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: userOrgDistance ? '50%' : '40%',
-        }}>
-        {/* <CartHeader appCart={appCart} /> */}
-        <CartItems
-          isCartScreen={true}
-          appCart={appCart}
-          handleAddRemove={handleAddRemove}
-          onEdit={handleEdit}
-          isOpen={isOpenNote}
-          handlenoteVisibility={handleIsNote}
-          addANote={addANote}
-        />
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: userOrgDistance ? '50%' : '40%',
+          }}>
+          {/* <CartHeader appCart={appCart} /> */}
+          <CartItems
+            isCartScreen={true}
+            appCart={appCart}
+            handleAddRemove={handleAddRemove}
+            onEdit={handleEdit}
+            isOpen={isOpenNote}
+            handlenoteVisibility={handleIsNote}
+            addANote={addANote}
+          />
 
-        {/* <CartInstructions
+          {/* <CartInstructions
             appCart={appCart}
             onAction={(action, data) => {
               saveInstructions(action, data, appCart?.org_id, onSucces);
             }}
           /> */}
-        {completeMealList?.length > 0 && (
-          <View style={styles.completeMealWithView}>
-            <Text style={styles.titleText}>Complete your meal with</Text>
-            <View style={styles.comMealListView}>
-              {CompletedMealOrderList()}
+          {completeMealList?.length > 0 && (
+            <View style={styles.completeMealWithView}>
+              <Text style={styles.titleText}>Complete your meal with</Text>
+              <View style={styles.comMealListView}>
+                {CompletedMealOrderList()}
+              </View>
             </View>
+          )}
+
+          {offerList?.length > 0 && (
+            <CartCoupanApply
+              item={activeOffer?.referral_code ? activeOffer : offerList[0]}
+              onApply={item => {
+                onApplyOffer(item);
+              }}
+              activeOffer={activeOffer}
+              applyTitle={activeOffer?.referral_code ? 'Remove' : 'Apply'}
+              onMoreCoupan={() => {
+                navigation.navigate('couponsList', {
+                  restaurant: restaurant,
+                  selectedOffers: activeOffer,
+                  onCoupanSelected: onCoupanSelected,
+                  couponList: offerList,
+                  getCartTotal: cartBillG,
+                });
+              }}
+              btnTitle="View more coupons"
+              getCartTotal={cartBillG}
+            />
+          )}
+          {missedSomeList?.length > 0 && (
+            <View style={styles.addNowView}>
+              <Text style={styles.titleText}>Missed something? Add now</Text>
+              <View style={styles.addNewListView}>{MissedSomeThingsList()}</View>
+            </View>
+          )}
+
+          <View>
+            <DeliveryCart
+              DeliveryInMint={'Delivery in 30 mins'}
+              address={
+                deliveryAddress?.title?.length > 0
+                  ? `Delivery at ${deliveryAddress?.title}`
+                  : 'Add loaction'
+              }
+              locationAddress={
+                deliveryAddress?.address?.length > 0
+                  ? deliveryAddress?.address
+                  : 'Please add delivert loacation first'
+              }
+              onAddInstruction={() => {
+                setIsInstruction(!isInstruction);
+              }}
+              isTxtInst={isTxtInst}
+              instuctions={instuctions}
+              txtInstArray={instuctionsArray}
+              isAudio={isAudio}
+              isPlaying={isPlaying}
+              audioInstuctions={'Audio Instuctions'}
+              nameWithNumber={`${appUser?.name}, +91-${appUser?.phone}`}
+              number={`+91-${deliveryAddress?.phone}`}
+              onBillDetails={() => {
+                setIsBillDetail(!isBillDetail);
+              }}
+              totalBill={'Total Bill'}
+              cartBillG={cartBillG}
+              onPressLocation={onPressLocation}
+            />
           </View>
-        )}
 
-        {offerList?.length > 0 && (
-          <CartCoupanApply
-            item={activeOffer?.referral_code ? activeOffer : offerList[0]}
-            onApply={item => {
-              onApplyOffer(item);
-            }}
-            activeOffer={activeOffer}
-            applyTitle={activeOffer?.referral_code ? 'Remove' : 'Apply'}
-            onMoreCoupan={() => {
-              navigation.navigate('couponsList', {
-                restaurant: restaurant,
-                selectedOffers: activeOffer,
-                onCoupanSelected: onCoupanSelected,
-                couponList: offerList,
-                getCartTotal: cartBillG,
-              });
-            }}
-            btnTitle="View more coupons"
-            getCartTotal={cartBillG}
-          />
-        )}
-        {missedSomeList?.length > 0 && (
-          <View style={styles.addNowView}>
-            <Text style={styles.titleText}>Missed something? Add now</Text>
-            <View style={styles.addNewListView}>{MissedSomeThingsList()}</View>
-          </View>
-        )}
-
-        <View>
-          <DeliveryCart
-            DeliveryInMint={'Delivery in 30 mins'}
-            address={
-              deliveryAddress?.title?.length > 0
-                ? `Delivery at ${deliveryAddress?.title}`
-                : 'Add loaction'
-            }
-            locationAddress={
-              deliveryAddress?.address?.length > 0
-                ? deliveryAddress?.address
-                : 'Please add delivert loacation first'
-            }
-            onAddInstruction={() => {
-              setIsInstruction(!isInstruction);
-            }}
-            isTxtInst={isTxtInst}
-            instuctions={instuctions}
-            txtInstArray={instuctionsArray}
-            isAudio={isAudio}
-            isPlaying={isPlaying}
-            audioInstuctions={'Audio Instuctions'}
-            nameWithNumber={`${appUser?.name}, +91-${appUser?.phone}`}
-            number={`+91-${deliveryAddress?.phone}`}
-            onBillDetails={() => {
-              setIsBillDetail(!isBillDetail);
-            }}
-            totalBill={'Total Bill'}
-            cartBillG={cartBillG}
-            onPressLocation={onPressLocation}
-          />
-        </View>
-
-        {/* <CartBill
+          {/* <CartBill
           appCart={appCart}
           billdetail={bill => {
             setCartTotal(bill.cartTotal);
@@ -769,88 +780,88 @@ const Cart = ({ navigation, route }) => {
           activeOffer={activeOffer}
         /> */}
 
-        <View style={styles.cancelationPolicyView}>
-          <Text style={styles.cancellationPilocyText}>
-            Cancellation Policy :
-          </Text>
-          <Text style={styles.aviodCancellationText}>
-            Avoid Cancellation as it leads to food wastage. The amount paid is
-            non- refundable after placing the order.
-          </Text>
-        </View>
-      </ScrollView>
+          <View style={styles.cancelationPolicyView}>
+            <Text style={styles.cancellationPilocyText}>
+              Cancellation Policy :
+            </Text>
+            <Text style={styles.aviodCancellationText}>
+              Avoid Cancellation as it leads to food wastage. The amount paid is
+              non- refundable after placing the order.
+            </Text>
+          </View>
+        </ScrollView>
 
-      <BillSummary
-        // menu={orgMenu}
-        activeOffer={activeOffer}
-        visible={isBillDetail}
-        cartBillG={cartBillG}
-        onClose={() => setIsBillDetail(false)}
-        onSelectMenu={key => {
-          scrollToGroup_(key);
-        }}
-      />
-      <AddNote
-        // menu={orgMenu}
-        addNote={addANote}
-        onSelectAddNote={hanldeSelectAddNote}
-        visible={isOpenNote}
-        onClose={() => setIsOpenNote(false)}
-        onSelectMenu={key => {
-          scrollToGroup_(key);
-        }}
-      />
-      <DeliveryInstructions
-        // menu={orgMenu}
-        visible={isInstruction}
-        onClose={() => setIsInstruction(false)}
-        // onSelectMenu={key => {
-        //   scrollToGroup_(key);
-        // }}
+        <BillSummary
+          // menu={orgMenu}
+          activeOffer={activeOffer}
+          visible={isBillDetail}
+          cartBillG={cartBillG}
+          onClose={() => setIsBillDetail(false)}
+          onSelectMenu={key => {
+            scrollToGroup_(key);
+          }}
+        />
+        <AddNote
+          // menu={orgMenu}
+          addNote={addANote}
+          onSelectAddNote={hanldeSelectAddNote}
+          visible={isOpenNote}
+          onClose={() => setIsOpenNote(false)}
+          onSelectMenu={key => {
+            scrollToGroup_(key);
+          }}
+        />
+        <DeliveryInstructions
+          // menu={orgMenu}
+          visible={isInstruction}
+          onClose={() => setIsInstruction(false)}
+          // onSelectMenu={key => {
+          //   scrollToGroup_(key);
+          // }}
 
-        audioInstruction={data => {
-          // setIsInstruction(false);
-          if (data !== null) {
-            console.log('audioInstruction>', data);
-            setInstuctions(data);
-            setIsAudio(true);
-            // setIsTxtInst(false);
-          } else {
-            setIsAudio(false);
-            // setIsTxtInst(true);
-            setInstuctions('Add instructions for delivery partner');
-          }
-        }}
-        txtInstArray={instuctionsArray}
-        txtInstuctions={data => {
-          if (data !== null) {
-            console.log('data>', data);
+          audioInstruction={data => {
             // setIsInstruction(false);
-            if (data?.length > 0) {
-              setInstuctionsArray(data);
-              // const commaSeparatedString = data?.join(', ');
-              // console.log(commaSeparatedString);
-              // setInstuctions(commaSeparatedString);
-              // setIsAudio(false);
+            if (data !== null) {
+              console.log('audioInstruction>', data);
+              setInstuctions(data);
+              setIsAudio(true);
+              // setIsTxtInst(false);
+            } else {
+              setIsAudio(false);
               // setIsTxtInst(true);
+              setInstuctions('Add instructions for delivery partner');
+            }
+          }}
+          txtInstArray={instuctionsArray}
+          txtInstuctions={data => {
+            if (data !== null) {
+              console.log('data>', data);
+              // setIsInstruction(false);
+              if (data?.length > 0) {
+                setInstuctionsArray(data);
+                // const commaSeparatedString = data?.join(', ');
+                // console.log(commaSeparatedString);
+                // setInstuctions(commaSeparatedString);
+                // setIsAudio(false);
+                // setIsTxtInst(true);
+              } else {
+                setInstuctionsArray([]);
+              }
             } else {
               setInstuctionsArray([]);
+              setInstuctions('Add instructions for delivery partner');
             }
-          } else {
-            setInstuctionsArray([]);
-            setInstuctions('Add instructions for delivery partner');
-          }
-        }}
-      />
-      {/* )} */}
+          }}
+        />
+        {/* )} */}
 
-      {/* {appCart && ( */}
+        {/* {appCart && ( */}
 
-      <PlaceOrderBtn appCart={appCart} userOrgDistance={userOrgDistance} />
+        <PlaceOrderBtn appCart={appCart} userOrgDistance={userOrgDistance} />
 
-      {/* )} */}
+        {/* )} */}
 
-      {/* 
+        {/* 
       <PickedOrderModalComponent
         visible={visible}
         setVisible={setVisible}
@@ -863,7 +874,7 @@ const Cart = ({ navigation, route }) => {
         }}
       /> */}
 
-      {/* <CartItemUpdate
+        {/* <CartItemUpdate
         visible={isEdit}
         close={() => setIsEdit(false)}
         onUpdate={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
@@ -895,15 +906,15 @@ const Cart = ({ navigation, route }) => {
         product={itemForEdit?.addon}
       /> */}
 
-      {(appUser?.addresses && appUser?.addresses?.length == 0) &&
-        <IncompletedAppRule
-          title={'App Confirmation'}
-          message={' Please add your address first.'}
-          onHanlde={() => onPressLocation()}
-        />
-      }
+        {(appUser?.addresses && appUser?.addresses?.length == 0) &&
+          <IncompletedAppRule
+            title={'App Confirmation'}
+            message={' Please add your address first.'}
+            onHanlde={() => onPressLocation()}
+          />
+        }
 
-      {/* {(appUserData?.profile_pic == null ||
+        {/* {(appUserData?.profile_pic == null ||
         appUserData?.profile_pic?.length === 0) && (
           <IncompletedAppRule
             title={'App Confirmation'}
@@ -913,127 +924,128 @@ const Cart = ({ navigation, route }) => {
         )} */}
 
 
-      {(Object.keys(deliveryAddress)?.length === 0) && (
-        <IncompletedAppRule
-          title={'App Confirmation'}
-          message={'Please add your address first.'}
-          onHanlde={() => onPressLocation()}
-        />
-      )}
-      <OrderCustomization
-        isResOpen={isEdit}
-        appCart={cartList}
-        // setFullImage={setFullImage}
-        visible={isEdit}
-        close={() => setIsEdit(false)}
-        item={itemForEdit}
-        // imageUrl={imageUrl}
-        addToCart={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
-          console.log(
-            'modal ckilc data',
-            quan,
-            sellAmount,
-            vcId,
-            vcName,
-            addons,
-            iPrice,
-            itemForEdit,
-          );
-          // setItemModal(false);
-          setIsEdit(false);
-          let addOnData = {
-            food_item_id: itemForEdit?._id,
-            add_on_items: addons ?? [],
-          };
-
-          const getCartList = { ...cartList };
-          console.log(
-            'getCartList OrderCustomization:-',
-            getCartList,
-            itemForEdit,
-          );
-
-          let updatedCustomizeItem = {
-            ...itemForEdit,
-            selling_price: sellAmount,
-            quantity: quan,
-            food_item_id: itemForEdit?._id,
-            food_item_price: sellAmount,
-            selected_add_on: addons ?? [],
-            varient_name: vcName,
-            varient_price: sellAmount,
-          };
-
-          if (Array?.isArray(getCartList?.cart_items)) {
-            const checkAvailabilityById = getCartList?.cart_items?.find(
-              cartItem => cartItem?.food_item_id === updatedCustomizeItem?._id,
+        {(Object.keys(deliveryAddress)?.length === 0) && (
+          <IncompletedAppRule
+            title={'App Confirmation'}
+            message={'Please add your address first.'}
+            onHanlde={() => onPressLocation()}
+          />
+        )}
+        <OrderCustomization
+          isResOpen={isEdit}
+          appCart={cartList}
+          // setFullImage={setFullImage}
+          visible={isEdit}
+          close={() => setIsEdit(false)}
+          item={itemForEdit}
+          // imageUrl={imageUrl}
+          addToCart={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
+            console.log(
+              'modal ckilc data',
+              quan,
+              sellAmount,
+              vcId,
+              vcName,
+              addons,
+              iPrice,
+              itemForEdit,
             );
-            // console.log('getCartList checkAvailability', checkAvailabilityById);
-            // if (getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id) {
-            let updatedCartList = getCartList?.cart_items;
-            if (checkAvailabilityById) {
-              updatedCartList = getCartList?.cart_items?.map(data => {
-                if (data?.food_item_id == updatedCustomizeItem?._id) {
-                  return { ...data, quantity: quan, food_item_price: sellAmount, selected_add_on: addons };
+            // setItemModal(false);
+            setIsEdit(false);
+            let addOnData = {
+              food_item_id: itemForEdit?._id,
+              add_on_items: addons ?? [],
+            };
+
+            const getCartList = { ...cartList };
+            console.log(
+              'getCartList OrderCustomization:-',
+              getCartList,
+              itemForEdit,
+            );
+
+            let updatedCustomizeItem = {
+              ...itemForEdit,
+              selling_price: sellAmount,
+              quantity: quan,
+              food_item_id: itemForEdit?._id,
+              food_item_price: sellAmount,
+              selected_add_on: addons ?? [],
+              varient_name: vcName,
+              varient_price: sellAmount,
+            };
+
+            if (Array?.isArray(getCartList?.cart_items)) {
+              const checkAvailabilityById = getCartList?.cart_items?.find(
+                cartItem => cartItem?.food_item_id === updatedCustomizeItem?._id,
+              );
+              // console.log('getCartList checkAvailability', checkAvailabilityById);
+              // if (getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id) {
+              let updatedCartList = getCartList?.cart_items;
+              if (checkAvailabilityById) {
+                updatedCartList = getCartList?.cart_items?.map(data => {
+                  if (data?.food_item_id == updatedCustomizeItem?._id) {
+                    return { ...data, quantity: quan, food_item_price: sellAmount, selected_add_on: addons };
+                  }
+                  return {
+                    ...data,
+                  };
+                });
+                // console.log(
+                //   'updatedCartList--',
+                //   updatedCartList,
+                //   appUser,
+                //   restaurant,
+                //   getCartList,
+                // );
+                const resUpdateCart = await updateCart(
+                  updatedCartList,
+                  appUser,
+                  restaurant,
+                  getCartList,
+                  addOnData,
+                );
+                if (resUpdateCart?.statusCode == 200) {
+                  getUserCart();
                 }
-                return {
-                  ...data,
-                };
-              });
-              // console.log(
-              //   'updatedCartList--',
-              //   updatedCartList,
-              //   appUser,
-              //   restaurant,
-              //   getCartList,
-              // );
-              const resUpdateCart = await updateCart(
-                updatedCartList,
-                appUser,
-                restaurant,
-                getCartList,
-                addOnData,
-              );
-              if (resUpdateCart?.statusCode == 200) {
-                getUserCart();
+              } else {
+                // console.log('updateCart--', updatedCartList, appUser, restaurant, [
+                //   newItem,
+                // ]);
+                const resUpdateCart = await updateCart(
+                  [...updatedCartList, ...[updatedCustomizeItem]],
+                  appUser,
+                  restaurant,
+                  getCartList,
+                  addOnData,
+                );
+                if (resUpdateCart?.statusCode == 200) {
+                  getUserCart();
+                }
               }
+              //  }
+              //  else{
+              //   setClickItem(updatedCustomizeItem);
+              //   setIsRemoveCart(true);
+              // }
             } else {
-              // console.log('updateCart--', updatedCartList, appUser, restaurant, [
-              //   newItem,
-              // ]);
-              const resUpdateCart = await updateCart(
-                [...updatedCartList, ...[updatedCustomizeItem]],
+              console.log('setCart--first', appUser, restaurant, [
+                updatedCustomizeItem,
+              ]);
+              const resSetCart = await setCart(
+                [updatedCustomizeItem],
                 appUser,
                 restaurant,
-                getCartList,
-                addOnData,
               );
-              if (resUpdateCart?.statusCode == 200) {
+              if (resSetCart?.restaurant_id?.length > 0) {
                 getUserCart();
               }
             }
-            //  }
-            //  else{
-            //   setClickItem(updatedCustomizeItem);
-            //   setIsRemoveCart(true);
-            // }
-          } else {
-            console.log('setCart--first', appUser, restaurant, [
-              updatedCustomizeItem,
-            ]);
-            const resSetCart = await setCart(
-              [updatedCustomizeItem],
-              appUser,
-              restaurant,
-            );
-            if (resSetCart?.restaurant_id?.length > 0) {
-              getUserCart();
-            }
-          }
-        }}
-      />
-      {loading && <IndicatorLoader />}
-    </View>
+          }}
+        />
+        {loading && <IndicatorLoader />}
+      </View>
+    </Wrapper>
   );
 };
 

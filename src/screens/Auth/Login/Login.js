@@ -14,6 +14,7 @@ import { Strings } from '../../../translates/strings';
 import { styles } from './styles';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 import BTN from '../../../components/cta/BTN';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 export default function Login({ navigation }) {
   const [type, setType] = useState('Mobile');
@@ -41,6 +42,10 @@ export default function Login({ navigation }) {
   };
 
   return (
+     <Wrapper
+        edges={['left', 'right']}
+        transparentStatusBar
+      >
     <View style={styles.container}>
       <ScrollView
         bounces={false}
@@ -104,5 +109,6 @@ export default function Login({ navigation }) {
         </View>
       </ScrollView>
     </View>
+    </Wrapper>
   );
 }

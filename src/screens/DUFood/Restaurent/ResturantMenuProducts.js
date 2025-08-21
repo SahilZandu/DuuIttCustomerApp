@@ -35,6 +35,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import Url from '../../../api/Url';
 import PopUp from '../../../components/appPopUp/PopUp';
 import { getTodayRestaurantTimings } from '../../../halpers/OpenCloseStatusRestaurant';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let filterType = 'all';
 
@@ -513,136 +514,140 @@ const ResturantProducts = memo(({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollView}
-        onScrollEndDrag={() => {
-          if (!showFilters) {
-            setShowFilters(true);
-          }
-        }}
-        ref={scrollViewRef}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={showFilters ? [2] : []}>
-        {/* {!showFilters && <Spacer space={'20%'}/>} */}
-        <View style={styles.coverBtnView}>
-          <FastImage
-            style={[
-              styles.coverImage,
-              {
-                opacity: isResOpen ? 1 : 0.6,
-              },
-            ]}
-            source={
-              restaurant?.banner?.length > 0
-                ? { uri: Url?.Image_Url + restaurant?.banner }
-                : appImages.foodIMage
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+    >
+      <View style={styles.container}>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          onScrollEndDrag={() => {
+            if (!showFilters) {
+              setShowFilters(true);
             }
-            resizeMode={FastImage.resizeMode.cover}
-          />
-          <TouchableOpacity
-            activeOpacity={0.8}
-            hitSlop={styles.btnHitSlot}
-            style={styles.btnTouch}
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <SvgXml
-              xml={appImagesSvg.whitebackArrow}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.restaurantDetailsView}>
-          <OrgCard
-            org={restaurant}
-            isResOpen={isResOpen}
-            openCloseTime={isOpenCloseTime}
-            // offerData={offerData}
-            // isResOpenSoon={isResOpenSoon}
-            orgOffers={orgOffers}
-            onReviews={handleReviewNavigation}
-          />
-        </View>
-        <View style={styles.restaurantScrollViewHold}>
-          <ScrollView
-            style={{ flex: 1 }}
-            horizontal={true}
-            nestedScrollEnabled={false}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingRight: '45%' }}>
-            <View style={[styles.filterMainView, { opacity: isResOpen ? 1 : 0.5 }]}>
-              <View style={[styles.filterView, { opacity: showFilters ? 1 : 0 }]}>
-                <SvgXml xml={appImagesSvg.filter} />
-                <Text style={styles.filterText}>
-                  {'  '}
-                  Filter
-                </Text>
-              </View>
-              <GroupsFilter
-                mainStyle={styles.filterInnerView}
-                onFilter={f => {
-                  (filterType = f), handleFilter(f);
-                }}
-                showFilters={showFilters}
-                filterType={filterType}
-              />
-            </View>
-          </ScrollView>
-          <View style={styles.bottomLineview} />
-        </View>
-        {loading == true ? (
-          <AnimatedLoader type="restaurantItemLoader" />
-        ) : (
-          <View style={[styles.categoryFlatlistView, { opacity: isResOpen ? 1 : 0.5 }]}>
-            {groupProducts?.length > 0 ? (
-              <>
-                <Text style={styles.menuText}>Menu</Text>
-                <FlatList
-                  style={{ marginTop: '3%' }}
-                  data={groupProducts}
-                  renderItem={renderGroups}
-                  // keyExtractor={item => item?._id || item?.name}
-                  keyExtractor={(item, index) =>
-                    item?._id ?? `${item?.name}-${index}`
-                  }
-                  ItemSeparatorComponent={() => (
-                    <View style={styles.separateView}>
-                      <View style={styles.separateLine} />
-                    </View>
-                  )}
-                />
-              </>
-            ) : (
-              <View style={styles.noDataView}>
-                {!loading && (
-                  <Text style={styles.noDataText}>No product found</Text>
-                )}
-              </View>
-            )}
-          </View>
-        )}
-      </ScrollView>
-
-      {!loading && orgMenu && orgMenu?.length > 0 && <BottomContent />}
-
-      {isCart?.food_item?.length > 0 && !loading && (
-        <ViewCartBtn
-          isCart={isCart}
-          viewCart={() => {
-            if (restaurant?.timings) {
-              const openCloaseRes = getTodayRestaurantTimings(restaurant?.timings);
-              if (openCloaseRes === "Closed") {
-                setOpenCloseItem(true);
-              } else {
-                navigation.navigate('cart', { restaurant })
-              }
-            }
-
           }}
-        />
-      )}
-      {/* {isOtherCart && !loading && (
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          stickyHeaderIndices={showFilters ? [2] : []}>
+          {/* {!showFilters && <Spacer space={'20%'}/>} */}
+          <View style={styles.coverBtnView}>
+            <FastImage
+              style={[
+                styles.coverImage,
+                {
+                  opacity: isResOpen ? 1 : 0.6,
+                },
+              ]}
+              source={
+                restaurant?.banner?.length > 0
+                  ? { uri: Url?.Image_Url + restaurant?.banner }
+                  : appImages.foodIMage
+              }
+              resizeMode={FastImage.resizeMode.cover}
+            />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              hitSlop={styles.btnHitSlot}
+              style={styles.btnTouch}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <SvgXml
+                xml={appImagesSvg.whitebackArrow}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.restaurantDetailsView}>
+            <OrgCard
+              org={restaurant}
+              isResOpen={isResOpen}
+              openCloseTime={isOpenCloseTime}
+              // offerData={offerData}
+              // isResOpenSoon={isResOpenSoon}
+              orgOffers={orgOffers}
+              onReviews={handleReviewNavigation}
+            />
+          </View>
+          <View style={styles.restaurantScrollViewHold}>
+            <ScrollView
+              style={{ flex: 1 }}
+              horizontal={true}
+              nestedScrollEnabled={false}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingRight: '45%' }}>
+              <View style={[styles.filterMainView, { opacity: isResOpen ? 1 : 0.5 }]}>
+                <View style={[styles.filterView, { opacity: showFilters ? 1 : 0 }]}>
+                  <SvgXml xml={appImagesSvg.filter} />
+                  <Text style={styles.filterText}>
+                    {'  '}
+                    Filter
+                  </Text>
+                </View>
+                <GroupsFilter
+                  mainStyle={styles.filterInnerView}
+                  onFilter={f => {
+                    (filterType = f), handleFilter(f);
+                  }}
+                  showFilters={showFilters}
+                  filterType={filterType}
+                />
+              </View>
+            </ScrollView>
+            <View style={styles.bottomLineview} />
+          </View>
+          {loading == true ? (
+            <AnimatedLoader type="restaurantItemLoader" />
+          ) : (
+            <View style={[styles.categoryFlatlistView, { opacity: isResOpen ? 1 : 0.5 }]}>
+              {groupProducts?.length > 0 ? (
+                <>
+                  <Text style={styles.menuText}>Menu</Text>
+                  <FlatList
+                    style={{ marginTop: '3%' }}
+                    data={groupProducts}
+                    renderItem={renderGroups}
+                    // keyExtractor={item => item?._id || item?.name}
+                    keyExtractor={(item, index) =>
+                      item?._id ?? `${item?.name}-${index}`
+                    }
+                    ItemSeparatorComponent={() => (
+                      <View style={styles.separateView}>
+                        <View style={styles.separateLine} />
+                      </View>
+                    )}
+                  />
+                </>
+              ) : (
+                <View style={styles.noDataView}>
+                  {!loading && (
+                    <Text style={styles.noDataText}>No product found</Text>
+                  )}
+                </View>
+              )}
+            </View>
+          )}
+        </ScrollView>
+
+        {!loading && orgMenu && orgMenu?.length > 0 && <BottomContent />}
+
+        {isCart?.food_item?.length > 0 && !loading && (
+          <ViewCartBtn
+            isCart={isCart}
+            viewCart={() => {
+              if (restaurant?.timings) {
+                const openCloaseRes = getTodayRestaurantTimings(restaurant?.timings);
+                if (openCloaseRes === "Closed") {
+                  setOpenCloseItem(true);
+                } else {
+                  navigation.navigate('cart', { restaurant })
+                }
+              }
+
+            }}
+          />
+        )}
+        {/* {isOtherCart && !loading && (
         <DashboardCartBtn
           bottom={'6%'}
           isDash={true}
@@ -657,164 +662,165 @@ const ResturantProducts = memo(({ navigation, route }) => {
         />
       )} */}
 
-      <MenuListModal
-        menu={orgMenu}
-        visible={openMenu}
-        onClose={() => setOpenMenu(false)}
-        onSelectMenu={key => {
-          // navigation.navigate('orderPlaced')
-          scrollToGroup(key);
-        }}
-      />
+        <MenuListModal
+          menu={orgMenu}
+          visible={openMenu}
+          onClose={() => setOpenMenu(false)}
+          onSelectMenu={key => {
+            // navigation.navigate('orderPlaced')
+            scrollToGroup(key);
+          }}
+        />
 
-      <OrderCustomization
-        isResOpen={isResOpen}
-        appCart={isCart}
-        setFullImage={setFullImage}
-        visible={itemModal}
-        close={() => setItemModal(false)}
-        item={CustomizeItem}
-        // imageUrl={imageUrl}
-        addToCart={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
-          console.log(
-            'modal ckilc data',
-            quan,
-            sellAmount,
-            vcId,
-            vcName,
-            addons,
-            iPrice,
-            CustomizeItem,
-          );
-          setItemModal(false);
-          let addOnData = {
-            food_item_id: CustomizeItem?._id,
-            add_on_items: addons ?? [],
-          };
-          const getCartList = { ...(selectedCartList ?? {}) };
-          console.log(
-            'getCartList OrderCustomization:-',
-            getCartList,
-            CustomizeItem,
-            addOnData,
-          );
-
-          let updatedCustomizeItem = {
-            ...CustomizeItem,
-            selling_price: sellAmount,
-            quantity: quan,
-            food_item_id: CustomizeItem?._id,
-            food_item_price: sellAmount,
-            selected_add_on: addons ?? [],
-            varient_name: vcName,
-            varient_price: sellAmount,
-          };
-
-          if (Array?.isArray(getCartList?.cart_items)) {
-            const checkAvailabilityById = getCartList?.cart_items?.find(
-              cartItem => cartItem?.food_item_id === updatedCustomizeItem?._id,
+        <OrderCustomization
+          isResOpen={isResOpen}
+          appCart={isCart}
+          setFullImage={setFullImage}
+          visible={itemModal}
+          close={() => setItemModal(false)}
+          item={CustomizeItem}
+          // imageUrl={imageUrl}
+          addToCart={async (quan, sellAmount, vcId, vcName, addons, iPrice) => {
+            console.log(
+              'modal ckilc data',
+              quan,
+              sellAmount,
+              vcId,
+              vcName,
+              addons,
+              iPrice,
+              CustomizeItem,
             );
-            // console.log('getCartList checkAvailability', checkAvailabilityById);
-            if (
-              getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id
-            ) {
-              let updatedCartList = getCartList?.cart_items;
-              if (checkAvailabilityById) {
-                updatedCartList = getCartList?.cart_items?.map(data => {
-                  if (data?.food_item_id == updatedCustomizeItem?._id) {
+            setItemModal(false);
+            let addOnData = {
+              food_item_id: CustomizeItem?._id,
+              add_on_items: addons ?? [],
+            };
+            const getCartList = { ...(selectedCartList ?? {}) };
+            console.log(
+              'getCartList OrderCustomization:-',
+              getCartList,
+              CustomizeItem,
+              addOnData,
+            );
+
+            let updatedCustomizeItem = {
+              ...CustomizeItem,
+              selling_price: sellAmount,
+              quantity: quan,
+              food_item_id: CustomizeItem?._id,
+              food_item_price: sellAmount,
+              selected_add_on: addons ?? [],
+              varient_name: vcName,
+              varient_price: sellAmount,
+            };
+
+            if (Array?.isArray(getCartList?.cart_items)) {
+              const checkAvailabilityById = getCartList?.cart_items?.find(
+                cartItem => cartItem?.food_item_id === updatedCustomizeItem?._id,
+              );
+              // console.log('getCartList checkAvailability', checkAvailabilityById);
+              if (
+                getCartList?.restaurant_id == updatedCustomizeItem?.restaurant_id
+              ) {
+                let updatedCartList = getCartList?.cart_items;
+                if (checkAvailabilityById) {
+                  updatedCartList = getCartList?.cart_items?.map(data => {
+                    if (data?.food_item_id == updatedCustomizeItem?._id) {
+                      return {
+                        ...data,
+                        quantity: quan,
+                        food_item_price: sellAmount,
+                        selected_add_on: addons
+                      };
+                    }
                     return {
                       ...data,
-                      quantity: quan,
-                      food_item_price: sellAmount,
-                      selected_add_on: addons
                     };
+                  });
+                  // console.log(
+                  //   'updatedCartList--',
+                  //   updatedCartList,
+                  //   appUser,
+                  //   restaurant,
+                  //   getCartList,
+                  // );
+                  const resUpdateCart = await updateCart(
+                    updatedCartList,
+                    appUser,
+                    restaurant,
+                    getCartList,
+                    addOnData,
+                  );
+                  if (resUpdateCart?.statusCode == 200) {
+                    getUserCart(groupProducts);
                   }
-                  return {
-                    ...data,
-                  };
-                });
-                // console.log(
-                //   'updatedCartList--',
-                //   updatedCartList,
-                //   appUser,
-                //   restaurant,
-                //   getCartList,
-                // );
-                const resUpdateCart = await updateCart(
-                  updatedCartList,
-                  appUser,
-                  restaurant,
-                  getCartList,
-                  addOnData,
-                );
-                if (resUpdateCart?.statusCode == 200) {
-                  getUserCart(groupProducts);
+                } else {
+                  // console.log('updateCart--', updatedCartList, appUser, restaurant, [
+                  //   newItem,
+                  // ]);
+                  const resUpdateCart = await updateCart(
+                    [...updatedCartList, ...[updatedCustomizeItem]],
+                    appUser,
+                    restaurant,
+                    getCartList,
+                    addOnData,
+                  );
+                  if (resUpdateCart?.statusCode == 200) {
+                    getUserCart(groupProducts);
+                  }
                 }
               } else {
-                // console.log('updateCart--', updatedCartList, appUser, restaurant, [
-                //   newItem,
-                // ]);
-                const resUpdateCart = await updateCart(
-                  [...updatedCartList, ...[updatedCustomizeItem]],
-                  appUser,
-                  restaurant,
-                  getCartList,
-                  addOnData,
-                );
-                if (resUpdateCart?.statusCode == 200) {
-                  getUserCart(groupProducts);
-                }
+                setClickItem(updatedCustomizeItem);
+                setIsRemoveCart(true);
               }
             } else {
-              setClickItem(updatedCustomizeItem);
-              setIsRemoveCart(true);
+              console.log('setCart--first', appUser, restaurant, [
+                updatedCustomizeItem,
+              ]);
+              const resSetCart = await setCart(
+                [updatedCustomizeItem],
+                appUser,
+                restaurant,
+              );
+              if (resSetCart?.restaurant_id?.length > 0) {
+                getUserCart(groupProducts);
+              }
             }
-          } else {
-            console.log('setCart--first', appUser, restaurant, [
-              updatedCustomizeItem,
-            ]);
-            const resSetCart = await setCart(
-              [updatedCustomizeItem],
-              appUser,
-              restaurant,
-            );
-            if (resSetCart?.restaurant_id?.length > 0) {
-              getUserCart(groupProducts);
-            }
+            // setTimeout(() => {
+            //   getUserCart(groupProducts);
+            // }, 500);
+          }}
+        />
+        <PopUp
+          topIcon={true}
+          visible={isRemoveCart}
+          type={'delete'}
+          onClose={() => setIsRemoveCart(false)}
+          title={'Confirm Cart Clearance'}
+          text={
+            'Other restaurant item is already in your cart. Please remove it.? This action cannot be undone.'
           }
-          // setTimeout(() => {
-          //   getUserCart(groupProducts);
-          // }, 500);
-        }}
-      />
-      <PopUp
-       topIcon={true}
-        visible={isRemoveCart}
-        type={'delete'}
-        onClose={() => setIsRemoveCart(false)}
-        title={'Confirm Cart Clearance'}
-        text={
-          'Other restaurant item is already in your cart. Please remove it.? This action cannot be undone.'
-        }
-        onDelete={() => {
-          onDeleteCart(false);
-        }}
-      />
+          onDelete={() => {
+            onDeleteCart(false);
+          }}
+        />
 
-      <PopUp
-       topIcon={true}
-        visible={openCloseItem}
-        type={'delete'}
-        onClose={() => setOpenCloseItem(false)}
-        title={'Confirm Cart Clearance'}
-        text={
-          "The restaurant you added items from is currently closed. You can clear your cart and choose another restaurant. This action cannot be undone."
-        }
-        onDelete={() => {
-          onDeleteCartItem(false);
-        }}
-      />
-    </View>
+        <PopUp
+          topIcon={true}
+          visible={openCloseItem}
+          type={'delete'}
+          onClose={() => setOpenCloseItem(false)}
+          title={'Confirm Cart Clearance'}
+          text={
+            "The restaurant you added items from is currently closed. You can clear your cart and choose another restaurant. This action cannot be undone."
+          }
+          onDelete={() => {
+            onDeleteCartItem(false);
+          }}
+        />
+      </View>
+    </Wrapper>
   );
 });
 

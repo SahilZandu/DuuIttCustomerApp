@@ -23,6 +23,7 @@ import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import { colors } from '../../../../theme/colors';
 import IndicatorLoader from '../../../../halpers/IndicatorLoader';
+import { Wrapper4 } from '../../../../halpers/Wrapper4';
 
 const tabs = [
   { text: 'All Orders' },
@@ -244,12 +245,20 @@ export default function Orders({ navigation, route }) {
   };
 
   return (
+       <Wrapper4
+        edges={['left', 'right']}
+        transparentStatusBar
+        title={"Orders"}
+        appUserInfo={appUser}
+        navigation={navigation}
+        showHeader
+        >
     <View style={styles.container}>
       {internet == false ? (
         <NoInternet />
       ) : (
         <>
-          <DashboardHeader title={'Orders'} />
+          {/* <DashboardHeader title={'Orders'} /> */}
           <View style={styles.mainView}>
             <Tabs3
               isRating={true}
@@ -291,5 +300,7 @@ export default function Orders({ navigation, route }) {
         </>
       )}
     </View>
+  
+    </Wrapper4>
   );
 }

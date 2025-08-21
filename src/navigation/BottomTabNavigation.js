@@ -157,10 +157,10 @@ export function DashboardBottomNavigator() {
           return (
             <View
               style={{
-                // marginTop:hp('-4%'),
+                // marginTop: '-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('1.7%'),
+                bottom: hp('2.3%'),
               }}>
               <Text
                 style={{
@@ -301,7 +301,7 @@ export function RideBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('1.3%'),
+                bottom: hp('2%'),
               }}>
               <Text
                 style={{
@@ -395,7 +395,7 @@ export function FoodBottomNavigator() {
             //   break;
             default:
               iconName = focused
-                ? bottomTabIcons.focusOrderIcon
+                ? bottomTabIcons.focusFoodIcon
                 : bottomTabIcons.foodIcon;
           }
           return (
@@ -440,7 +440,7 @@ export function FoodBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('1.3%'),
+                bottom: hp('2%'),
               }}>
               <Text
                 style={{
@@ -577,7 +577,7 @@ export function ParcelBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('1.3%'),
+                bottom: hp('2%'),
               }}>
               <Text
                 style={{
@@ -643,8 +643,8 @@ const styles = {
     backgroundColor: colors.main,
     width: wp('20%'),
     position: 'absolute',
-    // top: '10%',
-    top: '11%',
+    // top: '11%',
+    top: hp('1.4%'),
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
@@ -652,7 +652,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: hp('-1.5%'),
+    marginTop: hp('-2.5%'),
     width: wp('20%'),
     borderTopWidth: Platform.OS == 'android' ? 0.1 : 0.1,
     height: hp('8%'),

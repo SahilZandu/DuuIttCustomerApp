@@ -41,6 +41,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import FieldErrorMessage from '../../../components/FieldErrorMessage';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 
@@ -210,9 +211,9 @@ export default function AddMyAddress({ navigation, route }) {
 
   const onPressAddress = (data, details) => {
     setName(details?.name);
-      const shortAddress = filterAddress(details?.formatted_address)
-      //  console.log("shortAddress----",shortAddress);
-     setAddress(shortAddress);
+    const shortAddress = filterAddress(details?.formatted_address)
+    //  console.log("shortAddress----",shortAddress);
+    setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id);
   };
@@ -541,140 +542,151 @@ export default function AddMyAddress({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+      title={type == 'add' ? 'Add My Address' : 'Update My Address'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={type == 'add' ? 'Add My Address' : 'Update My Address'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      <View style={styles.main}>
-        {/* <MapRouteMarker
+      /> */}
+        <View style={styles.main}>
+          {/* <MapRouteMarker
           mapContainerView={{
             height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
           }}
           origin={geoLocation}
         /> */}
-        <View style={{ height: Platform.OS == 'ios' ? hp('66%') : hp('74%'), }}>
-          {/* {(geoLocation?.lat && geoLocation?.lng) &&
+          <View style={{ height: Platform.OS == 'ios' ? hp('66%') : hp('74%'), }}>
+            {/* {(geoLocation?.lat && geoLocation?.lng) &&
             <> */}
-              <MapLocationRoute
-                mapContainerView={{
-                  height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
-                }}
-                origin={geoLocation}
-                onTouchLocation={handleTouchAddress}
-                height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
-              />
+            <MapLocationRoute
+              mapContainerView={{
+                height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
+              }}
+              origin={geoLocation}
+              onTouchLocation={handleTouchAddress}
+              height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
+            />
             {/* </>} */}
 
-          <AutoCompleteGooglePlaceHolder
-            onPressAddress={onPressAddress}
-            address={address}
-          />
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => {
-            handleCurrentAddress();
-          }}
-          style={styles.currentLocTouch}>
-          <View style={styles.currentLocView}>
-            <Image
-              resizeMode="contain"
-              style={styles.currentLocImage}
-              source={appImages.currentLocationIcon}
+            <AutoCompleteGooglePlaceHolder
+              onPressAddress={onPressAddress}
+              address={address}
             />
-            <Text style={styles.currentLocText}>Current location</Text>
           </View>
-        </TouchableOpacity>
-
-        <View style={styles.addressView}>
-          {!address?.length > 0 ? (
-            <View>
-              {loadingAddress == true ? (
-                <AnimatedLoader type={'addMyAddress'} />
-              ) : (
-                <Text style={styles.chooseText}>Please choose location...</Text>
-              )}
-            </View>
-          ) : (
-            <View style={styles.addressContainView}>
-              <LocationHistoryCard
-                bottomLine={true}
-                item={{
-                  name: name,
-                  address: address,
-                }}
-                index={0}
-                onPress={() => { }}
-              />
-              <Spacer space={hp('3.5%')} />
-              <CTA
-                disable={!(address || name)}
-                onPress={() => {
-                  handleConfirm();
-                }}
-                title={'Confirm'}
-                textTransform={'capitalize'}
-                bottomCheck={10}
-              />
-            </View>
-          )}
-        </View>
-
-        <Modal
-          animationType="slide"
-          isVisible={visible}
-          // swipeDirection="down"
-          animationIn="fadeIn"
-          animationOut="fadeOut"
-          style={{ justifyContent: 'flex-end', margin: 0 }}>
           <TouchableOpacity
-            onPress={() => {
-              setVisible(false);
-            }}
             activeOpacity={0.8}
-            style={{ alignSelf: 'center' }}>
-            <Image
-              resizeMode="contain"
-              style={{ height: 45, width: 45 }}
-              source={appImages.crossClose} // Your icon image
-            />
+            onPress={() => {
+              handleCurrentAddress();
+            }}
+            style={styles.currentLocTouch}>
+            <View style={styles.currentLocView}>
+              <Image
+                resizeMode="contain"
+                style={styles.currentLocImage}
+                source={appImages.currentLocationIcon}
+              />
+              <Text style={styles.currentLocText}>Current location</Text>
+            </View>
           </TouchableOpacity>
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
-              marginTop: '2%',
-            }}>
+
+          <View style={styles.addressView}>
+            {!address?.length > 0 ? (
+              <View>
+                {loadingAddress == true ? (
+                  <AnimatedLoader type={'addMyAddress'} />
+                ) : (
+                  <Text style={styles.chooseText}>Please choose location...</Text>
+                )}
+              </View>
+            ) : (
+              <View style={styles.addressContainView}>
+                <LocationHistoryCard
+                  bottomLine={true}
+                  item={{
+                    name: name,
+                    address: address,
+                  }}
+                  index={0}
+                  onPress={() => { }}
+                />
+                <Spacer space={hp('3.5%')} />
+                <CTA
+                  disable={!(address || name)}
+                  onPress={() => {
+                    handleConfirm();
+                  }}
+                  title={'Confirm'}
+                  textTransform={'capitalize'}
+                  bottomCheck={10}
+                />
+              </View>
+            )}
+          </View>
+
+          <Modal
+            animationType="slide"
+            isVisible={visible}
+            // swipeDirection="down"
+            animationIn="fadeIn"
+            animationOut="fadeOut"
+            style={{ justifyContent: 'flex-end', margin: 0 }}>
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(false);
+              }}
+              activeOpacity={0.8}
+              style={{ alignSelf: 'center' }}>
+              <Image
+                resizeMode="contain"
+                style={{ height: 45, width: 45 }}
+                source={appImages.crossClose} // Your icon image
+              />
+            </TouchableOpacity>
             <View
               style={{
-                backgroundColor: colors.appBackground,
-                width: '100%',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                // paddingBottom: '12%',
-                height: hp('82%'),
+                justifyContent: 'flex-end',
+                alignItems: 'flex-end',
+                marginTop: '2%',
               }}>
-              <Spacer space={'2%'} />
-              <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust if needed
-                behavior={Platform.OS === 'ios' ? 'padding' : null}>
-                <AppInputScroll
-                  padding={true}
-                  keyboardShouldPersistTaps={'handled'}
-                  Pb={hp('15%')}>
-                  {OpenDetails()}
-                </AppInputScroll>
-              </KeyboardAvoidingView>
+              <View
+                style={{
+                  backgroundColor: colors.appBackground,
+                  width: '100%',
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  // paddingBottom: '12%',
+                  height: hp('82%'),
+                }}>
+                <Spacer space={'2%'} />
+                <KeyboardAvoidingView
+                  style={{ flex: 1 }}
+                  keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // Adjust if needed
+                  behavior={Platform.OS === 'ios' ? 'padding' : null}>
+                  <AppInputScroll
+                    padding={true}
+                    keyboardShouldPersistTaps={'handled'}
+                    Pb={hp('15%')}>
+                    {OpenDetails()}
+                  </AppInputScroll>
+                </KeyboardAvoidingView>
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        </View>
       </View>
-    </View>
+    </Wrapper>
   );
 }
 

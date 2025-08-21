@@ -15,6 +15,7 @@ import {appImages, appImagesSvg} from '../../../../commons/AppImages';
 import {SvgXml} from 'react-native-svg';
 import {currencyFormat} from '../../../../halpers/currencyFormat';
 import PaymentMethodComp from '../../../../components/PaymentMethodComp';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 const PaymentMethod = ({navigation, secondLine}) => {
   let paymentMode = [
@@ -92,14 +93,24 @@ const PaymentMethod = ({navigation, secondLine}) => {
   };
 
   return (
+    <Wrapper
+          edges={['left', 'right']}
+          transparentStatusBar
+          backArrow={true}
+          title={'Payment Method'}
+          onPress={() => {
+            navigation.goBack();
+          }}
+          showHeader
+        >
     <View style={styles.main}>
-      <Header
+      {/* <Header
         backArrow={true}
         title={'Payment Method'}
         onPress={() => {
           navigation.goBack();
         }}
-      />
+      /> */}
       <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
         <View style={styles.upperMainView}>
           {paymentMothod?.map((item, i) => {
@@ -114,6 +125,7 @@ const PaymentMethod = ({navigation, secondLine}) => {
         </View>
       </AppInputScroll>
     </View>
+    </Wrapper>
   );
 };
 

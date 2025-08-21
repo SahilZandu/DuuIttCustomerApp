@@ -17,6 +17,7 @@ import NoInternet from '../../../../components/NoInternet';
 import socketServices from '../../../../socketIo/SocketServices';
 import PopUp from '../../../../components/appPopUp/PopUp';
 import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
+import { Wrapper4 } from '../../../../halpers/Wrapper4';
 
 
 export default function SideMenu({ navigation }) {
@@ -523,74 +524,83 @@ export default function SideMenu({ navigation }) {
 
 
   return (
-    <View style={styles.container}>
-      {internet == false ? (
-        <NoInternet />
-      ) : (
-        <>
-          <ProfileUpperShowComp
-            navigation={navigation}
-            item={initialValues}
-            appUser={appUser}
-          />
-          <Spacer space={'1%'} />
-          <AppInputScroll
-            Pb={'57%'}
-            padding={true}
-            keyboardShouldPersistTaps={'handled'}>
-            <ProfileCompleteIconTextComp
+    <Wrapper4
+      edges={['left', 'right']}
+      transparentStatusBar
+      // title={"Explore"}
+      appUserInfo={appUser}
+      navigation={navigation}
+    // showHeader
+    >
+      <View style={styles.container}>
+        {internet == false ? (
+          <NoInternet />
+        ) : (
+          <>
+            <ProfileUpperShowComp
               navigation={navigation}
+              item={initialValues}
               appUser={appUser}
             />
-            <ReusableSurfaceComp title={'Food'}>
-              <TouchTextRightIconComp firstIcon={true} data={foodOptions} />
-            </ReusableSurfaceComp>
+            <Spacer space={'1%'} />
+            <AppInputScroll
+              Pb={'57%'}
+              padding={true}
+              keyboardShouldPersistTaps={'handled'}>
+              <ProfileCompleteIconTextComp
+                navigation={navigation}
+                appUser={appUser}
+              />
+              <ReusableSurfaceComp title={'Food'}>
+                <TouchTextRightIconComp firstIcon={true} data={foodOptions} />
+              </ReusableSurfaceComp>
 
-            <ReusableSurfaceComp title={'Ride'}>
-              <TouchTextRightIconComp firstIcon={true} data={rideOptions} />
-            </ReusableSurfaceComp>
+              <ReusableSurfaceComp title={'Ride'}>
+                <TouchTextRightIconComp firstIcon={true} data={rideOptions} />
+              </ReusableSurfaceComp>
 
-            <ReusableSurfaceComp title={'Parcel'}>
-              <TouchTextRightIconComp firstIcon={true} data={parcelOptions} />
-            </ReusableSurfaceComp>
+              <ReusableSurfaceComp title={'Parcel'}>
+                <TouchTextRightIconComp firstIcon={true} data={parcelOptions} />
+              </ReusableSurfaceComp>
 
-            {/* <ReusableSurfaceComp title={'Money'}>
+              {/* <ReusableSurfaceComp title={'Money'}>
           <TouchTextRightIconComp firstIcon={true} data={moneyOptions} />
         </ReusableSurfaceComp> */}
-            {/* <ReusableSurfaceComp title={'Coupons'}>
+              {/* <ReusableSurfaceComp title={'Coupons'}>
           <TouchTextRightIconComp  firstIcon={true} data={coupanOptions} />
         </ReusableSurfaceComp> */}
 
-            <ReusableSurfaceComp title={'More'}>
-              <TouchTextRightIconComp firstIcon={true} data={moreOptions} />
-            </ReusableSurfaceComp>
-            <PopUp
-              topIcon={true}
-              visible={isLogout}
-              type={'logout'}
-              onClose={() => setIsLogout(false)}
-              title={'Are you sure you want to log out?'}
-              text={
-                'You will be log out of your account. Do you want to continue?'
-              }
-              onDelete={handleLogout}
-            />
+              <ReusableSurfaceComp title={'More'}>
+                <TouchTextRightIconComp firstIcon={true} data={moreOptions} />
+              </ReusableSurfaceComp>
+              <PopUp
+                topIcon={true}
+                visible={isLogout}
+                type={'logout'}
+                onClose={() => setIsLogout(false)}
+                title={'Are you sure you want to log out?'}
+                text={
+                  'You will be log out of your account. Do you want to continue?'
+                }
+                onDelete={handleLogout}
+              />
 
-            <PopUpInProgess
-              topIcon={true}
-              CTATitle={'Cancel'}
-              visible={isProgrss}
-              type={'warning'}
-              onClose={() => setIsProgress(false)}
-              title={"You can't logout"}
-              text={
-                "You can't logout your account while your order is being processed."
-              }
-            />
+              <PopUpInProgess
+                topIcon={true}
+                CTATitle={'Cancel'}
+                visible={isProgrss}
+                type={'warning'}
+                onClose={() => setIsProgress(false)}
+                title={"You can't logout"}
+                text={
+                  "You can't logout your account while your order is being processed."
+                }
+              />
 
-          </AppInputScroll>
-        </>
-      )}
-    </View>
+            </AppInputScroll>
+          </>
+        )}
+      </View>
+    </Wrapper4>
   );
 }

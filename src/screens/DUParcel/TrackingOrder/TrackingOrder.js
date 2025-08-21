@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import {View} from 'react-native';
-import {styles} from './styles';
+import { View } from 'react-native';
+import { styles } from './styles';
 import Header from '../../../components/header/Header';
 import TrackingOrderForm from '../../../forms/TrackingOrderForm';
+import { Wrapper } from '../../../halpers/Wrapper';
 
-const TrackingOrder = ({navigation}) => {
-  
- 
+const TrackingOrder = ({ navigation }) => {
+
+
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={'Order Tracking'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={'Order Tracking'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-        <TrackingOrderForm navigation={navigation}/>
-     
-    </View>
+      /> */}
+        <TrackingOrderForm navigation={navigation} />
+      </View>
+    </Wrapper>
   );
 };
 

@@ -22,6 +22,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import PopUp from '../../../components/appPopUp/PopUp';
 import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 export default function MyAddress({ navigation, route }) {
   const { screenName } = route.params || {};
@@ -113,78 +114,89 @@ export default function MyAddress({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={'My Address'}
+      backArrow={screenName == 'home' || screenName == 'cart' ? true : false}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={'My Address'}
         backArrow={screenName == 'home' || screenName == 'cart' ? true : false}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      {internet == false ? (
-        <NoInternet />
-      ) : (
-        <>
-          {loading == true ? (
-            <AnimatedLoader type={'myAddress'} />
-          ) : (
-            <>
-              <View style={styles.main}>
-                {myAddress?.length > 0 ? (
-                  <FlatList
-                    contentContainerStyle={{ paddingBottom: '30%' }}
-                    showsVerticalScrollIndicator={false}
-                    data={myAddress}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                  />
-                ) : (
-                  <View style={styles.noDataView}>
-                    <Text style={styles.noDataText}>You haven't set an address yet.</Text>
-                  </View>
-                )}
-              </View>
-              <View
-                style={[
-                  styles.btnView,
-                  {
-                    bottom:
-                      screenName == 'home' || screenName == 'cart'
-                        ? hp('1.5%')
-                        : hp('8%'),
-                  },
-                ]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('addMyAddress', {
-                      type: 'add',
-                      data: undefined,
-                      screenName: screenName,
-                    });
-                  }}
-                  activeOpacity={0.8}
-                  style={styles.btnTouch}>
-                  <SvgXml
-                    width={50}
-                    height={50}
-                    xml={appImagesSvg.addAddresBtn}
-                  />
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
+      /> */}
+        {internet == false ? (
+          <NoInternet />
+        ) : (
+          <>
+            {loading == true ? (
+              <AnimatedLoader type={'myAddress'} />
+            ) : (
+              <>
+                <View style={styles.main}>
+                  {myAddress?.length > 0 ? (
+                    <FlatList
+                      contentContainerStyle={{ paddingBottom: '30%' }}
+                      showsVerticalScrollIndicator={false}
+                      data={myAddress}
+                      renderItem={renderItem}
+                      keyExtractor={item => item.id}
+                    />
+                  ) : (
+                    <View style={styles.noDataView}>
+                      <Text style={styles.noDataText}>You haven't set an address yet.</Text>
+                    </View>
+                  )}
+                </View>
+                <View
+                  style={[
+                    styles.btnView,
+                    {
+                      bottom:
+                        screenName == 'home' || screenName == 'cart'
+                          ? hp('1.5%')
+                          : hp('8%'),
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('addMyAddress', {
+                        type: 'add',
+                        data: undefined,
+                        screenName: screenName,
+                      });
+                    }}
+                    activeOpacity={0.8}
+                    style={styles.btnTouch}>
+                    <SvgXml
+                      width={50}
+                      height={50}
+                      xml={appImagesSvg.addAddresBtn}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
 
-          <PopUp
-           topIcon={true}
-            visible={isDelete}
-            type={'delete'}
-            onClose={() => setIsDelete(false)}
-            title={'You are about to delete an item'}
-            text={'This will delete your item from the address are your sure?'}
-            onDelete={handleDelete}
-          />
-        </>
-      )}
-    </View>
+            <PopUp
+              topIcon={true}
+              visible={isDelete}
+              type={'delete'}
+              onClose={() => setIsDelete(false)}
+              title={'You are about to delete an item'}
+              text={'This will delete your item from the address are your sure?'}
+              onDelete={handleDelete}
+            />
+          </>
+        )}
+      </View>
+    </Wrapper>
   );
 }

@@ -1,17 +1,18 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {DeviceEventEmitter, Text, View,} from 'react-native';
-import {styles} from './styles';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { DeviceEventEmitter, Text, View, } from 'react-native';
+import { styles } from './styles';
 import Header from '../../../../components/header/Header';
 import ProfileForm from '../../../../forms/ProfileForm';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 
-export default function Profile({navigation,route}) {
+export default function Profile({ navigation, route }) {
   const [internet, setInternet] = useState(true);
-  const {screenName}=route.params;
+  const { screenName } = route.params;
 
   useFocusEffect(
     useCallback(() => {
@@ -38,19 +39,29 @@ export default function Profile({navigation,route}) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header 
+
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
       onPress={()=>{navigation.goBack()}}
       title={'Edit Profile'}
-       backArrow={true} />
+       backArrow={true}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header 
+      onPress={()=>{navigation.goBack()}}
+      title={'Edit Profile'}
+       backArrow={true} /> */}
         {internet == false ? (
-        <NoInternet/>
-      ) : (
-        <>
-     <ProfileForm navigation={navigation} screenName={screenName}/>
-     </>
-     )}
-    </View>
+          <NoInternet />
+        ) : (
+          <>
+            <ProfileForm navigation={navigation} screenName={screenName} />
+          </>
+        )}
+      </View>
+    </Wrapper>
   );
 
 }

@@ -13,6 +13,7 @@ import BTN from '../../../components/cta/BTN';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { rootStore } from '../../../stores/rootStore';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 export default function CustomerSupport({ navigation }) {
   const { getAdminInfo, getSupportInfo } = rootStore.authStore;
@@ -46,53 +47,65 @@ export default function CustomerSupport({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Customer Support'}
+      bottomLine={1}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
         title={'Customer Support'}
         bottomLine={1}
-      />
-      <View style={styles.innerView}>
-        <Image
-          resizeMode="contain"
-          style={styles.image}
-          source={appImages.customerSupportImage}
-        />
-        <Text style={styles.supportText}>Customer Support Center</Text>
-        <Text style={styles.ifText}>
-          If you have any questions, encounter issues, or simply want to provide
-          feedback, our support team is ready to help. Choose from the options
-          below to get in touch with us
-        </Text>
-        <View style={styles.buttonView}>
-          <BTN
-            disable={infoData?.email?.length > 0 ? false : true}
-            backgroundColor={colors.white}
-            labelColor={colors.main}
-            width={wp('40%')}
-            title={'Email Us'}
-            onPress={() => {
-              hanldeLinking('email');
-            }}
-            bottomCheck={15}
-            textTransform={'capitalize'}
+      /> */}
+        <View style={styles.innerView}>
+          <Image
+            resizeMode="contain"
+            style={styles.image}
+            source={appImages.customerSupportImage}
           />
+          <Text style={styles.supportText}>Customer Support Center</Text>
+          <Text style={styles.ifText}>
+            If you have any questions, encounter issues, or simply want to provide
+            feedback, our support team is ready to help. Choose from the options
+            below to get in touch with us
+          </Text>
+          <View style={styles.buttonView}>
+            <BTN
+              disable={infoData?.email?.length > 0 ? false : true}
+              backgroundColor={colors.white}
+              labelColor={colors.main}
+              width={wp('40%')}
+              title={'Email Us'}
+              onPress={() => {
+                hanldeLinking('email');
+              }}
+              bottomCheck={15}
+              textTransform={'capitalize'}
+            />
 
-          <BTN
-            disable={infoData?.phone?.toString()?.length > 0 ? false : true}
-            width={wp('40%')}
-            title={'Call Us'}
-            onPress={() => {
-              hanldeLinking('phone');
-            }}
-            bottomCheck={15}
-            textTransform={'capitalize'}
-          />
+            <BTN
+              disable={infoData?.phone?.toString()?.length > 0 ? false : true}
+              width={wp('40%')}
+              title={'Call Us'}
+              onPress={() => {
+                hanldeLinking('phone');
+              }}
+              bottomCheck={15}
+              textTransform={'capitalize'}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </Wrapper>
   );
 }

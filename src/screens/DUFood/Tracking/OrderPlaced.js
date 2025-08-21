@@ -24,6 +24,7 @@ import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
 import { rootStore } from '../../../stores/rootStore';
 import { useFocusEffect } from '@react-navigation/native';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 export default function OrderPlaced({ navigation, route }) {
   const { orderData } = route.params;
@@ -65,67 +66,72 @@ export default function OrderPlaced({ navigation, route }) {
 
 
   return (
-    <View style={styles.conatiner}>
-      <AppInputScroll
-        padding={true}
-        Pb={'1%'}
-        keyboardShouldPersistTaps={'handled'}>
-        <View style={styles.innerMainView}>
-          <View style={styles.imageTextBtnView}>
-            <Image style={styles.image} source={appImages.orderPlaced} />
-            <Text style={styles.orderPlacedText}>Order Placed</Text>
-            <Text style={styles.yourOrderText}>
-              Your order has been successfully placed and your items are on the
-              way to you
-            </Text>
-            <Spacer space={'10%'} />
-            {/* {orderDetails?.status == 'waiting_for_confirmation' &&
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+    >
+      <View style={styles.conatiner}>
+        <AppInputScroll
+          padding={true}
+          Pb={'1%'}
+          keyboardShouldPersistTaps={'handled'}>
+          <View style={styles.innerMainView}>
+            <View style={styles.imageTextBtnView}>
+              <Image style={styles.image} source={appImages.orderPlaced} />
+              <Text style={styles.orderPlacedText}>Order Placed</Text>
+              <Text style={styles.yourOrderText}>
+                Your order has been successfully placed and your items are on the
+                way to you
+              </Text>
+              <Spacer space={'10%'} />
+              {/* {orderDetails?.status == 'waiting_for_confirmation' &&
               <> */}
-            <BTN
-              // disable={orderDetails?.rider?._id?.length > 0 ? true : false}
-              textTransform={'auto'}
-              title={orderDetails?.status === "waiting_for_confirmation" ? 'Cancel with full refund' : "Cancel with no refund"}
-              onPress={() => {
-                onCancelFoodOrder();
-                //navigation.navigate('trackingFoodOrderList');
-              }}
-              loading={loading}
-            />
-            <Spacer space={'5%'} />
-            {/* </>} */}
-            <BTN
-              backgroundColor={colors.white}
-              borderColor={colors.green}
-              labelColor={colors.green}
-              title={'Track Your Order'}
-              onPress={() => {
-                navigation.navigate('trackingFoodOrderList');
-              }}
-            />
-
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('food', { screen: 'home' });
-              }}
-              activeOpacity={0.8}>
-              <Text style={styles.backToHomeText}>Back to home</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={styles.bottomSliderView}>
-            <View
-              style={styles.bottomMainSlider}>
-              <FoodSlider
-                data={sliderItems}
-                oneCard={true}
-                imageWidth={wp('90%')}
-                imageHeight={hp('18%')}
+              <BTN
+                // disable={orderDetails?.rider?._id?.length > 0 ? true : false}
+                textTransform={'auto'}
+                title={orderDetails?.status === "waiting_for_confirmation" ? 'Cancel with full refund' : "Cancel with no refund"}
+                onPress={() => {
+                  onCancelFoodOrder();
+                  //navigation.navigate('trackingFoodOrderList');
+                }}
+                loading={loading}
               />
+              <Spacer space={'5%'} />
+              {/* </>} */}
+              <BTN
+                backgroundColor={colors.white}
+                borderColor={colors.green}
+                labelColor={colors.green}
+                title={'Track Your Order'}
+                onPress={() => {
+                  navigation.navigate('trackingFoodOrderList');
+                }}
+              />
+
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('food', { screen: 'home' });
+                }}
+                activeOpacity={0.8}>
+                <Text style={styles.backToHomeText}>Back to home</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={styles.bottomSliderView}>
+              <View
+                style={styles.bottomMainSlider}>
+                <FoodSlider
+                  data={sliderItems}
+                  oneCard={true}
+                  imageWidth={wp('90%')}
+                  imageHeight={hp('18%')}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </AppInputScroll>
-    </View>
+        </AppInputScroll>
+      </View>
+    </Wrapper>
   );
 }
 

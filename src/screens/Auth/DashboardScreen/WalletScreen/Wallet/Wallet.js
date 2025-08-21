@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,16 +10,16 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import Header from '../../../../../components/header/Header';
 import AppInputScroll from '../../../../../halpers/AppInputScroll';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
-import {colors} from '../../../../../theme/colors';
-import {Surface} from 'react-native-paper';
-import {currencyFormat} from '../../../../../halpers/currencyFormat';
+import { colors } from '../../../../../theme/colors';
+import { Surface } from 'react-native-paper';
+import { currencyFormat } from '../../../../../halpers/currencyFormat';
 import Tabs from '../../../../../components/Tabs';
-import {appImages, appImagesSvg} from '../../../../../commons/AppImages';
+import { appImages, appImagesSvg } from '../../../../../commons/AppImages';
 import TouchTextRightIconComp from '../../../../../components/TouchTextRightIconComp';
 import TransationHistComp from '../../../../../components/TransationHistComp';
 import AddMoneyCoinComp from '../../../../../components/AddMoneyCoinComp';
@@ -30,26 +30,27 @@ import { SvgXml } from 'react-native-svg';
 import { rootStore } from '../../../../../stores/rootStore';
 import { usePayment } from '../../../../../halpers/usePayment';
 import AnimatedLoader from '../../../../../components/AnimatedLoader/AnimatedLoader';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
 let tabs = [
-  {text: 'All'},
-  {text: 'Deposits'},
-  {text: 'Duuitt Credits'},
-  {text: 'Reward Coins'},
+  { text: 'All' },
+  { text: 'Deposits' },
+  { text: 'Duuitt Credits' },
+  { text: 'Reward Coins' },
 ];
 let defaultType = 'All';
 
-let defaultValue =""
+let defaultValue = ""
 
-const Wallet = ({navigation}) => {
-  const {getWallet,welletBalance,addWalletBalance }=rootStore.dashboardStore
-  const {appUser}=rootStore.commonStore
+const Wallet = ({ navigation }) => {
+  const { getWallet, welletBalance, addWalletBalance } = rootStore.dashboardStore
+  const { appUser } = rootStore.commonStore
   const [type, setType] = useState('All');
   const [value, setValue] = useState('');
   const [addMoney, setAddMoney] = useState(false);
-  const [walletData,setWalletData]=useState(welletBalance ??{})
-  const [loading ,setLoading]=useState(false)
-  const [loadingWallet ,setLoadingWallet]=useState(walletData?.balance > 0 ? false :true)
+  const [walletData, setWalletData] = useState(welletBalance ?? {})
+  const [loading, setLoading] = useState(false)
+  const [loadingWallet, setLoadingWallet] = useState(walletData?.balance > 0 ? false : true)
 
   useFocusEffect(
     useCallback(() => {
@@ -64,10 +65,10 @@ const Wallet = ({navigation}) => {
     setWalletData(res);
   };
   // console.log('res--walletData', walletData);
- const handleWalletLoading =(v)=>{
-  setLoadingWallet(v)
- }
- 
+  const handleWalletLoading = (v) => {
+    setLoadingWallet(v)
+  }
+
 
   const handleLoading = v => {
     setLoading(v);
@@ -75,15 +76,15 @@ const Wallet = ({navigation}) => {
 
   const onAdd = (amount) => {
     setLoading(true);
-    let data = {topay: Number(value)};
+    let data = { topay: Number(value) };
 
-    console.log("data---value",data,value,amount);
+    console.log("data---value", data, value, amount);
     usePayment(data, onSuccess, onError);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
-    },1000)
+    }, 1000)
   };
-  console.log("value---",value);
+  console.log("value---", value);
 
   const onSuccess = async data => {
     console.log('onSuccess---', data);
@@ -144,11 +145,11 @@ const Wallet = ({navigation}) => {
     },
   ];
   const tabsRate = [
-    {text: '100'},
-    {text: '200'},
-    {text: '500'},
-    {text: '1000'},
-    {text: '2000'},
+    { text: '100' },
+    { text: '200' },
+    { text: '500' },
+    { text: '1000' },
+    { text: '2000' },
   ];
 
   const handleTabPress = async text => {
@@ -165,7 +166,7 @@ const Wallet = ({navigation}) => {
   const handleAddMoneyToggle = useCallback(item => {
     console.log('item----', item);
     if (item === 'Add') {
-        onAdd(value)
+      onAdd(value)
     } else {
       setAddMoney(prev => !prev);
     }
@@ -173,112 +174,122 @@ const Wallet = ({navigation}) => {
 
 
   return (
-    <View style={styles.main}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      backArrow={true}
+      title={'Wallet'}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.main}>
+        {/* <Header
         backArrow={true}
         title={'Wallet'}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-       {loadingWallet == true  ? (
-        <AnimatedLoader type={'walletLoader'} />
-      ) : (
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <AppInputScroll
-          Pb={'25%'}
-          padding={true}
-          keyboardShouldPersistTaps={'handled'}>
-          <View style={styles.upperMainView}>
-            <Surface elevation={2} style={styles.walletSurfaceView}>
-              <View style={styles.innerViewWallet}>
-                <View style={styles.walletTotalBalView}>
-                  <Text style={styles.totalBalValue}>
-                    {currencyFormat(walletData?.balance ?? 0)}
-                  </Text>
-                  <Text style={styles.totalBalText}>Total Balance</Text>
-                  <View style={styles.bottomLine} />
-                </View>
-                <AddMoneyCoinComp
-                loading={loading}
-                  item={{
-                    name: 'Deposits',
-                    price: Number(walletData?.deposits ?? 0),
-                  }}
-                  // onPressTouch={()}
-                  bottomLine={!addMoney}
-                  onAddMoney={item => {
-                    handleAddMoneyToggle(item);
-                  }}
-                  addBtn={addMoney}
-                  value={value}
-                />
-                {addMoney && (
-                  <View style={styles.addMoneyInnerView}>
-                    <View style={styles.inputTextView}>
-                      <Text
-                        style={[
-                          styles.rateText,
-                          {
-                            color:
-                              value?.length > 0 ? colors.black : colors.color95,
-                          },
-                        ]}>
-                        ₹
+      /> */}
+        {loadingWallet == true ? (
+          <AnimatedLoader type={'walletLoader'} />
+        ) : (
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <AppInputScroll
+              Pb={'25%'}
+              padding={true}
+              keyboardShouldPersistTaps={'handled'}>
+              <View style={styles.upperMainView}>
+                <Surface elevation={2} style={styles.walletSurfaceView}>
+                  <View style={styles.innerViewWallet}>
+                    <View style={styles.walletTotalBalView}>
+                      <Text style={styles.totalBalValue}>
+                        {currencyFormat(walletData?.balance ?? 0)}
                       </Text>
-                      <TextInput
-                        placeholder="Enter Amount"
-                        keyboardType="numeric"
-                        maxLength={6}
-                        onChangeText={(text) =>(setValue(text))}
-                        value={value}
-                        style={styles.inputText}
-                      />
+                      <Text style={styles.totalBalText}>Total Balance</Text>
+                      <View style={styles.bottomLine} />
                     </View>
-                    <Spacer space={'1%'} />
-                    <TabTextIcon
-                      isRating={true}
-                      tabs={tabsRate}
-                      tabPress={handleTabRatePress}
+                    <AddMoneyCoinComp
+                      loading={loading}
+                      item={{
+                        name: 'Deposits',
+                        price: Number(walletData?.deposits ?? 0),
+                      }}
+                      // onPressTouch={()}
+                      bottomLine={!addMoney}
+                      onAddMoney={item => {
+                        handleAddMoneyToggle(item);
+                      }}
+                      addBtn={addMoney}
+                      value={value}
                     />
-                    <View style={styles.bottomLineAddBtn} />
+                    {addMoney && (
+                      <View style={styles.addMoneyInnerView}>
+                        <View style={styles.inputTextView}>
+                          <Text
+                            style={[
+                              styles.rateText,
+                              {
+                                color:
+                                  value?.length > 0 ? colors.black : colors.color95,
+                              },
+                            ]}>
+                            ₹
+                          </Text>
+                          <TextInput
+                            placeholder="Enter Amount"
+                            keyboardType="numeric"
+                            maxLength={6}
+                            onChangeText={(text) => (setValue(text))}
+                            value={value}
+                            style={styles.inputText}
+                          />
+                        </View>
+                        <Spacer space={'1%'} />
+                        <TabTextIcon
+                          isRating={true}
+                          tabs={tabsRate}
+                          tabPress={handleTabRatePress}
+                        />
+                        <View style={styles.bottomLineAddBtn} />
+                      </View>
+                    )}
+                    <AddMoneyCoinComp
+                      item={{
+                        name: 'Duuitt Credites',
+                        price: Number(walletData?.duuitt_credits ?? 0),
+                      }}
+                      bottomLine={true}
+                      onPressTouch={() => {
+                        navigation.navigate('duuIttCredit');
+                      }}
+                    />
+
+                    {!addMoney && (
+                      <AddMoneyCoinComp
+                        item={{
+                          name: 'Reward Stars Coins',
+                          price: 150,
+                        }}
+                        onPressTouch={() => {
+                          navigation.navigate('rewardsStars');
+                        }}
+                        bottomLine={true}
+                      />
+                    )}
+
+                    <TouchableOpacity
+                      onPress={() => { navigation.navigate('transactionHistory') }}
+                      style={styles.transationHistTouch}>
+                      <Text style={styles.viewTransationHistText}> View Transaction History</Text>
+                      <SvgXml style={{ marginLeft: '1%' }} xml={appImagesSvg.greenArrowIcon} />
+                    </TouchableOpacity>
                   </View>
-                )}
-                <AddMoneyCoinComp
-                  item={{
-                    name: 'Duuitt Credites',
-                    price: Number(walletData?.duuitt_credits ?? 0),
-                  }}
-                  bottomLine={true}
-                  onPressTouch={() => {
-                    navigation.navigate('duuIttCredit');
-                  }}
-                />
-
-                {!addMoney && (
-                  <AddMoneyCoinComp
-                    item={{
-                      name: 'Reward Stars Coins',
-                      price: 150,
-                    }}
-                    onPressTouch={() => {
-                      navigation.navigate('rewardsStars');
-                    }}
-                    bottomLine={true}
-                  />
-                )}
-
-                <TouchableOpacity
-                onPress={()=>{navigation.navigate('transactionHistory')}}
-                  style={styles.transationHistTouch}>
-                  <Text style={styles.viewTransationHistText}> View Transaction History</Text>
-                  <SvgXml style={{marginLeft:'1%'}} xml={appImagesSvg.greenArrowIcon} />
-                </TouchableOpacity>
-              </View>
-            </Surface>
-            {/* <View>
+                </Surface>
+                {/* <View>
               <View style={styles.transationHistView}>
                 <Text style={styles.transationHistText}>
                   Transaction History
@@ -297,7 +308,7 @@ const Wallet = ({navigation}) => {
               </View>
             </View> */}
 
-            {/* <View>
+                {/* <View>
               <Text style={styles.giftCartText}>Gift Cards</Text>
               <Surface elevation={2} style={styles.giftCardSurfaceView}>
                 <TouchTextRightIconComp
@@ -306,10 +317,11 @@ const Wallet = ({navigation}) => {
                 />
               </Surface>
             </View> */}
-          </View>
-        </AppInputScroll>
-      </KeyboardAvoidingView>)}
-    </View>
+              </View>
+            </AppInputScroll>
+          </KeyboardAvoidingView>)}
+      </View>
+    </Wrapper>
   );
 };
 

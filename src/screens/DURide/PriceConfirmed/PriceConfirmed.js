@@ -510,6 +510,7 @@ import { fonts } from '../../../theme/fonts/fonts';
 import Slider from '@react-native-community/slider';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import BackBtn from '../../../components/cta/BackBtn';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let priceArray = [0, 10, 20, 30, 40, 50];
 
@@ -704,233 +705,238 @@ export default function PriceConfirmed({ navigation, route }) {
   }
 
   return (
-    <View style={styles.container}>
-      <MapRoute
-        origin={pickDropDetails?.sender_address?.geo_location}
-        destination={pickDropDetails?.receiver_address?.geo_location}
-        mapContainerView={{ height: hp('48%') }}
-      />
-      <BackBtn onPress={() => {
-        backToHome();
-      }} />
-      <View style={styles.containerDriverTouch}>
-        {/* <View style={styles.topLineView} /> */}
-        <Spacer space={'2%'} />
-        <Formik initialValues={initialValues}>
-          <>
-            <AppInputScroll
-              Pb={hp('25%')}
-              padding={true}
-              keyboardShouldPersistTaps={'handled'}>
-              <View style={{ marginHorizontal: 20, marginTop: '3%' }}>
-                <PickDropLocation
-                  pickUpLocation={pickUpLocation}
-                  dropLocation={dropLocation}
-                  pick={'Pickup location'}
-                  drop={'Drop location'}
-                  onPressPickLocation={onPressPickLocation}
-                  onPressDropLocation={onPressDropLocation}
-                />
-                <View>
-                  <Surface elevation={3} style={styles.rateSurfaceView}>
-                    <View style={styles.surfaceInnerView}>
-                      <Image
-                        resizeMode="cover"
-                        style={styles.rateImage}
-                        source={appImages.rateIcon}
+    <Wrapper
+      edges={['left', 'right', 'bottom']}
+      transparentStatusBar
+    >
+      <View style={styles.container}>
+        <MapRoute
+          origin={pickDropDetails?.sender_address?.geo_location}
+          destination={pickDropDetails?.receiver_address?.geo_location}
+          mapContainerView={{ height: hp('48%') }}
+        />
+        <BackBtn onPress={() => {
+          backToHome();
+        }} />
+        <View style={styles.containerDriverTouch}>
+          {/* <View style={styles.topLineView} /> */}
+          <Spacer space={'2%'} />
+          <Formik initialValues={initialValues}>
+            <>
+              <AppInputScroll
+                Pb={hp('25%')}
+                padding={true}
+                keyboardShouldPersistTaps={'handled'}>
+                <View style={{ marginHorizontal: 20, marginTop: '3%' }}>
+                  <PickDropLocation
+                    pickUpLocation={pickUpLocation}
+                    dropLocation={dropLocation}
+                    pick={'Pickup location'}
+                    drop={'Drop location'}
+                    onPressPickLocation={onPressPickLocation}
+                    onPressDropLocation={onPressDropLocation}
+                  />
+                  <View>
+                    <Surface elevation={3} style={styles.rateSurfaceView}>
+                      <View style={styles.surfaceInnerView}>
+                        <Image
+                          resizeMode="cover"
+                          style={styles.rateImage}
+                          source={appImages.rateIcon}
+                        />
+                        <Text style={styles.rateText}>
+                          {currencyFormat(Number(total))}
+                        </Text>
+                      </View>
+                    </Surface>
+                    <View style={styles.homeSliderView}>
+                      <HomeSlider
+                        data={sliderItems}
+                        imageWidth={wp('92%')}
+                        imageHeight={hp('18%')}
                       />
-                      <Text style={styles.rateText}>
-                        {currencyFormat(Number(total))}
-                      </Text>
                     </View>
-                  </Surface>
-                  <View style={styles.homeSliderView}>
-                    <HomeSlider
-                      data={sliderItems}
-                      imageWidth={wp('92%')}
-                      imageHeight={hp('18%')}
-                    />
                   </View>
                 </View>
+              </AppInputScroll>
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: colors.white,
+                  alignSelf: 'center',
+                  paddingHorizontal: 40,
+                  height: hp('18%'),
+                  bottom: 0.1,
+                  borderTopWidth: 0.3,
+                  borderTopColor: colors.main,
+                }}>
+                <CheckBoxText
+                  data={paymentMethod}
+                  title={'Payment Methods'}
+                  name={'paymentMethods'}
+                  value={initialValues.paymentMethods}
+                />
+                <Spacer space={hp('3.5%')} />
+
+                <BtnForm
+                  onPress={value => {
+                    handleFindRider(value);
+                  }}
+                // onBackPress={() => {
+                //   backToHome();
+                // }}
+                />
               </View>
-            </AppInputScroll>
-            <View
-              style={{
-                position: 'absolute',
-                backgroundColor: colors.white,
-                alignSelf: 'center',
-                paddingHorizontal: 40,
-                height: hp('18%'),
-                bottom: 0.1,
-                borderTopWidth: 0.3,
-                borderTopColor: colors.main,
-              }}>
-              <CheckBoxText
-                data={paymentMethod}
-                title={'Payment Methods'}
-                name={'paymentMethods'}
-                value={initialValues.paymentMethods}
-              />
-              <Spacer space={hp('3.5%')} />
+            </>
+          </Formik>
+        </View>
 
-              <BtnForm
-                onPress={value => {
-                  handleFindRider(value);
-                }}
-              // onBackPress={() => {
-              //   backToHome();
-              // }}
-              />
-            </View>
-          </>
-        </Formik>
-      </View>
-
-      <ModalPopUp
-        isVisible={isPriceModal}
-        onClose={() => {
-          setIsPriceModal(false);
-        }}>
-        <View
-          style={{
-            height: hp('48%'),
-            backgroundColor: colors.white,
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
+        <ModalPopUp
+          isVisible={isPriceModal}
+          onClose={() => {
+            setIsPriceModal(false);
           }}>
-          <View style={{ marginHorizontal: 20 }}>
-            <Text
-              style={{
-                fontSize: RFValue(15),
-                fontFamily: fonts.bold,
-                color: colors.black,
-                marginTop: '5%',
-              }}>
-              Raise your fair
-            </Text>
-            <Text
-              style={{
-                fontSize: RFValue(13),
-                fontFamily: fonts.regular,
-                color: colors.color24,
-                marginTop: '3%',
-                lineHeight: 20,
-              }}>
-              We charge no commission. Full amount goes to the rider
-            </Text>
+          <View
+            style={{
+              height: hp('48%'),
+              backgroundColor: colors.white,
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+            }}>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text
+                style={{
+                  fontSize: RFValue(15),
+                  fontFamily: fonts.bold,
+                  color: colors.black,
+                  marginTop: '5%',
+                }}>
+                Raise your fair
+              </Text>
+              <Text
+                style={{
+                  fontSize: RFValue(13),
+                  fontFamily: fonts.regular,
+                  color: colors.color24,
+                  marginTop: '3%',
+                  lineHeight: 20,
+                }}>
+                We charge no commission. Full amount goes to the rider
+              </Text>
 
-            <Text
-              style={{
-                fontSize: RFValue(32),
-                fontFamily: fonts.semiBold,
-                color: colors.black,
-                marginTop: '5%',
-                textAlign: 'center',
-              }}>
-              {currencyFormat(total)}
-            </Text>
-            <Text
-              style={{
-                fontSize: RFValue(12),
-                fontFamily: fonts.regular,
-                color: colors.black,
-                marginTop: '3%',
-                textAlign: 'center',
-              }}>
-              You can also directly increase the fare
-            </Text>
-            <View style={{ justifyContent: 'center', marginTop: hp('3%') }}>
-              <ProgressBarWithGradient progress={selectedCount} />
-              <View style={styles.sliderView}>
-                <Slider
-                  style={{ width: wp(90), height: hp(5) }}
-                  minimumValue={0}
-                  step={1}
-                  maximumValue={5}
-                  value={fireValue}
-                  onValueChange={val => {
-                    const fixedNum = Number(val?.toFixed(0));
-                    // console.log('val---', fixedNum);
-                    setTimeout(() => {
-                      setFireValue(fixedNum);
-                      if (fireValue < fixedNum) {
-                        onPositive(fixedNum);
-                      } else {
-                        onNegative(fixedNum);
-                      }
-                    });
+              <Text
+                style={{
+                  fontSize: RFValue(32),
+                  fontFamily: fonts.semiBold,
+                  color: colors.black,
+                  marginTop: '5%',
+                  textAlign: 'center',
+                }}>
+                {currencyFormat(total)}
+              </Text>
+              <Text
+                style={{
+                  fontSize: RFValue(12),
+                  fontFamily: fonts.regular,
+                  color: colors.black,
+                  marginTop: '3%',
+                  textAlign: 'center',
+                }}>
+                You can also directly increase the fare
+              </Text>
+              <View style={{ justifyContent: 'center', marginTop: hp('3%') }}>
+                <ProgressBarWithGradient progress={selectedCount} />
+                <View style={styles.sliderView}>
+                  <Slider
+                    style={{ width: wp(90), height: hp(5) }}
+                    minimumValue={0}
+                    step={1}
+                    maximumValue={5}
+                    value={fireValue}
+                    onValueChange={val => {
+                      const fixedNum = Number(val?.toFixed(0));
+                      // console.log('val---', fixedNum);
+                      setTimeout(() => {
+                        setFireValue(fixedNum);
+                        if (fireValue < fixedNum) {
+                          onPositive(fixedNum);
+                        } else {
+                          onNegative(fixedNum);
+                        }
+                      });
+                    }}
+                    thumbTintColor="transparent" // Hide default thumb
+                    minimumTrackTintColor="transparent"
+                    maximumTrackTintColor="transparent"
+                  />
+                  <Image
+                    source={appImages.fareBtn}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      position: 'absolute',
+                      top: -1,
+                      left: (fireValue / 5) * wp(90) - 19, // Dynamically move thumb
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  marginHorizontal: 10,
+                  marginTop: '6%',
+                }}>
+                {priceArray?.map((item, i) => {
+                  return (
+                    <View>
+                      <Text style={styles.priceText}>{item}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  marginHorizontal: 10,
+                  marginTop: '4%',
+                }}>
+                <SvgXml
+                  onPress={() => {
+                    onNegative('-10');
                   }}
-                  thumbTintColor="transparent" // Hide default thumb
-                  minimumTrackTintColor="transparent"
-                  maximumTrackTintColor="transparent"
+                  width={30}
+                  height={30}
+                  xml={appImagesSvg.progessNegative}
                 />
-                <Image
-                  source={appImages.fareBtn}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    position: 'absolute',
-                    top: -1,
-                    left: (fireValue / 5) * wp(90) - 19, // Dynamically move thumb
+                <SvgXml
+                  onPress={() => {
+                    onPositive('+10');
                   }}
-                  resizeMode="contain"
+                  width={30}
+                  height={30}
+                  xml={appImagesSvg.progessPositive}
                 />
               </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                marginHorizontal: 10,
-                marginTop: '6%',
-              }}>
-              {priceArray?.map((item, i) => {
-                return (
-                  <View>
-                    <Text style={styles.priceText}>{item}</Text>
-                  </View>
-                );
-              })}
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                marginHorizontal: 10,
-                marginTop: '4%',
-              }}>
-              <SvgXml
-                onPress={() => {
-                  onNegative('-10');
-                }}
-                width={30}
-                height={30}
-                xml={appImagesSvg.progessNegative}
-              />
-              <SvgXml
-                onPress={() => {
-                  onPositive('+10');
-                }}
-                width={30}
-                height={30}
-                xml={appImagesSvg.progessPositive}
-              />
-            </View>
-            <View style={{ marginTop: '10%' }}>
-              <BTN
-                width={wp('86%')}
-                title={`Book Now for ${currencyFormat(total)}`}
-                textTransform={'capitalize'}
-                onPress={() => {
-                  handlePriceFindRider();
-                }}
-              />
+              <View style={{ marginTop: '10%' }}>
+                <BTN
+                  width={wp('86%')}
+                  title={`Book Now for ${currencyFormat(total)}`}
+                  textTransform={'capitalize'}
+                  onPress={() => {
+                    handlePriceFindRider();
+                  }}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </ModalPopUp>
-    </View>
+        </ModalPopUp>
+      </View>
+    </Wrapper>
   );
 }

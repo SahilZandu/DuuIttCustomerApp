@@ -313,7 +313,7 @@ const PriceDetailsForm = ({ navigation }) => {
           </KeyboardAvoidingView>
 
           <View
-            style={{ backgroundColor: colors.appBackground, height: hp('9%') }}>
+            style={styles.btnBackColor}>
             <FormButton loading={loading} onPress={handlePrice} />
           </View>
         </>
@@ -477,4 +477,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.black85,
   },
+  btnBackColor: {
+    backgroundColor: colors.appBackground,
+    height: hp('10%'),
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

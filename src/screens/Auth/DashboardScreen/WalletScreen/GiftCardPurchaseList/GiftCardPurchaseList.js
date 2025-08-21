@@ -22,6 +22,7 @@ import {
 } from '../../../../../stores/DummyData/Offers';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
 import PurcahseGiftCardListComp from '../../../../../components/PurchaseCardListComp';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
 const GiftCardPurcahseList = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -61,97 +62,108 @@ const GiftCardPurcahseList = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Header
+        <Wrapper
+            edges={['left', 'right']}
+            transparentStatusBar
+            backArrow={true}
+            title={'Gift Cards Purchase'}
+            onPress={() => {
+                navigation.goBack();
+            }}
+            showHeader
+        >
+            <View style={styles.container}>
+                {/* <Header
                 backArrow={true}
                 title={'Gift Cards Purchase'}
                 onPress={() => {
                     navigation.goBack();
                 }}
-            />
-            <AppInputScroll
-                Pb={'25%'}
-                padding={true}
-                keyboardShouldPersistTaps={'handled'}>
-                <View style={styles.main}>
-                    <View style={styles.claimContainerView}>
-                        {purcahseGiftArray?.length > 0 ? (
-                            <View style={styles.mapRenderView}>
-                                {purcahseGiftArray?.map((item, index) => {
+            /> */}
+                <AppInputScroll
+                    Pb={'25%'}
+                    padding={true}
+                    keyboardShouldPersistTaps={'handled'}>
+                    <View style={styles.main}>
+                        <View style={styles.claimContainerView}>
+                            {purcahseGiftArray?.length > 0 ? (
+                                <View style={styles.mapRenderView}>
+                                    {purcahseGiftArray?.map((item, index) => {
+                                        return (
+                                            <PurcahseGiftCardListComp
+                                                item={item}
+                                                index={index}
+                                                onOderDetails={onViewDetails}
+                                            />
+                                        );
+                                    })}
+                                </View>
+
+                            ) : (
+                                <View style={styles.noDataView}>
+                                    <Text style={styles.noDataText}>
+                                        No Purcahse List Available
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    </View>
+                </AppInputScroll>
+                <ModalPopUpTouch
+                    isVisible={isViewDetails}
+                    onOuterClose={() => {
+                        setIsViewDetails(false);
+                    }}>
+                    <View style={styles.modalMainView}>
+                        <Image style={styles.modalImage} source={claimGiftItem?.image} />
+
+                        <View style={styles.modalInnerView}>
+                            <View style={styles.textView}>
+                                <Text style={styles.giftCardDetails}>Gift Card Details</Text>
+                                {claimDetails?.map((item, i) => {
                                     return (
-                                        <PurcahseGiftCardListComp
-                                            item={item}
-                                            index={index}
-                                            onOderDetails={onViewDetails}
-                                        />
+                                        <View style={{ marginHorizontal: -10 }}>
+                                            <DotTextComp
+                                                title={item?.title}
+                                                index={i}
+                                                data={claimDetails}
+                                                amount={item?.amount}
+                                            />
+                                        </View>
                                     );
                                 })}
-                            </View>
-
-                        ) : (
-                            <View style={styles.noDataView}>
-                                <Text style={styles.noDataText}>
-                                    No Purcahse List Available
-                                </Text>
-                            </View>
-                        )}
-                    </View>
-                </View>
-            </AppInputScroll>
-            <ModalPopUpTouch
-                isVisible={isViewDetails}
-                onOuterClose={() => {
-                    setIsViewDetails(false);
-                }}>
-                <View style={styles.modalMainView}>
-                    <Image style={styles.modalImage} source={claimGiftItem?.image} />
-
-                    <View style={styles.modalInnerView}>
-                        <View style={styles.textView}>
-                            <Text style={styles.giftCardDetails}>Gift Card Details</Text>
-                            {claimDetails?.map((item, i) => {
-                                return (
-                                    <View style={{ marginHorizontal: -10 }}>
-                                        <DotTextComp
-                                            title={item?.title}
-                                            index={i}
-                                            data={claimDetails}
-                                            amount={item?.amount}
-                                        />
-                                    </View>
-                                );
-                            })}
-                            <View style={styles.btnView}>
-                                <BTN
-                                    backgroundColor={colors.white}
-                                    labelColor={colors.bottomBarColor}
-                                    width={wp('42')}
-                                    title={'QR code'}
-                                    textTransform={'capitalize'}
-                                    onPress={() => {
-                                        setIsViewDetails(false);
-                                        navigation.navigate('claimGiftQRCode', {
-                                            item: claimGiftItem,
-                                        });
-                                    }}
-                                />
-                                <BTN
-                                    width={wp('42')}
-                                    title={'Claim'}
-                                    textTransform={'capitalize'}
-                                    onPress={() => {
-                                        setIsViewDetails(false);
-                                        navigation.navigate('claimGiftCard', {
-                                            item: claimGiftItem,
-                                        });
-                                    }}
-                                />
+                                <View style={styles.btnView}>
+                                    <BTN
+                                        backgroundColor={colors.white}
+                                        labelColor={colors.bottomBarColor}
+                                        width={wp('42')}
+                                        title={'QR code'}
+                                        textTransform={'capitalize'}
+                                        onPress={() => {
+                                            setIsViewDetails(false);
+                                            navigation.navigate('claimGiftQRCode', {
+                                                item: claimGiftItem,
+                                            });
+                                        }}
+                                    />
+                                    <BTN
+                                        width={wp('42')}
+                                        title={'Claim'}
+                                        textTransform={'capitalize'}
+                                        onPress={() => {
+                                            setIsViewDetails(false);
+                                            navigation.navigate('claimGiftCard', {
+                                                item: claimGiftItem,
+                                            });
+                                        }}
+                                    />
+                                </View>
                             </View>
                         </View>
                     </View>
-                </View>
-            </ModalPopUpTouch>
-        </View>
+                </ModalPopUpTouch>
+            </View>
+        </Wrapper>
     );
 };
 

@@ -447,35 +447,47 @@
 
 
 
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../../components/header/Header';
 import PriceDetailsForm from '../../../forms/PriceDetailsForm';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 
-export default function PriceDetails({navigation}) {
+export default function PriceDetails({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-    },[]),
+    }, []),
   );
 
 
   return (
-    <View style={styles.container}>
-      <Header 
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
       title={'Parcel Details'}
       backArrow={true}
       onPress={() => {
         navigation.goBack();
-      }}/>
-       <PriceDetailsForm navigation={navigation} />
-    </View>
-  ); 
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header 
+      title={'Parcel Details'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}/> */}
+        <PriceDetailsForm navigation={navigation} />
+      </View>
+    </Wrapper>
+  );
 }

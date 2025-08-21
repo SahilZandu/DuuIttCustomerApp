@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
-import {styles} from './styles';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -13,16 +13,17 @@ import Spacer from '../../../../../halpers/Spacer';
 import BTN from '../../../../../components/cta/BTN';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
 
-const ClaimGiftCard = ({navigation, route}) => {
-  const {item} = route.params;
+const ClaimGiftCard = ({ navigation, route }) => {
+  const { item } = route.params;
   const [clainGift, setClaimGift] = useState(item);
 
   useFocusEffect(
-    useCallback(()=>{
+    useCallback(() => {
       handleAndroidBackButton(navigation)
-    },[])
+    }, [])
   )
 
   useEffect(() => {
@@ -43,46 +44,57 @@ const ClaimGiftCard = ({navigation, route}) => {
   ];
 
   return (
-    <View style={styles.main}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      backArrow={true}
+      title={'Claim Gift Card'}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.main}>
+        {/* <Header
         backArrow={true}
         title={'Claim Gift Card'}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
-        <View style={styles.upperMainView}>
-          <GiftCardHappiness item={clainGift} />
+      /> */}
+        <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
+          <View style={styles.upperMainView}>
+            <GiftCardHappiness item={clainGift} />
+          </View>
+          <View style={styles.detailsView}>
+            <Text
+              style={styles.detailsText}>
+              Details
+            </Text>
+            {claimDetails?.map((item, i) => {
+              return (
+                <View style={{ marginHorizontal: -10 }}>
+                  <DotTextComp
+                    title={item?.title}
+                    index={i}
+                    data={claimDetails}
+                    amount={item?.amount}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        </AppInputScroll>
+        <View
+          style={styles.botomBtnView}>
+          <Spacer space={'5%'} />
+          <BTN title={'Back to Gift Cards'}
+            width={wp('90%')}
+            onPress={() => { navigation.goBack() }}
+          />
         </View>
-        <View style={styles.detailsView}>
-          <Text
-            style={styles.detailsText}>
-            Details
-          </Text>
-          {claimDetails?.map((item, i) => {
-            return (
-              <View style={{marginHorizontal: -10}}>
-                <DotTextComp
-                  title={item?.title}
-                  index={i}
-                  data={claimDetails}
-                  amount={item?.amount}
-                />
-              </View>
-            );
-          })}
-        </View>
-      </AppInputScroll>
-      <View
-        style={styles.botomBtnView}>
-        <Spacer space={'5%'} />
-        <BTN title={'Back to Gift Cards'} 
-        width={wp('90%')}
-        onPress={()=>{navigation.goBack()}}
-        />
       </View>
-    </View>
+    </Wrapper>
   );
 };
 

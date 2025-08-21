@@ -1,4 +1,4 @@
-import React, {useCallback,} from 'react';
+import React, { useCallback, } from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,17 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import Header from '../../../../../components/header/Header';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
-import {colors} from '../../../../../theme/colors';
-import {appImages, appImagesSvg} from '../../../../../commons/AppImages';
+import { colors } from '../../../../../theme/colors';
+import { appImages, appImagesSvg } from '../../../../../commons/AppImages';
 import NumberBoxComponent from '../../../../../components/NumberBoxComp';
 import Spacer from '../../../../../halpers/Spacer';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
-const RewardsStars = ({navigation}) => {
+const RewardsStars = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
@@ -80,7 +81,7 @@ const RewardsStars = ({navigation}) => {
     },
   ];
 
-  const RenderItem = ({item, index}) => {
+  const RenderItem = ({ item, index }) => {
     return (
       <View
         style={[
@@ -98,9 +99,8 @@ const RewardsStars = ({navigation}) => {
                 ? item?.completedText?.length > 0
                   ? item?.completedText + ' ' + ' ' + item?.type
                   : item?.type
-                : `${item?.availableCount}${' '}${item?.type}${' '}(${
-                    item?.usedCount
-                  }/${item?.availableCount})`}
+                : `${item?.availableCount}${' '}${item?.type}${' '}(${item?.usedCount
+                }/${item?.availableCount})`}
             </Text>
             <View
               style={[
@@ -142,8 +142,8 @@ const RewardsStars = ({navigation}) => {
                   item?.status == 'completed'
                     ? 'transparent'
                     : item?.status == 'not_available'
-                    ? colors.grey
-                    : colors.main,
+                      ? colors.grey
+                      : colors.main,
               },
             ]}>
             <Text
@@ -163,26 +163,37 @@ const RewardsStars = ({navigation}) => {
   };
 
   return (
-    <View style={styles.main}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      backArrow={true}
+      title={'Reward Stars'}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.main}>
+        {/* <Header
         backArrow={true}
         title={'Reward Stars'}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      <NumberBoxComponent />
-      <Spacer space={'2%'}/>
-      <View style={styles.upperMainView}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={rewardStarList}
-          renderItem={RenderItem}
-          keyExtractor={item => item?.id}
-          contentContainerStyle={{paddingBottom: '10%'}}
-        />
+      /> */}
+        <NumberBoxComponent />
+        <Spacer space={'2%'} />
+        <View style={styles.upperMainView}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={rewardStarList}
+            renderItem={RenderItem}
+            keyExtractor={item => item?.id}
+            contentContainerStyle={{ paddingBottom: '10%' }}
+          />
+        </View>
       </View>
-    </View>
+    </Wrapper>
   );
 };
 

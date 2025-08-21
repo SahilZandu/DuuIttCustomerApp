@@ -11,7 +11,7 @@ const AppInputScroll = ({children,padding,Pb,nestedScrollEnabled,...otherProps})
     useAnimatedScrollView={true}
     style={{flex: 1}}
     contentContainerStyle={{
-      paddingBottom:Pb?Pb:'15%',
+     paddingBottom:Pb?Pb:'15%',
      paddingHorizontal:padding ? 0 : 40,
       flexGrow: 1,
     }}

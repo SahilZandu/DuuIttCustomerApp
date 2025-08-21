@@ -63,7 +63,9 @@ const DashbordScreens = [
   'addRestaurantLocation',
   'about',
   'searchHome',
-
+  'help',
+  'feedback',
+  
 ];
 
 export function setBarColor(screen) {

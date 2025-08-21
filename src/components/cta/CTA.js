@@ -34,7 +34,8 @@ const CTA = ({
       position: isBottom ? 'absolute' : 'relative',
       bottom:bottomCheck?bottomCheck:10,
       borderColor:'#28B056',
-      borderWidth:1
+      borderWidth:1,
+      bottom: isBottom ? hp('3%') : 0,
     }}
     rippleColor={colors.ripleColor}
     labelStyle={{

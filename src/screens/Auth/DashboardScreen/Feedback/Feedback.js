@@ -1,23 +1,24 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-import {Text, View} from 'react-native';
-import {styles} from './styles';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Text, View } from 'react-native';
+import { styles } from './styles';
 import Header from '../../../../components/header/Header';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
-  } from 'react-native-responsive-screen';
-import {useFocusEffect} from '@react-navigation/native';
-import {Formik, useFormikContext} from 'formik';
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import { useFocusEffect } from '@react-navigation/native';
+import { Formik, useFormikContext } from 'formik';
 import InputFieldMultiLine from '../../../../components/InputFieldMultiLine';
 import CTA from '../../../../components/cta/CTA';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import { feedbackValidations } from '../../../../forms/formsValidation/feedbackValidations';
 import { Strings } from '../../../../translates/strings';
 import { rootStore } from '../../../../stores/rootStore';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
-export default function Feedback({navigation}) {
-  const {appFeedback}=rootStore.dashboardStore;
+export default function Feedback({ navigation }) {
+  const { appFeedback } = rootStore.dashboardStore;
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({
     feedback: '',
@@ -29,8 +30,8 @@ export default function Feedback({navigation}) {
     }, []),
   );
 
-  const FormButton = ({loading, onPress}) => {
-    const {dirty, isValid, values} = useFormikContext();
+  const FormButton = ({ loading, onPress }) => {
+    const { dirty, isValid, values } = useFormikContext();
     return (
       <>
         <CTA
@@ -47,51 +48,62 @@ export default function Feedback({navigation}) {
     );
   };
 
-  const handleFeedback = async(values) => {
-    await appFeedback(values,handleLoading,navigation)
+  const handleFeedback = async (values) => {
+    await appFeedback(values, handleLoading, navigation)
   };
 
-  const handleLoading =(v)=>{
+  const handleLoading = (v) => {
     setLoading(v)
   }
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Send Feedback'}
+      backArrow={true}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         onPress={() => {
           navigation.goBack();
         }}
         title={'Send Feedback'}
         backArrow={true}
-          />
-       
+          /> */}
+
         <Formik
-        initialValues={initialValues}
-        validationSchema={feedbackValidations()}
+          initialValues={initialValues}
+          validationSchema={feedbackValidations()}
         >
-        <View style={styles.mainView}>
-         <AppInputScroll padding={true} Pb={hp('15%')}> 
-          <View style={styles.inputView}>
-            <InputFieldMultiLine
-              maxLength={350}
-              inputLabel={''}
-              name={'feedback'}
-              placeholder={'Enter Feedback'}
-            />
-            <Text
-              style={styles.tellAboutText}>
-             {Strings.TellUsLoveAbout}
-            </Text>
+          <View style={styles.mainView}>
+            <AppInputScroll padding={true} Pb={hp('15%')}>
+              <View style={styles.inputView}>
+                <InputFieldMultiLine
+                  maxLength={350}
+                  inputLabel={''}
+                  name={'feedback'}
+                  placeholder={'Enter Feedback'}
+                />
+                <Text
+                  style={styles.tellAboutText}>
+                  {Strings.TellUsLoveAbout}
+                </Text>
+              </View>
+            </AppInputScroll>
+            <View
+              style={styles.bottomBtnView}>
+              <FormButton loading={loading} onPress={handleFeedback} />
+            </View>
           </View>
-          </AppInputScroll>
-          <View
-            style={styles.bottomBtnView}>
-            <FormButton loading={loading} onPress={handleFeedback} />
-          </View>
-          </View>
-      </Formik>
-      
-    </View>
+        </Formik>
+
+      </View>
+    </Wrapper>
   );
 }
 

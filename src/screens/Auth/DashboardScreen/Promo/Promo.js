@@ -22,6 +22,7 @@ import Rewards from './Rewards';
 import NoInternet from '../../../../components/NoInternet';
 import {fetch} from '@react-native-community/netinfo';
 import { silderArray } from '../../../../stores/DummyData/Home';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 
 const tabs = [{text: 'Gift cards'}, {text: 'Rewards'}];
@@ -66,6 +67,10 @@ export default function Promo({navigation}) {
   };
 
   return (
+    <Wrapper
+    edges={['left', 'right']}
+    transparentStatusBar
+  >
     <View style={styles.container}>
       {internet == false ? <NoInternet/> 
       :<> 
@@ -117,5 +122,6 @@ export default function Promo({navigation}) {
       </Formik>
       </>}
     </View>
+    </Wrapper>
   );
 }

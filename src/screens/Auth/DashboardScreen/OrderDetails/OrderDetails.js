@@ -1,38 +1,49 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Text,
   View,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../../../components/header/Header';
 import CardOrderDetails from '../../../../components/CardOrderDetails';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 
 
 
-export default function OrderDetails({navigation, route}) {
-    const {item}=route.params;
+export default function OrderDetails({ navigation, route }) {
+  const { item } = route.params;
 
-    console.log("item===",item);
- 
+  console.log("item===", item);
+
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);
-    },[])
+    }, [])
   )
 
- 
+
 
   return (
-    <View style={styles.container}>
-         <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Order Details'}
+      backArrow={true}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
        onPress={()=>{ 
         // navigation.navigate('tab3', { 
         // tabText: item?.order_type?.toUpperCase() 
@@ -40,8 +51,9 @@ export default function OrderDetails({navigation, route}) {
        navigation.goBack();
       }}
       title={'Order Details'}
-       backArrow={true} />
-      <CardOrderDetails item={item} />
-    </View>
+       backArrow={true} /> */}
+        <CardOrderDetails item={item} />
+      </View>
+    </Wrapper>
   );
 }

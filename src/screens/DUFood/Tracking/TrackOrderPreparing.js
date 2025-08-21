@@ -21,6 +21,7 @@ import socketServices from '../../../socketIo/SocketServices';
 import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import { rootStore } from '../../../stores/rootStore';
 import { useFocusEffect } from '@react-navigation/native';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 export default function TrackOrderPreparing({ navigation, route }) {
@@ -73,17 +74,17 @@ export default function TrackOrderPreparing({ navigation, route }) {
   const getOrderStatusDetailsTitle = (status) => {
     switch (status) {
       case 'waiting_for_confirmation':
-        return 'Waiting for Restaurant Confirm'; 
+        return 'Waiting for Restaurant Confirm';
       case 'cooking':
-        return 'Your Order is Being Cooked'; 
+        return 'Your Order is Being Cooked';
       case 'packing_processing':
-        return 'Packing Your Delicious Order'; 
+        return 'Packing Your Delicious Order';
       case 'ready_to_pickup':
-        return 'Order Ready for Pickup'; 
+        return 'Order Ready for Pickup';
       case 'picked':
-        return 'Rider is On the Way'; 
+        return 'Rider is On the Way';
       default:
-        return 'Your Order Status Updated'; 
+        return 'Your Order Status Updated';
     }
   };
 
@@ -343,144 +344,149 @@ export default function TrackOrderPreparing({ navigation, route }) {
 
 
   return (
-    <View style={styles.container}>
-      <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
-        <View>
-          <View style={styles.restaurantConatiner}>
-            {((origin?.lng && destination?.lng) && orderStep == 2) ? (
-              <MapRoute
-                origin={origin}
-                destination={destination}
-                mapContainerView={{ height: hp('45%') }}
-              />
-            ) : (
-              <FastImage
-                style={styles.topImage}
-                source={
-                  orderStep === 0
-                    ? appImages.preparingFood
-                    : appImages.cookingFood
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+    >
+      <View style={styles.container}>
+        <AppInputScroll padding={true} keyboardShouldPersistTaps={'handled'}>
+          <View>
+            <View style={styles.restaurantConatiner}>
+              {((origin?.lng && destination?.lng) && orderStep == 2) ? (
+                <MapRoute
+                  origin={origin}
+                  destination={destination}
+                  mapContainerView={{ height: hp('45%') }}
+                />
+              ) : (
+                <FastImage
+                  style={styles.topImage}
+                  source={
+                    orderStep === 0
+                      ? appImages.preparingFood
+                      : appImages.cookingFood
 
-                }
-                resizeMode={FastImage.resizeMode.cover}
-              />
-            )}
-            <View style={styles.upperLightGreenView}>
-              <View style={styles.chefTextView}>
-                <Text style={styles.chefText}>
-                  {getOrderStatusDetailsTitle(itemDetails?.status ?? item?.status)}
-                  {/* {orderStep === 1
+                  }
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+              )}
+              <View style={styles.upperLightGreenView}>
+                <View style={styles.chefTextView}>
+                  <Text style={styles.chefText}>
+                    {getOrderStatusDetailsTitle(itemDetails?.status ?? item?.status)}
+                    {/* {orderStep === 1
                     ? 'Chef is cooking the food'
                     : orderStep === 2
                       ? 'Chef prepared the food'
                       : 'Chef is preparing the food'} */}
-                </Text>
-                <Text numberOfLines={2} style={styles.waitingForText}>
-                  {getOrderStatusDetailsDes(itemDetails?.status ?? item?.status)}
-                  {/* {orderStep === 1
+                  </Text>
+                  <Text numberOfLines={2} style={styles.waitingForText}>
+                    {getOrderStatusDetailsDes(itemDetails?.status ?? item?.status)}
+                    {/* {orderStep === 1
                     ? 'Making the best quality food for you'
                     : orderStep === 2
                       ? 'Waiting for the delivery partner for pickup'
                       : 'Making the best quality food for you'} */}
 
-                </Text>
-              </View>
-              <View style={styles.arivalInMainView}>
-                <View style={styles.arivalInView}>
-                  <Text style={styles.arriveInText}>Arival in</Text>
-                  <Text style={styles.mintText}> {arivelTime ?? itemDetails?.arrival_time ?? '0 Min'} </Text>
+                  </Text>
                 </View>
-                <Text style={styles.onTimeView}>On time</Text>
+                <View style={styles.arivalInMainView}>
+                  <View style={styles.arivalInView}>
+                    <Text style={styles.arriveInText}>Arival in</Text>
+                    <Text style={styles.mintText}> {arivelTime ?? itemDetails?.arrival_time ?? '0 Min'} </Text>
+                  </View>
+                  <Text style={styles.onTimeView}>On time</Text>
+                </View>
               </View>
             </View>
-          </View>
 
-          {orderStep === 2 ? (
-            <View style={styles.riderMainView}>
-              <Image
-                resizeMode="cover"
-                source={
-                  (item?.rider && item?.rider?.profile_pic?.length > 0) ? {
-                    uri: Url?.Image_Url + item?.rider?.profile_pic
-                  } :
-                    appImages.avtarImage
+            {orderStep === 2 ? (
+              <View style={styles.riderMainView}>
+                <Image
+                  resizeMode="cover"
+                  source={
+                    (item?.rider && item?.rider?.profile_pic?.length > 0) ? {
+                      uri: Url?.Image_Url + item?.rider?.profile_pic
+                    } :
+                      appImages.avtarImage
+                  }
+                  style={styles.riderImage}
+                />
+                <View style={styles.nameRateView}>
+                  <Text numberOfLines={1} style={styles.riderName}>{itemDetails?.rider?.name}</Text>
+                  <View style={styles.ratingView}>
+                    <SvgXml xml={appImagesSvg.whiteStar} />
+                    <Text style={styles.ratingText}>{(itemDetails?.rider?.riderReviews?.average_rating?.toFixed(1)) ?? 0}</Text>
+                  </View>
+                </View>
+                <View style={styles.phoneMsgImage}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      //  hanldeLinking('email', itemDetails) 
+                      onChat(itemDetails ?? item)
+                    }}
+                    activeOpacity={0.8}>
+                    <Image
+                      resizeMode="contain"
+                      style={{ width: 34, height: 34 }}
+                      source={appImages.chat}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => { hanldeLinking('call', itemDetails) }}
+                    activeOpacity={0.8}>
+                    <SvgXml xml={appImagesSvg.phone} />
+
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View style={styles.getDriverView}>
+                <SvgXml xml={appImagesSvg.bikeSvg} />
+                <View style={styles.getDriverInnerView}>
+                  <Text style={styles.getDriverText}>
+                    You’ll get a driver when food’s almost ready
+                  </Text>
+                  <Text style={styles.youOnTimeText}>
+                    Deliver the food to you on time
+                  </Text>
+                </View>
+                <Image
+                  resizeMode="cover"
+                  style={styles.trackedBikeImage}
+                  source={appImages.trackBikeMap}
+                />
+              </View>
+            )}
+
+            <View style={styles.sliderMainView}>
+              <View style={styles.sliderInnerView}>
+                <FoodSlider
+                  data={sliderItems}
+                  oneCard={true}
+                  imageWidth={wp('90%')}
+                  imageHeight={hp('18%')}
+                />
+              </View>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              activeOpacity={0.8}
+              style={styles.backBtnView}>
+              <SvgXml
+                xml={
+                  orderStep === 2
+                    ? appImagesSvg.backArrow
+                    : appImagesSvg.whitebackArrow
                 }
-                style={styles.riderImage}
               />
-              <View style={styles.nameRateView}>
-                <Text numberOfLines={1} style={styles.riderName}>{itemDetails?.rider?.name}</Text>
-                <View style={styles.ratingView}>
-                  <SvgXml xml={appImagesSvg.whiteStar} />
-                  <Text style={styles.ratingText}>{(itemDetails?.rider?.riderReviews?.average_rating?.toFixed(1)) ?? 0}</Text>
-                </View>
-              </View>
-              <View style={styles.phoneMsgImage}>
-                <TouchableOpacity
-                  onPress={() => {
-                    //  hanldeLinking('email', itemDetails) 
-                    onChat(itemDetails ?? item)
-                  }}
-                  activeOpacity={0.8}>
-                  <Image
-                    resizeMode="contain"
-                    style={{ width: 34, height: 34 }}
-                    source={appImages.chat}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => { hanldeLinking('call', itemDetails) }}
-                  activeOpacity={0.8}>
-                  <SvgXml xml={appImagesSvg.phone} />
-
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.getDriverView}>
-              <SvgXml xml={appImagesSvg.bikeSvg} />
-              <View style={styles.getDriverInnerView}>
-                <Text style={styles.getDriverText}>
-                  You’ll get a driver when food’s almost ready
-                </Text>
-                <Text style={styles.youOnTimeText}>
-                  Deliver the food to you on time
-                </Text>
-              </View>
-              <Image
-                resizeMode="cover"
-                style={styles.trackedBikeImage}
-                source={appImages.trackBikeMap}
-              />
-            </View>
-          )}
-
-          <View style={styles.sliderMainView}>
-            <View style={styles.sliderInnerView}>
-              <FoodSlider
-                data={sliderItems}
-                oneCard={true}
-                imageWidth={wp('90%')}
-                imageHeight={hp('18%')}
-              />
-            </View>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            activeOpacity={0.8}
-            style={styles.backBtnView}>
-            <SvgXml
-              xml={
-                orderStep === 2
-                  ? appImagesSvg.backArrow
-                  : appImagesSvg.whitebackArrow
-              }
-            />
-          </TouchableOpacity>
-        </View>
-      </AppInputScroll>
-    </View>
+        </AppInputScroll>
+      </View>
+    </Wrapper>
   );
 }
 

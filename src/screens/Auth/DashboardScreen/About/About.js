@@ -7,6 +7,7 @@ import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import TouchTextRightIconComp from '../../../../components/TouchTextRightIconComp';
 import { appImagesSvg } from '../../../../commons/AppImages';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 export default function About({ navigation }) {
 
@@ -67,24 +68,35 @@ export default function About({ navigation }) {
 
 
     return (
-        <View style={styles.container}>
-            <Header
+        <Wrapper
+            edges={['left', 'right']}
+            transparentStatusBar
+            bottomLine={true}
+            onPress={() => {
+                navigation.goBack();
+            }}
+            title={'About'}
+            backArrow={true}
+            showHeader
+        >
+            <View style={styles.container}>
+                {/* <Header
                 bottomLine={true}
                 onPress={() => {
                     navigation.goBack();
                 }}
                 title={'About'}
                 backArrow={true}
-            />
-
-            <AppInputScroll
-                Pb={'20%'}
-                padding={true}
-                keyboardShouldPersistTaps={'handled'}>
-                <View style={{ marginHorizontal: 5, justifyContent: 'center' }}>
-                    <TouchTextRightIconComp firstIcon={false} data={aboutOptions} />
-                </View>
-            </AppInputScroll>
-        </View>
+            /> */}
+                <AppInputScroll
+                    Pb={'20%'}
+                    padding={true}
+                    keyboardShouldPersistTaps={'handled'}>
+                    <View style={{ marginHorizontal: 5, justifyContent: 'center' }}>
+                        <TouchTextRightIconComp firstIcon={false} data={aboutOptions} />
+                    </View>
+                </AppInputScroll>
+            </View>
+        </Wrapper>
     );
 }

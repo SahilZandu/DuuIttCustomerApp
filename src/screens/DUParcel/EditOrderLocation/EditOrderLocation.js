@@ -28,6 +28,7 @@ import { filterAddress, getCurrentLocation } from '../../../components/GetAppLoc
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let currentLocation = {
     lat: null,
@@ -104,9 +105,9 @@ const EditOrderLocation = ({ navigation, route }) => {
     const onPressAddress = (data, details) => {
         console.log('data ,details 333', data, details);
         setName(details?.name);
-          const shortAddress = filterAddress(details?.formatted_address)
-            // console.log("shortAddress----",shortAddress);
-            setAddress(shortAddress);
+        const shortAddress = filterAddress(details?.formatted_address)
+        // console.log("shortAddress----",shortAddress);
+        setAddress(shortAddress);
         setGeoLocation(details?.geometry?.location);
         setLocationId(details?.place_id)
     };
@@ -142,18 +143,18 @@ const EditOrderLocation = ({ navigation, route }) => {
         if (
             (newItem?.location_id || newItem?.geo_location) &&
             pickDrop === 'pick' &&
-           (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
-            parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)
-            || newItem?.location_id === orderItem?.receiver_address?.location_id)
+            (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
+                parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)
+                || newItem?.location_id === orderItem?.receiver_address?.location_id)
         ) {
             alert("You can't choose the same location. Please choose another location.");
             return;
         } else if (
             (newItem?.location_id || newItem?.geo_location) &&
             pickDrop !== 'pick' &&
-           ( parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
-            parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)
-            || newItem?.location_id === orderItem?.sender_address?.location_id)
+            (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
+                parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)
+                || newItem?.location_id === orderItem?.sender_address?.location_id)
         ) {
             alert("You can't choose the same location. Please choose another location.");
             return;
@@ -223,30 +224,40 @@ const EditOrderLocation = ({ navigation, route }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Header
+        <Wrapper
+            edges={['left', 'right']}
+            transparentStatusBar
+            title={'Choose On Map Location'}
+            backArrow={true}
+            onPress={() => {
+                navigation.goBack();
+            }}
+            showHeader
+        >
+            <View style={styles.container}>
+                {/* <Header
                 title={'Choose On Map Location'}
                 backArrow={true}
                 onPress={() => {
                     navigation.goBack();
                 }}
-            />
-            <View style={{ flex: 1 }}>
+            /> */}
+                <View style={{ flex: 1 }}>
 
-                <MapLocationRoute
-                    mapContainerView={
-                        Platform.OS == 'ios'
-                            ? { height: screenHeight(70) }
-                            : { height: screenHeight(74) }
-                    }
-                    origin={geoLocation}
-                    onTouchLocation={handleTouchAddress}
-                    height={Platform.OS == 'ios'
-                        ? screenHeight(70)
-                        : screenHeight(74)
-                    }
-                />
-                {/* <MapRoute
+                    <MapLocationRoute
+                        mapContainerView={
+                            Platform.OS == 'ios'
+                                ? { height: screenHeight(70) }
+                                : { height: screenHeight(74) }
+                        }
+                        origin={geoLocation}
+                        onTouchLocation={handleTouchAddress}
+                        height={Platform.OS == 'ios'
+                            ? screenHeight(70)
+                            : screenHeight(74)
+                        }
+                    />
+                    {/* <MapRoute
           mapContainerView={
             Platform.OS == 'ios'
               ? {height: screenHeight(70)}
@@ -254,54 +265,55 @@ const EditOrderLocation = ({ navigation, route }) => {
           }
           origin={geoLocation}
         /> */}
-                <AutoCompleteGooglePlaceHolder
-                    onPressAddress={onPressAddress}
-                    address={address}
-                />
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                        handleCurrentAddress();
-                    }}
-                    style={styles.currentLocTouch}>
-                    <View style={styles.currentLocView}>
-                        <Image
-                            resizeMode="contain"
-                            style={styles.currentLocImage}
-                            source={appImages.currentLocationIcon}
-                        />
-                        <Text style={styles.currentLocText}>Current location</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+                    <AutoCompleteGooglePlaceHolder
+                        onPressAddress={onPressAddress}
+                        address={address}
+                    />
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                            handleCurrentAddress();
+                        }}
+                        style={styles.currentLocTouch}>
+                        <View style={styles.currentLocView}>
+                            <Image
+                                resizeMode="contain"
+                                style={styles.currentLocImage}
+                                source={appImages.currentLocationIcon}
+                            />
+                            <Text style={styles.currentLocText}>Current location</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
 
-            <View style={styles.bottomPopUpContainer}>
-                <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
-                    {!address?.length > 0 ? (
-                        <AnimatedLoader type={'addMyAddress'} />
-                    ) : (
-                        <>
-                            <LocationHistoryCard
-                                bottomLine={true}
-                                item={{ name: name, address: address }}
-                                index={0}
-                                onPress={() => { }}
-                            />
-                            <Spacer space={'12%'} />
-                            <CTA
-                                onPress={() => {
-                                    handleRegionChangeComplete(geoLocation);
-                                }}
-                                title={'Confirm'}
-                                textTransform={'capitalize'}
-                                bottomCheck={10}
-                                loading={loading}
-                            />
-                        </>
-                    )}
+                <View style={styles.bottomPopUpContainer}>
+                    <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
+                        {!address?.length > 0 ? (
+                            <AnimatedLoader type={'addMyAddress'} />
+                        ) : (
+                            <>
+                                <LocationHistoryCard
+                                    bottomLine={true}
+                                    item={{ name: name, address: address }}
+                                    index={0}
+                                    onPress={() => { }}
+                                />
+                                <Spacer space={'12%'} />
+                                <CTA
+                                    onPress={() => {
+                                        handleRegionChangeComplete(geoLocation);
+                                    }}
+                                    title={'Confirm'}
+                                    textTransform={'capitalize'}
+                                    bottomCheck={10}
+                                    loading={loading}
+                                />
+                            </>
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
+        </Wrapper>
     );
 };
 

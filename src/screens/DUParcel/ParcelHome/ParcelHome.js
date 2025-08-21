@@ -26,6 +26,7 @@ import ReviewsRatingComp from '../../../components/ReviewsRatingComp';
 import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute';
 import Spacer from '../../../halpers/Spacer';
+import { Wrapper2 } from '../../../halpers/Wrapper2';
 
 let geoLocation = {
   lat: null,
@@ -205,10 +206,10 @@ export default function ParcelHome({ navigation }) {
 
   useEffect(() => {
     // if (incompletedArray?.length == 0) {
-      const interval = setTimeout(() => {
-        getIncompleteOrder(); // make sure this is a function call
-      }, 4000);
-      return () => clearTimeout(interval); // cleanup
+    const interval = setTimeout(() => {
+      getIncompleteOrder(); // make sure this is a function call
+    }, 4000);
+    return () => clearTimeout(interval); // cleanup
     // }
   }, []);
 
@@ -314,12 +315,27 @@ export default function ParcelHome({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      {internet == false ? (
-        <NoInternet />
-      ) : (
-        <>
-          <DashboardHeader2
+    <Wrapper2
+      edges={['left', 'right']}
+      transparentStatusBar
+      navigation={navigation}
+      onPress={() => {
+        navigation.navigate('dashborad', {
+          screen: 'home', params: {
+            screen: 'tab1',
+          },
+        });
+        // navigation.goBack();
+      }}
+      appUserInfo={appUserInfo}
+      showHeader
+    >
+      <View style={styles.container}>
+        {internet == false ? (
+          <NoInternet />
+        ) : (
+          <>
+            {/* <DashboardHeader2
             navigation={navigation}
             onPress={() => {
               navigation.navigate('dashborad', {
@@ -330,32 +346,32 @@ export default function ParcelHome({ navigation }) {
               // navigation.goBack();
             }}
             appUserInfo={appUserInfo}
-          />
-          <MapCurrentLocationRoute
-            mapContainerView={{ height: hp('30%') }}
-            origin={geoLocation ?? originLocation}
-            isPendingReq={true}
-          />
-          <SearchTextIcon
-            title={'Enter pick up or send location'}
-            onPress={() => {
-              if (incompletedArray?.length > 0) {
-                onPressInCompleteOrder();
-                // navigation.navigate('setLocationHistory');
-              } else {
-                navigation.navigate('setLocationHistory');
-                // navigation.navigate('pickSuccessfully');
-              }
-            }}
-          />
-          <View style={styles.outerScrollView}>
-            <Spacer space={hp('1%')} />
-            <AppInputScroll
-              padding={true}
-              Pb={getHeight(trackedArray, incompletedArray)}
-              keyboardShouldPersistTaps={'handled'}>
-              <View style={styles.imageMainView}>
-                {/* <View>
+          /> */}
+            <MapCurrentLocationRoute
+              mapContainerView={{ height: hp('30%') }}
+              origin={geoLocation ?? originLocation}
+              isPendingReq={true}
+            />
+            <SearchTextIcon
+              title={'Enter pick up or send location'}
+              onPress={() => {
+                if (incompletedArray?.length > 0) {
+                  onPressInCompleteOrder();
+                  // navigation.navigate('setLocationHistory');
+                } else {
+                  navigation.navigate('setLocationHistory');
+                  // navigation.navigate('pickSuccessfully');
+                }
+              }}
+            />
+            <View style={styles.outerScrollView}>
+              <Spacer space={hp('1%')} />
+              <AppInputScroll
+                padding={true}
+                Pb={getHeight(trackedArray, incompletedArray)}
+                keyboardShouldPersistTaps={'handled'}>
+                <View style={styles.imageMainView}>
+                  {/* <View>
               <Text
                 style={{
                   fontSize: RFValue(13),
@@ -400,45 +416,45 @@ export default function ParcelHome({ navigation }) {
                 </>
               )}
             </View> */}
-                <View
-                  style={styles.imageView}>
-                  <Image
-                    resizeMode="contain"
-                    style={{ width: wp('90%'), height: hp('18%') }}
-                    source={appImages.parcelHomeImage}
-                  />
-                </View>
-                {/* <ChangeRoute2
+                  <View
+                    style={styles.imageView}>
+                    <Image
+                      resizeMode="contain"
+                      style={{ width: wp('90%'), height: hp('18%') }}
+                      source={appImages.parcelHomeImage}
+                    />
+                  </View>
+                  {/* <ChangeRoute2
                   data={homeParcelCS}
                   navigation={navigation}
                   route={'PARCEL'}
                 /> */}
-              </View>
-              <View style={styles.bottomImageView}>
-                <Image
-                  resizeMode="contain"
-                  style={styles.bottomImage}
-                  source={appImages.parcelHomeBootmImage}
-                />
-              </View>
-            </AppInputScroll>
-          </View>
+                </View>
+                <View style={styles.bottomImageView}>
+                  <Image
+                    resizeMode="contain"
+                    style={styles.bottomImage}
+                    source={appImages.parcelHomeBootmImage}
+                  />
+                </View>
+              </AppInputScroll>
+            </View>
 
-          {incompletedArray?.length > 0 && (
-            <IncompleteCartComp
-              navigation={navigation}
-              trackedArray={trackedArray}
-              incompletedArray={incompletedArray}
-              onPressComplete={() => {
-                onPressInCompleteOrder();
-              }}
-              // onDeleteRequest={() => {
-              //   setIsDelete(true);
-              // }}
-              title={'Complete your order'}
-            />
-          )}
-          {/* <PopUp
+            {incompletedArray?.length > 0 && (
+              <IncompleteCartComp
+                navigation={navigation}
+                trackedArray={trackedArray}
+                incompletedArray={incompletedArray}
+                onPressComplete={() => {
+                  onPressInCompleteOrder();
+                }}
+                // onDeleteRequest={() => {
+                //   setIsDelete(true);
+                // }}
+                title={'Complete your order'}
+              />
+            )}
+            {/* <PopUp
            topIcon={true}
             visible={isDelete}
             type={'delete'}
@@ -449,29 +465,30 @@ export default function ParcelHome({ navigation }) {
             }
             onDelete={deleteIncompleteOrder}
           /> */}
-          <ReviewsRatingComp
-            //data={{}}
-            data={ratingData}
-            type={'PARCEL'}
-            reviewToRider={true}
-            title={'How was your parcel delivery experience?'}
-            isVisible={isReviewRider}
-            onClose={() => {
-              setIsReviewRider(false);
-            }}
-            loading={loadingRating}
-            onHandleLoading={v => {
-              setLoadingRating(v);
-            }}
-          />
-          {trackedArray?.length > 0 && (
-            <TrackingOrderComp
-              navigation={navigation}
-              trackedArray={trackedArray}
+            <ReviewsRatingComp
+              //data={{}}
+              data={ratingData}
+              type={'PARCEL'}
+              reviewToRider={true}
+              title={'How was your parcel delivery experience?'}
+              isVisible={isReviewRider}
+              onClose={() => {
+                setIsReviewRider(false);
+              }}
+              loading={loadingRating}
+              onHandleLoading={v => {
+                setLoadingRating(v);
+              }}
             />
-          )}
-        </>
-      )}
-    </View>
+            {trackedArray?.length > 0 && (
+              <TrackingOrderComp
+                navigation={navigation}
+                trackedArray={trackedArray}
+              />
+            )}
+          </>
+        )}
+      </View>
+    </Wrapper2>
   );
 }

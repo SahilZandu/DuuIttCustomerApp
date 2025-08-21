@@ -22,6 +22,7 @@ import {
     giftImageArray,
 } from '../../../../../stores/DummyData/Offers';
 import handleAndroidBackButton from '../../../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
 const ClaimGiftCardList = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -75,14 +76,24 @@ const ClaimGiftCardList = ({ navigation }) => {
     };
 
     return (
+        <Wrapper
+            edges={['left', 'right']}
+            transparentStatusBar
+            backArrow={true}
+            title={'Claim Gift Cards'}
+            onPress={() => {
+                navigation.goBack();
+            }}
+            showHeader
+        >
             <View style={styles.container}>
-                <Header
+                {/* <Header
                     backArrow={true}
                     title={'Claim Gift Cards'}
                     onPress={() => {
                         navigation.goBack();
                     }}
-                />
+                /> */}
                 <AppInputScroll
                     Pb={'25%'}
                     padding={true}
@@ -166,6 +177,7 @@ const ClaimGiftCardList = ({ navigation }) => {
                     </View>
                 </ModalPopUpTouch>
             </View>
+        </Wrapper>
     );
 };
 

@@ -1,22 +1,22 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Text,
   View,
   DeviceEventEmitter,
   Image,
 } from 'react-native';
-import {styles} from './styles';
+import { styles } from './styles';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import NoInternet from '../../../../components/NoInternet';
-import {fetch} from '@react-native-community/netinfo';
+import { fetch } from '@react-native-community/netinfo';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
-import {rootStore} from '../../../../stores/rootStore';
+import { rootStore } from '../../../../stores/rootStore';
 import OffersExploreFlatList from '../../../../components/slider/offersExplore';
 import {
   offerExplore,
@@ -26,11 +26,12 @@ import {
 import PromotionsFlatList from '../../../../components/slider/promotionsSlider';
 import TwoTextSlider from '../../../../components/slider/twoTextSlider';
 import { appImages } from '../../../../commons/AppImages';
+import { Wrapper4 } from '../../../../halpers/Wrapper4';
 
 
-export default function Offers({navigation}) {
-  const {appUser} = rootStore.commonStore;
-   const {getCheckDeviceId} = rootStore.dashboardStore;
+export default function Offers({ navigation }) {
+  const { appUser } = rootStore.commonStore;
+  const { getCheckDeviceId } = rootStore.dashboardStore;
   const [internet, setInternet] = useState(true);
   const [exploreArray, setExploreArray] = useState(offerExplore);
   const [promotionArray, setPromotionArray] = useState(offerPromotion);
@@ -45,7 +46,7 @@ export default function Offers({navigation}) {
   );
   const getCheckDevice = async () => {
     await getCheckDeviceId()
-   }
+  }
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab2', event => {
@@ -62,28 +63,37 @@ export default function Offers({navigation}) {
     });
   };
 
-  const onPressExplore =(item)=>{
-    console.log("item--",item);
-    if( item?.title == 'Rewards'){
-    navigation.navigate("rewards")
+  const onPressExplore = (item) => {
+    console.log("item--", item);
+    if (item?.title == 'Rewards') {
+      navigation.navigate("rewards")
     }
-    else if( item?.title == 'Gift Cards'){
+    else if (item?.title == 'Gift Cards') {
       navigation.navigate("giftCard");
     }
-    else if( item?.title == 'Vouchers'){
+    else if (item?.title == 'Vouchers') {
       navigation.navigate("vouchers");
     }
-    else if( item?.title == 'Wallet'){
+    else if (item?.title == 'Wallet') {
       navigation.navigate("wallet");
-    }else{
-      navigation.navigate('rewardsStars') 
+    } else {
+      navigation.navigate('rewardsStars')
       // alert("under processing...")
     }
   }
 
   return (
-    <View style={styles.container}>
-      {/* {internet == false ? (
+    <Wrapper4
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={"Explore"}
+      appUserInfo={appUser}
+      navigation={navigation}
+      showHeader
+    >
+      <View style={styles.container}>
+
+        {/* {internet == false ? (
         <NoInternet />
       ) : (
         <>
@@ -121,9 +131,10 @@ export default function Offers({navigation}) {
             </AppInputScroll>
         </>
       )} */}
-      <Image
-      resizeMode='stretch'
-       style={{height:hp('100%'),width:wp('100%')}} source={appImages.explore2}/>
-    </View>
+        <Image
+          resizeMode='stretch'
+          style={{ height: hp('100%'), width: wp('100%') }} source={appImages.explore2} />
+      </View>
+    </Wrapper4>
   );
 }

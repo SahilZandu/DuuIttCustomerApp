@@ -12,6 +12,7 @@ import { fonts } from '../../../../theme/fonts/fonts';
 import Spacer from '../../../../halpers/Spacer';
 import { colors } from '../../../../theme/colors';
 import { styles } from './styles';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 
 
@@ -69,7 +70,7 @@ export default function Help({ navigation }) {
         "Tap Report Issue and choose the reason (late delivery, payment problem, etc.)",
         "Submit details — our support team will respond within 24 hours.",
       ],
-  
+
     },
     {
       id: 6,
@@ -79,7 +80,7 @@ export default function Help({ navigation }) {
         "Email: support@duuitt.com",
       ],
     },
-  
+
   ];
 
   const onPressDownUp = item => {
@@ -101,14 +102,17 @@ export default function Help({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
-        onPress={() => {
-          navigation.goBack();
-        }}
-        title={'Help'}
-        backArrow={true}
-      />
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Help'}
+      backArrow={true}
+      showHeader
+    >
+
       <InputScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
@@ -169,8 +173,7 @@ export default function Help({ navigation }) {
           );
         })}
       </InputScrollView>
-
-    </View>
+    </Wrapper>
   );
 }
 

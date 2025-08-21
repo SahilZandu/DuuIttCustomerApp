@@ -37,6 +37,7 @@ import {
 import socketServices from '../../../../socketIo/SocketServices';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 import Spacer from '../../../../halpers/Spacer';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 // let item ={}
 export default function Chat({ navigation, route }) {
@@ -306,14 +307,27 @@ export default function Chat({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {(loading == true) &&
+    <Wrapper
+      edges={['left', 'right','bottom',]}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      title={'Chat'}
+      backArrow={true}
+      onPressPhone={() => {
+        hanldeLinking();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {(loading == true) &&
+          <>
+            <Spacer space={hp("7%")} />
+            <AnimatedLoader type={'chatLoader'} />
+          </>}
         <>
-          <Spacer space={hp("7%")} />
-          <AnimatedLoader type={'chatLoader'} />
-        </>}
-      <>
-        <View style={styles.haederView}>
+          {/* <View style={styles.haederView}>
           <Header
             onPress={() => {
               navigation.goBack();
@@ -324,95 +338,95 @@ export default function Chat({ navigation, route }) {
               hanldeLinking();
             }}
           />
-        </View>
+        </View> */}
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? undefined : 'height'}
-          style={{ flex: 1 }} // Adjust paddingTop to header height
-          keyboardVerticalOffset={Platform.OS === 'ios'
-            ? keyboardVisible ? 0 : 0
-            : keyboardVisible ? 40 : 0}
-        >
-          {/* <TouchableWithoutFeedback
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? undefined : 'height'}
+            style={{ flex: 1 }} // Adjust paddingTop to header height
+            keyboardVerticalOffset={Platform.OS === 'ios'
+              ? keyboardVisible ? 0 : 0
+              : keyboardVisible ? (Platform.OS === 'android' && Platform.Version >= 35) ? 100 : 40 : 0}
+          >
+            {/* <TouchableWithoutFeedback
           onPress={Keyboard.dismiss} accessible={false}> */}
-          <View style={{ flex: 1, marginTop: hp('6%') }}>
-            <GiftedChat
-              // renderAvatar={renderAvatar}
-              renderAvatar={null}
-              messages={messages}
-              // onSend={messages => onSend(messages)}
-              user={{
-                _id: 1,
-              }}
-              // renderMessageImage={renderMessageImage}
-              renderBubble={props => {
-                return (
-                  <Bubble
+            <View style={{ flex: 1, marginTop: hp('6%') }}>
+              <GiftedChat
+                // renderAvatar={renderAvatar}
+                renderAvatar={null}
+                messages={messages}
+                // onSend={messages => onSend(messages)}
+                user={{
+                  _id: 1,
+                }}
+                // renderMessageImage={renderMessageImage}
+                renderBubble={props => {
+                  return (
+                    <Bubble
+                      {...props}
+                      textStyle={{
+                        right: styles.rightText,
+                        left: styles.leftText,
+                      }}
+                      wrapperStyle={{
+                        right: styles.rightBoxView,
+                        left: styles.leftBoxView,
+                      }}
+                    />
+                  );
+                }}
+                renderInputToolbar={props => (
+                  <InputToolbar
                     {...props}
-                    textStyle={{
-                      right: styles.rightText,
-                      left: styles.leftText,
-                    }}
-                    wrapperStyle={{
-                      right: styles.rightBoxView,
-                      left: styles.leftBoxView,
-                    }}
-                  />
-                );
-              }}
-              renderInputToolbar={props => (
-                <InputToolbar
-                  {...props}
-                  containerStyle={styles.toolBarView}
-                  textInputStyle={{ color: colors.black }}
-                  renderComposer={composerProps => (
-                    <View
-                      style={styles.inputTextMainView}>
-                      <TextInput
-                        value={inputText}
-                        onChangeText={text => setInputText(text)}
-                        style={styles.inputText}
-                        placeholder='Type a message here....'
-                        multiline={true}
-                      />
-                      <View style={styles.buttonMainView}>
-                        <TouchableOpacity
-                          style={styles.touchMike}
-                          onPress={() => {
-                            setVisible(true)
-                          }}>
-                          <SvgXml xml={appImagesSvg.mikeSvg} width={22} height={22} />
-                        </TouchableOpacity>
-                        <View
-                          style={styles.btnCenterLine}
+                    containerStyle={styles.toolBarView}
+                    textInputStyle={{ color: colors.black }}
+                    renderComposer={composerProps => (
+                      <View
+                        style={styles.inputTextMainView}>
+                        <TextInput
+                          value={inputText}
+                          onChangeText={text => setInputText(text)}
+                          style={styles.inputText}
+                          placeholder='Type a message here....'
+                          multiline={true}
                         />
-                        <TouchableOpacity
-                          style={styles.touchSendBtn}
-                          onPress={() => {
-                            if (inputText?.trim()?.length > 0) {
-                              const newMessage = {
-                                _id: messages?.length + 1,
-                                text: inputText.trim(),
-                                user: {
-                                  _id: 1,
-                                  name: 'Customer',
-                                },
-                                createdAt: new Date(),
-                              };
-                              onSend([newMessage]); // send your message
-                            }
-                            // if (sendProps.text?.trim()) {
-                            //   sendProps.onSend({ text: sendProps.text.trim() }, true);
-                            // }
-                          }}>
-                          <SvgXml
-                            xml={appImagesSvg.sendChat}
-                            width={22}
-                            height={22}
+                        <View style={styles.buttonMainView}>
+                          <TouchableOpacity
+                            style={styles.touchMike}
+                            onPress={() => {
+                              setVisible(true)
+                            }}>
+                            <SvgXml xml={appImagesSvg.mikeSvg} width={22} height={22} />
+                          </TouchableOpacity>
+                          <View
+                            style={styles.btnCenterLine}
                           />
-                        </TouchableOpacity>
-                      </View>
-                      {/* <Composer
+                          <TouchableOpacity
+                            style={styles.touchSendBtn}
+                            onPress={() => {
+                              if (inputText?.trim()?.length > 0) {
+                                const newMessage = {
+                                  _id: messages?.length + 1,
+                                  text: inputText.trim(),
+                                  user: {
+                                    _id: 1,
+                                    name: 'Customer',
+                                  },
+                                  createdAt: new Date(),
+                                };
+                                onSend([newMessage]); // send your message
+                              }
+                              // if (sendProps.text?.trim()) {
+                              //   sendProps.onSend({ text: sendProps.text.trim() }, true);
+                              // }
+                            }}>
+                            <SvgXml
+                              xml={appImagesSvg.sendChat}
+                              width={22}
+                              height={22}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        {/* <Composer
                       {...composerProps}
                       placeholder="Type a message here...." // Custom placeholder text
                       textInputStyle={{
@@ -423,61 +437,62 @@ export default function Chat({ navigation, route }) {
                         paddingVertical: 10,
                       }}
                     /> */}
-                    </View>
-                  )}
-                // renderSend={sendProps => (
-                // <View style={styles.buttonMainView}>
-                //       <TouchableOpacity
-                //         style={styles.touchMike}
-                //         onPress={() => {
-                //           setVisible(true)
-                //         }}>
-                //         <SvgXml xml={appImagesSvg.mikeSvg} width={22} height={22} />
-                //       </TouchableOpacity>
-                //       <View
-                //         style={styles.btnCenterLine}
-                //       />
-                //       <TouchableOpacity
-                //         style={styles.touchSendBtn}
-                //         onPress={() => {
-                //           if (inputText?.trim()?.length > 0) {
-                //             const newMessage = {
-                //               _id: 2,
-                //               text: inputText.trim(),
-                //               user: {
-                //                 _id: 1,
-                //                 name: 'Hello developer',
-                //               },
-                //               createdAt: new Date(),
-                //             };
-                //             onSend([newMessage]); // send your message
-                //           }
-                //           // if (sendProps.text?.trim()) {
-                //           //   sendProps.onSend({ text: sendProps.text.trim() }, true);
-                //           // }
-                //         }}>
-                //         <SvgXml
-                //           xml={appImagesSvg.sendChat}
-                //           width={22}
-                //           height={22}
-                //         />
-                //       </TouchableOpacity>
-                //     </View>
-                // )}
-                />
-              )}
-            />
-          </View>
-          {/* </TouchableWithoutFeedback> */}
-        </KeyboardAvoidingView>
-      </>
-      <MikePopUp
-        visible={visible}
-        title={'Sorry! Didn’t hear that'}
-        text={'Try saying somethings.'}
-        onCancelBtn={onCancel}
-        onSuccessResult={onSuccessResult}
-      />
-    </SafeAreaView>
+                      </View>
+                    )}
+                  // renderSend={sendProps => (
+                  // <View style={styles.buttonMainView}>
+                  //       <TouchableOpacity
+                  //         style={styles.touchMike}
+                  //         onPress={() => {
+                  //           setVisible(true)
+                  //         }}>
+                  //         <SvgXml xml={appImagesSvg.mikeSvg} width={22} height={22} />
+                  //       </TouchableOpacity>
+                  //       <View
+                  //         style={styles.btnCenterLine}
+                  //       />
+                  //       <TouchableOpacity
+                  //         style={styles.touchSendBtn}
+                  //         onPress={() => {
+                  //           if (inputText?.trim()?.length > 0) {
+                  //             const newMessage = {
+                  //               _id: 2,
+                  //               text: inputText.trim(),
+                  //               user: {
+                  //                 _id: 1,
+                  //                 name: 'Hello developer',
+                  //               },
+                  //               createdAt: new Date(),
+                  //             };
+                  //             onSend([newMessage]); // send your message
+                  //           }
+                  //           // if (sendProps.text?.trim()) {
+                  //           //   sendProps.onSend({ text: sendProps.text.trim() }, true);
+                  //           // }
+                  //         }}>
+                  //         <SvgXml
+                  //           xml={appImagesSvg.sendChat}
+                  //           width={22}
+                  //           height={22}
+                  //         />
+                  //       </TouchableOpacity>
+                  //     </View>
+                  // )}
+                  />
+                )}
+              />
+            </View>
+            {/* </TouchableWithoutFeedback> */}
+          </KeyboardAvoidingView>
+        </>
+        <MikePopUp
+          visible={visible}
+          title={'Sorry! Didn’t hear that'}
+          text={'Try saying somethings.'}
+          onCancelBtn={onCancel}
+          onSuccessResult={onSuccessResult}
+        />
+      </View>
+    </Wrapper>
   );
 }

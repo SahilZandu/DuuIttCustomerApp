@@ -1,23 +1,29 @@
 import React from 'react';
-import {View} from 'react-native';
-import {styles} from './styles';
+import { View } from 'react-native';
+import { styles } from './styles';
 import Header from '../../../components/header/Header';
 import SearchingRideForm from '../../../forms/SearchingRideForm';
+import { Wrapper } from '../../../halpers/Wrapper';
 
-const SearchingRide = ({navigation, route}) => {
- 
+const SearchingRide = ({ navigation, route }) => {
+
   return (
-    <View style={styles.container}>
-      {/* <Header
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={''}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
       /> */}
-      <SearchingRideForm navigation={navigation} route={route} screenName={'ride'}/>
+        <SearchingRideForm navigation={navigation} route={route} screenName={'ride'} />
 
-    </View>
+      </View>
+    </Wrapper>
   );
 };
 

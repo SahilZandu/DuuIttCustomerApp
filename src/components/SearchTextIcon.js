@@ -36,8 +36,10 @@ const styles = StyleSheet.create({
   main: {
     position: 'absolute',
     width: wp('100%'),
-    top: '10%',
+    // top: '10%',
+    top: '1%',
   },
+ 
   touch: {
     flexDirection: 'row',
     marginHorizontal: 20,

@@ -11,6 +11,7 @@ import Header from '../../../components/header/Header';
 import { colors } from '../../../theme/colors';
 import { styles } from './styles';
 import { useFocusEffect } from '@react-navigation/native';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 
@@ -42,43 +43,54 @@ export default function MyWebComponent({ navigation, route }) {
   }
 
   useFocusEffect(
-    useCallback(()=>{
+    useCallback(() => {
       handleAndroidBackButton(navigation);
-    },[])
+    }, [])
   )
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      backArrow={true}
+      title={setHeaderText(type)}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         onPress={() => {
           navigation.goBack();
         }}
         backArrow={true}
         title={setHeaderText(type)}
-      />
-      {loading && (
-        <View
-          style={styles.loaderView}>
-          <ActivityIndicator style={{
-            marginTop:
-              Platform.OS === 'ios' ?
-                hp('-20%') : hp('-10%')
-          }} size="large" color={colors.main} />
+      /> */}
+        {loading && (
+          <View
+            style={styles.loaderView}>
+            <ActivityIndicator style={{
+              marginTop:
+                Platform.OS === 'ios' ?
+                  hp('-20%') : hp('-10%')
+            }} size="large" color={colors.main} />
+          </View>
+        )}
+        <View style={styles.webMainView}>
+          <WebView
+            style={{ flex: 1 }}
+            source={{ uri: link }}
+            onLoadStart={() => {
+              setLoading(true);
+            }}
+            onLoadEnd={() => {
+              setLoading(false);
+            }}
+          />
         </View>
-      )}
-      <View style={styles.webMainView}>
-        <WebView
-          style={{ flex: 1 }}
-          source={{ uri: link }}
-          onLoadStart={() => {
-            setLoading(true);
-          }}
-          onLoadEnd={() => {
-            setLoading(false);
-          }}
-        />
       </View>
-    </View>
+    </Wrapper>
   );
 }
 

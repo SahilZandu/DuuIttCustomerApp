@@ -22,6 +22,7 @@ import { rootStore } from '../../../stores/rootStore';
 import { colors } from '../../../theme/colors';
 import { fonts } from '../../../theme/fonts/fonts';
 import { styles } from './styles';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let geoLocation = {
   lat: null,
@@ -340,30 +341,40 @@ const SetLocationHistory = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={'Pick up or send anything'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={'Pick up or send anything'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      <View style={{ flex: 1, marginHorizontal: 20 }}>
-        <PickDropLocation
-          pickUpLocation={pickUpLocation}
-          dropLocation={dropLocation}
-          cancelPickUp={() => {
-            setPickUpLocation(''), setPickDrop('pick'), setSenderAddress({});
-          }}
-          cancelDrop={() => {
-            setDropLocation(''), setPickDrop('drop'), setReceiverAddress({});
-          }}
-          onPressPickLocation={onPressPickLocation}
-          onPressDropLocation={onPressDropLocation}
-          onChangePress={() => { onChangePress() }}
-        />
+      /> */}
+        <View style={{ flex: 1, marginHorizontal: 20 }}>
+          <PickDropLocation
+            pickUpLocation={pickUpLocation}
+            dropLocation={dropLocation}
+            cancelPickUp={() => {
+              setPickUpLocation(''), setPickDrop('pick'), setSenderAddress({});
+            }}
+            cancelDrop={() => {
+              setDropLocation(''), setPickDrop('drop'), setReceiverAddress({});
+            }}
+            onPressPickLocation={onPressPickLocation}
+            onPressDropLocation={onPressDropLocation}
+            onChangePress={() => { onChangePress() }}
+          />
 
-        {/* <View style={styles.currentLocView}>
+          {/* <View style={styles.currentLocView}>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
@@ -379,50 +390,51 @@ const SetLocationHistory = ({ navigation }) => {
           </TouchableOpacity>
         </View> */}
 
-        <View style={styles.middleLineView} />
-        {loading == true ? (
-          <AnimatedLoader type={'locationHistory'} />
-        ) : (
-          <View style={{ marginTop: '1%' }}>
-            {myAddress?.length > 0 ? (
-              <FlatList
-                bounces={false}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: '70%' }}
-                data={myAddress}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-              />
-            ) : (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: hp('25%'),
-                }}>
-                <Text
+          <View style={styles.middleLineView} />
+          {loading == true ? (
+            <AnimatedLoader type={'locationHistory'} />
+          ) : (
+            <View style={{ marginTop: '1%' }}>
+              {myAddress?.length > 0 ? (
+                <FlatList
+                  bounces={false}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: '70%' }}
+                  data={myAddress}
+                  renderItem={renderItem}
+                  keyExtractor={item => item.id}
+                />
+              ) : (
+                <View
                   style={{
-                    fontSize: RFValue(14),
-                    fontFamily: fonts.medium,
-                    color: colors.black,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: hp('25%'),
                   }}>
-                  You haven't set an address yet.
-                </Text>
-              </View>
-            )}
-          </View>
+                  <Text
+                    style={{
+                      fontSize: RFValue(14),
+                      fontFamily: fonts.medium,
+                      color: colors.black,
+                    }}>
+                    You haven't set an address yet.
+                  </Text>
+                </View>
+              )}
+            </View>
 
-        )}
+          )}
+        </View>
+        {(senderAddress?.address?.length > 0 &&
+          receiverAddress?.address?.length > 0) &&
+          <View style={{ backgroundColor: colors.appBackground, height: hp("8%") }}>
+            <Spacer space={'5%'} />
+            <CTA title={'continue'}
+              onPress={() => { navigation.navigate('priceDetails') }}
+            />
+          </View>}
       </View>
-      {(senderAddress?.address?.length > 0 &&
-        receiverAddress?.address?.length > 0) &&
-        <View style={{ backgroundColor: colors.appBackground, height: hp("8%") }}>
-          <Spacer space={'5%'} />
-          <CTA title={'continue'}
-            onPress={() => { navigation.navigate('priceDetails') }}
-          />
-        </View>}
-    </View>
+    </Wrapper>
   );
 };
 

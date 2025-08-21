@@ -447,7 +447,7 @@
 
 
 
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -457,27 +457,28 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import {appImages, appImagesSvg} from '../../../commons/AppImages';
-import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
+import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import { styles } from './styles';
+import { SvgXml } from 'react-native-svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {fonts} from '../../../theme/fonts/fonts';
-import {colors} from '../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../theme/fonts/fonts';
+import { colors } from '../../../theme/colors';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import Header from '../../../components/header/Header';
 import SenderReceiverForm from '../../../forms/SenderReceiverForm';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 
-export default function SenderReceiverDetails({navigation,route}) {
-    const {pickDrop,item}=route.params
+export default function SenderReceiverDetails({ navigation, route }) {
+  const { pickDrop, item } = route.params
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
@@ -486,14 +487,25 @@ export default function SenderReceiverDetails({navigation,route}) {
 
 
   return (
-    <View style={styles.container}>
-      <Header 
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={pickDrop == 'pick' ? 'Sender Details' : 'Receiver Details'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header 
       title={pickDrop == 'pick' ? 'Sender Details':'Receiver Details'}
       backArrow={true}
       onPress={() => {
         navigation.goBack();
-      }}/>
-       <SenderReceiverForm navigation={navigation} route={route}/>
-    </View>
+      }}/> */}
+        <SenderReceiverForm navigation={navigation} route={route} />
+      </View>
+    </Wrapper>
   );
 }

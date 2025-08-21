@@ -36,6 +36,8 @@ import OnlineFoodUnavailable from '../../../components/OnlineFoodUnavailable';
 import DashboardHeader3 from '../../../components/header/DashboardHeader3';
 import { getTodayRestaurantTimings } from '../../../halpers/OpenCloseStatusRestaurant';
 import ReviewsRatingFoodComp from '../../../components/ReviewRatingFoodComp';
+import { Wrapper2 } from '../../../halpers/Wrapper2';
+import { Wrapper3 } from '../../../halpers/Wrapper3';
 
 
 let geoLocation = {
@@ -671,133 +673,158 @@ export default function FoodHome({ navigation }) {
   }
 
   return (
-    <View style={[styles.container]}>
-      {internet == false ? (
-        <NoInternet />
-      ) : ((loading && loadingCategory && loadingRepeat && loadingRecommended)) == true ? (
-        <AnimatedLoader type={'foodHomeLoader'} />
-      ) : (
-        <>
-          <DashboardHeader3
-            navigation={navigation}
-            onPress={() => {
-              navigation.goBack();
-            }}
-            onPressSearch={() => {
-              if (restaurantList?.length > 0) {
-                navigation.navigate("searchHome")
-              } else {
-                alert('Oops! Please choose a location first.')
-                // alert("Location is required. Kindly select a location to continue.")
-              }
-            }}
-            appUserInfo={appUserInfo}
-            // value={searchRes}
-            onChangeText={t => {
-              setSearchRes(t);
-              if (t) {
-                hanldeSearch(t);
-              }
-            }}
-          // onMicroPhone={() => {
-          //   setVisible(true);
-          // }}
-          // onFocus={() => setIskeyboard(true)}
-          // onBlur={() => setIskeyboard(false)}
-          // onCancelPress={() => {
-          //   setSearchRes('');
-          // }}
-          // onRefershData={onRefershData}
-          />
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.mainScreen}
-            stickyHeaderIndices={
-              (repeatOrdersList?.length ?? 0) > 2 &&
-                (recomendedList?.length ?? 0) > 2
-                ? [3]
-                : (repeatOrdersList?.length ?? 0) > 2 ||
+    <Wrapper3
+      edges={['left', 'right']}
+      transparentStatusBar
+      navigation={navigation}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      onPressSearch={() => {
+        if (restaurantList?.length > 0) {
+          navigation.navigate("searchHome")
+        } else {
+          alert('Oops! Please choose a location first.')
+          // alert("Location is required. Kindly select a location to continue.")
+        }
+      }}
+      appUserInfo={appUserInfo}
+      // value={searchRes}
+      onChangeText={t => {
+        setSearchRes(t);
+        if (t) {
+          hanldeSearch(t);
+        }
+      }}
+      showHeader
+    >
+      <View style={[styles.container]}>
+        {internet == false ? (
+          <NoInternet />
+        ) : ((loading && loadingCategory && loadingRepeat && loadingRecommended)) == true ? (
+          <AnimatedLoader type={'foodHomeLoader'} />
+        ) : (
+          <>
+            {/* <DashboardHeader3
+              navigation={navigation}
+              onPress={() => {
+                navigation.goBack();
+              }}
+              onPressSearch={() => {
+                if (restaurantList?.length > 0) {
+                  navigation.navigate("searchHome")
+                } else {
+                  alert('Oops! Please choose a location first.')
+                  // alert("Location is required. Kindly select a location to continue.")
+                }
+              }}
+              appUserInfo={appUserInfo}
+              // value={searchRes}
+              onChangeText={t => {
+                setSearchRes(t);
+                if (t) {
+                  hanldeSearch(t);
+                }
+              }}
+            // onMicroPhone={() => {
+            //   setVisible(true);
+            // }}
+            // onFocus={() => setIskeyboard(true)}
+            // onBlur={() => setIskeyboard(false)}
+            // onCancelPress={() => {
+            //   setSearchRes('');
+            // }}
+            // onRefershData={onRefershData}
+            /> */}
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles.mainScreen}
+              stickyHeaderIndices={
+                (repeatOrdersList?.length ?? 0) > 2 &&
                   (recomendedList?.length ?? 0) > 2
-                  ? [2]
-                  : [1]
-            }
-            // stickyHeaderIndices={[3]}
-            contentContainerStyle={{
-              flexGrow: 1,
-              paddingBottom: hp('5%'),
-            }}>
-            {repeatOrdersList?.length > 2 && (
-              <View style={styles.orderMainView}>
-                <RepeatOrder
-                  data={repeatOrdersList}
-                  onPress={item => {
-                    onPressRepeatOrder(item);
-                  }}
-                  onPressLikeDislike={item => {
-                    handleLikeDislikeRepeated(item);
-                  }}
-                />
-              </View>
-            )}
-
-            {recomendedList?.length > 2 && (
-              <View style={styles.orderMainView}>
-                <RecommendedOrder
-                  data={recomendedList}
-                  onAddDec={handleAddDecRecommended}
-                  handleRecommendedTouch={handleRecommendedTouch}
-                />
-              </View>
-            )}
-
-            <View style={styles.orderMainView}>
-              <CategoryCard data={categoryList} navigation={navigation} />
-            </View>
-
-            <View style={styles.exploreView}>
-              <Text style={styles.titleText}>Top Restaurants to explore</Text>
-              <View style={styles.filterView}>
-                <DashboardFilters
-                  data={filters}
-                  onChange={f => {
-                    // console.log('f>', f);
-                    selectedFilter = f;
-                    getRestaurantFilterList();
-                    // getLocationCurrent();
-                  }}
-                />
-              </View>
-            </View>
-
-            <View style={styles.restaurantMainView}>
-              {restaurantList?.length > 0 ? (
-                <FlatList
-                  scrollEnabled={false}
-                  nestedScrollEnabled={true}
-                  data={restaurantList}
-                  renderItem={topRestaurentItem}
-                  keyExtractor={item => item.id}
-                  onEndReached={loadMoredata}
-                  onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
-                  contentContainerStyle={{
-                    justifyContent: 'center',
-                    paddingBottom:
-                      cartItems?.food_item?.length > 0 ? hp('30%') : hp('20%'),
-                  }}
-                />
-              ) : (
-                <View style={styles.dataFoundView}>
-                  <Text style={styles.dataFoundText}>
-                    There aren't any nearby restaurants at the moment.
-                  </Text>
+                  ? [3]
+                  : (repeatOrdersList?.length ?? 0) > 2 ||
+                    (recomendedList?.length ?? 0) > 2
+                    ? [2]
+                    : [1]
+              }
+              // stickyHeaderIndices={[3]}
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingBottom: hp('5%'),
+              }}>
+              {repeatOrdersList?.length > 2 && (
+                <View style={styles.orderMainView}>
+                  <RepeatOrder
+                    data={repeatOrdersList}
+                    onPress={item => {
+                      onPressRepeatOrder(item);
+                    }}
+                    onPressLikeDislike={item => {
+                      handleLikeDislikeRepeated(item);
+                    }}
+                  />
                 </View>
               )}
-            </View>
+
+              {recomendedList?.length > 2 && (
+                <View style={styles.orderMainView}>
+                  <RecommendedOrder
+                    data={recomendedList}
+                    onAddDec={handleAddDecRecommended}
+                    handleRecommendedTouch={handleRecommendedTouch}
+                  />
+                </View>
+              )}
+
+              <View style={styles.orderMainView}>
+                <CategoryCard data={categoryList} navigation={navigation} />
+              </View>
+
+              <View style={styles.exploreView}>
+                <Text style={styles.titleText}>Top Restaurants to explore</Text>
+                <View style={styles.filterView}>
+                  <DashboardFilters
+                    data={filters}
+                    onChange={f => {
+                      // console.log('f>', f);
+                      selectedFilter = f;
+                      getRestaurantFilterList();
+                      // getLocationCurrent();
+                    }}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.restaurantMainView}>
+                {restaurantList?.length > 0 ? (
+                  <FlatList
+                    scrollEnabled={false}
+                    nestedScrollEnabled={true}
+                    data={restaurantList}
+                    renderItem={topRestaurentItem}
+                    keyExtractor={item => item.id}
+                    onEndReached={loadMoredata}
+                    onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
+                    contentContainerStyle={{
+                      justifyContent: 'center',
+                      paddingBottom:
+                        cartItems?.food_item?.length > 0 ? hp('30%') : hp('20%'),
+                    }}
+                  />
+                ) : (
+                  <View style={styles.dataFoundView}>
+                    <Text style={styles.dataFoundText}>
+                      There aren't any nearby restaurants at the moment.
+                    </Text>
+                  </View>
+                )}
+              </View>
 
 
-          </ScrollView>
-          <View style={styles.restaurantMainView}>
-            {/* <FlatList
+            </ScrollView>
+            <View style={styles.restaurantMainView}>
+              {/* <FlatList
          
             stickyHeaderIndices={[2]}
 
@@ -855,117 +882,118 @@ export default function FoodHome({ navigation }) {
                 cartItems?.food_item?.length > 0 ? hp('35%') : hp('25%'),
             }}
           /> */}
-          </View>
-          {(restaurantShow === true) && <OnlineFoodUnavailable
-            appUserData={appUserInfo}
-            navigation={navigation} />}
+            </View>
+            {(restaurantShow === true) && <OnlineFoodUnavailable
+              appUserData={appUserInfo}
+              navigation={navigation} />}
 
-          <View style={styles.bottomCartBtnView}>
-            {trackedArray?.length > 0 && (
-            <FoodTrackingOrder
-              bottom={cartItems?.food_item?.length > 0 ? hp('18.3%') : hp('8.5%')}
-              navigation={navigation}
-              trackedArray={trackedArray}
-            />
-           )} 
-            {cartItems?.food_item?.length > 0 && (
-              <DashboardCartBtn
-                bottom={hp('8.5%')}
-                isDash={true}
-                cartData={cartItems}
-                onViewCart={() => {
-                  //   navigation.navigate('trackOrderPreparing')
-                  if (cartItems?.restaurant?.timings) {
-                    const openCloseRes = getTodayRestaurantTimings(cartItems?.restaurant?.timings)
-                    if (openCloseRes === "Closed") {
-                      setIsRemoveCart(true);
-                      setOpenCloseItem(true)
-                    } else {
-                      setOpenCloseItem(false)
-                      navigation.navigate('cart', {
-                        restaurant: cartItems?.restaurant,
-                      });
+            <View style={styles.bottomCartBtnView}>
+              {trackedArray?.length > 0 && (
+                <FoodTrackingOrder
+                  bottom={cartItems?.food_item?.length > 0 ? hp('18.3%') : hp('8.5%')}
+                  navigation={navigation}
+                  trackedArray={trackedArray}
+                />
+              )}
+              {cartItems?.food_item?.length > 0 && (
+                <DashboardCartBtn
+                  bottom={hp('8.5%')}
+                  isDash={true}
+                  cartData={cartItems}
+                  onViewCart={() => {
+                    //   navigation.navigate('trackOrderPreparing')
+                    if (cartItems?.restaurant?.timings) {
+                      const openCloseRes = getTodayRestaurantTimings(cartItems?.restaurant?.timings)
+                      if (openCloseRes === "Closed") {
+                        setIsRemoveCart(true);
+                        setOpenCloseItem(true)
+                      } else {
+                        setOpenCloseItem(false)
+                        navigation.navigate('cart', {
+                          restaurant: cartItems?.restaurant,
+                        });
+                      }
                     }
-                  }
 
-                }}
-                onDeletePress={async () => {
-                  // setRemoveCart(true);
-                  // setIsOtherCart(false);
-                  setIsRemoveCart(true);
-                }}
-              />
-            )}
-          </View>
+                  }}
+                  onDeletePress={async () => {
+                    // setRemoveCart(true);
+                    // setIsOtherCart(false);
+                    setIsRemoveCart(true);
+                  }}
+                />
+              )}
+            </View>
 
-        </>
-      )}
-      <MikePopUp
-        visible={visible}
-        title={'Sorry! Didn’t hear that'}
-        text={'Try saying restaurant name or a dish.'}
-        onCancelBtn={onCancel}
-        onSuccessResult={onSuccessResult}
-      />
-      <PopUp
-        topIcon={true}
-        visible={isRemoveCart}
-        type={'delete'}
-        onClose={() => { setIsRemoveCart(false), setOpenCloseItem(false) }}
-        title={'Confirm Cart Clearance'}
-        text={
-          openCloseItem ?
-            "The restaurant you added items from is currently closed. You can clear your cart and choose another restaurant. This action cannot be undone." :
-            'Are you sure you want to remove all items from your cart? This action cannot be undone.'
-        }
-        onDelete={() => {
-          onDeleteCart(true);
-        }}
-      />
+          </>
+        )}
+        <MikePopUp
+          visible={visible}
+          title={'Sorry! Didn’t hear that'}
+          text={'Try saying restaurant name or a dish.'}
+          onCancelBtn={onCancel}
+          onSuccessResult={onSuccessResult}
+        />
+        <PopUp
+          topIcon={true}
+          visible={isRemoveCart}
+          type={'delete'}
+          onClose={() => { setIsRemoveCart(false), setOpenCloseItem(false) }}
+          title={'Confirm Cart Clearance'}
+          text={
+            openCloseItem ?
+              "The restaurant you added items from is currently closed. You can clear your cart and choose another restaurant. This action cannot be undone." :
+              'Are you sure you want to remove all items from your cart? This action cannot be undone.'
+          }
+          onDelete={() => {
+            onDeleteCart(true);
+          }}
+        />
 
-      <PopUp
-        topIcon={true}
-        visible={isRemoveCartOtherRes}
-        type={'delete'}
-        onClose={() => setIsRemoveCartOtherRes(false)}
-        title={'Confirm Cart Clearance'}
-        text={
-          'Other restaurant item is already in your cart. Please remove it.? This action cannot be undone.'
-        }
-        onDelete={() => {
-          onDeleteCartUpdateRest(false);
-        }}
-      />
+        <PopUp
+          topIcon={true}
+          visible={isRemoveCartOtherRes}
+          type={'delete'}
+          onClose={() => setIsRemoveCartOtherRes(false)}
+          title={'Confirm Cart Clearance'}
+          text={
+            'Other restaurant item is already in your cart. Please remove it.? This action cannot be undone.'
+          }
+          onDelete={() => {
+            onDeleteCartUpdateRest(false);
+          }}
+        />
 
-      <ReviewsRatingComp
-        data={ratingData}
-        type={'FOOD'}
-        reviewToRider={true}
-        title={'How was your delivery experience?'}
-        isVisible={isReviewRider}
-        onClose={() => {
-          setIsReviewRider(false),
-            setTimeout(() => {
-              setIsReviewFoodStar(true);
-            }, 500);
+        <ReviewsRatingComp
+          data={ratingData}
+          type={'FOOD'}
+          reviewToRider={true}
+          title={'How was your delivery experience?'}
+          isVisible={isReviewRider}
+          onClose={() => {
+            setIsReviewRider(false),
+              setTimeout(() => {
+                setIsReviewFoodStar(true);
+              }, 500);
 
-        }}
-        loading={loadingRating}
-        onHandleLoading={(v) => {
-          setLoadingRating(v)
-        }}
-      />
-      <ReviewsRatingFoodComp
-        data={ratingData}
-        type={'FOOD'}
-        reviewToRider={false}
-        title={'Did you enjoy your meal?*'}
-        isVisible={isReviewFoodStar}
-        onClose={() => { onCloseFood() }}
-        loading={loadingRating}
-        onHandleLoading={(v) => { onHandleLoadingFood(v) }}
-      />
+          }}
+          loading={loadingRating}
+          onHandleLoading={(v) => {
+            setLoadingRating(v)
+          }}
+        />
+        <ReviewsRatingFoodComp
+          data={ratingData}
+          type={'FOOD'}
+          reviewToRider={false}
+          title={'Did you enjoy your meal?*'}
+          isVisible={isReviewFoodStar}
+          onClose={() => { onCloseFood() }}
+          loading={loadingRating}
+          onHandleLoading={(v) => { onHandleLoadingFood(v) }}
+        />
 
-    </View>
+      </View>
+    </Wrapper3>
   );
 }

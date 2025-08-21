@@ -28,6 +28,7 @@ import { filterAddress, getCurrentLocation, setCurrentLocation } from '../../../
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let currentLocation = {
   lat: null,
@@ -297,30 +298,40 @@ const ChooseMapLocation = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={'Choose On Map Location'}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         title={'Choose On Map Location'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      <View style={{ flex: 1 }}>
+      /> */}
+        <View style={{ flex: 1 }}>
 
-        <MapLocationRoute
-          mapContainerView={
-            Platform.OS == 'ios'
-              ? { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100) }
-              : { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100) }
-          }
-          origin={geoLocation}
-          onTouchLocation={handleTouchAddress}
-          height={Platform.OS == 'ios'
-            ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
-            : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)
-          }
-        />
-        {/* <MapRoute
+          <MapLocationRoute
+            mapContainerView={
+              Platform.OS == 'ios'
+                ? { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100) }
+                : { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100) }
+            }
+            origin={geoLocation}
+            onTouchLocation={handleTouchAddress}
+            height={Platform.OS == 'ios'
+              ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
+              : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)
+            }
+          />
+          {/* <MapRoute
           mapContainerView={
             Platform.OS == 'ios'
               ? {height: screenHeight(70)}
@@ -328,58 +339,59 @@ const ChooseMapLocation = ({ navigation, route }) => {
           }
           origin={geoLocation}
         /> */}
-        <AutoCompleteGooglePlaceHolder
-          onPressAddress={onPressAddress}
-          address={address}
-        />
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => {
-            handleCurrentAddress();
-          }}
-          style={[styles.currentLocTouch, { bottom: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? hp('24%') : hp('4%') }]}>
-          <View style={styles.currentLocView}>
-            <Image
-              resizeMode="contain"
-              style={styles.currentLocImage}
-              source={appImages.currentLocationIcon}
-            />
-            <Text style={styles.currentLocText}>Current location</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      {(pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) &&
-        <View style={styles.bottomPopUpContainer}>
-          <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
-            {!address?.length > 0 ? (
-              <AnimatedLoader type={'addMyAddress'} />
-            ) : (
-              <>
-
-                <LocationHistoryCard
-                  bottomLine={true}
-                  item={{ name: name, address: address }}
-                  index={0}
-                  onPress={() => { }}
-                />
-                <Spacer space={'12%'} />
-                <CTA
-                  loading={loading}
-                  onPress={() => {
-                    // onHandleConfirm();
-                    handleRegionChangeComplete(geoLocation);
-                  }}
-                  title={'Confirm'}
-                  textTransform={'capitalize'}
-                  bottomCheck={10}
-                />
-              </>
-            )}
-          </View>
+          <AutoCompleteGooglePlaceHolder
+            onPressAddress={onPressAddress}
+            address={address}
+          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              handleCurrentAddress();
+            }}
+            style={[styles.currentLocTouch, { bottom: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? hp('24%') : hp('4%') }]}>
+            <View style={styles.currentLocView}>
+              <Image
+                resizeMode="contain"
+                style={styles.currentLocImage}
+                source={appImages.currentLocationIcon}
+              />
+              <Text style={styles.currentLocText}>Current location</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-      }
+        {(pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) &&
+          <View style={styles.bottomPopUpContainer}>
+            <View style={{ paddingHorizontal: 30, marginTop: '3%' }}>
+              {!address?.length > 0 ? (
+                <AnimatedLoader type={'addMyAddress'} />
+              ) : (
+                <>
 
-    </View>
+                  <LocationHistoryCard
+                    bottomLine={true}
+                    item={{ name: name, address: address }}
+                    index={0}
+                    onPress={() => { }}
+                  />
+                  <Spacer space={'12%'} />
+                  <CTA
+                    loading={loading}
+                    onPress={() => {
+                      // onHandleConfirm();
+                      handleRegionChangeComplete(geoLocation);
+                    }}
+                    title={'Confirm'}
+                    textTransform={'capitalize'}
+                    bottomCheck={10}
+                  />
+                </>
+              )}
+            </View>
+          </View>
+        }
+
+      </View>
+    </Wrapper>
   );
 };
 

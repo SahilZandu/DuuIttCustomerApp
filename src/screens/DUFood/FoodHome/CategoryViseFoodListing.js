@@ -28,6 +28,7 @@ import { fonts } from '../../../theme/fonts/fonts';
 import { colors } from '../../../theme/colors';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import PopUp from '../../../components/appPopUp/PopUp';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 let geoLocation = {
   lat: null,
@@ -186,57 +187,67 @@ export default function CategoryViseFoodListing({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
-      {internet == false ? (
-        <NoInternet />
-      ) : (
-        <>
-          <Header
+    <Wrapper
+      edges={['left', 'right','bottom']}
+      transparentStatusBar
+      title={category?.name}
+      backArrow={true}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {internet == false ? (
+          <NoInternet />
+        ) : (
+          <>
+            {/* <Header
             title={category?.name}
             backArrow={true}
             onPress={() => {
               navigation.goBack();
             }}
-          />
-          {loading ? (
-            <AnimatedLoader type={'restaurantCartLoader'} />
-          ) : (
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <View style={styles.innerView}>
-                <View style={styles.filterView}>
-                  <DashboardFilters
-                    onChange={f => {
-                      // filters = f;
-                      // getLocationCurrent();
-                    }}
-                  />
-                </View>
-                <View style={styles.flatListView}>
-                  {relatedRestaurant?.length > 0 ? (
-                    <FlatList
-                      initialNumToRender={20}
-                      showsVerticalScrollIndicator={false}
-                      data={relatedRestaurant}
-                      renderItem={topRestaurentItem}
-                      keyExtractor={item => item?._id}
-                      onEndReached={loadMoredata}
-                      onEndReachedThreshold={0.5}
-                      contentContainerStyle={styles.flatListContainer}
+          /> */}
+            {loading ? (
+              <AnimatedLoader type={'restaurantCartLoader'} />
+            ) : (
+              <View style={{ flex: 1, justifyContent: 'center' }}>
+                <View style={styles.innerView}>
+                  <View style={styles.filterView}>
+                    <DashboardFilters
+                      onChange={f => {
+                        // filters = f;
+                        // getLocationCurrent();
+                      }}
                     />
-                  ) : (
-                    <View style={styles.noDataView}>
-                      <Text style={styles.noDataText}>
-                        There aren't any nearby restaurants at the moment.
-                      </Text>
-                    </View>
-                  )}
+                  </View>
+                  <View style={styles.flatListView}>
+                    {relatedRestaurant?.length > 0 ? (
+                      <FlatList
+                        initialNumToRender={20}
+                        showsVerticalScrollIndicator={false}
+                        data={relatedRestaurant}
+                        renderItem={topRestaurentItem}
+                        keyExtractor={item => item?._id}
+                        onEndReached={loadMoredata}
+                        onEndReachedThreshold={0.5}
+                        contentContainerStyle={styles.flatListContainer}
+                      />
+                    ) : (
+                      <View style={styles.noDataView}>
+                        <Text style={styles.noDataText}>
+                          There aren't any nearby restaurants at the moment.
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-              </View>
 
-              {cartItems?.food_item?.length > 0 && (
-                <View style={styles.bottomCartBtnView}>
-                  {/* pending FoodTrackingOrder functionality */}
-                  {/* <FoodTrackingOrder
+                {cartItems?.food_item?.length > 0 && (
+                  <View style={styles.bottomCartBtnView}>
+                    {/* pending FoodTrackingOrder functionality */}
+                    {/* <FoodTrackingOrder
                 bottom={
                   cartItems?.food_item?.length > 0 ? hp('18.5%') : hp('8%')
                 }
@@ -249,41 +260,42 @@ export default function CategoryViseFoodListing({ navigation, route }) {
                 ]}
               /> */}
 
-                  <DashboardCartBtn
-                    bottom={hp('1%')}
-                    isDash={true}
-                    cartData={cartItems}
-                    onViewCart={
-                      () => {
-                        navigation.navigate('cart', {
-                          restaurant: cartItems?.restaurant,
-                        })
+                    <DashboardCartBtn
+                      bottom={hp('1%')}
+                      isDash={true}
+                      cartData={cartItems}
+                      onViewCart={
+                        () => {
+                          navigation.navigate('cart', {
+                            restaurant: cartItems?.restaurant,
+                          })
+                        }
                       }
-                    }
-                    onDeletePress={async () => {
-                      setIsRemoveCart(true);
-                    }}
-                  />
-                </View>
-              )}
-            </View>
-          )}
-        </>
-      )}
-      <PopUp
-       topIcon={true}
-        visible={isRemoveCart}
-        type={'delete'}
-        onClose={() => setIsRemoveCart(false)}
-        title={'Confirm Cart Clearance'}
-        text={
-          'Are you sure you want to remove all items from your cart? This action cannot be undone.'
-        }
-        onDelete={() => {
-          onDeleteCart(true);
-        }}
-      />
-    </View>
+                      onDeletePress={async () => {
+                        setIsRemoveCart(true);
+                      }}
+                    />
+                  </View>
+                )}
+              </View>
+            )}
+          </>
+        )}
+        <PopUp
+          topIcon={true}
+          visible={isRemoveCart}
+          type={'delete'}
+          onClose={() => setIsRemoveCart(false)}
+          title={'Confirm Cart Clearance'}
+          text={
+            'Are you sure you want to remove all items from your cart? This action cannot be undone.'
+          }
+          onDelete={() => {
+            onDeleteCart(true);
+          }}
+        />
+      </View>
+    </Wrapper>
   );
 }
 

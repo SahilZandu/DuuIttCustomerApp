@@ -41,6 +41,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import FieldErrorMessage from '../../../components/FieldErrorMessage';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 
@@ -49,7 +50,7 @@ let currentLocation = {
     lng: null,
 };
 export default function AddRestaurantLocation({ navigation }) {
-     const {setChangeLiveLocation}=rootStore.foodDashboardStore;
+    const { setChangeLiveLocation } = rootStore.foodDashboardStore;
     const getLocation = type => {
         let d =
             type == 'lat'
@@ -146,12 +147,12 @@ export default function AddRestaurantLocation({ navigation }) {
             geoLocation: geoLocation
         }
         setChangeLiveLocation(data),
-        navigation.goBack();
-        
+            navigation.goBack();
+
     };
 
     const handleCurrentAddress = async () => {
-         setCurrentLocation();
+        setCurrentLocation();
         const addressData = await getGeoCodes(
             currentLocation?.lat,
             currentLocation?.lng,
@@ -186,80 +187,91 @@ export default function AddRestaurantLocation({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Header
+        <Wrapper
+            edges={['left', 'right']}
+            transparentStatusBar
+            title={'Choose Your Location'}
+            backArrow={true}
+            onPress={() => {
+                navigation.goBack();
+            }}
+            showHeader
+        >
+            <View style={styles.container}>
+                {/* <Header
                 title={'Choose Your Location'}
                 backArrow={true}
                 onPress={() => {
                     navigation.goBack();
                 }}
-            />
-            <View style={styles.main}>
-                <View style={{ height: Platform.OS == 'ios' ? hp('66%') : hp('74%'), }}>
-                    <MapLocationRoute
-                        mapContainerView={{
-                            height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
-                        }}
-                        origin={geoLocation}
-                        onTouchLocation={handleTouchAddress}
-                        height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
-                    />
-                    <AutoCompleteGooglePlaceHolder
-                        onPressAddress={onPressAddress}
-                        address={address}
-                    />
-                </View>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                        handleCurrentAddress();
-                    }}
-                    style={styles.currentLocTouch}>
-                    <View style={styles.currentLocView}>
-                        <Image
-                            resizeMode="contain"
-                            style={styles.currentLocImage}
-                            source={appImages.currentLocationIcon}
+            /> */}
+                <View style={styles.main}>
+                    <View style={{ height: Platform.OS == 'ios' ? hp('66%') : hp('74%'), }}>
+                        <MapLocationRoute
+                            mapContainerView={{
+                                height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
+                            }}
+                            origin={geoLocation}
+                            onTouchLocation={handleTouchAddress}
+                            height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
                         />
-                        <Text style={styles.currentLocText}>Current location</Text>
+                        <AutoCompleteGooglePlaceHolder
+                            onPressAddress={onPressAddress}
+                            address={address}
+                        />
                     </View>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                            handleCurrentAddress();
+                        }}
+                        style={styles.currentLocTouch}>
+                        <View style={styles.currentLocView}>
+                            <Image
+                                resizeMode="contain"
+                                style={styles.currentLocImage}
+                                source={appImages.currentLocationIcon}
+                            />
+                            <Text style={styles.currentLocText}>Current location</Text>
+                        </View>
+                    </TouchableOpacity>
 
-                <View style={styles.addressView}>
-                    {!address?.length > 0 ? (
-                        <View>
-                            {loadingAddress == true ? (
-                                <AnimatedLoader type={'addMyAddress'} />
-                            ) : (
-                                <Text style={styles.chooseText}>Please choose location...</Text>
-                            )}
-                        </View>
-                    ) : (
-                        <View style={styles.addressContainView}>
-                            <LocationHistoryCard
-                                bottomLine={true}
-                                item={{
-                                    name: name,
-                                    address: address,
-                                }}
-                                index={0}
-                                onPress={() => { }}
-                            />
-                            <Spacer space={hp('3.5%')} />
-                            <CTA
-                                disable={!(address || name)}
-                                onPress={() => {
-                                    handleConfirm();
-                                }}
-                                title={'Confirm'}
-                                textTransform={'capitalize'}
-                                bottomCheck={10}
-                            />
-                        </View>
-                    )}
+                    <View style={styles.addressView}>
+                        {!address?.length > 0 ? (
+                            <View>
+                                {loadingAddress == true ? (
+                                    <AnimatedLoader type={'addMyAddress'} />
+                                ) : (
+                                    <Text style={styles.chooseText}>Please choose location...</Text>
+                                )}
+                            </View>
+                        ) : (
+                            <View style={styles.addressContainView}>
+                                <LocationHistoryCard
+                                    bottomLine={true}
+                                    item={{
+                                        name: name,
+                                        address: address,
+                                    }}
+                                    index={0}
+                                    onPress={() => { }}
+                                />
+                                <Spacer space={hp('3.5%')} />
+                                <CTA
+                                    disable={!(address || name)}
+                                    onPress={() => {
+                                        handleConfirm();
+                                    }}
+                                    title={'Confirm'}
+                                    textTransform={'capitalize'}
+                                    bottomCheck={10}
+                                />
+                            </View>
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
+        </Wrapper>
     );
 }
 

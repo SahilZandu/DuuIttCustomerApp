@@ -23,6 +23,7 @@ import BTN from '../../../../../components/cta/BTN';
 import DotTextComp from '../../../../../components/DotTextComp';
 import DotTextExpireComp from '../../../../../components/DotTextExpireComp';
 import { currencyFormat } from '../../../../../halpers/currencyFormat';
+import { Wrapper } from '../../../../../halpers/Wrapper';
 
 const data = [
   {
@@ -263,7 +264,7 @@ const { width } = Dimensions.get('window'); // Get device width
 const ITEM_MARGIN = 20; // Space between items
 const ITEM_SIZE = (width - ITEM_MARGIN * 3) / 2; // Ensures two items fit perfectly
 
-let selectedItem ={}
+let selectedItem = {}
 const Rewards = ({ navigation }) => {
   const [isViewDetails, setIsViewDetails] = useState(false);
   const [rewardsList, setRewardsList] = useState(data ?? [])
@@ -299,11 +300,11 @@ const Rewards = ({ navigation }) => {
     <TouchableOpacity
       onPress={() => {
         if (item?.status == 1) {
-           selectedItem=item
+          selectedItem = item
           onClaimRewards();
         } else {
           setIsViewDetails(true);
-           selectedItem=item
+          selectedItem = item
         }
       }}
       activeOpacity={0.8}
@@ -348,107 +349,118 @@ const Rewards = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      backArrow={true}
+      title={'Rewards'}
+      onPress={() => {
+        navigation.goBack();
+      }}
+      showHeader
+    >
+      <View style={styles.container}>
+        {/* <Header
         backArrow={true}
         title={'Rewards'}
         onPress={() => {
           navigation.goBack();
         }}
-      />
-      <View style={styles.flatListView}>
-        {rewardsList?.length > 0 ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={rewardsList}
-            renderItem={RenderItem}
-            keyExtractor={item => item?.id}
-            numColumns={2} // Set 2 columns
-            columnWrapperStyle={{
-              justifyContent: 'space-between',
-              marginHorizontal: ITEM_MARGIN,
-            }}
-            contentContainerStyle={styles.flatListContainerView}
-          />
-        ) : (
-          <View style={styles.noDataView}>
-            <Text style={styles.noDataText}>No Rewards Cards Available</Text>
-          </View>
-        )}
-      </View>
+      /> */}
+        <View style={styles.flatListView}>
+          {rewardsList?.length > 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={rewardsList}
+              renderItem={RenderItem}
+              keyExtractor={item => item?.id}
+              numColumns={2} // Set 2 columns
+              columnWrapperStyle={{
+                justifyContent: 'space-between',
+                marginHorizontal: ITEM_MARGIN,
+              }}
+              contentContainerStyle={styles.flatListContainerView}
+            />
+          ) : (
+            <View style={styles.noDataView}>
+              <Text style={styles.noDataText}>No Rewards Cards Available</Text>
+            </View>
+          )}
+        </View>
 
-      <ModalPopUpTouch
-        isVisible={isViewDetails}
-        onOuterClose={() => {
-          setIsViewDetails(false);
-        }}>
-        <View style={styles.modalMainView}>
-          <View style={styles.mainScrtView}>
-            <Image source={selectedItem?.image} style={styles.modalImage} />
-            {/* <ScratchCard
+        <ModalPopUpTouch
+          isVisible={isViewDetails}
+          onOuterClose={() => {
+            setIsViewDetails(false);
+          }}>
+          <View style={styles.modalMainView}>
+            <View style={styles.mainScrtView}>
+              <Image source={selectedItem?.image} style={styles.modalImage} />
+              {/* <ScratchCard
               brushWidth={100}
               onScratch={handleScratch}
               // strokeColor="#099DB2"
               source={appImages.scratchImage}
               style={styles.modalImagesrct}
             /> */}
-          </View>
-          <View style={styles.modalMainInnerView}>
-            <View style={styles.modalInnerView}>
-              <View style={styles.textView}>
-                <Text style={styles.giftCardDetails}>Voucher Details</Text>
-                {selectedItem?.data?.map((item, i) => {
-                  return (
-                    <View style={{ marginHorizontal: -10 }}>
-                      {(item?.wallet ?? 0) > 0 ||
-                        (item?.coupanCount ?? 0) > 0 ||
-                        (item?.expireDate ?? 0) > 0 ? (
-                        <DotTextExpireComp
-                          item={item}
-                          index={i}
-                          data={selectedItem?.data}
-                        />
-                      ) : (
-                        <DotTextComp
-                          title={item?.title}
-                          index={i}
-                          data={selectedItem?.data}
-                          amount={item?.amount}
-                        />
-                      )}
-                    </View>
-                  );
-                })}
+            </View>
+            <View style={styles.modalMainInnerView}>
+              <View style={styles.modalInnerView}>
+                <View style={styles.textView}>
+                  <Text style={styles.giftCardDetails}>Voucher Details</Text>
+                  {selectedItem?.data?.map((item, i) => {
+                    return (
+                      <View style={{ marginHorizontal: -10 }}>
+                        {(item?.wallet ?? 0) > 0 ||
+                          (item?.coupanCount ?? 0) > 0 ||
+                          (item?.expireDate ?? 0) > 0 ? (
+                          <DotTextExpireComp
+                            item={item}
+                            index={i}
+                            data={selectedItem?.data}
+                          />
+                        ) : (
+                          <DotTextComp
+                            title={item?.title}
+                            index={i}
+                            data={selectedItem?.data}
+                            amount={item?.amount}
+                          />
+                        )}
+                      </View>
+                    );
+                  })}
 
-                <View style={styles.btnView}>
-                  <BTN
-                    backgroundColor={colors.white}
-                    labelColor={colors.bottomBarColor}
-                    width={wp('42')}
-                    title={'QR code'}
-                    textTransform={'capitalize'}
-                    onPress={() => {
-                      setIsViewDetails(false);
-                      navigation.navigate('rewardQRCode', {
-                        item: selectedItem,
-                      });
-                    }}
-                  />
-                  <BTN
-                    width={wp('42')}
-                    title={'Claim'}
-                    textTransform={'capitalize'}
-                    onPress={() => {
-                      onClaimRewards()
-                    }}
-                  />
+                  <View style={styles.btnView}>
+                    <BTN
+                      backgroundColor={colors.white}
+                      labelColor={colors.bottomBarColor}
+                      width={wp('42')}
+                      title={'QR code'}
+                      textTransform={'capitalize'}
+                      onPress={() => {
+                        setIsViewDetails(false);
+                        navigation.navigate('rewardQRCode', {
+                          item: selectedItem,
+                        });
+                      }}
+                    />
+                    <BTN
+                      width={wp('42')}
+                      title={'Claim'}
+                      textTransform={'capitalize'}
+                      onPress={() => {
+                        onClaimRewards()
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-      </ModalPopUpTouch>
-    </View>
+        </ModalPopUpTouch>
+      </View>
+    </Wrapper>
   );
 };
 

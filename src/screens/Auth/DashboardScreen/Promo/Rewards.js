@@ -19,6 +19,7 @@ import {currencyFormat} from '../../../../halpers/currencyFormat';
 import {promoRewards, promoVouchers} from '../../../../stores/DummyData/Promo';
 import {colors} from '../../../../theme/colors';
 import {fonts} from '../../../../theme/fonts/fonts';
+import { Wrapper } from '../../../../halpers/Wrapper';
 
 
 const Rewards = ({navigation}) => {
@@ -46,6 +47,10 @@ const Rewards = ({navigation}) => {
   );
 
   return (
+    <Wrapper
+    edges={['left', 'right']}
+    transparentStatusBar
+  >
     <View style={styles.container}>
       <Text style={styles.rewardsText}>Rewards</Text>
       <RewardsTwoItemComp
@@ -69,6 +74,7 @@ const Rewards = ({navigation}) => {
         </View>
       </View>
     </View>
+    </Wrapper>
   );
 };
 

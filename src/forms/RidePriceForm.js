@@ -42,7 +42,7 @@ const RidePriceForm = ({ navigation }) => {
     }, []),
   );
 
-  
+
 
   console.log('appUser ride --', appUser);
 
@@ -84,7 +84,7 @@ const RidePriceForm = ({ navigation }) => {
         platform_fee: 2,
         gst_fee: 18
       },
-      isSecure:isSecure,
+      isSecure: isSecure,
       order_type: 'ride',
     };
     console.log('newdata--', newdata);
@@ -101,7 +101,7 @@ const RidePriceForm = ({ navigation }) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'pick',
       item: senderAddress,
-      screenName:'priceDetails'
+      screenName: 'priceDetails'
     });
   };
 
@@ -109,7 +109,7 @@ const RidePriceForm = ({ navigation }) => {
     navigation.navigate('chooseMapLocation', {
       pickDrop: 'drop',
       item: receiverAddress,
-      screenName:'priceDetails'
+      screenName: 'priceDetails'
     });
   };
 
@@ -148,7 +148,7 @@ const RidePriceForm = ({ navigation }) => {
               destination={receiverAddress?.geo_location}
               mapContainerView={{ height: Platform.OS == 'ios' ? hp('28%') : hp('28%') }}
             />
-             <Spacer space={hp('2%')}/>
+            <Spacer space={hp('2%')} />
             <View style={{ flex: 1, marginHorizontal: 20, }}>
               <PickDropLocation
                 pickUpLocation={pickUpLocation}
@@ -168,7 +168,7 @@ const RidePriceForm = ({ navigation }) => {
           </AppInputScroll>
         </KeyboardAvoidingView>
 
-        <View style={{ backgroundColor: colors.appBackground, height: hp('9%') }}>
+        <View style={styles.btnBackColor}>
           <FormButton loading={loading} onPress={handlePrice} />
         </View>
       </>
@@ -205,4 +205,14 @@ const RidePriceForm = ({ navigation }) => {
 };
 
 export default RidePriceForm;
+
+const styles = StyleSheet.create({
+  btnBackColor: {
+    backgroundColor: colors.appBackground,
+    height: hp('10%'),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+})
 

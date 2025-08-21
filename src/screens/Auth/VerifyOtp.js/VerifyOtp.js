@@ -1,20 +1,20 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Text, View, KeyboardAvoidingView, Keyboard} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Text, View, KeyboardAvoidingView, Keyboard } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {Strings} from '../../../translates/strings';
+import { Strings } from '../../../translates/strings';
 import Spacer from '../../../halpers/Spacer';
 import CTA from '../../../components/cta/CTA';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import OtpInput from '../../../components/OtpInput';
 import ResendOtp from '../../../components/ResendOtp';
-import {styles} from './styles';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../../../commons/AppImages';
+import { styles } from './styles';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg } from '../../../commons/AppImages';
 import Header from '../../../components/header/Header';
-import {rootStore} from '../../../stores/rootStore';
+import { rootStore } from '../../../stores/rootStore';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 import {
   getHash,
@@ -25,13 +25,15 @@ import {
 } from 'react-native-otp-verify';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
+import { Wrapper } from '../../../halpers/Wrapper';
+import BTN from '../../../components/cta/BTN';
 
 
 
-export default function VerifyOtp({navigation, route}) {
-  const {setToken} = rootStore.commonStore;
-  const {verifyOtp} = rootStore.authStore;
-  const {value, loginType} = route.params;
+export default function VerifyOtp({ navigation, route }) {
+  const { setToken } = rootStore.commonStore;
+  const { verifyOtp } = rootStore.authStore;
+  const { value, loginType } = route.params;
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState(null);
   const [otpBtn, setOtpBtn] = useState(null);
@@ -51,38 +53,38 @@ export default function VerifyOtp({navigation, route}) {
 
   useFocusEffect(
     useCallback(() => {
-     handleAndroidBackButton(navigation);
+      handleAndroidBackButton(navigation);
     }
-    , [])
+      , [])
   )
 
-  
-   // using methods only for android
-    useEffect(() => {
-      if (Platform.OS === 'android') {
+
+  // using methods only for android
+  useEffect(() => {
+    if (Platform.OS === 'android') {
       getHash().then(hash => {
-        console.log('hash>',hash);
+        console.log('hash>', hash);
         // use this hash in the message.
       }).catch(console.log);
-  
+
       startOtpListener(message => {
-        console.log('message>',message);
+        console.log('message>', message);
         if (message.includes('is OTP')) {
-        // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
-        const otp = /(\d{4})/g.exec(message)[1];
-        setOtp(otp);
-        setOtpBtn(otp)
+          // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
+          const otp = /(\d{4})/g.exec(message)[1];
+          setOtp(otp);
+          setOtpBtn(otp)
         }
       });
-  
+
       getOtp().then(pp => {
-        console.log('getOtp>',pp);
+        console.log('getOtp>', pp);
         // use this hash in the message.
       }).catch(console.log);
-  
+
       return () => removeListener();
     }
-    }, []);
+  }, []);
 
   const handleTextChange = t => {
     console.log('triger handle change:-', t);
@@ -93,16 +95,15 @@ export default function VerifyOtp({navigation, route}) {
     }
   };
 
-  const FormButton = ({loading, onPress}) => {
+  const FormButton = ({ loading, onPress }) => {
     return (
-      <CTA
+      <BTN
         disable={(otp?.length != 4 || otpBtn?.length != 4)}
         title={Strings.verify}
         onPress={() => {
           onPress(otpBtn);
         }}
         loading={loading}
-        theme={'primary'}
         isBottom={true}
       />
     );
@@ -132,7 +133,7 @@ export default function VerifyOtp({navigation, route}) {
 
 
   const handleResendLoading = v => {
-    console.log("handleResendLoading",v);
+    console.log("handleResendLoading", v);
     // setLoading(v);
   };
 
@@ -144,22 +145,31 @@ export default function VerifyOtp({navigation, route}) {
   };
 
   return (
-    <View style={styles.screen}>
-      <Header
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+      onPress={() => {
+        navigation.goBack();
+      }}
+      backArrow={true}
+      showHeader
+    >
+      <View style={styles.screen}>
+        {/* <Header
         onPress={() => {
           navigation.goBack();
         }}
         backArrow={true}
-      />
-      <KeyboardAvoidingView
-        style={styles.keyboradView}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <AppInputScroll
-          pb={0}
-          padding={true}
-          keyboardShouldPersistTaps={'handled'}>
-          <View style={styles.mainContainer}>
-            {/* <View style={styles.imageTextView}>
+      /> */}
+        <KeyboardAvoidingView
+          style={styles.keyboradView}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <AppInputScroll
+            pb={0}
+            padding={true}
+            keyboardShouldPersistTaps={'handled'}>
+            <View style={styles.mainContainer}>
+              {/* <View style={styles.imageTextView}>
               <SvgXml xml={appImagesSvg.logoIcon} />
               <Text style={styles.varificationText}>
                 {Strings.verification}
@@ -176,37 +186,37 @@ export default function VerifyOtp({navigation, route}) {
                 }`}
               </Text>
             </View> */}
-            <AuthScreenContent
-              marginTop={'25%'}
-              title={Strings.verification}
-              subTitle={`${Strings.otpVerificationText} ${
-                loginType == 'Mobile'
+              <AuthScreenContent
+                marginTop={'25%'}
+                title={Strings.verification}
+                subTitle={`${Strings.otpVerificationText} ${loginType == 'Mobile'
                   ? Strings.phoneNumber
                   : Strings.emailAddress
-              } ${
-                loginType == 'Mobile' ? mobileEmail?.mobile : mobileEmail?.email
-              }`}
-            />
+                  } ${loginType == 'Mobile' ? mobileEmail?.mobile : mobileEmail?.email
+                  }`}
+              />
 
-            <Spacer space={'2%'} />
-            <OtpInput
-              value={otp}
-              clearData={clearData}
-              handleTextChange={handleTextChange}
-            />
-            <Spacer space={'5%'} />
-            <ResendOtp
-              value={mobileEmail}
-              type={loginType}
-              onResendClear={onResendClear}
-              handleLoading={handleResendLoading}
-            />
-            <View style={{marginTop: '30%'}}>
+              <Spacer space={'2%'} />
+              <OtpInput
+                value={otp}
+                clearData={clearData}
+                handleTextChange={handleTextChange}
+              />
+              <Spacer space={'5%'} />
+              <ResendOtp
+                value={mobileEmail}
+                type={loginType}
+                onResendClear={onResendClear}
+                handleLoading={handleResendLoading}
+              />
+            </View>
+            <View style={{ marginTop: hp('12%') }}>
               <FormButton loading={loading} onPress={handleVerify} />
             </View>
-          </View>
-        </AppInputScroll>
-      </KeyboardAvoidingView>
-    </View>
+          </AppInputScroll>
+
+        </KeyboardAvoidingView>
+      </View>
+    </Wrapper>
   );
 }
