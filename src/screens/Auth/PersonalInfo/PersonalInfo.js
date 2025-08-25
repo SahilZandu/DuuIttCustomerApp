@@ -24,6 +24,7 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import { rootStore } from '../../../stores/rootStore';
 import socketServices from '../../../socketIo/SocketServices';
 import { colors } from '../../../theme/colors';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 
 

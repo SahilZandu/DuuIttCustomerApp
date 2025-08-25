@@ -131,7 +131,7 @@ export default function FavoriteRestaurant({ navigation }) {
           <View style={styles.flatListView}>
             {likeRestaurant?.length > 0 ? (
               <FlatList
-                showsVerticalScrollIndicator={favoriteRestaurantList}
+                showsVerticalScrollIndicator={false}
                 data={likeRestaurant}
                 renderItem={renderItem}
                 keyExtractor={item => item._id}
