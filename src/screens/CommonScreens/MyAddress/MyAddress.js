@@ -77,9 +77,11 @@ export default function MyAddress({ navigation, route }) {
   };
 
   const onSuccess = () => {
+     getAppUser();
     myAddress.splice(isDeleteIndex, 1);
     setMyAddress([...myAddress]);
     setIsDelete(false);
+ 
   };
 
   const handleLoading = v => {

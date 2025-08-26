@@ -104,9 +104,6 @@ const Cart = ({ navigation, route }) => {
       const { appUser } = rootStore.commonStore;
       handleAndroidBackButton(navigation);
       getUserCart();
-      // if (restaurant) {
-      //   getCompMealList();
-      // }
       setDeliveryAddress(
         selectedAddress?.address?.length > 0
           ? selectedAddress
@@ -174,7 +171,7 @@ const Cart = ({ navigation, route }) => {
 
   useEffect(() => {
     if (restaurant) {
-      getCompMealList();
+      // getCompMealList();
     }
   }, [restaurant]);
 
@@ -461,7 +458,7 @@ const Cart = ({ navigation, route }) => {
         setMissedSomeList([]);
       }
     } else {
-      getCompMealList();
+      // getCompMealList();
     }
   };
 
@@ -657,7 +654,7 @@ const Cart = ({ navigation, route }) => {
 
   return (
     <Wrapper
-      edges={['left', 'right','bottom']}
+      edges={['left', 'right', 'bottom']}
       transparentStatusBar
       title={'Cart'}
       backArrow={true}
@@ -700,15 +697,6 @@ const Cart = ({ navigation, route }) => {
               saveInstructions(action, data, appCart?.org_id, onSucces);
             }}
           /> */}
-          {completeMealList?.length > 0 && (
-            <View style={styles.completeMealWithView}>
-              <Text style={styles.titleText}>Complete your meal with</Text>
-              <View style={styles.comMealListView}>
-                {CompletedMealOrderList()}
-              </View>
-            </View>
-          )}
-
           {offerList?.length > 0 && (
             <CartCoupanApply
               item={activeOffer?.referral_code ? activeOffer : offerList[0]}
@@ -730,6 +718,14 @@ const Cart = ({ navigation, route }) => {
               getCartTotal={cartBillG}
             />
           )}
+           {completeMealList?.length > 0 && (
+            <View style={styles.completeMealWithView}>
+              <Text style={styles.titleText}>Complete your meal with</Text>
+              <View style={styles.comMealListView}>
+                {CompletedMealOrderList()}
+              </View>
+            </View>
+          )}
           {missedSomeList?.length > 0 && (
             <View style={styles.addNowView}>
               <Text style={styles.titleText}>Missed something? Add now</Text>
@@ -743,12 +739,12 @@ const Cart = ({ navigation, route }) => {
               address={
                 deliveryAddress?.title?.length > 0
                   ? `Delivery at ${deliveryAddress?.title}`
-                  : 'Add loaction'
+                  : 'Add location'
               }
               locationAddress={
                 deliveryAddress?.address?.length > 0
                   ? deliveryAddress?.address
-                  : 'Please add delivert loacation first'
+                  : 'Please add delivery location first'
               }
               onAddInstruction={() => {
                 setIsInstruction(!isInstruction);
@@ -760,7 +756,7 @@ const Cart = ({ navigation, route }) => {
               isPlaying={isPlaying}
               audioInstuctions={'Audio Instuctions'}
               nameWithNumber={`${appUser?.name}, +91-${appUser?.phone}`}
-              number={`+91-${deliveryAddress?.phone}`}
+              number={`+91-${deliveryAddress?.phone ?? appUser?.phone}`}
               onBillDetails={() => {
                 setIsBillDetail(!isBillDetail);
               }}

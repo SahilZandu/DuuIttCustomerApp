@@ -120,6 +120,7 @@ export const agent = {
   updatePassword: body => requests.post(Url.updatePassword, body),
   myAddress: body => requests.post(Url.myAddress, body),
   getMyAddress: () => requests.get(Url.getMyAddress),
+  getAppUser: () => requests.get(Url.getAppUser),
   parcelsRides: body => requests.post(Url.parcelsRides, body),
   foodReorder : body => requests.post(Url.foodReorder, body),
   editParcelsRides: (body, orderId) => requests.post(`${Url.editParcelsRides}/${orderId?.order_id}`, body),

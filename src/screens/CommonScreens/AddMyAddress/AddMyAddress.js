@@ -93,7 +93,7 @@ export default function AddMyAddress({ navigation, route }) {
       setCurrentLocation();
       setMpaDaltaInitials();
       handleAndroidBackButton(navigation);
-      if (type == 'add') {
+      if (type == 'add' && !data) {
         getCurrentAddress();
       }
     }, [type]),
@@ -107,14 +107,16 @@ export default function AddMyAddress({ navigation, route }) {
   ];
 
   useEffect(() => {
-    if (data) {
+    if (data?.address?.length > 0) {
+      setTimeout(() => {
       console.log('data---', data);
       const nameData = data?.address?.split(',');
-      setGeoLocation(data?.geo_location);
-      setAddress(data?.address);
-      setLocationId(data?.location_id);
+      setGeoLocation(data?.geo_location ?? {});
+      
+      setAddress(data?.address ?? '');
+      setLocationId(data?.location_id ?? '');
       setName(nameData[0]);
-      setTitle(data?.title);
+      setTitle(data?.title ?? 'Home');
       setInitialValues({
         name: data?.name,
         phone: data?.phone?.toString(),
@@ -122,7 +124,15 @@ export default function AddMyAddress({ navigation, route }) {
         landmark: data?.landmark,
         id: data?._id,
       });
-      setVisible(true)
+        // handleTouchAddress({
+        //   latitude: data?.geo_location?.lat ?? getLocation('lat'),
+        //   longitude: data?.geo_location?.lng ?? getLocation('lng'),
+        // })
+
+        setVisible(true)
+      },600);
+     
+    
     }
     else {
       setGeoLocation({
@@ -543,7 +553,7 @@ export default function AddMyAddress({ navigation, route }) {
 
   return (
     <Wrapper
-      edges={['left', 'right','bottom']}
+      edges={['left', 'right', 'bottom']}
       transparentStatusBar
       title={type == 'add' ? 'Add My Address' : 'Update My Address'}
       backArrow={true}
@@ -575,7 +585,7 @@ export default function AddMyAddress({ navigation, route }) {
                 height: Platform.OS == 'ios' ? hp('66%') : hp('74%'),
               }}
               origin={geoLocation}
-              onTouchLocation={handleTouchAddress}
+              onTouchLocation={(loaction) => { handleTouchAddress(loaction) }}
               height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
             />
             {/* </>} */}

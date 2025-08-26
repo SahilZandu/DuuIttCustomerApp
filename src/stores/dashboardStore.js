@@ -627,7 +627,7 @@ export default class DashboardStore {
       const m = error?.data?.message
         ? error?.data?.message
         : 'Something went wrong';
-      useToast(m, 0);
+      // useToast(m, 0);
       return []
     }
 

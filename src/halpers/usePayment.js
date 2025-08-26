@@ -45,7 +45,7 @@ import { colors } from "../theme/colors";
 
 export async function usePayment(data, onSuccess, onError) {
   const { appUser } = rootStore.commonStore;
-  const { paymentsCreateOrder,paymentsVerify } = rootStore.dashboardStore;
+  const { paymentsCreateOrder, paymentsVerify } = rootStore.dashboardStore;
   const totalPriceOrder = data?.topay
   const totalPrice = data?.topay * 100; // Convert to paise
 
@@ -63,18 +63,18 @@ export async function usePayment(data, onSuccess, onError) {
       image: "https://duuitt.hashsoft.io/public/duuitt/app_icon.png",
       currency: "INR",
       key: "rzp_test_xsRy9RU40sgsGW", // Razorpay Key
-      amount: totalPrice.toFixed(0),
+      amount: totalPrice?.toFixed(2),
       name: "Duuitt",
       order_id: orderId, // Pass Order ID
       prefill: {
-        email:appUser?.email,
-        contact: appUser?.mobile,
+        email: appUser?.email,
+        contact: appUser?.phone,
         name: appUser?.name,
       },
-      theme: { color:colors.main},
+      theme: { color: colors.main },
     };
     console.log("options---", options);
-    
+
     RazorpayCheckout.open(options)
       .then(async data => {
         console.log('payment success:-', data);
@@ -103,6 +103,6 @@ export async function usePayment(data, onSuccess, onError) {
     return;
   }
 
-  
+
 }
 

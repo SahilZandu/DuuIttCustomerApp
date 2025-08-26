@@ -70,7 +70,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   const [senderLocation, setSenderLocation] = useState({});
   const [destination, setDestination] = useState({});
   const [riderDest, setRiderDest] = useState({});
-  const [parcelInfo, setParcelInfo] = useState(addParcelInfo);
+  const [parcelInfo, setParcelInfo] = useState(addParcelInfo ?? {});
   const [cancelReason, setCancelReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [riderLoading, setRiderLoading] = useState(false);
@@ -196,7 +196,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       if (data?.order_type == 'parcel') {
         setTimeout(() => {
           onChat();
-        },500)
+        }, 500)
 
       }
     });
@@ -212,7 +212,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
 
   useEffect(() => {
-    if (Object?.keys(parcelInfo)?.length > 0) {
+    if (Object?.keys(parcelInfo ?? addParcelInfo)?.length > 0) {
       setSenderLocation(parcelInfo?.sender_address?.geo_location);
       setDestination(parcelInfo?.receiver_address?.geo_location);
       setRiderDest(parcelInfo?.rider?.geo_location);
@@ -231,7 +231,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         }
       }, 1000);
     }
-  }, []);
+  }, [addParcelInfo, parcelInfo]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -549,7 +549,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   };
 
   const onChat = () => {
-    navigation.navigate("chat", { item: parcelInfo ?? addParcelInfo})
+    navigation.navigate("chat", { item: parcelInfo ?? addParcelInfo })
   }
 
   const openMap = (riderDest, destination, label) => {

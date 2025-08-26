@@ -15,6 +15,7 @@ export default {
     updatePassword: 'customers/update-password',
     myAddress: 'customers/address',
     getMyAddress: 'customers/detail',
+    getAppUser: 'customers/detail',
     parcelsRides: 'orders',
     foodReorder :"cart/reorder-from-order",
     editParcelsRides: "orders/update-order-details",

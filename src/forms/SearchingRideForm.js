@@ -652,7 +652,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   const [senderLocation, setSenderLocation] = useState({});
   const [destination, setDestination] = useState({});
   const [riderDest, setRiderDest] = useState({});
-  const [parcelInfo, setParcelInfo] = useState(addParcelInfo);
+  const [parcelInfo, setParcelInfo] = useState(addParcelInfo ?? {});
   const [cancelReason, setCancelReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [riderLoading, setRiderLoading] = useState(false);
@@ -777,6 +777,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       if (data?.order_type == 'ride') {
         setParcelInfo(data);
         setAddParcelInfo(data);
+        setSearchArrive('arrive');
         if (screenName == 'parcel') {
           navigation.navigate('pickSuccessfully');
           setSearchArrive('search');
@@ -875,7 +876,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
 
   useEffect(() => {
-    if (Object?.keys(parcelInfo)?.length > 0) {
+    if (Object?.keys(parcelInfo ?? addParcelInfo)?.length > 0) {
       setSenderLocation(parcelInfo?.sender_address?.geo_location);
       setDestination(parcelInfo?.receiver_address?.geo_location);
       setRiderDest(parcelInfo?.rider?.geo_location);
@@ -898,7 +899,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         }
       }, 1000);
     }
-  }, []);
+  }, [addParcelInfo,parcelInfo]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

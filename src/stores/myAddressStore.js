@@ -1,7 +1,7 @@
-import {action, computed, decorate, observable, runInAction} from 'mobx';
-import {agent} from '../api/agent';
-import {rootStore} from './rootStore';
-import {useToast} from '../halpers/useToast';
+import { action, computed, decorate, observable, runInAction } from 'mobx';
+import { agent } from '../api/agent';
+import { rootStore } from './rootStore';
+import { useToast } from '../halpers/useToast';
 
 export default class MyAddressStore {
   getAddress = [];
@@ -22,32 +22,32 @@ export default class MyAddressStore {
   ) => {
     handleLoading(true);
     let requestData = {}
-    if(type == 'add') {
-    requestData = {
+    if (type == 'add') {
+      requestData = {
         title: title,
-      name: values?.name,
-      phone: Number(values?.phone),
-      address: address,
-      address_detail: values?.house,
-      geo_location: geoLocation,
-      location_id: loactionId,
-      landmark: values?.landmark,
-      type: type,
-    };
-  }else{
-    requestData = {
-      _id: values?.id,
-      title: title,
-      name: values?.name,
-      phone: Number(values?.phone),
-      address: address,
-      address_detail: values?.house,
-      geo_location: geoLocation,
-      location_id: loactionId,
-      landmark: values?.landmark,
-      type: type,
-    };
-  }
+        name: values?.name,
+        phone: Number(values?.phone),
+        address: address,
+        address_detail: values?.house,
+        geo_location: geoLocation,
+        location_id: loactionId,
+        landmark: values?.landmark,
+        type: type,
+      };
+    } else {
+      requestData = {
+        _id: values?.id,
+        title: title,
+        name: values?.name,
+        phone: Number(values?.phone),
+        address: address,
+        address_detail: values?.house,
+        geo_location: geoLocation,
+        location_id: loactionId,
+        landmark: values?.landmark,
+        type: type,
+      };
+    }
 
     console.log('requestData:-', requestData);
     try {
@@ -74,6 +74,7 @@ export default class MyAddressStore {
   };
 
   getMyAddress = async () => {
+    const { setAppUser, appUser } = rootStore.commonStore;
     try {
       const res = await agent.getMyAddress();
       console.log('getMyAddressd Res : ', res);
@@ -81,6 +82,7 @@ export default class MyAddressStore {
         res?.data?.addresses
           ? (this.getAddress = res?.data?.addresses)
           : (this.getAddress = []);
+        setAppUser(res?.data ?? appUser);
         return res?.data?.addresses;
       } else {
         this.getAddress = [];

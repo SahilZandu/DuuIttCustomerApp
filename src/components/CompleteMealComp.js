@@ -75,7 +75,7 @@ const CompleteMealComp = ({item, index, handleAddDecMeal}) => {
       </Text>
       <View style={[styles.viewContainer]}>
         <Text numberOfLines={1} style={styles.rating}>
-          {currencyFormat(item?.food_items?.selling_price)}
+          {currencyFormat(item?.food_items?.selling_price ??  0)}
         </Text>
         <AddButton item={item} />
       </View>

@@ -98,7 +98,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
       getRestCategoryList();
       setRestaurant(item ?? {});
       const todayTimings = getTodayRestaurantTimings(item?.timings ?? {});
-      console.log("todayTimings--", todayTimings);
+      console.log("todayTimings--", todayTimings,item?.timings);
       if (todayTimings === 'Closed') {
         setIsResOpen(false)
         setIsOpenCloseTime('')
@@ -121,13 +121,13 @@ const ResturantProducts = memo(({ navigation, route }) => {
       getUserCart(res?.food_items);
       setCategoryMenuList(res?.food_items);
     } catch (error) {
-      console.error('Error fetching restaurant category list:', error);
+      console.log('Error fetching restaurant category list:', error);
     }
   };
 
   const onMenuCount = arr => {
     if (!Array?.isArray(arr)) {
-      console.error('Error: arr is not an array', arr);
+      console.log('Error: arr is not an array', arr);
       return;
     }
     let menuList = arr?.map(group => {

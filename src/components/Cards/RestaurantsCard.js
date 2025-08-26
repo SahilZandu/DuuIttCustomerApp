@@ -209,27 +209,29 @@ const RestaurantsCard = ({ item, navigation, isHorizontal, onLike }) => {
         )}
       </TouchableOpacity>
 
-      <View
-        style={[
-          styles.flatOffView,
-          {
-            zIndex: 1,
-            opacity: isResOpen ? 1 : 0.4,
-          },
-        ]}>
-        <View style={styles.flatOffInnerView}>
-          <SvgXml xml={isResOpen ? flat : flatOfline} />
-          <Text
-            style={[
-              styles.flatOffText,
-              {
-                color: isResOpen ? colors.redBold : colors.black75,
-              },
-            ]}>
-            Flat 125 OFF above 319
-          </Text>
+      {item?.offers?.length > 0 &&
+        <View
+          style={[
+            styles.flatOffView,
+            {
+              zIndex: 1,
+              opacity: isResOpen ? 1 : 0.4,
+            },
+          ]}>
+          <View style={styles.flatOffInnerView}>
+            <SvgXml xml={isResOpen ? flat : flatOfline} />
+            <Text
+              style={[
+                styles.flatOffText,
+                {
+                  color: isResOpen ? colors.redBold : colors.black75,
+                },
+              ]}>
+              Flat 125 OFF above 319
+            </Text>
+          </View>
         </View>
-      </View>
+        }
     </View>
   );
 };

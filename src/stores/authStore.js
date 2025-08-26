@@ -269,12 +269,12 @@ export default class AuthStore {
   // }
 
   getAppUser = async () => {
-    const { setAppUser } = rootStore.commonStore;
+    const { setAppUser, appUser } = rootStore.commonStore;
     try {
       const res = await agent.getAppUser();
       console.log('getUser API Res:', res);
       if (res?.statusCode == 200) {
-        setAppUser(res?.data);
+        setAppUser(res?.data ?? appUser);
         return res?.data;
       } else {
         // setAppUser(null);

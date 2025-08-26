@@ -11,11 +11,27 @@ export function getTodayRestaurantTimings(timingsData) {
         const formattedHour = ((hour + 11) % 12) + 1;
         return `${formattedHour}:${minuteStr} ${suffix}`;
     };
+    
+    const formatTime2 = (timeStr) => {
+        if (!timeStr) return "";
+      
+        const [hourStr, minuteStr] = timeStr.split(":");
+        const hour = parseInt(hourStr, 10);
+      
+        const suffix = hour >= 12 ? "PM" : "AM";
+        const formattedHour = hour?.toString().padStart(2, "0");
+        const formattedMinute = minuteStr?.padStart(2, "0");
+      
+        return `${formattedHour}:${formattedMinute} ${suffix}`;
+      };
 
     let todayTimings = [];
-
-    if (timingsData?.is_all_day && timingsData?.all_days?.timings?.length > 0) {
-        if (!timingsData?.all_days?.outlet_status) return 'Closed';
+   
+    if (timingsData?.is_all_day 
+        // && timingsData?.all_days?.timings?.length > 0
+    ) {
+        if (!timingsData?.all_days?.outlet_status) return `${formatTime2("00:01")} - ${formatTime("23:59")}`;
+        // return 'Closed';
         todayTimings = timingsData?.all_days?.timings;
     } else {
         const today = timingsData?.specified?.[todayIndex !== 0 ? todayIndex - 1 : 6];
@@ -35,7 +51,9 @@ export function getTodayRestaurantTimings(timingsData) {
         }
     }
 
-    return 'Closed';
+    // return "Closed"
+    // return  (timingsData?.all_days?.timings?.length >  0) ? 'Closed' :`${formatTime2("00:01")} - ${formatTime("23:59")}` ;
+     return `${formatTime2("00:01")} - ${formatTime("23:59")}`;
 };
 
 

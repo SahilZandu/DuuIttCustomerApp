@@ -5,6 +5,7 @@ import { WebView } from 'react-native-webview';
 import {
   termsAndConditionsLink,
   privacyPolicyLink,
+  openSourceyLink,
 } from '../../../halpers/AppLink';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import Header from '../../../components/header/Header';
@@ -19,7 +20,7 @@ export default function MyWebComponent({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const { type } = route?.params;
 
-  let link = type == 'policy' ? privacyPolicyLink : termsAndConditionsLink;
+  let link = type == 'policy' ? privacyPolicyLink : type == 'terms' ? termsAndConditionsLink : openSourceyLink;
 
   useEffect(() => {
     if (type == 'policy') {
@@ -27,7 +28,7 @@ export default function MyWebComponent({ navigation, route }) {
     } else if (type == 'terms') {
       link = termsAndConditionsLink
     } else {
-      link = termsAndConditionsLink
+      link = openSourceyLink
     }
   }, [type])
 
@@ -74,7 +75,8 @@ export default function MyWebComponent({ navigation, route }) {
               marginTop:
                 Platform.OS === 'ios' ?
                   hp('-20%') : hp('-10%')
-            }} size="large" color={colors.main} />
+            }}
+            size="large" color={colors.main} />
           </View>
         )}
         <View style={styles.webMainView}>

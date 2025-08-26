@@ -1,0 +1,1370 @@
+ error paymentsCreateOrder: {
+    "config": {
+        "adapter": [
+            "xhr",
+            "http",
+            "fetch"
+        ],
+        "baseURL": "https://duuitt.hashsoftware.com/",
+        "data": "{\"amount\":1213.37,\"currency\":\"INR\",\"status\":true}",
+        "env": {
+            "Blob": [Function Blob
+            ],
+            "FormData": [Function FormData
+            ]
+        },
+        "headers": [Object
+        ],
+        "maxBodyLength": -1,
+        "maxContentLength": -1,
+        "method": "post",
+        "timeout": 10000,
+        "transformRequest": [
+            [Function transformRequest
+            ]
+        ],
+        "transformResponse": [
+            [Function transformResponse
+            ]
+        ],
+        "transitional": {
+            "clarifyTimeoutError": false,
+            "forcedJSONParsing": true,
+            "silentJSONParsing": true
+        },
+        "url": "payments/create-order",
+        "validateStatus": [Function validateStatus
+        ],
+        "xsrfCookieName": "XSRF-TOKEN",
+        "xsrfHeaderName": "X-XSRF-TOKEN"
+    },
+    "data": {
+        "data": null,
+        "message": "Error in creating order",
+        "status": "faliure",
+        "statusCode": 400
+    },
+    "headers": {
+        "access-control-allow-origin": "*",
+        "connection": "Keep-Alive",
+        "content-length": "85",
+        "content-security-policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+        "content-type": "application/json; charset=utf-8",
+        "cross-origin-opener-policy": "same-origin",
+        "cross-origin-resource-policy": "same-origin",
+        "date": "Mon, 25 Aug 2025 11:15:17 GMT",
+        "etag": "W/\"55-b7UjdlTi0ob4d+pPX418ABRR890\"",
+        "keep-alive": "timeout=5, max=100",
+        "origin-agent-cluster": "?1",
+        "referrer-policy": "no-referrer",
+        "server": "Apache/2.4.58 (Ubuntu)",
+        "strict-transport-security": "max-age=15552000; includeSubDomains",
+        "x-content-type-options": "nosniff",
+        "x-dns-prefetch-control": "off",
+        "x-download-options": "noopen",
+        "x-frame-options": "SAMEORIGIN",
+        "x-permitted-cross-domain-policies": "none",
+        "x-ratelimit-limit": "100",
+        "x-ratelimit-remaining": "99",
+        "x-ratelimit-reset": "60",
+        "x-xss-protection": "0"
+    },
+    "request": {
+        "DONE": 4,
+        "HEADERS_RECEIVED": 2,
+        "LOADING": 3,
+        "OPENED": 1,
+        "UNSENT": 0,
+        "_aborted": false,
+        "_cachedResponse": undefined,
+        "_hasError": false,
+        "_headers": {
+            "accept": "application/json, text/plain, */*",
+            "authorization": "Bearer 57a7dc072868c58857a0772f181c0d42:c8aaf9d9f4f39ea609642e9bdeb787d1bb7473c685ac8ebb1802f5a21119b1a38d861e8eb5043f5850fc84d03bb0be63c7e299b31f01afd3887f3841cb0f06f62f916b96779b435b8c545a55930dcba21e4f70bbca01137bdf81e935ad9a91493cd5aa5d5fe08dc442c9b0baca8282e1bbc4fce4f4df7ed0f3fa6b57eb38fbfb97953b883834bd2fe3cef7069434bebe6ff1617090b1a8633c0b8460b463b3a75008e4f576ad952cf5740050f5d61ed8e998c8ebeb87f568d859049da2e1bd74af69aa0737688df2dde920a1a369dc973c158b901b7f710b643a230c1cf2a80c6794e5d798a611b9cdb86ec5847e721718f6e6e6c3ae416a3a890574f39aa3d8",
+            "content-type": "application/json"
+        },
+        "_incrementalEvents": false,
+        "_lowerCaseResponseHeaders": {
+            "access-control-allow-origin": "*",
+            "connection": "Keep-Alive",
+            "content-length": "85",
+            "content-security-policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+            "content-type": "application/json; charset=utf-8",
+            "cross-origin-opener-policy": "same-origin",
+            "cross-origin-resource-policy": "same-origin",
+            "date": "Mon, 25 Aug 2025 11:15:17 GMT",
+            "etag": "W/\"55-b7UjdlTi0ob4d+pPX418ABRR890\"",
+            "keep-alive": "timeout=5, max=100",
+            "origin-agent-cluster": "?1",
+            "referrer-policy": "no-referrer",
+            "server": "Apache/2.4.58 (Ubuntu)",
+            "strict-transport-security": "max-age=15552000; includeSubDomains",
+            "x-content-type-options": "nosniff",
+            "x-dns-prefetch-control": "off",
+            "x-download-options": "noopen",
+            "x-frame-options": "SAMEORIGIN",
+            "x-permitted-cross-domain-policies": "none",
+            "x-ratelimit-limit": "100",
+            "x-ratelimit-remaining": "99",
+            "x-ratelimit-reset": "60",
+            "x-xss-protection": "0"
+        },
+        "_method": "POST",
+        "_perfKey": "network_XMLHttpRequest_https://duuitt.hashsoftware.com/payments/create-order",
+        "_performanceLogger": {
+            "_closed": false,
+            "_extras": [Object
+            ],
+            "_pointExtras": [Object
+            ],
+            "_points": [Object
+            ],
+            "_timespans": [Object
+            ]
+        },
+        "_requestId": null,
+        "_response": "{\"statusCode\":400,\"message\":\"Error in creating order\",\"data\":null,\"status\":\"faliure\"}",
+        "_responseType": "",
+        "_sent": true,
+        "_subscriptions": [],
+        "_timedOut": false,
+        "_trackingName": "unknown",
+        "_url": "https://duuitt.hashsoftware.com/payments/create-order",
+        "readyState": 4,
+        "responseHeaders": {
+            "Access-Control-Allow-Origin": "*",
+            "Connection": "Keep-Alive",
+            "Content-Length": "85",
+            "Content-Security-Policy": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests",
+            "Content-Type": "application/json; charset=utf-8",
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Resource-Policy": "same-origin",
+            "Date": "Mon, 25 Aug 2025 11:15:17 GMT",
+            "Etag": "W/\"55-b7UjdlTi0ob4d+pPX418ABRR890\"",
+            "Keep-Alive": "timeout=5, max=100",
+            "Origin-Agent-Cluster": "?1",
+            "Referrer-Policy": "no-referrer",
+            "Server": "Apache/2.4.58 (Ubuntu)",
+            "Strict-Transport-Security": "max-age=15552000; includeSubDomains",
+            "X-Content-Type-Options": "nosniff",
+            "X-DNS-Prefetch-Control": "off",
+            "X-Download-Options": "noopen",
+            "X-Frame-Options": "SAMEORIGIN",
+            "X-Permitted-Cross-Domain-Policies": "none",
+            "X-RateLimit-Limit": "100",
+            "X-RateLimit-Remaining": "99",
+            "X-RateLimit-Reset": "60",
+            "X-XSS-Protection": "0"
+        },
+        "responseURL": "https://duuitt.hashsoftware.com/payments/create-order",
+        "status": 201,
+        "timeout": 10000,
+        "upload": {},
+        "withCredentials": true
+    },
+    "status": 201,
+    "statusText": undefined
+}
+
+
+
+ {
+    "__v": 0,
+    "_id": "68ad3ab3a9ddb31beb80e541",
+    "about": "About Restaurantvcbcncncncn",
+    "address": "Sidhu Square, Saini Mohalla, Balongi, Sahibzada Ajit Singh Nagar, Punjab, India",
+    "admin_commission": 10,
+    "approval_request": "approved",
+    "assets": [
+        "public/uploads/restaurants/68ad3ab3a9ddb31beb80e53f/assets/files-1756183663444-840316781.jpg",
+        "public/uploads/restaurants/68ad3ab3a9ddb31beb80e53f/assets/files-1756183663495-789703459.jpg",
+        "public/uploads/restaurants/68ad3ab3a9ddb31beb80e53f/assets/files-1756183663544-377503689.jpg"
+    ],
+    "banner": "public/uploads/restaurants/68ad3ab3a9ddb31beb80e53f/assets/banner-1756183663283-328762843",
+    "createdAt": "2025-08-26T04:40:19.043Z",
+    "date_of_founding": "2021-08-26",
+    "deletedAt": null,
+    "dist": {
+        "calculated": 1064.820301684938,
+        "location": {
+            "coordinates": [Array
+            ],
+            "type": "Point"
+        }
+    },
+    "distanceInKm": 1.064820301684938,
+    "email": "restaurant1756183219041@gmail.com",
+    "extras": [],
+    "food_rating_avg": 0,
+    "gst_percentage": 5,
+    "is_online": true,
+    "landmark": "Xn ndmcnscnnx",
+    "likedRestaurant": false,
+    "location": {
+        "coordinates": [
+            76.6925655,
+            30.7297947
+        ],
+        "type": "Point"
+    },
+    "minimum_order_preparation_time": 25,
+    "minimum_order_value": 100,
+    "name": "Boss ",
+    "packaging_rating_avg": 0,
+    "payment_logs": [],
+    "phone": 9879879879,
+    "restaurant_charge": 5,
+    "taste_rating_avg": 0,
+    "timeInHours": 0.0177470050280823,
+    "timings": {
+        "all_days": {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        "is_all_day": false,
+        "specified": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ]
+    },
+    "total_food_reviews": 0,
+    "total_org_amt": 0,
+    "updatedAt": "2025-08-26T04:49:31.341Z",
+    "value_rating_avg": 0,
+    "veg_non_veg": "veg",
+    "vendor": {
+        "__v": 0,
+        "_id": "68ad3ab3a9ddb31beb80e53f",
+        "addresses": [],
+        "bank_detail": {
+            "account_number": "12345678908",
+            "bank_name": "Ghfggfgv",
+            "ifsc_code": "PUNB0476400",
+            "status": "approved"
+        },
+        "blocked_reason": "",
+        "createdAt": "2025-08-26T04:40:19.032Z",
+        "date_of_birth": "2025-08-12T00:00:00.000Z",
+        "device_id": "f1d3b9bf0ded6dfa",
+        "email": "sdfdgf@gmail.com",
+        "fcm_token": "f7WgeFp_Q4KBCfFy4SMZt3:APA91bHjb8po6vb9xEc8TJO40FbqGVLhpzPaPEoD02HzXR9W_JqVjEOtSHKygZlhvGyUokL-2SJDNO0BcLZsH_pSH9fQGINCtlFPo-PH9LmK4v26OAfJ5Qs",
+        "fssai_detail": {
+            "account_number": "89812361588858",
+            "expiration_date": "2031-08-28",
+            "image": "public/uploads/vendor/documents/68ad3ab3a9ddb31beb80e53f/image-1756183337096-800941092.png",
+            "status": "approved"
+        },
+        "gender": "male",
+        "gstn_detail": {
+            "expiration_date": "2027-08-28",
+            "gstn_number": "05AAACC4175D1Z4",
+            "image": "public/uploads/vendor/documents/68ad3ab3a9ddb31beb80e53f/image-1756183447040-564501368.png",
+            "status": "approved"
+        },
+        "is_active": true,
+        "is_blocked": false,
+        "is_deleted": false,
+        "is_kyc_completed": true,
+        "is_suspended": false,
+        "name": "ryhtyhrt rtrthrt",
+        "no_of_tries": 0,
+        "otp": null,
+        "otp_expires_at": null,
+        "pan_detail": {
+            "image": "public/uploads/vendor/documents/68ad3ab3a9ddb31beb80e53f/image-1756183472196-437021494.png",
+            "pan_number": "BOZPT7698P",
+            "status": "approved"
+        },
+        "password": "2b40e794d1d09c934e83117bd2200779:a4d134edc688757e015944787db2504b:165031677c0437b29257eea25c2f9e73",
+        "permissions": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+        "phone": 9879879879,
+        "profile_pic": null,
+        "role": "vendor",
+        "suspended_reason": "",
+        "suspended_until": null,
+        "updatedAt": "2025-08-26T04:48:13.558Z"
+    },
+    "vendor_id": "68ad3ab3a9ddb31beb80e53f"
+}
+
+
+ {
+    "__v": 77,
+    "_id": "6788fee87dcbadd89696ecc0",
+    "about": "restaurant about for this h",
+    "address": "Phase 5, Sector 59, Sahibzada Ajit Singh Nagar, Punjab, India",
+    "admin_commission": 10,
+    "approval_request": "approved",
+    "assets": [
+        "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/files-1754567065566-465989619.jpg",
+        "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/files-1754567065615-989836300.jpg",
+        "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/files-1754567065810-130060037.jpg",
+        "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/files-1754567066966-355487165.jpg"
+    ],
+    "banner": "public/uploads/restaurants/6788fee87dcbadd89696ecbe/assets/banner-1756114366861-608695795",
+    "createdAt": "2025-01-16T12:43:20.781Z",
+    "date_of_founding": "2000-06-02",
+    "deletedAt": null,
+    "dist": {
+        "calculated": 0,
+        "location": {
+            "coordinates": [Array
+            ],
+            "type": "Point"
+        }
+    },
+    "distanceInKm": 0,
+    "email": "vickyrestaurant@gmail.com",
+    "extras": [],
+    "food_rating_avg": 4.3,
+    "gst_percentage": 5,
+    "is_online": true,
+    "landmark": "landmarkkmnjlkj",
+    "likedRestaurant": false,
+    "location": {
+        "coordinates": [
+            76.7148927,
+            30.714478
+        ],
+        "type": "Point"
+    },
+    "minimum_order_preparation_time": 32,
+    "minimum_order_value": 52,
+    "name": "vicky's Hotels & Restro",
+    "packaging_rating_avg": 3.5,
+    "payment_logs": [
+        {
+            "_id": "687f40b6bbe6afc10d916761",
+            "amount": 2072.21809836279,
+            "date": "2025-07-22T07:41:42.511Z",
+            "invoice_no": "DUUIT102511",
+            "order_id": "ORD811402511",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qw2BR1pnRBuOAi",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "687f4124bbe6afc10d9167db",
+            "amount": 890.9380983627898,
+            "date": "2025-07-22T07:43:32.020Z",
+            "invoice_no": "DUUIT212020",
+            "order_id": "ORD806312020",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qw2DesW95blxwl",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6880c1b05a941b8077f2ed9e",
+            "amount": 1017.8980983627898,
+            "date": "2025-07-23T11:04:16.978Z",
+            "invoice_no": "DUUIT656978",
+            "order_id": "ORD773856978",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QwUAtkNCzMD8Pc",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6880cfb95a941b8077f307ab",
+            "amount": 3253.49809836279,
+            "date": "2025-07-23T12:04:09.898Z",
+            "invoice_no": "DUUIT249898",
+            "order_id": "ORD837949898",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QwVC8c1XoTF6o7",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6881aa585a941b8077f31de4",
+            "amount": 846.3082134423607,
+            "date": "2025-07-24T03:36:56.804Z",
+            "invoice_no": "DUUIT216804",
+            "order_id": "ORD123116804",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qwl5MglPYGm5w1",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6881aa585a941b8077f31def",
+            "amount": 846.3082134423607,
+            "date": "2025-07-24T03:36:56.834Z",
+            "invoice_no": "DUUIT216834",
+            "order_id": "ORD702216834",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qwl5MglPYGm5w1",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "688222692d3f15936fb7f257",
+            "amount": 2342.69809836279,
+            "date": "2025-07-24T12:09:13.227Z",
+            "invoice_no": "DUUIT953227",
+            "order_id": "ORD631553227",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QwtoaNFL2W32UN",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6882269e2d3f15936fb7ffeb",
+            "amount": 822.0868983627897,
+            "date": "2025-07-24T12:27:10.725Z",
+            "invoice_no": "DUUIT030725",
+            "order_id": "ORD304530725",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qwu7YL69sMmf6G",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68830e6b2d3f15936fb80f23",
+            "amount": 1166.9380983627898,
+            "date": "2025-07-25T04:56:11.866Z",
+            "invoice_no": "DUUIT371866",
+            "order_id": "ORD593871866",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QxAyJPyxsglsXa",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6883317e1fd372809d725397",
+            "amount": 0,
+            "date": "2025-07-25T12:55:50.520Z",
+            "invoice_no": "DUUIT249898",
+            "order_id": "ORD837949898",
+            "payment_method": "",
+            "transaction_id": "refund_ORD837949898",
+            "transaction_type": "Refund"
+        },
+        {
+            "_id": "68848f7fddeaad4812e92e0a",
+            "amount": 846.3082134423607,
+            "date": "2025-07-26T08:19:11.479Z",
+            "invoice_no": "DUUIT951479",
+            "order_id": "ORD578151479",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QxcxoXLOsbQ7Fo",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6885d424ddeaad4812e9314a",
+            "amount": 846.3082134423607,
+            "date": "2025-07-27T12:54:20.059Z",
+            "invoice_no": "DUUIT951479",
+            "order_id": "ORD578151479",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QxcxoXLOsbQ7Fo",
+            "transaction_type": "bank_transfer"
+        },
+        {
+            "_id": "6885da66ddeaad4812e9391c",
+            "amount": 2238.576383835096,
+            "date": "2025-07-27T07:51:02.131Z",
+            "invoice_no": "DUUIT662131",
+            "order_id": "ORD655862131",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qy11FRWOoR8Oog",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6885db98ddeaad4812e9397c",
+            "amount": 2238.576383835096,
+            "date": "2025-07-27T13:26:08.968Z",
+            "invoice_no": "DUUIT662131",
+            "order_id": "ORD655862131",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_Qy11FRWOoR8Oog",
+            "transaction_type": "bank_transfer"
+        },
+        {
+            "_id": "6885dc11ddeaad4812e93e51",
+            "amount": 2058.211583835096,
+            "date": "2025-07-27T07:58:09.259Z",
+            "invoice_no": "DUUIT089259",
+            "order_id": "ORD520989259",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qy18l6c9RxTuJ1",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68884b9a70503df236e4c9b8",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-29T04:18:34.921Z",
+            "invoice_no": "DUUIT714921",
+            "order_id": "ORD164414921",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QykT3nMIcoxbn9",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68884bfd70503df236e4c9f2",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-29T04:20:13.293Z",
+            "invoice_no": "DUUIT813293",
+            "order_id": "ORD910713293",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QykUn5ndQ3ownc",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68884d3e70503df236e4cafb",
+            "amount": 2172.29809836279,
+            "date": "2025-07-29T04:25:34.964Z",
+            "invoice_no": "DUUIT134963",
+            "order_id": "ORD121134963",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QykaT7Die9DtsP",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68884d4870503df236e4cb04",
+            "amount": 2172.29809836279,
+            "date": "2025-07-29T04:25:44.473Z",
+            "invoice_no": "DUUIT134963",
+            "order_id": "ORD121134963",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QykaT7Die9DtsP",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68884ddc70503df236e4cbb1",
+            "amount": 1465.73809836279,
+            "date": "2025-07-29T04:28:12.068Z",
+            "invoice_no": "DUUIT292068",
+            "order_id": "ORD815892068",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QykdEGaTsQUu49",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6888541570503df236e4cc26",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-29T10:24:45.667Z",
+            "invoice_no": "DUUIT714921",
+            "order_id": "ORD164414921",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QykT3nMIcoxbn9",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "6888541570503df236e4cc43",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-29T10:24:45.667Z",
+            "invoice_no": "DUUIT813293",
+            "order_id": "ORD910713293",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QykUn5ndQ3ownc",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "6888541570503df236e4cc46",
+            "amount": 1465.73809836279,
+            "date": "2025-07-29T10:24:45.667Z",
+            "invoice_no": "DUUIT292068",
+            "order_id": "ORD815892068",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QykdEGaTsQUu49",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "688854e2b573746017f2f225",
+            "amount": 2331.0180983627897,
+            "date": "2025-07-29T04:58:10.045Z",
+            "invoice_no": "DUUIT090045",
+            "order_id": "ORD527090045",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qyl8rpmadwLLbO",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "688867d42f4d0c206eed4fcc",
+            "amount": 2331.0180983627897,
+            "date": "2025-07-29T11:49:00.496Z",
+            "invoice_no": "DUUIT090045",
+            "order_id": "ORD527090045",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_Qyl8rpmadwLLbO",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "688868e22f4d0c206eed5084",
+            "amount": 2075.0180983627897,
+            "date": "2025-07-29T06:23:30.263Z",
+            "invoice_no": "DUUIT210263",
+            "order_id": "ORD177410263",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qymb0tfSK0Se6s",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68886af52f4d0c206eed5108",
+            "amount": 2075.0180983627897,
+            "date": "2025-07-29T06:32:21.477Z",
+            "invoice_no": "DUUIT210263",
+            "order_id": "ORD177410263",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_Qymb0tfSK0Se6s",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68886d6c7b97addc9a411f35",
+            "amount": 1294.2180983627898,
+            "date": "2025-07-29T06:42:52.040Z",
+            "invoice_no": "DUUIT372040",
+            "order_id": "ORD640072040",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QymvTfGBQPTYHt",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68886d767b97addc9a411f42",
+            "amount": 1294.2180983627898,
+            "date": "2025-07-29T06:43:02.396Z",
+            "invoice_no": "DUUIT372040",
+            "order_id": "ORD640072040",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QymvTfGBQPTYHt",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68887a4c7b97addc9a412417",
+            "amount": 3406.2180983627895,
+            "date": "2025-07-29T07:37:48.670Z",
+            "invoice_no": "DUUIT668670",
+            "order_id": "ORD708068670",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QynrVpY0DCVyma",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68887ca97b97addc9a412480",
+            "amount": 3406.2180983627895,
+            "date": "2025-07-29T13:17:53.242Z",
+            "invoice_no": "DUUIT668670",
+            "order_id": "ORD708068670",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QynrVpY0DCVyma",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68887db80fcef9467e420254",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-29T07:52:24.461Z",
+            "invoice_no": "DUUIT544460",
+            "order_id": "ORD883444460",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qyo6wYSWAYJNHL",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68887dc40fcef9467e420265",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-29T07:52:36.045Z",
+            "invoice_no": "DUUIT544460",
+            "order_id": "ORD883444460",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_Qyo6wYSWAYJNHL",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68887f460fcef9467e420364",
+            "amount": 825.7380983627897,
+            "date": "2025-07-29T07:59:02.593Z",
+            "invoice_no": "DUUIT942593",
+            "order_id": "ORD658242593",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QyoDx3zWwGUidG",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68887f5a0fcef9467e4203e2",
+            "amount": 825.7380983627897,
+            "date": "2025-07-29T07:59:22.198Z",
+            "invoice_no": "DUUIT942593",
+            "order_id": "ORD658242593",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QyoDx3zWwGUidG",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "6888822bb53a0754577c806b",
+            "amount": 1560.45809836279,
+            "date": "2025-07-29T08:11:23.158Z",
+            "invoice_no": "DUUIT683158",
+            "order_id": "ORD625183158",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QyoQzBfYS7hL4d",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6888823ab53a0754577c807d",
+            "amount": 1560.45809836279,
+            "date": "2025-07-29T08:11:38.717Z",
+            "invoice_no": "DUUIT683158",
+            "order_id": "ORD625183158",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QyoQzBfYS7hL4d",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68888f41b53a0754577c81ac",
+            "amount": 2177.41809836279,
+            "date": "2025-07-29T09:07:13.907Z",
+            "invoice_no": "DUUIT033907",
+            "order_id": "ORD980733907",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QypNywSnBtoFY4",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68888f4fb53a0754577c81be",
+            "amount": 2177.41809836279,
+            "date": "2025-07-29T09:07:27.275Z",
+            "invoice_no": "DUUIT033907",
+            "order_id": "ORD980733907",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QypNywSnBtoFY4",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68889b55b53a0754577cbe11",
+            "amount": 1240.45809836279,
+            "date": "2025-07-29T09:58:45.541Z",
+            "invoice_no": "DUUIT125541",
+            "order_id": "ORD702325541",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QyqGOpRmBCrQJ5",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6888a179b53a0754577cddb3",
+            "amount": 825.7380983627897,
+            "date": "2025-07-29T10:24:57.212Z",
+            "invoice_no": "DUUIT697212",
+            "order_id": "ORD283797212",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_Qyqi4imog83QIP",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6888a4b1b53a0754577cecf8",
+            "amount": 825.7380983627897,
+            "date": "2025-07-29T10:38:41.612Z",
+            "invoice_no": "DUUIT521611",
+            "order_id": "ORD873621611",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QyqwZGh0QbvXzo",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889b07222f23727e8368d8b",
+            "amount": 2182.53809836279,
+            "date": "2025-07-30T05:41:06.289Z",
+            "invoice_no": "DUUIT066288",
+            "order_id": "ORD281166288",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzAPJfH7AgkIBZ",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889cb26ae172d7115d98a12",
+            "amount": 311.17809836278985,
+            "date": "2025-07-30T07:35:02.731Z",
+            "invoice_no": "DUUIT902731",
+            "order_id": "ORD800802731",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzCLiEfakT275d",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889cb84ae172d7115d98b30",
+            "amount": 930.6980983627899,
+            "date": "2025-07-30T07:36:36.248Z",
+            "invoice_no": "DUUIT996248",
+            "order_id": "ORD180696248",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzCNMGF23nxKtO",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889d23aae172d7115d98f31",
+            "amount": 1240.45809836279,
+            "date": "2025-07-30T08:05:14.954Z",
+            "invoice_no": "DUUIT714954",
+            "order_id": "ORD408414954",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzCrcEVCNwDZ6h",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889d294ae172d7115d99066",
+            "amount": 1916.29809836279,
+            "date": "2025-07-30T08:06:44.417Z",
+            "invoice_no": "DUUIT804417",
+            "order_id": "ORD211104417",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzCtCDJNt82lLV",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889e9ca60c80d4325d9396a",
+            "amount": 3585.41809836279,
+            "date": "2025-07-30T09:45:46.949Z",
+            "invoice_no": "DUUIT746949",
+            "order_id": "ORD344946949",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzEZofSKn7IvJo",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889eb4f60c80d4325d93b1f",
+            "amount": 1214.8580983627899,
+            "date": "2025-07-30T09:52:15.373Z",
+            "invoice_no": "DUUIT135373",
+            "order_id": "ORD703335373",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzEgekzbnY28SX",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6889ec7760c80d4325d93cc5",
+            "amount": 1081.7380983627897,
+            "date": "2025-07-30T09:57:11.426Z",
+            "invoice_no": "DUUIT431426",
+            "order_id": "ORD860231426",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_QzElrik38UXaYx",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "689444adaf00d2255c5c8b74",
+            "amount": 2177.41809836279,
+            "date": "2025-08-07T06:16:11.070Z",
+            "invoice_no": "DUUIT033907",
+            "order_id": "ORD980733907",
+            "payment_method": "upi",
+            "status": "refund",
+            "transaction_id": "pay_QypNywSnBtoFY4",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "6895bd7a3e26a2085138f543",
+            "amount": 807.89,
+            "date": "2025-08-08T09:03:54.298Z",
+            "invoice_no": "DUUIT834298",
+            "order_id": "ORD682734298",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2mffTCFcYQm5W",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6895c2533e26a2085138f725",
+            "amount": 1955.8899999999999,
+            "date": "2025-08-08T09:24:35.390Z",
+            "invoice_no": "DUUIT075389",
+            "order_id": "ORD594575389",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2n1W1WAwQbeEZ",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6895c2e63e26a2085138f83d",
+            "amount": 607.89,
+            "date": "2025-08-08T09:27:02.432Z",
+            "invoice_no": "DUUIT222432",
+            "order_id": "ORD392622432",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2n46xaiTzPPpA",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6895c4513e26a2085138f8d5",
+            "amount": 607.89,
+            "date": "2025-08-08T15:03:03.640Z",
+            "invoice_no": "DUUIT222432",
+            "order_id": "ORD392622432",
+            "payment_method": "upi",
+            "refund_id": null,
+            "status": "refund",
+            "transaction_id": "pay_R2n46xaiTzPPpA",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "6895cd683e26a2085139035a",
+            "amount": 209.88999999999996,
+            "date": "2025-08-08T10:11:52.495Z",
+            "invoice_no": "DUUIT912494",
+            "order_id": "ORD325012494",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2npT7kLupAQYJ",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6895ceb03e26a208513904f4",
+            "amount": 209.88999999999996,
+            "date": "2025-08-08T15:47:19.095Z",
+            "invoice_no": "DUUIT912494",
+            "order_id": "ORD325012494",
+            "payment_method": "upi",
+            "refund_id": null,
+            "status": "refund",
+            "transaction_id": "pay_R2npT7kLupAQYJ",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "6895ddf23139a4f736da3b9e",
+            "amount": 811.8899999999999,
+            "date": "2025-08-08T11:22:26.551Z",
+            "invoice_no": "DUUIT146551",
+            "order_id": "ORD976746551",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2p20gTJ4BZIZh",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6895e1073139a4f736da3f3b",
+            "amount": 205.89,
+            "date": "2025-08-08T11:35:35.276Z",
+            "invoice_no": "DUUIT935275",
+            "order_id": "ORD915735275",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2pFsms63hWJa9",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "6895e2cf3139a4f736da4157",
+            "amount": 811.8899999999999,
+            "date": "2025-08-08T11:43:11.354Z",
+            "invoice_no": "DUUIT391354",
+            "order_id": "ORD241691354",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R2pNvG3rgF3KlQ",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "689f495c7f200016da84627f",
+            "amount": 691.64,
+            "date": "2025-08-15T14:51:08.203Z",
+            "invoice_no": "DUUIT468203",
+            "order_id": "ORD479468203",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R5eKGtA6oCChjD",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "689f49767f200016da84628c",
+            "amount": 1103.56,
+            "date": "2025-08-15T14:51:33.267Z",
+            "invoice_no": "DUUIT468203",
+            "order_id": "ORD479468203",
+            "payment_method": "upi",
+            "refund_id": "rfnd_R5eKzJ7IznCc4z",
+            "status": "refund",
+            "transaction_id": "pay_R5eKGtA6oCChjD",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "689f49ce7f200016da846357",
+            "amount": 691.64,
+            "date": "2025-08-15T14:53:02.783Z",
+            "invoice_no": "DUUIT582783",
+            "order_id": "ORD461082783",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R5eMIkHyGK6lgP",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "689f4b277f200016da846418",
+            "amount": 691.64,
+            "date": "2025-08-15T20:28:45.903Z",
+            "invoice_no": "DUUIT582783",
+            "order_id": "ORD461082783",
+            "payment_method": "upi",
+            "refund_id": null,
+            "status": "refund",
+            "transaction_id": "pay_R5eMIkHyGK6lgP",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "689f4bd47f200016da8464e0",
+            "amount": 695.6399999999999,
+            "date": "2025-08-15T15:01:40.442Z",
+            "invoice_no": "DUUIT100442",
+            "order_id": "ORD723900442",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R5eVQbQDY9bZgV",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "689f4d047f200016da8465f2",
+            "amount": 695.6399999999999,
+            "date": "2025-08-15T20:36:42.540Z",
+            "invoice_no": "DUUIT100442",
+            "order_id": "ORD723900442",
+            "payment_method": "upi",
+            "refund_id": null,
+            "status": "refund",
+            "transaction_id": "pay_R5eVQbQDY9bZgV",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "689f4d047f200016da8465f7",
+            "amount": 695.6399999999999,
+            "date": "2025-08-15T20:36:43.683Z",
+            "invoice_no": "DUUIT100442",
+            "order_id": "ORD723900442",
+            "payment_method": "upi",
+            "refund_id": null,
+            "status": "refund",
+            "transaction_id": "pay_R5eVQbQDY9bZgV",
+            "transaction_type": "Debit"
+        },
+        {
+            "_id": "68a040b07f200016da846d1c",
+            "amount": 491.64000000000004,
+            "date": "2025-08-16T08:26:24.064Z",
+            "invoice_no": "DUUIT784064",
+            "order_id": "ORD632984064",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R5wIwnqLRQ7Ku2",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68a56b585141d2980eca20a4",
+            "amount": -129.33,
+            "date": "2025-08-20T06:29:44.067Z",
+            "invoice_no": "DUUIT384067",
+            "order_id": "ORD144284067",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R7USG6w9CbV57C",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68ac487ca9ddb31beb7f4ee0",
+            "amount": 1545.6299999999999,
+            "date": "2025-08-25T11:26:52.255Z",
+            "invoice_no": "DUUIT212255",
+            "order_id": "ORD291312255",
+            "payment_method": "upi",
+            "status": "captured",
+            "transaction_id": "pay_R9YBj9BdUGW6JL",
+            "transaction_type": "Credit"
+        },
+        {
+            "_id": "68ac5251a9ddb31beb7f5d81",
+            "amount": 1545.6299999999999,
+            "date": "2025-08-25T17:38:47.756Z",
+            "invoice_no": "DUUIT212255",
+            "order_id": "ORD291312255",
+            "payment_method": "upi",
+            "refund_id": null,
+            "status": "refund",
+            "transaction_id": "pay_R9YBj9BdUGW6JL",
+            "transaction_type": "Debit"
+        }
+    ],
+    "phone": 9879879878,
+    "reason_to_offline": "",
+    "remarks": "remarkskjkl",
+    "restaurant_charge": 5,
+    "taste_rating_avg": 3.8,
+    "timeInHours": 0,
+    "timings": {
+        "all_days": {
+            "outlet_status": true,
+            "timings": [Array
+            ]
+        },
+        "is_all_day": true,
+        "specified": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ]
+    },
+    "total_food_reviews": 4,
+    "total_org_amt": 43030.06337525307,
+    "updatedAt": "2025-08-25T12:08:49.309Z",
+    "value_rating_avg": 3.8,
+    "veg_non_veg": "non-veg",
+    "vendor": {
+        "__v": 1,
+        "_id": "6788fee87dcbadd89696ecbe",
+        "addresses": [],
+        "bank_detail": {
+            "account_number": "85465423548544",
+            "bank_name": "Punjab bank",
+            "ifsc_code": "PUNB0047640",
+            "status": "approved"
+        },
+        "blocked_reason": "",
+        "createdAt": "2025-01-16T12:43:20.759Z",
+        "date_of_birth": "1990-09-09T00:00:00.000Z",
+        "device_id": "8e0c94cc73df4403",
+        "email": "malik@gamil.com",
+        "fcm_token": "cp_S86v-RB-szsTxSaEsNq:APA91bED3N9rzNVRj6RE-Ql_d_PUlrWGjLwz68jJKNN6PWQXNfRqXeOLZpk2ANZOgUQf_soJOxa8yh_IC5QitJsCCqToSFhkpoBl0fF7opvi8mr4LuVlrGU",
+        "fssai_detail": {
+            "account_number": "87546454646846",
+            "expiration_date": "2028-02-05",
+            "image": "public/uploads/vendor/documents/6788fee87dcbadd89696ecbe/image-1753939911501-363064440.png",
+            "status": "approved"
+        },
+        "gender": "male",
+        "gstn_detail": {
+            "expiration_date": "2043-02-05",
+            "gstn_number": "04AAACC4175D1Z8",
+            "image": "public/uploads/vendor/documents/6788fee87dcbadd89696ecbe/image-1753874218346-358155972.png",
+            "status": "approved"
+        },
+        "is_active": true,
+        "is_blocked": false,
+        "is_deleted": false,
+        "is_kyc_completed": true,
+        "is_suspended": false,
+        "name": "Mohd Gullu Malik",
+        "no_of_tries": 0,
+        "otp": null,
+        "otp_expires_at": null,
+        "pan_detail": {
+            "image": "public/uploads/vendor/documents/6788fee87dcbadd89696ecbe/image-1754973665536-268926673.png",
+            "pan_number": "ABCDE1234F",
+            "status": "approved"
+        },
+        "password": "b0456a71ace9899329a3acc95b4999ed:336f04556388357691f57969eff3e9bc:2cb344fc17f41538807d57f2fde6f411b16c1379afc2519efe19872d93c894db",
+        "permissions": [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+        "phone": 8006386138,
+        "profile_pic": null,
+        "role": "vendor",
+        "suspended_reason": "",
+        "suspended_until": null,
+        "updatedAt": "2025-08-26T10:38:27.865Z"
+    },
+    "vendor_id": "6788fee87dcbadd89696ecbe"
+} {
+    "all_days": {
+        "outlet_status": true,
+        "timings": [
+            [Object
+            ],
+            [Object
+            ]
+        ]
+    },
+    "is_all_day": true,
+    "specified": [
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        },
+        {
+            "outlet_status": false,
+            "timings": [Array
+            ]
+        }
+    ]
+} [
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    },
+    {
+        "outlet_status": false,
+        "timings": []
+    }
+] {
+    "outlet_status": true,
+    "timings": [
+        {
+            "_id": "688c5ca5b3e77da33e1943b0",
+            "close_time": "14:00",
+            "days_of_week": 0,
+            "is_edit_delete": true,
+            "open_times": "08:59"
+        },
+        {
+            "_id": "688c5ceab3e77da33e1943e6",
+            "close_time": "23:59",
+            "days_of_week": 0,
+            "is_edit_delete": true,
+            "open_times": "14:30"
+        }
+    ]
+}
