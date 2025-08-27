@@ -131,7 +131,8 @@ export function DashboardBottomNavigator() {
                   height: 8, width: 8,
                   backgroundColor: 'red',
                   borderRadius: 100
-                }} />}
+                }} />
+               }
             </View>
           );
         },

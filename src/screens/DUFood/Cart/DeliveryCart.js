@@ -310,12 +310,11 @@ const styles = StyleSheet.create({
   },
   totalBillWithRate: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     marginTop: '-0.5%'
   },
   totalBillText: {
-    alignSelf: 'flex-start',
+    textAlign:'auto',
     fontFamily: fonts.medium,
     fontSize: RFValue(12),
     color: colors.color24,

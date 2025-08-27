@@ -245,62 +245,62 @@ export default function Orders({ navigation, route }) {
   };
 
   return (
-       <Wrapper4
-        edges={['left', 'right']}
-        transparentStatusBar
-        title={"Orders"}
-        appUserInfo={appUser}
-        navigation={navigation}
-        showHeader
-        >
-    <View style={styles.container}>
-      {internet == false ? (
-        <NoInternet />
-      ) : (
-        <>
-          {/* <DashboardHeader title={'Orders'} /> */}
-          <View style={styles.mainView}>
-            <Tabs3
-              isRating={true}
-              tabs={tabs}
-              tabPress={handleTabPress}
-              type={defaultType}
-            />
-            {/* <View style={styles.offerTextView}>
+    <Wrapper4
+      edges={['left', 'right']}
+      transparentStatusBar
+      title={"Orders"}
+      appUserInfo={appUser}
+      navigation={navigation}
+      showHeader
+    >
+      <View style={styles.container}>
+        {internet == false ? (
+          <NoInternet />
+        ) : (
+          <>
+            {/* <DashboardHeader title={'Orders'} /> */}
+            <View style={styles.mainView}>
+              <Tabs3
+                isRating={true}
+                tabs={tabs}
+                tabPress={handleTabPress}
+                type={defaultType}
+              />
+              {/* <View style={styles.offerTextView}>
               <Text style={styles.offerText}>Offers You Can’t Miss</Text>
             </View> */}
-            {loading == true ? (
-              <AnimatedLoader type={'orderHistoryLoader'} />
-            ) : (
-              <View style={{ flex: 0 }}>
-                {orderList?.length > 0 ? (
-                  <FlatList
-                    ref={flatListRef}
-                    initialScrollIndex={0}
-                    initialNumToRender={20}
-                    contentContainerStyle={{ paddingBottom: Platform.OS == 'ios' ? '35%' : '30%' }}
-                    scrollEnabled={true}
-                    showsVerticalScrollIndicator={false}
-                    data={orderList}
-                    renderItem={renderItem}
-                    keyExtractor={item => item?._id}
-                    onEndReached={loadMoredata}
-                    onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
-                    ListFooterComponent={renderFooter}
-                  />
-                ) : (
-                  <View style={styles.NoDataView}>
-                    {(loading == false && orderList?.length == 0) && <Text style={styles.NoDataText}>No Record Found</Text>}
-                  </View>
-                )}
-              </View>
-            )}
-            {filterLoading && <IndicatorLoader />}
-          </View>
-        </>
-      )}
-    </View>
-  
+              {loading == true ? (
+                <AnimatedLoader type={'orderHistoryLoader'} />
+              ) : (
+                <View style={{ flex: 0 }}>
+                  {orderList?.length > 0 ? (
+                    <FlatList
+                      ref={flatListRef}
+                      initialScrollIndex={0}
+                      initialNumToRender={20}
+                      contentContainerStyle={{ paddingBottom: Platform.OS == 'ios' ? '35%' : '30%' }}
+                      scrollEnabled={true}
+                      showsVerticalScrollIndicator={false}
+                      data={orderList}
+                      renderItem={renderItem}
+                      keyExtractor={item => item?._id}
+                      onEndReached={loadMoredata}
+                      onEndReachedThreshold={0.5} // Trigger when the user scrolls 50% from the bottom
+                      ListFooterComponent={renderFooter}
+                    />
+                  ) : (
+                    <View style={styles.NoDataView}>
+                      {(loading == false && orderList?.length == 0) && <Text style={styles.NoDataText}>No Record Found</Text>}
+                    </View>
+                  )}
+                </View>
+              )}
+              {filterLoading && <IndicatorLoader />}
+            </View>
+          </>
+        )}
+      </View>
+
     </Wrapper4>
   );
 }

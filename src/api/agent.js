@@ -2,7 +2,7 @@ import Url from './Url';
 import axios from 'axios';
 import { rootStore } from '../stores/rootStore';
 import RNRestart from 'react-native-restart';
-import { InteractionManager } from 'react-native';
+import { Alert, InteractionManager } from 'react-native';
 
 const Base_Url = Url.Base_Url;
 
@@ -34,13 +34,13 @@ axios.interceptors.response.use(
 
     if (statusCode === 401) {
 
-   InteractionManager.runAfterInteractions(() => {
-  rootStore.dashboardStore.saveFcmToken(null)
-  rootStore.commonStore.setToken(null);
-  rootStore.commonStore.setAppUser(null);
-  RNRestart.restart();
-  });
- return Promise.reject(response);
+      InteractionManager.runAfterInteractions(() => {
+        rootStore.dashboardStore.saveFcmToken(null)
+        rootStore.commonStore.setToken(null);
+        rootStore.commonStore.setAppUser(null);
+        RNRestart.restart();
+      });
+      return Promise.reject(response);
     }
 
     return response;
@@ -49,10 +49,12 @@ axios.interceptors.response.use(
     console.log('❌ Axios Error:', error);
 
     if (error.message === 'Network Error' && !error.response) {
+      Alert.alert("Network Error. Please check your internet connection and try again.")
       return Promise.reject(error);
     }
 
     if (error.code === 'ECONNABORTED') {
+      Alert.alert("The request is taking longer than expected. Please check your internet connection and try again.")
       return Promise.reject(new Error('Network/Server timeout error'));
     }
 
@@ -68,7 +70,7 @@ axios.interceptors.response.use(
         rootStore.commonStore.setToken(null);
         rootStore.commonStore.setAppUser(null);
         RNRestart.restart();
-        });
+      });
       // rootStore.dashboardStore.saveFcmToken(null);
       // rootStore.commonStore.setToken(null);
       // rootStore.commonStore.setAppUser(null);
@@ -122,7 +124,7 @@ export const agent = {
   getMyAddress: () => requests.get(Url.getMyAddress),
   getAppUser: () => requests.get(Url.getAppUser),
   parcelsRides: body => requests.post(Url.parcelsRides, body),
-  foodReorder : body => requests.post(Url.foodReorder, body),
+  foodReorder: body => requests.post(Url.foodReorder, body),
   editParcelsRides: (body, orderId) => requests.post(`${Url.editParcelsRides}/${orderId?.order_id}`, body),
   parcels_Cancel: body => requests.post(Url.parcels_Cancel, body),
   parcels_find_rider: body => requests.post(Url.parcels_find_rider, body),
@@ -160,7 +162,7 @@ export const agent = {
   getFoodOrderTracking: () => requests.get(Url.getFoodOrderTracking),
 
   addReviews: body => requests.post(Url.addReviews, body),
-  foodOrderReviews : body => requests.post(Url.foodOrderReviews, body),
+  foodOrderReviews: body => requests.post(Url.foodOrderReviews, body),
   restaurantReview: body => requests.post(Url.restaurantReview, body),
   completeMealItems: body => requests.post(Url.completeMealItems, body),
   restaurantOffers: body => requests.post(Url.restaurantOffers, body),
@@ -168,7 +170,7 @@ export const agent = {
   removeCoupan: body => requests.post(Url.removeCoupan, body),
   calculateDeliveryFee: body => requests.post(Url.calculateDeliveryFee, body),
   appFeedback: body => requests.post(Url.appFeedback, body),
-  restaurantOffersData: () =>  requests.get(Url.restaurantOffersData),
+  restaurantOffersData: () => requests.get(Url.restaurantOffersData),
   wallet: body => requests.get(`${Url.wallet}/${body?.userId}`),
   walletUpdateBalance: body => requests.patch(Url.walletUpdateBalance, body),
   transactionHistory: body =>
@@ -192,9 +194,9 @@ export const agent = {
   userLogout: body => requests.post(Url.userLogout, body),
   getRestaurantFoodReviews: body => requests.post(Url.getRestaurantFoodReviews, body),
   reorderCart: body => requests.post(Url.reorderCart, body),
-  getRestaurantBanners:body => requests.get(Url.getRestaurantBanners),
+  getRestaurantBanners: body => requests.get(Url.getRestaurantBanners),
   cancelFoodOrderByCustomer: body => requests.post(Url.cancelFoodOrderByCustomer, body),
-  
+
 };
 
 const requests = {

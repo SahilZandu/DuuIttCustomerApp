@@ -342,7 +342,7 @@ const SetLocationHistory = ({ navigation }) => {
 
   return (
     <Wrapper
-      edges={['left', 'right']}
+      edges={['left', 'right','bottom']}
       transparentStatusBar
       title={'Pick up or send anything'}
       backArrow={true}
@@ -428,7 +428,7 @@ const SetLocationHistory = ({ navigation }) => {
         {(senderAddress?.address?.length > 0 &&
           receiverAddress?.address?.length > 0) &&
           <View style={{ backgroundColor: colors.appBackground, height: hp("8%") }}>
-            <Spacer space={'5%'} />
+            <Spacer space={'3%'} />
             <CTA title={'continue'}
               onPress={() => { navigation.navigate('priceDetails') }}
             />

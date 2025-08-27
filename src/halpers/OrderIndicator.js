@@ -84,7 +84,11 @@ from 'react-native-responsive-screen';
 import * as Animatable from 'react-native-animatable';
 import { appImages } from '../commons/AppImages';
 import { colors } from '../theme/colors';
+import DeviceInfo from 'react-native-device-info';
 
+// Get the device model
+let deviceModel = DeviceInfo.getModel();
+// console.log("Device Model:", deviceModel);
 
 const CornerTriangle = ({onPress}) => {
   return (
@@ -112,8 +116,8 @@ export default CornerTriangle;
 const styles = StyleSheet.create({
   main: {
     position: 'absolute', // fixed typo here
-    top: Platform.OS == 'ios' ? hp('2.9%') : (Platform.OS === 'android' && Platform.Version >= 35)?hp('2.9%'): hp('3.1%'),
-    right: Platform.OS == 'ios' ? wp('0.9%'):(Platform.OS === 'android' && Platform.Version >= 35) ? wp('1.4%') : wp('1.1%'),
+    top: Platform.OS == 'ios' ? hp('2.9%') : (Platform.OS === 'android' && Platform.Version >= 35)?   deviceModel == "RMX3840" ? hp('2.8%') :hp('2.9%'): hp('3.1%'),
+    right: Platform.OS == 'ios' ? wp('0.9%'):(Platform.OS === 'android' && Platform.Version >= 35) ?  deviceModel == "RMX3840" ? wp('0.6%') : wp('1.4%') : wp('1.1%'),
     width:wp("20"),
     height:hp("20%"),
     overflow: 'hidden',

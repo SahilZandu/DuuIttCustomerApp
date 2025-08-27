@@ -302,7 +302,7 @@ export default function OrderCustomization(props) {
                       {/* <Ratings rateFormat={4.0} starHeight={14} /> */}
                       <Text style={styles.ratingCount}>
                         {' '}
-                        {item?.rating ? item?.rating : 4.4}
+                        {item?.rating ? item?.rating : 0}
                       </Text>
                     </View>
                     <View style={styles.restaurantBestConatiner}>

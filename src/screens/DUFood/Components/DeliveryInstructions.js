@@ -31,6 +31,7 @@ import {
   FinishMode,
 } from '@simform_solutions/react-native-audio-waveform';
 import {colors} from '../../../theme/colors';
+import BTN from '../../../components/cta/BTN';
 
 const DeliveryInstructions = ({
   visible,
@@ -222,8 +223,8 @@ const DeliveryInstructions = ({
       onRequestClose={() => {
         onClose();
       }}>
-      <Pressable onPress={() => onClose()} style={styles.container}>
-        <Pressable onPress={() => onClose()} style={styles.backButtonTouch}>
+      <Pressable onPress={() =>{ onClose()}} style={styles.container}>
+        <Pressable onPress={() => {onClose()}} style={styles.backButtonTouch}>
           <Image
             resizeMode="contain"
             style={{height: 45, width: 45}}
@@ -242,6 +243,10 @@ const DeliveryInstructions = ({
               <Text numberOfLines={1} style={styles.delivertText}>
                 Delivery Instructions
               </Text>
+              <Text numberOfLines={1} style={styles.selectedInstText}>
+              Selected Instructions : {selectedItems?.length ?? 0}
+              </Text>
+              
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
@@ -377,6 +382,10 @@ const DeliveryInstructions = ({
                   extraData={selectedItems} // Make sure to re-render the list when selection changes
                 />
               </View>
+              {/* <View style={{marginTop:'9%'}}>
+                <BTN 
+                title={'Ok'}  onPress={() =>{txtInstuctions(selectedItems ?? []),onClose()}}/>
+              </View> */}
             </View>
           </ScrollView>
         </View>
@@ -400,7 +409,7 @@ const styles = StyleSheet.create({
   },
   mainWhiteView: {
     backgroundColor: colors.white,
-    height: hp('52%'),
+    height: hp('56%'),
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     borderColor: colors.colorF9,
@@ -413,8 +422,16 @@ const styles = StyleSheet.create({
   delivertText: {
     fontFamily: fonts.bold,
     fontSize: RFValue(15),
-    padding: 10,
+    marginHorizontal: '3%',
     color: colors.black,
+  },
+  selectedInstText: {
+    fontFamily: fonts.medium,
+    fontSize: RFValue(12),
+    color: colors.black, 
+   marginHorizontal:'3%',
+    marginTop:'2%',
+   marginBottom:'2%'
   },
   recordingView: {
     paddingHorizontal: 16,

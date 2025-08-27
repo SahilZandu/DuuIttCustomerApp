@@ -8,8 +8,6 @@ import DashboardHeader3 from "../../components/header/DashboardHeader3";
 
 
 const Wrapper3 = (props) => {
-
-
   return (
 
     <SafeAreaView

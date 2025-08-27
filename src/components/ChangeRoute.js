@@ -215,6 +215,9 @@ const ChangeRoute = ({ data, navigation }) => {
     if (cart?.cart_items?.length > 0) {
       setCartItems(cart);
     }
+    else {
+      setCartItems({});
+    }
   };
 
   const getFoodTrackingOrder = async () => {
@@ -222,9 +225,9 @@ const ChangeRoute = ({ data, navigation }) => {
     setFoodTrackedArray(res);
   };
 
-  const handleTrackingLoading =(v)=>{
-    console.log("v",v);
-    
+  const handleTrackingLoading = (v) => {
+    console.log("v", v);
+
   }
 
 
@@ -287,7 +290,7 @@ const ChangeRoute = ({ data, navigation }) => {
   };
 
 
-  const setIndicatorShow = (name, ride, parcel, parcelTrack,foodCart,foodTarcking) => {
+  const setIndicatorShow = (name, ride, parcel, parcelTrack, foodCart, foodTarcking) => {
     if (ride?.length > 0 && name == "RIDE") {
       return true
     } else if ((parcel?.length > 0 || parcelTrack?.length > 0) && name == "PARCEL") {
@@ -436,7 +439,7 @@ const ChangeRoute = ({ data, navigation }) => {
             </TouchableOpacity>
           )}
         </Surface>
-        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder,cartItems,foodTrackedArray) && <CornerTriangle onPress={() => { onRoutePress(item) }} />}
+        {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder, cartItems, foodTrackedArray) && <CornerTriangle onPress={() => { onRoutePress(item) }} />}
         {/* {setIndicatorShow(item?.name, incompletedRideOrder, incompletedParcelOrder, trackedParcelOrder) && <OrderIndicator
           onPress={() => { onRoutePress(item); }}
           isHashOrders={s => console.log('s', s)}

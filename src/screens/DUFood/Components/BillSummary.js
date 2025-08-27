@@ -21,8 +21,9 @@ import DotedLine from './DotedLine';
 import { currencyFormat } from '../../../halpers/currencyFormat';
 import { colors } from '../../../theme/colors';
 import TextRender from '../../../components/TextRender';
+import TextSMRender from '../../../components/TextSMRender';
 
-const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
+const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu, cartList }) => {
 
   const billDetails = [
     {
@@ -31,6 +32,7 @@ const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
       price: cartBillG?.cartTotal,
       coupanCode: '',
       bottomLine: false,
+      sm: false
     },
     {
       id: '2',
@@ -38,6 +40,7 @@ const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
       price: cartBillG?.deliveryFree,
       coupanCode: '',
       bottomLine: false,
+      sm: false
     },
     // {
     //   id: '3',
@@ -52,6 +55,7 @@ const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
       price: cartBillG?.platformFree,
       coupanCode: '',
       bottomLine: false,
+      sm: false
     },
     {
       id: '5',
@@ -59,27 +63,47 @@ const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
       price: cartBillG?.gstRestorentCharges,
       coupanCode: '',
       bottomLine: true,
+      sm: false
     },
     {
       id: '6',
+      name: 'Small order fee',
+      price: cartList?.small_order_fee ?? 0,
+      coupanCode: '',
+      bottomLine: true,
+      sm: true
+    },
+    // {
+    //   id: '7',
+    //   name: 'reduced for orders above ',
+    //   price: cartBillG?.gstRestorentCharges,
+    //   coupanCode: ' ',
+    //   bottomLine: true,
+    //   sm:true
+    // },
+    {
+      id: '8',
       name: 'Grand Total',
       price: cartBillG?.grandTotal,
       coupanCode: '',
       bottomLine: false,
+      sm: false
     },
     {
-      id: '7',
+      id: '9',
       name: 'Restaurant Coupon',
       price: cartBillG?.couponDiscount,
       coupanCode: cartBillG?.coupanCode ?? '',
       bottomLine: true,
+      sm: false
     },
     {
-      id: '8',
+      id: '10',
       name: 'To Pay',
       price: cartBillG?.topay,
       coupanCode: '',
       bottomLine: false,
+      sm: false
     },
   ];
 
@@ -115,33 +139,36 @@ const BillSummary = ({ visible, cartBillG, onClose, menu, onSelectMenu }) => {
               {billDetails?.map((item, i) => {
                 return (
                   <View style={styles.billDetailRenderView}>
-                    <TextRender
-                      titleStyle={[
-                        styles.titleText,
-                        {
-                          color:
-                            item?.coupanCode?.length > 0
-                              ? colors.main
-                              : colors.color64,
-                        },
-                      ]}
-                      valueStyle={[
-                        styles.valueText,
-                        {
-                          color:
-                            item?.coupanCode?.length > 0
-                              ? colors.main
-                              : colors.color64,
-                        },
-                      ]}
-                      title={
-                        item?.coupanCode?.length > 0
-                          ? item?.name + '- (' + item?.coupanCode + ')'
-                          : item?.name
-                      }
-                      value={currencyFormat(Number(item?.price))}
-                      bottomLine={false}
-                    />
+                    {item?.sm ?
+                      <TextSMRender cartList={cartList} />
+                      :
+                      <TextRender
+                        titleStyle={[
+                          styles.titleText,
+                          {
+                            color:
+                              item?.coupanCode?.length > 0
+                                ? colors.main
+                                : colors.color64,
+                          },
+                        ]}
+                        valueStyle={[
+                          styles.valueText,
+                          {
+                            color:
+                              item?.coupanCode?.length > 0
+                                ? colors.main
+                                : colors.color64,
+                          },
+                        ]}
+                        title={
+                          item?.coupanCode?.length > 0
+                            ? item?.name + '- (' + item?.coupanCode + ')'
+                            : item?.name
+                        }
+                        value={currencyFormat(Number(item?.price))}
+                        bottomLine={false}
+                      />}
                     {item?.bottomLine && <DotedLine />}
                   </View>
                 );
@@ -180,7 +207,7 @@ const styles = StyleSheet.create({
   },
   mainWhiteView: {
     backgroundColor: colors.white,
-    height: hp('55%'),
+    height: hp('65%'),
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     borderColor: colors.colorF9,
@@ -190,11 +217,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: 'center',
   },
-  billingText:{
+  billingText: {
     fontFamily: fonts.bold,
     fontSize: RFValue(15),
     color: colors.black,
-    marginTop:'1%'
+    marginTop: '1%'
   },
   billDetailRenderView: {
     paddingHorizontal: 10,

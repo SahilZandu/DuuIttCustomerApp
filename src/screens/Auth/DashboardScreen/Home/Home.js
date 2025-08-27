@@ -21,7 +21,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { setCurrentLocation } from '../../../../components/GetAppLocation';
+import { getCurrentLocation, setCurrentLocation } from '../../../../components/GetAppLocation';
 import { useNotifications } from '../../../../halpers/useNotifications';
 import socketServices from '../../../../socketIo/SocketServices';
 import NoInternet from '../../../../components/NoInternet';
@@ -31,12 +31,26 @@ import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
 import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
+import { getGeoCodes } from '../../../../components/GeoCodeAddress';
 
 
+let currentLocation = {
+  lat: null,
+  lng: null,
+};
 
 export default function Home({ navigation }) {
   const { appUser } = rootStore.commonStore;
   const { saveFcmToken, getCheckDeviceId, getRestaurantBanners } = rootStore.dashboardStore;
+  const { setChangeLiveLocation, changeLiveLocation } = rootStore.foodDashboardStore;
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
   useNotifications(navigation);
   const [internet, setInternet] = useState(true);
   const [bannerList, setBannerList] = useState([])
@@ -52,16 +66,56 @@ export default function Home({ navigation }) {
       checkNotificationPer()
       initFCM();
       getRestaurantBannersData();
+      if (changeLiveLocation?.address?.length > 0) {
+        setTimeout(() => {
+          currentLocation = {
+            lat: getLocation('lat'),
+            lng: getLocation('lng'),
+          }
+          handleCurrentAddress()
+        }, 1000)
+
+      }
     }, []),
   );
+
+
+  const handleCurrentAddress = async () => {
+    setCurrentLocation();
+    const addressData = await getGeoCodes(
+      currentLocation?.lat,
+      currentLocation?.lng,
+    );
+
+    let data = {
+      address: addressData?.address,
+      geoLocation: addressData?.geo_location
+    }
+    setChangeLiveLocation(data)
+  };
+
+
 
 
   const getRestaurantBannersData = async () => {
     const res = await getRestaurantBanners();
     setBannerList(res)
     //  console.log("res---getRestaurantBannersData",res);
-
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      if (bannerList.length > 0) {
+        StatusBar.setBarStyle("light-content", true);
+      } else {
+        StatusBar.setBarStyle("dark-content", true);
+      }
+
+      return () => {
+        StatusBar.setBarStyle("dark-content", true);
+      };
+    }, [bannerList])
+  );
 
 
   async function requestUserNotificationPermission() {

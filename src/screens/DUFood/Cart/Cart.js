@@ -111,11 +111,11 @@ const Cart = ({ navigation, route }) => {
       );
       allCompleteMealList = mealOrderList;
       setAppUserData(appUser)
-      if (restaurentOfferCoupan?.length == 0) {
-        getRestaurantOffersData();
-      }
+      // if (restaurentOfferCoupan?.length == 0) {
+      getRestaurantOffersData();
+      // }
 
-    }, [selectedAddress, restaurentOfferCoupan]),
+    }, [selectedAddress]),
   );
 
   useEffect(() => {
@@ -581,7 +581,7 @@ const Cart = ({ navigation, route }) => {
         //   navigation.navigate('trackingFoodOrderList');
         // }}
         disable={cartBillG?.topay > 0 ? false : true}
-        payText={'Google Pay'}
+        payText={'Razor Pay'}
         onPressBuyNow={() => {
           handleOrderCreate();
         }}
@@ -718,7 +718,7 @@ const Cart = ({ navigation, route }) => {
               getCartTotal={cartBillG}
             />
           )}
-           {completeMealList?.length > 0 && (
+          {completeMealList?.length > 0 && (
             <View style={styles.completeMealWithView}>
               <Text style={styles.titleText}>Complete your meal with</Text>
               <View style={styles.comMealListView}>
@@ -785,6 +785,7 @@ const Cart = ({ navigation, route }) => {
               non- refundable after placing the order.
             </Text>
           </View>
+
         </ScrollView>
 
         <BillSummary
@@ -792,6 +793,7 @@ const Cart = ({ navigation, route }) => {
           activeOffer={activeOffer}
           visible={isBillDetail}
           cartBillG={cartBillG}
+          cartList={cartList}
           onClose={() => setIsBillDetail(false)}
           onSelectMenu={key => {
             scrollToGroup_(key);

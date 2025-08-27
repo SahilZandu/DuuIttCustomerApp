@@ -23,6 +23,7 @@ import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import CouponDetail from '../Components/CouponDetail';
 import { rootStore } from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
+import { Wrapper } from '../../../halpers/Wrapper';
 
 const CouponsList = ({ navigation, route }) => {
   const { restaurant, selectedOffers, onCoupanSelected, couponList, getCartTotal } = route.params;
@@ -140,14 +141,24 @@ const CouponsList = ({ navigation, route }) => {
   };
 
   return (
+     <Wrapper
+            edges={['left', 'right']}
+            transparentStatusBar
+            title={'Coupons'}
+            backArrow={true}
+            onPress={() => {
+              navigation.goBack();
+            }}
+            showHeader
+          >
     <View style={styles.container}>
-      <Header
+      {/* <Header
         title={'Coupons'}
         backArrow={true}
         onPress={() => {
           navigation.goBack();
         }}
-      />
+      /> */}
       {/* coupansListLoader */}
       {loading ? (
         <AnimatedLoader type={'coupansListLoader'} />
@@ -187,6 +198,7 @@ const CouponsList = ({ navigation, route }) => {
         }}
       />
     </View>
+    </Wrapper>
   );
 };
 
