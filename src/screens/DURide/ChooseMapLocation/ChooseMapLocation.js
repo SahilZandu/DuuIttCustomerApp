@@ -205,14 +205,17 @@ const ChooseMapLocation = ({ navigation, route }) => {
     }
 
     setTimeout(() => {
-      setLoading(false)
       const senderSet = pickDrop === 'pick' ? newItem : senderAddress;
       const receiverSet = pickDrop === 'drop' ? newItem : receiverAddress;
       if (senderSet?.address?.length > 0 && receiverSet?.address?.length > 0) {
-        navigation.navigate('priceDetails');
+        setTimeout(() => {
+          navigation.navigate('priceDetails');
+        }, 100)
+
       } else {
         navigation.navigate('setLocationHistory');
       }
+      setLoading(false)
     }, 800);
   };
 
@@ -325,7 +328,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
                 : { height: (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100) }
             }
             origin={geoLocation}
-            onTouchLocation={handleTouchAddress}
+            onTouchLocation={(loacation) => { handleTouchAddress(loacation) }}
             height={Platform.OS == 'ios'
               ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
               : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)
@@ -373,7 +376,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
                     index={0}
                     onPress={() => { }}
                   />
-                  <Spacer space={'12%'} />
+                  <Spacer space={'10%'} />
                   <CTA
                     loading={loading}
                     onPress={() => {

@@ -340,9 +340,14 @@ const SetLocationHistory = ({ navigation }) => {
     }
   }
 
+
+  const onPressContinue = () => {
+    navigation.navigate('priceDetails');
+  }
+
   return (
     <Wrapper
-      edges={['left', 'right','bottom']}
+      edges={['left', 'right', 'bottom']}
       transparentStatusBar
       title={'Pick up or send anything'}
       backArrow={true}
@@ -430,7 +435,7 @@ const SetLocationHistory = ({ navigation }) => {
           <View style={{ backgroundColor: colors.appBackground, height: hp("8%") }}>
             <Spacer space={'3%'} />
             <CTA title={'continue'}
-              onPress={() => { navigation.navigate('priceDetails') }}
+              onPress={() => { onPressContinue() }}
             />
           </View>}
       </View>

@@ -254,14 +254,14 @@ const SetLocationHistory = ({ navigation }) => {
       setGeoLocation(item?.geo_location);
       setPickDrop('drop');
       if (receiverAddress?.address?.length > 0) {
-        navigation.navigate('priceDetails');
+          navigation.navigate('priceDetails');
       }
     } else {
       setDropLocation(item?.address);
       setReceiverAddress(item);
       setGeoLocation2(item?.geo_location);
       if (senderAddress?.address?.length > 0) {
-        navigation.navigate('priceDetails');
+          navigation.navigate('priceDetails');
       }
     }
   }
@@ -333,6 +333,10 @@ const SetLocationHistory = ({ navigation }) => {
       setPickDrop('drop');
       setReceiverAddress({});
     }
+  }
+
+  const onPressContinue = () => {
+      navigation.navigate('priceDetails');
   }
 
   return (
@@ -431,7 +435,9 @@ const SetLocationHistory = ({ navigation }) => {
           <View style={{ backgroundColor: colors.appBackground, height: hp("8%") }}>
             <Spacer space={'3%'} />
             <CTA title={'continue'}
-              onPress={() => { navigation.navigate('priceDetails') }}
+              onPress={() => {
+                onPressContinue()
+              }}
             />
           </View>}
       </View>

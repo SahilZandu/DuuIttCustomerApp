@@ -32,7 +32,7 @@ const MapLocationRoute = React.memo(({
   const mapRef = useRef(null);
   const debounceTimeout = useRef(null);
   const [isMapReady, setIsMapReady] = useState(false);
-
+  const lastRegionRef = useRef(null);
   // Memoized map region to prevent unnecessary re-renders
   const mapRegion = useMemo(() => {
     if (origin?.lat && origin?.lng) {
@@ -63,36 +63,69 @@ const MapLocationRoute = React.memo(({
     );
   }, []);
 
-  // Optimized region change handler with debouncing
+
+
+  // Keep last region in a ref to compare properly
+
   const handleRegionChangeComplete = useCallback((region) => {
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
-      // Only update if region actually changed significantly
-      const latDiff = Math.abs(region?.latitude ?? 0 - mapRegion?.latitude ?? 0);
-      const lngDiff = Math.abs(region?.longitude ?? 0 - mapRegion?.longitude ?? 0);
+      if (!region) return;
 
-      // Optional bounds check
-      // if (!isWithinBounds(region?.latitude, region?.longitude)) {
-      //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-      //   const fallbackRegion = {
-      //     latitude: 30.7400,
-      //     longitude: 76.7900,
-      //     ...getMpaDalta(),
-      //   };
-      //   mapRef.current?.animateToRegion(fallbackRegion, 1000);
-      // }
+      const currentLat = Number(region.latitude);
+      const currentLng = Number(region.longitude);
 
+      const lastLat = Number(lastRegionRef.current?.latitude ?? 0);
+      const lastLng = Number(lastRegionRef.current?.longitude ?? 0);
+
+      const latDiff = Math.abs(currentLat - lastLat);
+      const lngDiff = Math.abs(currentLng - lastLng);
+
+      // Only trigger if moved more than threshold
       if (latDiff > 0.0001 || lngDiff > 0.0001) {
+        lastRegionRef.current = region; // update last region
         onTouchLocation({
-          latitude: region.latitude,
-          longitude: region.longitude,
+          latitude: currentLat,
+          longitude: currentLng,
         });
       }
     }, Platform.OS === 'ios' ? 100 : 300);
-  }, [mapRegion, onTouchLocation]);
+  }, [onTouchLocation]);
+
+
+  // Optimized region change handler with debouncing
+  // const handleRegionChangeComplete = useCallback((region) => {
+  //   if (debounceTimeout.current) {
+  //     clearTimeout(debounceTimeout.current);
+  //   }
+
+  //   debounceTimeout.current = setTimeout(() => {
+  //     // Only update if region actually changed significantly
+  //     const latDiff = Math.abs(region?.latitude ?? 0 - mapRegion?.latitude ?? 0);
+  //     const lngDiff = Math.abs(region?.longitude ?? 0 - mapRegion?.longitude ?? 0);
+
+  //     // Optional bounds check
+  //     // if (!isWithinBounds(region?.latitude, region?.longitude)) {
+  //     //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+  //     //   const fallbackRegion = {
+  //     //     latitude: 30.7400,
+  //     //     longitude: 76.7900,
+  //     //     ...getMpaDalta(),
+  //     //   };
+  //     //   mapRef.current?.animateToRegion(fallbackRegion, 1000);
+  //     // }
+
+  //     if (latDiff > 0.0001 || lngDiff > 0.0001) {
+  //       onTouchLocation({
+  //         latitude: region.latitude,
+  //         longitude: region.longitude,
+  //       });
+  //     }
+  //   }, Platform.OS === 'ios' ? 100 : 300);
+  // }, [mapRegion, onTouchLocation]);
 
   // Optimized map ready handler
   const handleMapReady = useCallback(() => {
