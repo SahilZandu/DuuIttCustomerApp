@@ -51,7 +51,7 @@ export default function PersonalInfo({ navigation, route }) {
     console.log('v--', v);
   }
   const isSuccess = () => {
-
+    setIsLogout(false);
     setTimeout(async () => {
       let query = {
         user_id: appUser?._id,
@@ -60,7 +60,6 @@ export default function PersonalInfo({ navigation, route }) {
       socketServices.disconnectSocket();
       await setToken(null);
       await setAppUser(null);
-      setIsLogout(false);
       navigation.dispatch(
         CommonActions.reset({
           index: 0,

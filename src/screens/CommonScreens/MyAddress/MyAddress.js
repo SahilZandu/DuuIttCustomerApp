@@ -89,6 +89,7 @@ export default function MyAddress({ navigation, route }) {
   };
 
   const renderItem = ({ item, index }) => {
+    console.log("item--setSelectedAddress",item)
     return (
       <AddressCard
         item={item}

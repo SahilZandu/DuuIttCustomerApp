@@ -904,14 +904,6 @@ const Cart = ({ navigation, route }) => {
         product={itemForEdit?.addon}
       /> */}
 
-        {(appUser?.addresses && appUser?.addresses?.length == 0) &&
-          <IncompletedAppRule
-            title={'App Confirmation'}
-            message={' Please add your address first.'}
-            onHanlde={() => onPressLocation()}
-          />
-        }
-
         {/* {(appUserData?.profile_pic == null ||
         appUserData?.profile_pic?.length === 0) && (
           <IncompletedAppRule
@@ -922,7 +914,16 @@ const Cart = ({ navigation, route }) => {
         )} */}
 
 
-        {(Object.keys(deliveryAddress)?.length === 0) && (
+        {/* {(appUser?.addresses && appUser?.addresses?.length == 0) &&
+          <IncompletedAppRule
+            title={'App Confirmation'}
+            message={' Please add your address first.'}
+            onHanlde={() => onPressLocation()}
+          />
+        } */}
+
+
+        {((Object.keys(deliveryAddress ?? {})?.length === 0) && (appUser?.addresses && appUser?.addresses?.length == 0)) && (
           <IncompletedAppRule
             title={'App Confirmation'}
             message={'Please add your address first.'}

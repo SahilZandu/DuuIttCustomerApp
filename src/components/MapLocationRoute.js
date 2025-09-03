@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, Platform, Alert } from 'react-native';
 import MapView, { Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { appImages } from '../commons/AppImages';
-import { getMpaDalta } from './GeoCodeAddress';
+import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { colors } from '../theme/colors';
 
@@ -84,6 +84,17 @@ const MapLocationRoute = React.memo(({
       const latDiff = Math.abs(currentLat - lastLat);
       const lngDiff = Math.abs(currentLng - lastLng);
 
+      //     // Optional bounds check
+      // if (!isWithinBounds(region?.latitude, region?.longitude)) {
+      //   Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+      //   const fallbackRegion = {
+      //     latitude: 30.7400,
+      //     longitude: 76.7900,
+      //     ...getMpaDalta(),
+      //   };
+      //   mapRef.current?.animateToRegion(fallbackRegion, 1000);
+      // }
+
       // Only trigger if moved more than threshold
       if (latDiff > 0.0001 || lngDiff > 0.0001) {
         lastRegionRef.current = region; // update last region
@@ -148,13 +159,16 @@ const MapLocationRoute = React.memo(({
     initialRegion: mapRegion,
     mapType: Platform.OS === 'ios' ? 'mutedStandard' : 'standard',
     showsCompass: false,
-    showsUserLocation: false,
-    followsUserLocation: false,
     loadingEnabled: true,
     zoomEnabled: true,
     scrollEnabled: true,
-    rotateEnabled: true,
+    rotateEnabled: false,
     zoomTapEnabled: true,
+    // 👇 Set Zoom Limits
+    minZoomLevel: 10,  // prevent zooming out too far
+    maxZoomLevel: 18,  // prevent zooming in too much
+    showsUserLocation:true,   // 👈 shows blue dot
+    followsUserLocation:true, // 👈 map follows the user as they move
     // Performance optimizations
     showsBuildings: false,
     showsTraffic: false,
@@ -162,6 +176,7 @@ const MapLocationRoute = React.memo(({
     showsMyLocationButton: false,
     toolbarEnabled: false,
     // Reduce map updates for better performance
+    onRegionChange: (e) => { setMpaDalta(e)},
     onRegionChangeComplete: handleRegionChangeComplete,
     onMapReady: handleMapReady,
   }), [mapRegion, mapContainerView, handleRegionChangeComplete, handleMapReady]);
@@ -215,7 +230,7 @@ const MapLocationRoute = React.memo(({
         ]}
         strokeColor={colors.black}
         fillColor="rgba(0, 150, 255, 0)"
-        strokeWidth={2}
+        strokeWidth={4}
       /> */}
       </MapView>
       {centerMarker}
@@ -250,8 +265,6 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
 });
-
-
 
 
 

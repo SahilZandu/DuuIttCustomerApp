@@ -316,7 +316,7 @@ const ChangeRoute = ({ data, navigation }) => {
             borderRadius: 10,
             height: hp('14%'),
             width: wp('88%'),
-            marginTop: '7%',
+            marginTop: '5%',
             // paddingVertical: '5%',
           }}>
           {index % 2 == 0 ? (
@@ -452,17 +452,17 @@ const ChangeRoute = ({ data, navigation }) => {
   return (
     <View
       style={{
-        marginTop: '3%',
+        marginTop: '0%',
         marginHorizontal: 10,
       }}>
-      <Text
+      {/* <Text
         style={{
           fontSize: RFValue(13),
           fontFamily: fonts.semiBold,
           color: colors.black,
         }}>
         {Strings.chooseYourService}
-      </Text>
+      </Text> */}
       <View
         style={{
           flex: 1,

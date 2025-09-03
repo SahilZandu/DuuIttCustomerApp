@@ -49,7 +49,7 @@ export default function Splash({ navigation }) {
   //     "updatedAt": "2025-06-26T10:46:38.792Z"
   // })
     // requestUserPermission();
-    // setCurrentLocation()
+    setCurrentLocation()
     setTimeout(() => {
       const { token, appUser } = rootStore.commonStore;
       console.log('appUser splash', appUser, token);

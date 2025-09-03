@@ -89,7 +89,8 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           zoomEnabled={true}
           scrollEnabled={true}
           showsScale={true}
-          mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
+          // mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
+          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
           paddingAdjustmentBehavior={'automatic'}
           // initialRegion={{
           //   latitude: lat,
@@ -104,9 +105,14 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
             longitudeDelta: getMpaDalta().longitudeDelta,
           }}
           zoomTapEnabled
-          rotateEnabled
+          rotateEnabled={false}
           loadingEnabled
           showsCompass={false}
+          // 👇 Set Zoom Limits
+          minZoomLevel={10}  // prevent zooming out too far
+          maxZoomLevel={18}  // prevent zooming in too much
+          showsUserLocation={true}   // 👈 shows blue dot
+          followsUserLocation={true} // 👈 map follows the user as they move
         >
           {markerArray && markerArray?.length > 0 ? (
             markerArray?.map((marker, index) => (

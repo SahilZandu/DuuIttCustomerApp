@@ -43,6 +43,7 @@ export default function Home({ navigation }) {
   const { appUser } = rootStore.commonStore;
   const { saveFcmToken, getCheckDeviceId, getRestaurantBanners } = rootStore.dashboardStore;
   const { setChangeLiveLocation, changeLiveLocation } = rootStore.foodDashboardStore;
+  const { setSelectedAddress } = rootStore.cartStore;
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -57,25 +58,25 @@ export default function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      setCurrentLocation();
       requestUserNotificationPermission();
       getCheckDevice();
       requestNotificationPermission();
       handleAndroidBackButton();
-      setCurrentLocation()
       checkInternet()
       checkNotificationPer()
       initFCM();
       getRestaurantBannersData();
-      if (changeLiveLocation?.address?.length > 0) {
-        setTimeout(() => {
-          currentLocation = {
-            lat: getLocation('lat'),
-            lng: getLocation('lng'),
-          }
-          handleCurrentAddress()
-        }, 1000)
+      // if (changeLiveLocation?.address?.length  0) {
+      setTimeout(() => {
+        currentLocation = {
+          lat: getLocation('lat'),
+          lng: getLocation('lng'),
+        }
+        handleCurrentAddress();
+      }, 1000)
 
-      }
+      // }
     }, []),
   );
 
@@ -91,6 +92,21 @@ export default function Home({ navigation }) {
       address: addressData?.address,
       geoLocation: addressData?.geo_location
     }
+
+    const orderAddress = {
+      _id: "674007788c0213057bd1520c",
+      address: addressData?.address,
+      address_detail: "Current Location",
+      geo_location: addressData?.geo_location,
+      landmark: "Live Location",
+      location_id: addressData?.place_Id ?? "ChIJG4wjYojuDzkRE-yXH4TZiN0",
+      name: appUser?.name ?? "No Name",
+      phone: appUser?.phone ?? 9876543210,
+      title: "Other"
+    }
+
+    setSelectedAddress(orderAddress);
+
     setChangeLiveLocation(data)
   };
 
@@ -99,7 +115,11 @@ export default function Home({ navigation }) {
 
   const getRestaurantBannersData = async () => {
     const res = await getRestaurantBanners();
-    setBannerList(res)
+    if (res?.length > 0) {
+      setBannerList(res)
+    } else {
+      setBannerList([]);
+    }
     //  console.log("res---getRestaurantBannersData",res);
   }
 
@@ -241,11 +261,12 @@ export default function Home({ navigation }) {
       {bannerList?.length == 0 ? <Wrapper4
         edges={['left', 'right']}
         transparentStatusBar
-        title={appUser?.name ?? "Home"}
+        title={""}
         appUserInfo={appUser}
         navigation={navigation}
         showProfile={true}
         showHeader
+        showLocation={true}
       >
         {/* <View style={styles.container}> */}
         {internet == false ? (
@@ -305,8 +326,19 @@ export default function Home({ navigation }) {
                       bannerList={bannerList}
                       data={bannerList[0]?.image_urls}
                       paginationList={true}
-                      imageHeight={hp('30%')} />
+                      imageHeight={hp('38%')} />
                   )}
+                  <View style={styles.haederShowView}>
+                    <DashboardHeader
+                      backgroundColor={colors.black05 ?? 'transparent'}
+                      textColor={bannerList[0]?.backgroundColor ?? colors.black}
+                      title={""}
+                      appUserInfo={appUser}
+                      navigation={navigation}
+                      showProfile={true}
+                      showLocation={true}
+                    />
+                  </View>
                   <View style={styles.innerView}>
                     <ChangeRoute data={homeCS} navigation={navigation} />
                   </View>

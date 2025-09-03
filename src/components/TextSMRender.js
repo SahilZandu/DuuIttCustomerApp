@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text,} from 'react-native';
+import { StyleSheet, View, Text, } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/fonts/fonts';
@@ -14,7 +14,7 @@ const TextSMRender = ({
             <View style={styles.smallMainView}>
                 <Text style={styles.smallText}>Small order fee</Text>
                 {cartList?.small_order_fee > 0 && <Text style={styles.smCutAmount}>{currencyFormat(cartList?.contactDetailsSmallOrder?.small_order_fee ?? 0)}</Text>}
-                <Text style={styles.smShowAmount}>{currencyFormat(cartList?.small_order_fee > 0 ? cartList?.small_order_fee ?? 0 : cartList?.contactDetailsSmallOrder?.small_order_fee ?? 0)}</Text>
+                <Text style={styles.smShowAmount}>{currencyFormat(cartList?.small_order_fee ?? 0)}</Text>
             </View>
             <Text style={styles.reducedOrderText}>reduced for orders above {currencyFormat(cartList?.contactDetailsSmallOrder?.small_order_min_amount ?? 0)} </Text>
         </View>

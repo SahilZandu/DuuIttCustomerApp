@@ -15,7 +15,7 @@ import { appImages } from '../commons/AppImages';
 import MapView, { Marker, AnimatedRegion, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import PolylineDecoder from '@mapbox/polyline';
 import { colors } from '../theme/colors';
-import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, } from './GeoCodeAddress';
+import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, setMpaDalta, } from './GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
@@ -232,11 +232,11 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     ) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 1000);
+      }, 300);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 5000);
+      }, 1000);
     }
   };
 
@@ -404,7 +404,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           provider={PROVIDER_GOOGLE}
           onRegionChange={e => {
             setMapManageRideDalta(e);
-            // setMpaDalta(e);
+            setMpaDalta(e);
             // console.log('e---onRegionChange', e);
             // handleRegionChangeComplete(e)
           }}
@@ -413,16 +413,20 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           zoomEnabled={true}
           scrollEnabled={true}
           showsScale={true}
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+          // mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
           region={mapRegion}
           // initialRegion={mapRegion}
           zoomTapEnabled={true}
-          rotateEnabled={true}
+          rotateEnabled={false}
           loadingEnabled={true}
           showsCompass={false}
           cacheEnabled={false}
           followsUserLocation={false}
           showsUserLocation={false}
+          // 👇 Set Zoom Limits
+          minZoomLevel = {10}  // prevent zooming out too far
+          maxZoomLevel={18}  // prevent zooming in too much
           // Performance optimizations
           showsBuildings={false}
           showsTraffic={false}
@@ -486,13 +490,13 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         )} */}
 
           {/* Polyline for the Route */}
-          {coords?.length > 0 && (
+          {/* {coords?.length > 0 && (
             <Polyline
               coordinates={coords}
               strokeWidth={4}
               strokeColor={colors.main}
             />
-          )}
+          )} */}
         </MapView>
       }
     </View>

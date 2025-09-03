@@ -24,6 +24,7 @@ import { getGeoCodes } from '../GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { rootStore } from '../../stores/rootStore';
 import { currencyFormat } from '../../halpers/currencyFormat';
+import AnimatedLoader from '../AnimatedLoader/AnimatedLoader';
 
 let geoLocation = {
     lat: null,
@@ -46,6 +47,7 @@ const DashboardHeader3 = ({
     const { getWallet, welletBalance } = rootStore.dashboardStore
     const { currentAddress } = rootStore.myAddressStore;
     const { changeLiveLocation } = rootStore.foodDashboardStore;
+    const { setSelectedAddress } = rootStore.cartStore;
     const getLocation = type => {
         let d =
             type == 'lat'
@@ -57,6 +59,7 @@ const DashboardHeader3 = ({
     const [address, setAddress] = useState(changeLiveLocation?.address ?? currentAddress?.address);
     const [isRefersh, setIsRefersh] = useState(false);
     const [walletData, setWalletData] = useState(welletBalance ?? {})
+    const [name, setName] = useState('')
     // const [geoLocation, setGeoLocation] = useState({
     //   lat: getLocation('lat'),
     //   lng: getLocation('lng'),
@@ -64,7 +67,7 @@ const DashboardHeader3 = ({
 
     useFocusEffect(
         useCallback(() => {
-            setAddress(changeLiveLocation?.address ?? currentAddress?.address ?? "Haidar Nagar, Haider Nagar Jalalpur, Uttar Pradesh 251306, India");
+            setAddress(changeLiveLocation?.address ?? currentAddress?.address ?? "");
             setCurrentLocation();
             if (walletData?.balance == undefined) {
                 getWalletData();
@@ -83,6 +86,12 @@ const DashboardHeader3 = ({
             setTimeout(() => {
                 getCurrentAddress();
             }, 500);
+        } else {
+            const nameData = changeLiveLocation?.address?.split(',');
+            // console.log('nameData--', nameData[0]);
+            const otherData = nameData?.slice(1)?.join(', ')?.trim();
+            setName(nameData[0]);
+            setAddress(otherData ?? changeLiveLocation?.address);
         }
     }, [isRefersh]);
 
@@ -114,7 +123,23 @@ const DashboardHeader3 = ({
     const getCurrentAddress = async () => {
         const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
         console.log('addressData', addressData);
-        setAddress(addressData?.address);
+        const nameData = addressData?.address?.split(',');
+        // console.log('nameData--', nameData[0]);
+        const otherData = nameData?.slice(1)?.join(', ')?.trim();
+        setName(nameData[0]);
+        setAddress(otherData ?? addressData?.address);
+        const foodOrderAddress = {
+            _id: "674007788c0213057bd1520c",
+            address: addressData?.address,
+            address_detail: "Current Location",
+            geo_location: addressData?.geo_location,
+            landmark: "Live Location",
+            location_id: addressData?.place_Id ?? "ChIJG4wjYojuDzkRE-yXH4TZiN0",
+            name: appUserInfo?.name ?? "No Name",
+            phone: appUserInfo?.phone ?? 9876543210,
+            title: "Other"
+        }
+        setSelectedAddress(foodOrderAddress);
     };
 
     return (
@@ -158,9 +183,9 @@ const DashboardHeader3 = ({
                                 fontFamily: fonts.semiBold,
                                 color: colors.black,
                                 maxWidth: wp('62%'),
-                                 textTransform:'capitalize'
+                                textTransform: 'capitalize'
                             }}>
-                            Hello {appUserInfo?.name}
+                            {name?.length > 0 ? name : `Hello Change Location`}
                         </Text>
                         <SvgXml style={{ marginLeft: '1%', marginTop: '1%' }}
                             height={26}
@@ -193,16 +218,20 @@ const DashboardHeader3 = ({
                                     }}> {currencyFormat(walletData?.balance ?? 0)}</Text>
                             </View>}
                     </View>
-                    <Text
+                    {name?.length > 0 ? <Text
                         style={{
                             fontSize: RFValue(10),
                             fontFamily: fonts.regular,
                             color: colors.colorA9,
                             width: wp('68%'),
                         }}
-                        numberOfLines={1}>
+                        numberOfLines={2}>
                         {address}
-                    </Text>
+                    </Text> :
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', right: '10%' }}>
+                            <AnimatedLoader type={'liveLocationLoader'} />
+                        </View>
+                    }
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -236,7 +265,7 @@ const DashboardHeader3 = ({
                         marginTop: '4%',
                     }}>
                     <TouchableOpacity
-                       
+
                         activeOpacity={0.8}
                         onPress={onPressSearch}
                         style={{
@@ -249,8 +278,8 @@ const DashboardHeader3 = ({
                             borderColor: colors.colorD9,
                             backgroundColor: colors.screenBackground,
                         }}>
-                           <TextInput
-                             pointerEvents="none"
+                        <TextInput
+                            pointerEvents="none"
                             ref={searchInputRef}
                             value={value}
                             onChangeText={onChangeText}

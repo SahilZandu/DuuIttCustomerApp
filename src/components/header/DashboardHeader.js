@@ -243,7 +243,7 @@
 
 // export default DashboardHeader;
 
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Platform,
   Text,
@@ -261,8 +261,19 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { appImages, appImagesSvg } from '../../commons/AppImages';
 import Url from '../../api/Url';
+import { rootStore } from '../../stores/rootStore';
+import { useFocusEffect } from '@react-navigation/native';
+import { getCurrentLocation, setCurrentLocation } from '../GetAppLocation';
+import { getGeoCodes } from '../GeoCodeAddress';
+import { ActivityIndicator } from 'react-native-paper';
+import AnimatedLoader from '../AnimatedLoader/AnimatedLoader';
 
 
+
+let geoLocation = {
+  lat: null,
+  lng: null,
+};
 const DashboardHeader = ({ title,
   onChangeText, value,
   onCancelPress,
@@ -271,40 +282,134 @@ const DashboardHeader = ({ title,
   onBlur,
   appUserInfo,
   navigation,
-  showProfile
+  showProfile,
+  backgroundColor,
+  textColor,
+  showLocation
 }) => {
   const searchInputRef = useRef(null);
+  const { currentAddress } = rootStore.myAddressStore;
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
+  const [address, setAddress] = useState(currentAddress?.address ?? '');
+  const [name, setName] = useState(title ?? '')
+  const [isRefersh, setIsRefersh] = useState(false);
   const handleSearchButtonPress = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentLocation();
+      if (currentAddress?.address?.length > 0) {
+        const nameData = currentAddress?.address?.split(',');
+        const otherData = nameData?.slice(1)?.join(', ')?.trim();
+        setName(nameData[0] ?? '');
+        setAddress(otherData ?? currentAddress?.address ?? '');
+      }
+      setTimeout(() => {
+        if (getLocation) {
+          onUpdateLatLng();
+          setIsRefersh(true);
+        }
+      }, 300);
+    }, [appUserInfo])
+  )
+
+  const onUpdateLatLng = () => {
+    geoLocation = {
+      lat: getLocation('lat'),
+      lng: getLocation('lng'),
+    };
+    setIsRefersh(true);
+    setTimeout(() => {
+      setIsRefersh(false);
+    }, 500);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getCurrentAddress();
+    }, 500);
+  }, [isRefersh]);
+
+
+  const getCurrentAddress = async () => {
+    const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
+    console.log('addressData', addressData);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    const otherData = nameData?.slice(1)?.join(', ')?.trim();
+    setName(nameData[0] ?? '');
+    setAddress(otherData ?? addressData?.address);
+  };
+
   return (
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: colors.appBackground,
+        backgroundColor: backgroundColor ? backgroundColor : colors.appBackground,
         alignItems: 'center',
         paddingBottom: '2.5%',
         marginTop: Platform.OS == 'ios' ? '1%' : '1%',
         paddingHorizontal: 20,
         borderBottomColor: colors.colorD9,
-        borderBottomWidth: 1
+        borderBottomWidth: backgroundColor ? 0 : 1
       }}>
       <View
-        style={{ flex: 1, backgroundColor: colors.appBackground, marginLeft: '1%' }}>
-        <Text
-          numberOfLines={1}
-          style={{
-            fontSize: RFValue(15),
-            fontFamily: fonts.semiBold,
-            color: colors.black,
-            textTransform:'capitalize'
-          }}>
-          {title}
-        </Text>
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {showLocation && <TouchableOpacity
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          activeOpacity={0.9}
+          // onPress={onPress}
+          style={{ marginRight: '4%', marginLeft: '-2%' }}>
+          <Image
+            style={{ width: 30, height: 30, top: hp('-0.3%'), tintColor: textColor ? textColor : colors.black }}
+            source={appImages.dropIconSet}
+          />
+        </TouchableOpacity>}
+        {name?.length > 0 ? <View
+          style={{ flex: 0, marginLeft: '-2%', justifyContent: 'space-between' }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: RFValue(15),
+              fontFamily: fonts.bold,
+              color: textColor ? textColor : colors.black,
+              width: wp('71%'),
+              textTransform: 'capitalize'
+            }}>
+            {showLocation ? name : title}
+          </Text>
+          {showLocation && <Text
+            style={{
+              fontSize: RFValue(11),
+              fontFamily: fonts.bold,
+              color: textColor ? textColor : colors.black,
+              width: wp('71%'),
+            }}
+            numberOfLines={2}>
+            {address}
+          </Text>}
+        </View> :
+          <View style={{ width: wp('71%'), marginLeft: '-2%', justifyContent: 'space-between' }}>
+            <AnimatedLoader type={'liveLocationLoader'} />
+          </View>}
       </View>
       {showProfile && <TouchableOpacity
+        style={{ left: wp('2%') }}
         hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
         onPress={() => {
           navigation.navigate('profile', { screenName: 'home' });
@@ -317,6 +422,7 @@ const DashboardHeader = ({ title,
             borderRadius: 100,
             borderColor: colors.main,
             borderWidth: 0.3,
+
           }}
           source={
             appUserInfo?.profile_pic?.length > 0

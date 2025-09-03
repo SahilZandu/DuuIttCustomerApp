@@ -51,6 +51,8 @@ let currentLocation = {
 };
 export default function AddRestaurantLocation({ navigation }) {
     const { setChangeLiveLocation } = rootStore.foodDashboardStore;
+    const { appUser } = rootStore.commonStore
+    const { setSelectedAddress } = rootStore.cartStore;
     const getLocation = type => {
         let d =
             type == 'lat'
@@ -146,9 +148,21 @@ export default function AddRestaurantLocation({ navigation }) {
             address: address,
             geoLocation: geoLocation
         }
+        const orderAddress = {
+            _id: "674007788c0213057bd1520c",
+            address: address,
+            address_detail: "Set Food Order Location",
+            geo_location: geoLocation,
+            landmark: "set Location",
+            location_id: loactionId ?? "ChIJG4wjYojuDzkRE-yXH4TZiN0",
+            name: appUser?.name ?? "No Name",
+            phone: appUser?.phone ?? 9876543210,
+            title: "Other"
+        }
+
+        setSelectedAddress(orderAddress);
         setChangeLiveLocation(data),
             navigation.goBack();
-
     };
 
     const handleCurrentAddress = async () => {

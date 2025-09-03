@@ -1,4 +1,4 @@
-import {Platform, StatusBar, StyleSheet} from 'react-native';
+import { Platform, StatusBar, StyleSheet } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,20 +12,20 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.appBackground,
   },
-  mainView:{
-    flex:1,
+  mainView: {
+    flex: 1,
   },
-  innerView:{
-    justifyContent:'center',
-    marginHorizontal:10,
+  innerView: {
+    justifyContent: 'center',
+    marginHorizontal: 10,
 
   },
-  bottomImageView:{
-    marginTop:Platform.OS === 'ios'? '0.5%': '2%'
+  bottomImageView: {
+    marginTop: Platform.OS === 'ios' ? '0.5%' : '2%'
   },
-  bottomImage:{
+  bottomImage: {
     height: hp('30%'),
-     width: wp('100%')
+    width: wp('100%')
   },
   statusBarBackground: {
     position: 'absolute',
@@ -36,6 +36,10 @@ export const styles = StyleSheet.create({
     backgroundColor: 'red', // Match this with your image background color
     zIndex: 0,
   },
- 
- 
+  haederShowView: {
+    position: 'absolute', width: wp('100%'),
+    top: Platform.OS == 'ios' ? hp('5.5%') : hp('5%')
+  }
+
+
 });

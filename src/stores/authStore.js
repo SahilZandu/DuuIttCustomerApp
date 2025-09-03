@@ -341,7 +341,7 @@ export default class AuthStore {
     let requestData = {
       name: values?.name,
       phone: Number(values?.mobile),
-      gender: ""
+      // gender: null,
     };
 
     if (values?.email?.length > 0) {

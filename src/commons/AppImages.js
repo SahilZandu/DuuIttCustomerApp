@@ -937,6 +937,7 @@ export const appImages = {
   parcelOrderImage: require('../assets/parcelOrderImage.png'),
   rideOrderImage: require('../assets/rideOrderImage.png'),
   razorPayImage: require('../assets/razorpay.png'),
+  dubbleRightArrow: require('../assets/dubbleRightArrow.png'),
 
 
 };

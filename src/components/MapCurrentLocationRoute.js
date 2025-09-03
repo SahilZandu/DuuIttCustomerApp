@@ -158,11 +158,11 @@ const MapCurrentLocationRoute = ({
       && animatedCoordinate?.latitude?.toString()?.length > 0) {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 1000);
+      }, 300);
     } else {
       setTimeout(() => {
         setIsMapReady(true);
-      }, 5000);
+      }, 1000);
     }
   };
 
@@ -183,17 +183,21 @@ const MapCurrentLocationRoute = ({
           zoomEnabled
           scrollEnabled={true}
           showsScale
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+          // mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
           region={mapRegion}
           // initialRegion={mapRegion}
           zoomTapEnabled
-          rotateEnabled
+          rotateEnabled={false}
           loadingEnabled
           onPress={e => onTouchLocationData(e.nativeEvent.coordinate)}
           onPoiClick={e => onTouchLocationData(e.nativeEvent.coordinate)}
           showsCompass={false}
-          showsUserLocation={false}
-          followsUserLocation={false}
+          // 👇 Set Zoom Limits
+          minZoomLevel={10}  // prevent zooming out too far
+          maxZoomLevel={18}  // prevent zooming in too much
+          showsUserLocation={true}   // 👈 shows blue dot
+          followsUserLocation={true} // 👈 map follows the user as they move
           // Performance optimizations
           showsBuildings={false}
           showsTraffic={false}

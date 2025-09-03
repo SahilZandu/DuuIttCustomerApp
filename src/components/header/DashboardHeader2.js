@@ -24,6 +24,7 @@ import { getGeoCodes } from '../GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { rootStore } from '../../stores/rootStore';
 import { currencyFormat } from '../../halpers/currencyFormat';
+import AnimatedLoader from '../AnimatedLoader/AnimatedLoader';
 
 let geoLocation = {
   lat: null,
@@ -42,7 +43,7 @@ const DashboardHeader2 = ({
   onBlur,
 }) => {
   const searchInputRef = useRef(null);
-    const {getWallet,welletBalance }=rootStore.dashboardStore
+  const { getWallet, welletBalance } = rootStore.dashboardStore
   const { currentAddress } = rootStore.myAddressStore;
   const getLocation = type => {
     let d =
@@ -52,9 +53,10 @@ const DashboardHeader2 = ({
 
     return d ? d : '';
   };
-  const [address, setAddress] = useState(currentAddress?.address);
+  const [address, setAddress] = useState(currentAddress?.address ?? '');
   const [isRefersh, setIsRefersh] = useState(false);
-  const [walletData,setWalletData]=useState(welletBalance ??{})
+  const [walletData, setWalletData] = useState(welletBalance ?? {})
+  const [name, setName] = useState('')
   // const [geoLocation, setGeoLocation] = useState({
   //   lat: getLocation('lat'),
   //   lng: getLocation('lng'),
@@ -62,9 +64,14 @@ const DashboardHeader2 = ({
 
   useFocusEffect(
     useCallback(() => {
-      setAddress(currentAddress?.address);
+      if (currentAddress?.address?.length > 0) {
+        const nameData = currentAddress?.address?.split(',');
+        const otherData = nameData?.slice(1)?.join(', ')?.trim();
+        setName(nameData[0] ?? '');
+        setAddress(otherData ?? currentAddress?.address ?? '');
+      }
       setCurrentLocation();
-      if(walletData?.balance == undefined){
+      if (walletData?.balance == undefined) {
         getWalletData();
       }
       setTimeout(() => {
@@ -90,10 +97,10 @@ const DashboardHeader2 = ({
     setWalletData(res);
   };
   // console.log('res--walletData', walletData);
- const handleWalletLoading =(v)=>{
- console.log('v--handleWalletLoading',v);
- 
- }
+  const handleWalletLoading = (v) => {
+    console.log('v--handleWalletLoading', v);
+
+  }
   // console.log("address---",address,currentAddress);
 
   const onUpdateLatLng = () => {
@@ -110,7 +117,11 @@ const DashboardHeader2 = ({
   const getCurrentAddress = async () => {
     const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
     console.log('addressData', addressData);
-    setAddress(addressData?.address);
+    const nameData = addressData?.address?.split(',');
+    // console.log('nameData--', nameData[0]);
+    const otherData = nameData?.slice(1)?.join(', ')?.trim();
+    setName(nameData[0]);
+    setAddress(otherData ?? addressData?.address);
   };
 
   return (
@@ -119,7 +130,7 @@ const DashboardHeader2 = ({
         backgroundColor: colors.appBackground,
         justifyContent: 'center',
         paddingBottom: '3%',
-         marginTop:Platform.OS == 'ios' ? '1%':'1%',
+        marginTop: Platform.OS == 'ios' ? '1%' : '1%',
         paddingHorizontal: 20,
         borderBottomColor: colors.colorD9,
         borderBottomWidth: 1
@@ -140,56 +151,66 @@ const DashboardHeader2 = ({
 
         <View
           style={{ flex: 1, backgroundColor: colors.appBackground, marginRight: '1%' }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: RFValue(15),
-                fontFamily: fonts.semiBold,
-                color: colors.black,
-                width: wp('50%'),
-                textTransform:'capitalize'
-              }}>
-              Hello {appUserInfo?.name}
-            </Text>
-            {appUserInfo?.isWallet == true &&
-             <View style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              right: wp(0.5),
-              borderRadius: 20, borderWidth: 1,
-              paddingHorizontal: 8,
-              paddingVertical: 1,
-              borderColor: colors.main,
-              backgroundColor: colors.colorD45,
-              justifyContent: 'center',
-            }}>
-              <Image resizeMode='cover'
-                style={{ height: 15, width: 15 ,
-                }} 
-                source={appImages.ruppeYellowIcon} />
+          {name?.length > 0 ?
+            <>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: RFValue(15),
+                    fontFamily: fonts.semiBold,
+                    color: colors.black,
+                    width: wp('62%'),
+                    textTransform: 'capitalize'
+                  }}>
+                  {name?.length > 0 ? name : `Hello ${appUserInfo?.name}`}
+                </Text>
+                {appUserInfo?.isWallet == true &&
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    right: wp(0.5),
+                    borderRadius: 20, borderWidth: 1,
+                    paddingHorizontal: 8,
+                    paddingVertical: 1,
+                    borderColor: colors.main,
+                    backgroundColor: colors.colorD45,
+                    justifyContent: 'center',
+                  }}>
+                    <Image resizeMode='cover'
+                      style={{
+                        height: 15, width: 15,
+                      }}
+                      source={appImages.ruppeYellowIcon} />
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        marginLeft: wp(0.1),
+                        fontSize: RFValue(9),
+                        fontFamily: fonts.semiBold,
+                        color: colors.main,
+                        maxWidth: wp(12)
+                      }}> {currencyFormat(walletData?.balance ?? 0)}</Text>
+                  </View>}
+              </View>
               <Text
-                numberOfLines={1}
                 style={{
-                  marginLeft: wp(0.1),
-                  fontSize: RFValue(9),
-                  fontFamily: fonts.semiBold,
-                  color: colors.main,
-                  maxWidth: wp(12)
-                }}> {currencyFormat(walletData?.balance ?? 0)}</Text>
-            </View>}
-          </View>
-          <Text
-            style={{
-              fontSize: RFValue(10),
-              fontFamily: fonts.regular,
-              color: colors.colorA9,
-              width: wp('68%'),
-            }}
-            numberOfLines={1}>
-            {address}
-          </Text>
+                  fontSize: RFValue(10),
+                  fontFamily: fonts.regular,
+                  color: colors.colorA9,
+                  width: wp('68%'),
+                }}
+                numberOfLines={2}>
+                {address}
+              </Text>
+            </> :
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', right: '10%' }}>
+              <AnimatedLoader type={'liveLocationLoader'} />
+            </View>
+          }
         </View>
+
+
 
         <TouchableOpacity
           hitSlop={{ top: 10, bottom: 10, left: 20, right: 20 }}
@@ -209,7 +230,7 @@ const DashboardHeader2 = ({
               appUserInfo?.profile_pic?.length > 0
                 ? { uri: Url.Image_Url + appUserInfo?.profile_pic }
                 : appImages.profileImage
-                // appImages.profileImage
+              // appImages.profileImage
             }
           />
         </TouchableOpacity>
