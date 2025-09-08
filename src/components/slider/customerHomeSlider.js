@@ -32,13 +32,17 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                     activeOpacity={0.8}
                     style={{
                         alignSelf: 'center',
+                        backgroundColor: bannerList[0]?.backgroundColor ?? colors.black,
+                        borderBottomLeftRadius: 20,
+                        borderBottomRightRadius: 20,
                     }}>
                     <FastImage
                         style={{
                             width: imageWidth ? imageWidth : wp('100%'),
                             height: imageHeight ? imageHeight : hp('25%'),
                             borderBottomLeftRadius: 20,
-                            borderBottomRightRadius: 20
+                            borderBottomRightRadius: 20,
+
                         }}
                         source={{ uri: Url?.Image_Url + item }}// your .gif file in assets
                         resizeMode={FastImage.resizeMode.stretch}
@@ -113,15 +117,15 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                 <View key={i} style={{
                                     justifyContent: 'center',
                                     backgroundColor: colors.white,
-                                    width: wp('42%'),
-                                    height: hp('11%'),
-                                    // marginHorizontal: wp('2.5%'), // Equal horizontal margin
+                                    width: data?.box_type == 'circle' ? wp('22%') : wp('42%'),
+                                    height: data?.box_type == 'circle' ? wp('22%') : hp('11%'),
+                                    marginHorizontal: wp('2.5%'), // Equal horizontal margin
                                     // marginBottom: hp('1%'), // Vertical margin
-                                    borderRadius: 10,
+                                    borderRadius: data?.box_type == 'circle' ? wp('22%') / 2 : 10,
                                     borderWidth: 0.5,
                                     borderColor: colors.green
                                 }}>
-                                    {data?.name?.length > 0 ? <View>
+                                    {(data?.name?.length > 0 && data?.box_type !== 'circle') ? <View>
                                         <Text
                                             numberOfLines={1}
                                             style={{
@@ -180,9 +184,9 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                     </View> :
                                         <FastImage
                                             style={{
-                                                width: Platform.OS == 'ios' ? wp('41.70%') : wp('41.85%'),
-                                                height: hp('10.9%'),
-                                                borderRadius: 10,
+                                                width: Platform.OS == 'ios' ? data?.box_type == 'circle' ? wp('21.52%') : wp('41.70%') : data?.box_type == 'circle' ? wp('21.85%') : wp('41.85%'),
+                                                height: data?.box_type == 'circle' ? wp('21.75%') : hp('10.9%'),
+                                                borderRadius: data?.box_type == 'circle' ? wp('22%') / 2 : 10,
                                             }}
                                             source={{ uri: Url?.Image_Url + data?.image }}
                                             resizeMode={FastImage.resizeMode.stretch}
@@ -250,7 +254,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Carousel
                     ref={carouselRef}
-                    data={data}
+                    data={data?.length > 0 ? data : ['/public/uploads/banners/a6fefcac-6885-46e6-8fbb-bbd4086e629c.jpg/']}
                     renderItem={renderItem}
                     sliderWidth={viewportWidth}
                     itemWidth={viewportWidth}

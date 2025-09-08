@@ -724,7 +724,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       getIncompleteOrder();
     }, 500)
 
-  }, [parcelInfo])
+  }, [])
 
   const getIncompleteOrder = async () => {
     if (totalAmount == 0) {
@@ -733,6 +733,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       if (resIncompleteOrder?.length > 0) {
         if (resIncompleteOrder[0]?.status !== "pending") {
           setParcelInfo(resIncompleteOrder[0]);
+          setAddParcelInfo(resIncompleteOrder[0]);
         }
       }
       else {
@@ -838,9 +839,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     const subscription = DeviceEventEmitter.addListener('chatPage', data => {
       console.log('chatPagedata -- ', data);
       if (data?.order_type == 'ride') {
-        setTimeout(()=>{
+        setTimeout(() => {
           onChat();
-        },500)
+        }, 500)
       }
     });
     return () => {
@@ -880,26 +881,48 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       setSenderLocation(parcelInfo?.sender_address?.geo_location);
       setDestination(parcelInfo?.receiver_address?.geo_location);
       setRiderDest(parcelInfo?.rider?.geo_location);
-      // setParcelInfo(parcelInfo);
       setTimeout(() => {
         setSearching(false);
         if (
-          parcelInfo?.status == 'accepted' ||
-          parcelInfo?.status == 'picked'
+          (parcelInfo?.status == 'accepted' ||
+            parcelInfo?.status == 'picked')
         ) {
           setSearchArrive('arrive');
           if (parcelInfo?.status == 'picked') {
             setMinMaxHp(screenHeight(35));
           }
-          // refRBSheet.current.open();
-        } else {
-          // if (parcelInfo?.status !== 'find-rider') {
-          onGetNearByRider(parcelInfo);
-          // }
         }
       }, 1000);
     }
-  }, [addParcelInfo,parcelInfo]);
+  }, [parcelInfo, addParcelInfo]);
+
+
+  useEffect(() => {
+    if (Object?.keys(parcelInfo ?? addParcelInfo)?.length > 0) {
+      setSenderLocation(parcelInfo?.sender_address?.geo_location);
+      setDestination(parcelInfo?.receiver_address?.geo_location);
+      setRiderDest(parcelInfo?.rider?.geo_location);
+      setTimeout(() => {
+        setSearching(false);
+        if (
+          (parcelInfo?.status == 'accepted' ||
+            parcelInfo?.status == 'picked')
+        ) {
+          setSearchArrive('arrive');
+          if (parcelInfo?.status == 'picked') {
+            setMinMaxHp(screenHeight(35));
+          }
+        }
+        else {
+          onGetNearByRider(addParcelInfo ?? parcelInfo);
+        }
+      }, 1000);
+    }
+  }, []);
+
+
+
+
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -946,25 +969,27 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
 
 
-  useEffect(() => {
-    if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
-      const findNearbyRiders = setInterval(() => {
-        // console.log('info--', parcelInfo);
-        let query = {
-          lat: getLocation('lat')?.toString(),
-          lng: getLocation('lng')?.toString(),
-          user_id: appUser?._id,
-          order_id: parcelInfo?._id,
-          refresh: '',
-        };
-        console.log('query--', query);
-        // socketServices.emit('find-nearby-riders', query);
-      }, 20000);
-      return () => {
-        clearInterval(findNearbyRiders);
-      };
-    }
-  }, [parcelInfo, nearbyRider, searchingFind]);
+  // useEffect(() => {
+  //   if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
+  //     const findNearbyRiders = setInterval(() => {
+  //       // console.log('info--', parcelInfo);
+  //       let query = {
+  //         lat: getLocation('lat')?.toString(),
+  //         lng: getLocation('lng')?.toString(),
+  //         user_id: appUser?._id,
+  //         order_id: parcelInfo?._id,
+  //         refresh: '',
+  //       };
+  //       console.log('query--', query);
+  //       // socketServices.emit('find-nearby-riders', query);
+  //     }, 20000);
+  //     return () => {
+  //       clearInterval(findNearbyRiders);
+  //     };
+  //   }
+  // }, [parcelInfo, nearbyRider, searchingFind]);
+
+
 
   // useEffect(() => {
   //   if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
@@ -1005,12 +1030,11 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     return () => {
       clearInterval(intervalId); // Clear when screen unmounts or deps change
     };
-  }, [parcelInfo?.status, searchingFind]);
+  }, [parcelInfo, searchingFind]);
 
 
   useEffect(() => {
     let intervalId;
-
     if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
       intervalId = BackgroundTimer.setInterval(async () => {
         console.log('⏱️ (BG) Refreshing find rider...');
@@ -1028,7 +1052,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     return () => {
       BackgroundTimer.clearInterval(intervalId);
     };
-  }, [parcelInfo?.status, searchingFind]);
+  }, [parcelInfo, searchingFind]);
 
 
   const handleDeleteLoading = v => {
@@ -1044,9 +1068,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       setSearchArrive('arrive');
     } else {
       setSearchingFind('searching');
-      if (parcelInfo?.status == 'find-rider') {
-        onGetNearByRider(parcelInfo);
-      }
+      onGetNearByRider(parcelInfo);
 
     }
   };
@@ -1124,6 +1146,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     } else {
       setNearByRider([]);
     }
+
     setTimeout(() => {
       setMultipleRider(false);
     }, 3000);

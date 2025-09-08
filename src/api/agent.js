@@ -196,6 +196,8 @@ export const agent = {
   reorderCart: body => requests.post(Url.reorderCart, body),
   getRestaurantBanners: body => requests.get(Url.getRestaurantBanners),
   cancelFoodOrderByCustomer: body => requests.post(Url.cancelFoodOrderByCustomer, body),
+  foodOrdersInvoice: body => requests.get(
+    `${Url.foodOrdersInvoice}/${body?.orderId}`),
 
 };
 

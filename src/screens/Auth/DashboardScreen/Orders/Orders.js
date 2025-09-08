@@ -227,7 +227,7 @@ export default function Orders({ navigation, route }) {
       <>
         <CardOrder item={item} index={i}
           navigation={navigation}
-          handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
+          handleDetails={(item) => {navigation.navigate('orderDetails', { item: item }) }} />
       </>
     );
   };

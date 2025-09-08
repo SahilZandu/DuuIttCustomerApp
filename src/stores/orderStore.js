@@ -174,6 +174,42 @@ export default class OrderStore {
   };
 
 
+  foodOrdersInvoice = async (
+    data, handleLoading
+  ) => {
+    handleLoading(true);
+    let requestData = {
+      orderId: data?._id,
+    };
+    console.log('foodOrdersInvoice request ', requestData);
+    try {
+      const res = await agent.foodOrdersInvoice(requestData);
+      console.log('foodOrdersInvoice Res : ', res);
+      if (res?.statusCode == 200) {
+        useToast(res?.message, 1);
+        handleLoading(false);
+        return res;
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        useToast(message, 0);
+        handleLoading(false);
+        return res;
+      }
+
+    } catch (error) {
+      console.log('foodOrdersInvoice error:', error);
+      handleLoading(false);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      useToast(m, 0);
+      return []
+    }
+  };
+
+
+
+
   setParcelTrackingOrder = async (data) => {
     this.orderTrackingList = data
   }

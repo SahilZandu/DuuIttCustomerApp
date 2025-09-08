@@ -24,7 +24,7 @@ export default function Help({ navigation }) {
   let helpArray = [
     {
       id: 1,
-      name: 'How to Book a Ride 🚖',
+      name: 'How to Book a Ride',
       AnswerArray: [
         "Open the Duuitt app and tap Du Ride from the home screen.",
         "Enter your pickup location and drop location.",
@@ -34,7 +34,7 @@ export default function Help({ navigation }) {
     },
     {
       id: 2,
-      name: 'How to Order Food 🍔',
+      name: 'How to Order Food',
       AnswerArray: [
         "Tap Du Food on the home screen.",
         "Select your restaurant or browse categories.",
@@ -44,7 +44,7 @@ export default function Help({ navigation }) {
     },
     {
       id: 3,
-      name: 'Sending a Parcel 📦',
+      name: 'How to Sending a Parcel',
       AnswerArray: [
         "Open Du Parcel from the home screen.",
         "Enter the pickup and delivery locations.",
@@ -54,7 +54,7 @@ export default function Help({ navigation }) {
     },
     {
       id: 4,
-      name: 'Track Your Orders & Rides 📍',
+      name: 'How to Track Your Orders & Rides',
       AnswerArray: [
         "Go to Profile > My Rides to see all your ride bookings.",
         "Go to Profile > My Orders to see your food orders.",
@@ -63,7 +63,7 @@ export default function Help({ navigation }) {
     },
     {
       id: 5,
-      name: 'Report an Issue 🛠',
+      name: 'How to Report an Issue',
       AnswerArray: [
         "Open My Rides or My Orders.",
         "Select the ride/order/parcel you faced an issue with.",
@@ -74,7 +74,7 @@ export default function Help({ navigation }) {
     },
     {
       id: 6,
-      name: 'Contact Us 📞',
+      name: 'How to Contact Us',
       AnswerArray: [
         "We’re here to help between 8 AM – 10 PM.",
         "Email: support@duuitt.com",

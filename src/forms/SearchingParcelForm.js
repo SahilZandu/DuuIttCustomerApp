@@ -216,6 +216,27 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       setSenderLocation(parcelInfo?.sender_address?.geo_location);
       setDestination(parcelInfo?.receiver_address?.geo_location);
       setRiderDest(parcelInfo?.rider?.geo_location);
+
+      setTimeout(() => {
+        setSearching(false);
+        if (
+          parcelInfo?.status == 'accepted' ||
+          parcelInfo?.status == 'picked'
+        ) {
+          setSearchArrive('arrive');
+          if (parcelInfo?.status == 'picked') {
+            setMinMaxHp(screenHeight(35));
+          }
+        }
+      }, 1000);
+    }
+  }, [addParcelInfo, parcelInfo]);
+
+  useEffect(() => {
+    if (Object?.keys(parcelInfo ?? addParcelInfo)?.length > 0) {
+      setSenderLocation(parcelInfo?.sender_address?.geo_location);
+      setDestination(parcelInfo?.receiver_address?.geo_location);
+      setRiderDest(parcelInfo?.rider?.geo_location);
       setTimeout(() => {
         setSearching(false);
         if (
@@ -227,11 +248,11 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
             setMinMaxHp(screenHeight(35));
           }
         } else {
-          onGetNearByRider(parcelInfo);
+          onGetNearByRider(addParcelInfo ?? parcelInfo);
         }
       }, 1000);
     }
-  }, [addParcelInfo, parcelInfo]);
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -300,7 +321,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     setTimeout(() => {
       getIncompleteOrder();
     }, 500)
-  }, [parcelInfo])
+  }, [])
 
   const getIncompleteOrder = async () => {
     if (totalAmount == 0) {
@@ -326,24 +347,24 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     }
   };
 
-  useEffect(() => {
-    if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
-      const findNearbyRiders = setInterval(() => {
-        // console.log('info--', parcelInfo);
-        let query = {
-          lat: getLocation('lat')?.toString(),
-          lng: getLocation('lng')?.toString(),
-          user_id: appUser?._id,
-          order_id: parcelInfo?._id,
-          refresh: '',
-        };
-        // socketServices.emit('find-nearby-riders', query);
-      }, 20000);
-      return () => {
-        clearInterval(findNearbyRiders);
-      };
-    }
-  }, [parcelInfo, nearbyRider, searchingFind]);
+  // useEffect(() => {
+  //   if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
+  //     const findNearbyRiders = setInterval(() => {
+  //       // console.log('info--', parcelInfo);
+  //       let query = {
+  //         lat: getLocation('lat')?.toString(),
+  //         lng: getLocation('lng')?.toString(),
+  //         user_id: appUser?._id,
+  //         order_id: parcelInfo?._id,
+  //         refresh: '',
+  //       };
+  //       // socketServices.emit('find-nearby-riders', query);
+  //     }, 20000);
+  //     return () => {
+  //       clearInterval(findNearbyRiders);
+  //     };
+  //   }
+  // }, [parcelInfo, nearbyRider, searchingFind]);
 
   // useEffect(() => {
   //   if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {

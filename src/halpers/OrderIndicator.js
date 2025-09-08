@@ -116,7 +116,7 @@ export default CornerTriangle;
 const styles = StyleSheet.create({
   main: {
     position: 'absolute', // fixed typo here
-    top: Platform.OS == 'ios' ? hp('2.9%') : (Platform.OS === 'android' && Platform.Version >= 35)?   deviceModel == "RMX3840" ? hp('2.8%') :hp('2.9%'): hp('3.1%'),
+    top: Platform.OS == 'ios' ? hp('2.1%') : (Platform.OS === 'android' && Platform.Version >= 35)?   deviceModel == "RMX3840" ? hp('2.0%') :hp('2.0%'): hp('2.3%'),
     right: Platform.OS == 'ios' ? wp('0.9%'):(Platform.OS === 'android' && Platform.Version >= 35) ?  deviceModel == "RMX3840" ? wp('0.6%') : wp('1.4%') : wp('1.1%'),
     width:wp("20"),
     height:hp("20%"),

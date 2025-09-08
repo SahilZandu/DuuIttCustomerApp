@@ -28,9 +28,9 @@ export const styles = StyleSheet.create({
   },
   nameTitle: {
     flex: 1,
-    fontSize: RFValue(12),
-    fontFamily: fonts.medium,
-    color: colors.green,
+    fontSize: RFValue(13),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
   },
   answerText: {
     fontSize: RFValue(12),
@@ -46,8 +46,8 @@ export const styles = StyleSheet.create({
   },
   bottonLineView: {
     height: 1,
-     backgroundColor: colors.colorD9,
-      marginTop: '5%'
+    backgroundColor: colors.colorD9,
+    marginTop: '5%'
   }
 
 

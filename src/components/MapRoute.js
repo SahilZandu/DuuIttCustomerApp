@@ -425,7 +425,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           followsUserLocation={false}
           showsUserLocation={false}
           // 👇 Set Zoom Limits
-          minZoomLevel = {10}  // prevent zooming out too far
+          minZoomLevel={10}  // prevent zooming out too far
           maxZoomLevel={18}  // prevent zooming in too much
           // Performance optimizations
           showsBuildings={false}
@@ -490,13 +490,13 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         )} */}
 
           {/* Polyline for the Route */}
-          {/* {coords?.length > 0 && (
+          {coords?.length > 0 && (
             <Polyline
               coordinates={coords}
               strokeWidth={4}
               strokeColor={colors.main}
             />
-          )} */}
+          )}
         </MapView>
       }
     </View>

@@ -7,6 +7,7 @@ import {
   View,
   Text,
   Platform,
+  Alert,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { SvgXml } from 'react-native-svg';
@@ -29,9 +30,20 @@ import {
 import TextRender from './TextRender';
 import DotedLine from '../screens/DUFood/Components/DotedLine';
 import OrdersInstrucationsComp from './OrderInstructionsComp';
+import { rootStore } from '../stores/rootStore';
+import Spacer from '../halpers/Spacer';
+import RNFS from 'react-native-fs';
+import RNFetchBlob from 'react-native-blob-util';
+import IndicatorLoader from '../halpers/IndicatorLoader';
+import { useToast } from '../halpers/useToast';
+
+
 
 const CardOrderDetails = ({ item }) => {
   console.log('item -- CardOrderDetails', item);
+  const { foodOrdersInvoice } = rootStore.orderStore;
+  const [loading, setLoading] = useState(false)
+
   let today = new Date();
   const setStatusData = status => {
     switch (status) {
@@ -196,10 +208,177 @@ const CardOrderDetails = ({ item }) => {
   };
 
 
+  const onInvoiceDownload = async () => {
+
+    const res = await foodOrdersInvoice(item, handleLoading);
+
+    console.log("res---", res);
+
+
+  }
+
+  const handleLoading = (v) => {
+    console.log("v--", v);
+  }
+
+  const downloadPDF = () => {
+    setLoading(true)
+
+    let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrdersInvoice}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
+    console.log('urlPdf---', urlPdf);
+
+    const { dirs } = RNFetchBlob.fs;
+    const fileName = `orderInvoice_${Date.now()}.pdf`;
+
+    const path =
+      Platform.OS === 'android'
+        ? `${dirs.DownloadDir}/${fileName}` // 👈 Android public Downloads folder
+        : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
+
+    RNFetchBlob.config({
+      addAndroidDownloads: {
+        useDownloadManager: true,   // 👈 Android system Download Manager
+        notification: true,         // 👈 show progress in notification bar
+        path,                       // 👈 save to Downloads
+        title: fileName,
+        description: 'Downloading invoice…',
+        mime: 'application/pdf',
+        mediaScannable: true,       // 👈 makes file visible in Files/My Files
+      },
+      fileCache: true,
+      path,
+    })
+      .fetch('GET', urlPdf)
+      .then((res) => {
+        console.log('✅ Invoice saved to:', res.path());
+        downloadSavePDF(urlPdf)
+        // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
+      })
+      .catch((err) => {
+        setLoading(false)
+        useToast('Unable to process your request. Please try again.', 0);
+        console.log('❌ Download error', err);
+        // Alert.alert('Error', 'Failed to download invoice.');
+      });
+  };
+
+  // const downloadPDF = () => {
+  //   const { dirs } = RNFetchBlob.fs;
+  //   const fileName = `invoice_${Date.now()}.pdf`;
+
+  //   const path =
+  //     Platform.OS === 'android'
+  //       ? `${dirs.DownloadDir}/${fileName}` // 👈 goes to Downloads
+  //       : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox (no public Downloads)
+
+  //   RNFetchBlob.config({
+  //     addAndroidDownloads: {
+  //       useDownloadManager: true,   // 👈 Android Download Manager
+  //       notification: true,         // show progress in notification bar
+  //       path,                       // save in Downloads folder
+  //       title: fileName,
+  //       description: 'Downloading invoice…',
+  //       mime: 'application/pdf',
+  //       mediaScannable: true,       // make it visible in gallery/Files app
+  //     },
+  //     fileCache: true,
+  //     path,
+  //   })
+  //     .fetch('GET', `https://duuitt.hashsoftware.com/orders/food-order-invoice/${'68b6bdd808ba51bf674a95ac'}`)
+  //     .then((res) => {
+  //       downloadSavePDF(`https://duuitt.hashsoftware.com/orders/food-order-invoice/${'68b6bdd808ba51bf674a95ac'}`)
+  //       console.log('Invoice saved to:', res.path());
+  //     })
+  //     .catch((err) => {
+  //       console.log('Download error', err);
+  //     });
+  // };
+
+
+  const downloadSavePDF = async (pdfUrls) => {
+    try {
+      const pdfUrl = pdfUrls; // your pdf url
+      const fileName = 'orderInvoice.pdf';
+      const downloadDest =
+        Platform.OS === 'android'
+          ? `${RNFS.DownloadDirectoryPath}/${fileName}`
+          : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+
+      const options = {
+        fromUrl: pdfUrl,
+        toFile: downloadDest,
+      };
+
+      const res = await RNFS.downloadFile(options).promise;
+      setLoading(false)
+      console.log('Download success', res);
+      useToast('Order invoice saved successfully.', 1);
+      // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
+    } catch (err) {
+      setLoading(false)
+      useToast('An error occurred. Please try again.', 0);
+      console.log('Download error', err);
+      // Alert.alert('Error', 'Failed to download file.');
+
+    }
+  };
+
+
+  // const downloadPDF = () => {
+  //   const { dirs } = RNFetchBlob.fs;
+  //   const fileName = `invoice_${Date.now()}.pdf`;
+  //   const path =
+  //     Platform.OS === 'android'
+  //       ? `${dirs.DownloadDir}/${fileName}`
+  //       : `${dirs.DocumentDir}/${fileName}`;
+
+  //   RNFetchBlob.config({
+  //     fileCache: true,
+  //     path,
+  //     addAndroidDownloads: {
+  //       useDownloadManager: true, // 👈 use system Download Manager
+  //       notification: true,       // 👈 show in notification bar
+  //       title: fileName,
+  //       description: 'Downloading invoice…',
+  //       mime: 'application/pdf',
+  //       mediaScannable: true,
+  //     },
+  //   })
+  //     .fetch('GET', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')
+  //     .then((res) => {
+  //       console.log('Invoice saved to', res.path());
+  //     })
+  //     .catch((err) => {
+  //       console.log('Download error', err);
+  //     });
+  // };
+
+
+
+
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} Pb={hp('25%')}>
-        <TouchableOpacity style={{ flex: 1 }} activeOpacity={0.8}>
+        <View style={styles.mainInvoiceView}>
+          <TouchableOpacity
+            onPress={() => { (downloadPDF()) }}
+            activeOpacity={0.8}
+            style={styles.invocesTouchView}>
+            <SvgXml xml={appImagesSvg.billSummaryInvoice} />
+            <Text style={styles.invocesText}>{'  '}Download invoice</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => { (downloadPDF()) }}
+            activeOpacity={0.8}
+            style={styles.invocesTouchView}>
+            <SvgXml xml={appImagesSvg.billSummaryInvoice} />
+            <Text style={styles.invocesText}>{'  '}Download summary</Text>
+          </TouchableOpacity>
+        </View>
+        <Spacer space={'6%'} />
+        <TouchableOpacity style={{ flex: 1 }}
+          activeOpacity={0.8}>
           <View style={styles.imageDateView}>
             <View style={styles.imageView}>
               <Image
@@ -398,7 +577,15 @@ const CardOrderDetails = ({ item }) => {
           </View>
           <OrdersInstrucationsComp item={item} />
         </TouchableOpacity>
+        {/* <Spacer space={'10%'} />
+        <BTN
+          title={'Download'}
+          onPress={() => { (downloadPDF()) }}
+        // onPress={() => { (onInvoiceDownload()) }}
+
+        /> */}
       </AppInputScroll>
+      {loading && <IndicatorLoader />}
       {/* <View
         style={{
           justifyContent: 'center',
@@ -522,6 +709,24 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: RFValue(11),
     color: colors.black
+  },
+  mainInvoiceView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  invocesTouchView: {
+    flexDirection: 'row', alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: wp('3%'),
+    paddingVertical: hp('1%'),
+    borderColor: colors.colorA9
+  },
+  invocesText: {
+    fontSize: Platform.OS == 'ios' ? RFValue(10.5) : RFValue(12),
+    fontFamily: fonts.semiBold,
+    color: colors.black,
   }
 
 

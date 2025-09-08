@@ -78,7 +78,9 @@ export default {
     reorderCart:"cart/reorder-from-order",
     getRestaurantFoodReviews:'reviews/restaurant-food-reviews',
     getRestaurantBanners :"restaurant/get-banners",
-    cancelFoodOrderByCustomer:'food-order/cancel-food-order-by-customer'
+    cancelFoodOrderByCustomer:'food-order/cancel-food-order-by-customer',
+    foodOrdersInvoice:'orders/food-order-invoice',
+    rideParcelOrderInvoice:'orders/rider-parcel-order-invoice'
 
    
 

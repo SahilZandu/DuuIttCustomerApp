@@ -67,16 +67,15 @@ export default function Home({ navigation }) {
       checkNotificationPer()
       initFCM();
       getRestaurantBannersData();
-      // if (changeLiveLocation?.address?.length  0) {
-      setTimeout(() => {
-        currentLocation = {
-          lat: getLocation('lat'),
-          lng: getLocation('lng'),
-        }
-        handleCurrentAddress();
-      }, 1000)
-
-      // }
+      if (changeLiveLocation?.address?.length === 0) {
+        setTimeout(() => {
+          currentLocation = {
+            lat: getLocation('lat'),
+            lng: getLocation('lng'),
+          }
+          handleCurrentAddress();
+        }, 1000)
+      }
     }, []),
   );
 
@@ -111,8 +110,6 @@ export default function Home({ navigation }) {
   };
 
 
-
-
   const getRestaurantBannersData = async () => {
     const res = await getRestaurantBanners();
     if (res?.length > 0) {
@@ -120,7 +117,8 @@ export default function Home({ navigation }) {
     } else {
       setBannerList([]);
     }
-    //  console.log("res---getRestaurantBannersData",res);
+    //  console.log("res---getRestaurantBannersData",res,res[0]?.additional_details);
+
   }
 
   useFocusEffect(
@@ -331,7 +329,7 @@ export default function Home({ navigation }) {
                   <View style={styles.haederShowView}>
                     <DashboardHeader
                       backgroundColor={colors.black05 ?? 'transparent'}
-                      textColor={bannerList[0]?.backgroundColor ?? colors.black}
+                      textColor={bannerList[0]?.backgroundColorText ?? colors.black}
                       title={""}
                       appUserInfo={appUser}
                       navigation={navigation}
