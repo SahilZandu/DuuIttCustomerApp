@@ -82,9 +82,9 @@ export default function CustomerSupport({ navigation }) {
           <View style={styles.buttonView}>
             <BTN
               disable={infoData?.email?.length > 0 ? false : true}
-              backgroundColor={colors.white}
-              labelColor={colors.main}
-              width={wp('40%')}
+              // backgroundColor={colors.white}
+              // labelColor={colors.main}
+              // width={wp('40%')}
               title={'Email Us'}
               onPress={() => {
                 hanldeLinking('email');
@@ -92,17 +92,18 @@ export default function CustomerSupport({ navigation }) {
               bottomCheck={15}
               textTransform={'capitalize'}
             />
-
-            <BTN
-              disable={infoData?.phone?.toString()?.length > 0 ? false : true}
-              width={wp('40%')}
-              title={'Call Us'}
-              onPress={() => {
-                hanldeLinking('phone');
-              }}
-              bottomCheck={15}
-              textTransform={'capitalize'}
-            />
+             {/* 
+            // <BTN
+            //   disable={infoData?.phone?.toString()?.length > 0 ? false : true}
+            //   width={wp('40%')}
+            //   title={'Call Us'}
+            //   onPress={() => {
+            //     hanldeLinking('phone');
+            //   }}
+            //   bottomCheck={15}
+            //   textTransform={'capitalize'}
+            // /> 
+            */}  
           </View>
         </View>
       </View>

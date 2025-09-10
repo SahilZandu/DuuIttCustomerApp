@@ -37,11 +37,11 @@
 // }
 
 
-
-
 import RazorpayCheckout from "react-native-razorpay";
 import { rootStore } from "../stores/rootStore";
 import { colors } from "../theme/colors";
+import { Razor_Pay_Key } from "./AppLink";
+import Url from "../api/Url";
 
 export async function usePayment(data, onSuccess, onError) {
   const { appUser } = rootStore.commonStore;
@@ -60,9 +60,10 @@ export async function usePayment(data, onSuccess, onError) {
   if (resCO?.statusCode === 200) {
     var options = {
       description: "",
-      image: "https://duuitt.hashsoft.io/public/duuitt/app_icon.png",
+      image:'https://duuitt.hashsoftware.com/public/duuitt/ride_app.png',
+      // `${Url?.Base_Url}/public/duuitt/app_icon.png`,
       currency: "INR",
-      key: "rzp_test_xsRy9RU40sgsGW", // Razorpay Key
+      key: Razor_Pay_Key, // Razorpay Key
       amount: totalPrice?.toFixed(2),
       name: "Duuitt",
       order_id: orderId, // Pass Order ID

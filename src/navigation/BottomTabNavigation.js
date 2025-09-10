@@ -132,7 +132,7 @@ export function DashboardBottomNavigator() {
                   backgroundColor: 'red',
                   borderRadius: 100
                 }} />
-               }
+              }
             </View>
           );
         },

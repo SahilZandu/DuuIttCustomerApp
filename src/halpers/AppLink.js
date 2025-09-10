@@ -4,4 +4,9 @@ export const privacyPolicyLink = "https://duuitt.com/privicy-policy-customer-app
 export const openSourceyLink = "https://duuitt.com/open-source-liberary-customer-app";
 
 //DuuItt  Map Key 
-export const MAP_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; 
+export const MAP_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
+
+
+// Razor Pay Key
+export const Razor_Pay_Key = 'rzp_test_RDsA8ZCLr6QIme' 
+// ?? "rzp_test_xsRy9RU40sgsGW" food lemon

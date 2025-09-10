@@ -25,6 +25,12 @@ export default function PickSuccessfully({ navigation }) {
       socketServices.removeListener('remaining-distance');
       socketServices.disconnectSocket();
 
+      const timeOut = setTimeout(() => {
+        navigation.navigate('parcel', { screen: 'home' });
+      }, 10000)
+      return () => {
+        clearTimeout(timeOut);
+      };
     }, []),
   );
 

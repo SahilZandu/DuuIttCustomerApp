@@ -235,16 +235,16 @@ export default function SideMenu({ navigation }) {
       show: true,
       disable: false,
     },
-    {
-      id: '5',
-      title: 'Customer Support',
-      onPress: () => {
-        navigation.navigate('customerSupport');
-      },
-      icon: appImagesSvg.customerSupport,
-      show: true,
-      disable: false,
-    },
+    // {
+    //   id: '5',
+    //   title: 'Customer Support',
+    //   onPress: () => {
+    //     navigation.navigate('customerSupport');
+    //   },
+    //   icon: appImagesSvg.customerSupport,
+    //   show: true,
+    //   disable: false,
+    // },
 
     {
       id: '6',
