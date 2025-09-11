@@ -80,7 +80,9 @@ export default {
     getRestaurantBanners :"restaurant/get-banners",
     cancelFoodOrderByCustomer:'food-order/cancel-food-order-by-customer',
     foodOrdersInvoice:'orders/food-order-invoice',
-    rideParcelOrderInvoice:'orders/rider-parcel-order-invoice'
+    rideParcelOrderInvoice:'orders/rider-parcel-order-invoice',
+    orderSummary :'orders/food-order-summary',
+    geth3Polygons:'h3/polygons'
 
    
 

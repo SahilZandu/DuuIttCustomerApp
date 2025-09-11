@@ -11,7 +11,7 @@ import { appImages } from '../../../commons/AppImages';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import CTA from '../../../components/cta/CTA';
 import { getGeoCodes } from '../../../components/GeoCodeAddress';
-import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { findPolygonForPoint, getCurrentLocation } from '../../../components/GetAppLocation';
 import Header from '../../../components/header/Header';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
@@ -38,6 +38,7 @@ const SetLocationHistory = ({ navigation }) => {
     senderAddress,
     receiverAddress,
   } = rootStore.myAddressStore;
+  const { geth3Polygons, h3PolyData } = rootStore.orderStore
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
     let d =
@@ -66,6 +67,7 @@ const SetLocationHistory = ({ navigation }) => {
   const [locationId, setLocationId] = useState('')
   const [currentAddress, setCurrentAddress] = useState('');
   const [name, setName] = useState('');
+  const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
 
   useFocusEffect(
     useCallback(() => {
@@ -89,6 +91,24 @@ const SetLocationHistory = ({ navigation }) => {
       getCurrentAddress();
     }, 500);
   }, []);
+
+
+  useEffect(() => {
+    if (h3PolyData?.length > 0) {
+      setPolygonArray(h3PolyData)
+    } else {
+      getH3PolygonData()
+    }
+  }, [h3PolyData])
+
+
+  const getH3PolygonData = async () => {
+
+    const resH3 = await geth3Polygons();
+    // console.log("resH3--- getH3PolygonData", resH3);
+    setPolygonArray(resH3)
+
+  }
 
   const getCheckSenderReciever = () => {
     const { senderAddress, receiverAddress } = rootStore.myAddressStore;
@@ -140,7 +160,24 @@ const SetLocationHistory = ({ navigation }) => {
 
   const handleRegionChangeComplete = (region) => {
     // console.log('region--', region);
-    onPressTouch(region)
+    const matchedPolygon = findPolygonForPoint(region?.geo_location?.lat, region?.geo_location?.lng, polygonArray);
+
+    if (matchedPolygon) {
+      console.log("Point belongs to polygon:", matchedPolygon.name);
+      // Alert.alert(
+      //   "Service Available",
+      //   "Waah! We currently  service this pickup or drop location."
+      // );
+      onPressTouch(region)
+    } else {
+      console.log("Point is outside all polygons");
+      Alert.alert(
+        "Service Not Available",
+        "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
+      );
+
+    }
+    // onPressTouch(region)
     // if (debounceTimeout.current) {
     //   clearTimeout(debounceTimeout.current);
     // }
@@ -182,25 +219,40 @@ const SetLocationHistory = ({ navigation }) => {
     setName(nameData[0]);
     setCurrentAddress(addressData?.address);
     geoLocation = (addressData?.geo_location)
-    if (pickDrop == 'pick') {
-      const newData = {
-        address: addressData?.address,
-        geo_location: geoLocation,
-      };
-      console.log('newData--', newData);
-      setSenderAddress(newData);
-      setPickUpLocation(addressData?.address);
-      setLocationId(addressData?.place_Id)
-      setPickDrop('drop');
+    const matchedPolygon = findPolygonForPoint(addressData?.geo_location?.lat, addressData?.geo_location?.lng, polygonArray);
+    if (matchedPolygon) {
+      console.log("Point belongs to polygon:", matchedPolygon.name);
+      // Alert.alert(
+      //   "Service Available",
+      //   "Waah! We currently  service this pickup or drop location."
+      // );
+      if (pickDrop == 'pick') {
+        const newData = {
+          address: addressData?.address,
+          geo_location: geoLocation,
+        };
+        console.log('newData--', newData);
+        setSenderAddress(newData);
+        setPickUpLocation(addressData?.address);
+        setLocationId(addressData?.place_Id)
+        setPickDrop('drop');
+      } else {
+        const newData = {
+          address: addressData?.address,
+          geo_location: geoLocation,
+        };
+        console.log('newData--', newData);
+        setReceiverAddress(newData);
+        setDropLocation(addressData?.address);
+        setPickDrop('pick');
+      }
     } else {
-      const newData = {
-        address: addressData?.address,
-        geo_location: geoLocation,
-      };
-      console.log('newData--', newData);
-      setReceiverAddress(newData);
-      setDropLocation(addressData?.address);
-      setPickDrop('pick');
+      console.log("Point is outside all polygons");
+      Alert.alert(
+        "Service Not Available",
+        "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
+      );
+
     }
   };
 

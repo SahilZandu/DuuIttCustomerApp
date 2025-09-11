@@ -39,6 +39,13 @@ export default function OrderPlaced({ navigation, route }) {
       // handleAndroidBackButton();
       handleAndroidBackButton('', 'food', 'food', navigation);
       setOrderDetails(orderData)
+      const timeOut = setTimeout(() => {
+        navigation.navigate('food', { screen: 'home' });
+      }, 10000)
+      return () => {
+        clearTimeout(timeOut);
+      };
+
     }, []),
   );
 

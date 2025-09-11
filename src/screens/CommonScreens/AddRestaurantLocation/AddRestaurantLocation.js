@@ -71,6 +71,7 @@ export default function AddRestaurantLocation({ navigation }) {
     const [name, setName] = useState('');
     const [visible, setVisible] = useState(false);
     const [title, setTitle] = useState('Home');
+    const [checkLocation, setCheckLocation] = useState(false)
 
     // const [initialValues, setInitialValues] = useState({
     //     changeAdress: address ?? '',
@@ -228,6 +229,8 @@ export default function AddRestaurantLocation({ navigation }) {
                             origin={geoLocation}
                             onTouchLocation={handleTouchAddress}
                             height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
+                            onCheckLocation={(data) => setCheckLocation(data)}
+                            checkLocation={checkLocation}
                         />
                         <AutoCompleteGooglePlaceHolder
                             onPressAddress={onPressAddress}
@@ -272,7 +275,7 @@ export default function AddRestaurantLocation({ navigation }) {
                                 />
                                 <Spacer space={hp('3.5%')} />
                                 <CTA
-                                    disable={!(address || name)}
+                                    disable={!(address || name) || checkLocation}
                                     onPress={() => {
                                         handleConfirm();
                                     }}

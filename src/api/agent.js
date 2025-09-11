@@ -198,6 +198,10 @@ export const agent = {
   cancelFoodOrderByCustomer: body => requests.post(Url.cancelFoodOrderByCustomer, body),
   foodOrdersInvoice: body => requests.get(
     `${Url.foodOrdersInvoice}/${body?.orderId}`),
+  geth3Polygons: () => requests.get(Url.geth3Polygons),
+
+
+
 
 };
 

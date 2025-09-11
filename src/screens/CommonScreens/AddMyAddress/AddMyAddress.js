@@ -87,6 +87,7 @@ export default function AddMyAddress({ navigation, route }) {
     id: data?._id,
   });
   const [loadingAddress, setLoadingAddress] = useState(true);
+  const [checkLocation, setCheckLocation] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -109,30 +110,30 @@ export default function AddMyAddress({ navigation, route }) {
   useEffect(() => {
     if (data?.address?.length > 0) {
       setTimeout(() => {
-      console.log('data---', data);
-      const nameData = data?.address?.split(',');
-      setGeoLocation(data?.geo_location ?? {});
-      
-      setAddress(data?.address ?? '');
-      setLocationId(data?.location_id ?? '');
-      setName(nameData[0]);
-      setTitle(data?.title ?? 'Home');
-      setInitialValues({
-        name: data?.name,
-        phone: data?.phone?.toString(),
-        house: data?.address_detail,
-        landmark: data?.landmark,
-        id: data?._id,
-      });
+        console.log('data---', data);
+        const nameData = data?.address?.split(',');
+        setGeoLocation(data?.geo_location ?? {});
+
+        setAddress(data?.address ?? '');
+        setLocationId(data?.location_id ?? '');
+        setName(nameData[0]);
+        setTitle(data?.title ?? 'Home');
+        setInitialValues({
+          name: data?.name,
+          phone: data?.phone?.toString(),
+          house: data?.address_detail,
+          landmark: data?.landmark,
+          id: data?._id,
+        });
         // handleTouchAddress({
         //   latitude: data?.geo_location?.lat ?? getLocation('lat'),
         //   longitude: data?.geo_location?.lng ?? getLocation('lng'),
         // })
 
         setVisible(true)
-      },600);
-     
-    
+      }, 600);
+
+
     }
     else {
       setGeoLocation({
@@ -587,6 +588,8 @@ export default function AddMyAddress({ navigation, route }) {
               origin={geoLocation}
               onTouchLocation={(loaction) => { handleTouchAddress(loaction) }}
               height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
+              onCheckLocation={(data) => setCheckLocation(data)}
+              checkLocation={checkLocation}
             />
             {/* </>} */}
 
@@ -633,7 +636,7 @@ export default function AddMyAddress({ navigation, route }) {
                 />
                 <Spacer space={hp('3.5%')} />
                 <CTA
-                  disable={!(address || name)}
+                  disable={!(address || name) || checkLocation}
                   onPress={() => {
                     handleConfirm();
                   }}

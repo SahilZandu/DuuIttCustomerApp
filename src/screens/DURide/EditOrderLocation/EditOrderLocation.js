@@ -56,6 +56,7 @@ const EditOrderLocation = ({ navigation, route }) => {
     const [name, setName] = useState('');
     const [LocationId, setLocationId] = useState('')
     const [loading, setLoading] = useState(false);
+    const [checkLocation, setCheckLocation] = useState(false)
 
     useFocusEffect(
         useCallback(() => {
@@ -263,6 +264,8 @@ const EditOrderLocation = ({ navigation, route }) => {
                             ? screenHeight(70)
                             : screenHeight(74)
                         }
+                        onCheckLocation={(data) => setCheckLocation(data)}
+                        checkLocation={checkLocation}
                     />
                     {/* <MapRoute
           mapContainerView={
@@ -307,6 +310,7 @@ const EditOrderLocation = ({ navigation, route }) => {
                                 />
                                 <Spacer space={'12%'} />
                                 <CTA
+                                    disable={checkLocation}
                                     onPress={() => {
                                         // onHandleConfirm();
                                         handleRegionChangeComplete(geoLocation);

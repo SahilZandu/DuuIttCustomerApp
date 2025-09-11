@@ -21,7 +21,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { getCurrentLocation, setCurrentLocation } from '../../../../components/GetAppLocation';
+import { findPolygonForPoint, getCurrentLocation, setCurrentLocation } from '../../../../components/GetAppLocation';
 import { useNotifications } from '../../../../halpers/useNotifications';
 import socketServices from '../../../../socketIo/SocketServices';
 import NoInternet from '../../../../components/NoInternet';
@@ -44,6 +44,7 @@ export default function Home({ navigation }) {
   const { saveFcmToken, getCheckDeviceId, getRestaurantBanners } = rootStore.dashboardStore;
   const { setChangeLiveLocation, changeLiveLocation } = rootStore.foodDashboardStore;
   const { setSelectedAddress } = rootStore.cartStore;
+  const { geth3Polygons, h3PolyData } = rootStore.orderStore;
   const getLocation = type => {
     let d =
       type == 'lat'
@@ -55,9 +56,13 @@ export default function Home({ navigation }) {
   useNotifications(navigation);
   const [internet, setInternet] = useState(true);
   const [bannerList, setBannerList] = useState([])
+  const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
 
   useFocusEffect(
     useCallback(() => {
+      if (h3PolyData?.length == 0) {
+        getH3PolygonData();
+      }
       setCurrentLocation();
       requestUserNotificationPermission();
       getCheckDevice();
@@ -78,6 +83,56 @@ export default function Home({ navigation }) {
       }
     }, []),
   );
+
+
+  const getH3PolygonData = async () => {
+
+    const resH3 = await geth3Polygons();
+    // console.log("resH3---Home", resH3);
+    setPolygonArray(resH3)
+
+
+  }
+
+  // function pointInPolygon(point, vs) {
+  //   const [x, y] = point;
+  //   let inside = false;
+
+  //   for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+  //     const xi = vs[i][0], yi = vs[i][1];
+  //     const xj = vs[j][0], yj = vs[j][1];
+
+  //     const intersect =
+  //       yi > y !== yj > y &&
+  //       x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+
+  //     if (intersect) inside = !inside;
+  //   }
+
+  //   return inside;
+  // }
+
+
+  // function findPolygonForPoint(lat, lng, polygons) {
+  //   for (const poly of polygons) {
+  //     if (pointInPolygon([lat, lng], poly.polygon)) {
+  //       return poly;
+  //     }
+  //   }
+  //   return null;
+  // }
+
+  // Example usage:
+  // const myLat = 30.7981;
+  // const myLng = 76.6526;
+
+  // const matchedPolygon = findPolygonForPoint(myLat, myLng, polygonArray);
+
+  // if (matchedPolygon) {
+  //   console.log("Point belongs to polygon:", matchedPolygon.name);
+  // } else {
+  //   console.log("Point is outside all polygons");
+  // }
 
 
   const handleCurrentAddress = async () => {
@@ -123,7 +178,7 @@ export default function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      if (bannerList.length > 0) {
+      if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
         StatusBar.setBarStyle("light-content", true);
       } else {
         StatusBar.setBarStyle("dark-content", true);

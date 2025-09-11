@@ -56,6 +56,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [name, setName] = useState('');
   const [LocationId, setLocationId] = useState('')
   const [loading, setLoading] = useState(false)
+  const [checkLocation, setCheckLocation] = useState(false)
 
   const onPressAddress = (data, details) => {
     console.log('data ,details 333', data, details);
@@ -227,7 +228,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
       if (senderSet?.address?.length > 0 && receiverSet?.address?.length > 0) {
         setTimeout(() => {
           navigation.navigate('priceDetails');
-        },100)
+        }, 100)
       } else {
         navigation.navigate('setLocationHistory');
       }
@@ -300,6 +301,8 @@ const ChooseMapLocation = ({ navigation, route }) => {
             height={Platform.OS == 'ios'
               ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
               : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)}
+            onCheckLocation={(data) => setCheckLocation(data)}
+            checkLocation={checkLocation}
           />
           {/* <MapRoute
           mapContainerView={
@@ -345,6 +348,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
                   />
                   <Spacer space={'10%'} />
                   <CTA
+                    disable={checkLocation}
                     loading={loading}
                     onPress={() => {
                       // onHandleConfirm();

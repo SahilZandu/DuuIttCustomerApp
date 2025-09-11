@@ -45,7 +45,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
 
                         }}
                         source={{ uri: Url?.Image_Url + item }}// your .gif file in assets
-                        resizeMode={FastImage.resizeMode.stretch}
+                        resizeMode={FastImage.resizeMode.cover}
                     />
                     {/* <Image
                         resizeMode='stretch'

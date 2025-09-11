@@ -221,7 +221,7 @@ const CardOrderDetails = ({ item }) => {
     console.log("v--", v);
   }
 
-  const downloadPDF = () => {
+  const downloadInvoicePDF = () => {
     setLoading(true)
 
     let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrdersInvoice}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
@@ -251,7 +251,7 @@ const CardOrderDetails = ({ item }) => {
       .fetch('GET', urlPdf)
       .then((res) => {
         console.log('✅ Invoice saved to:', res.path());
-        downloadSavePDF(urlPdf)
+        downloadInvoiceSavePDF(urlPdf)
         // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
       })
       .catch((err) => {
@@ -295,7 +295,7 @@ const CardOrderDetails = ({ item }) => {
   // };
 
 
-  const downloadSavePDF = async (pdfUrls) => {
+  const downloadInvoiceSavePDF = async (pdfUrls) => {
     try {
       const pdfUrl = pdfUrls; // your pdf url
       const fileName = 'orderInvoice.pdf';
@@ -356,12 +356,83 @@ const CardOrderDetails = ({ item }) => {
 
 
 
+  const downloadSummaryPDF = () => {
+    setLoading(true)
+
+    let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.orderSummary}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
+    console.log('urlPdf---', urlPdf);
+
+    const { dirs } = RNFetchBlob.fs;
+    const fileName = `orderSummary_${Date.now()}.pdf`;
+
+    const path =
+      Platform.OS === 'android'
+        ? `${dirs.DownloadDir}/${fileName}` // 👈 Android public Downloads folder
+        : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
+
+    RNFetchBlob.config({
+      addAndroidDownloads: {
+        useDownloadManager: true,   // 👈 Android system Download Manager
+        notification: true,         // 👈 show progress in notification bar
+        path,                       // 👈 save to Downloads
+        title: fileName,
+        description: 'Downloading summary…',
+        mime: 'application/pdf',
+        mediaScannable: true,       // 👈 makes file visible in Files/My Files
+      },
+      fileCache: true,
+      path,
+    })
+      .fetch('GET', urlPdf)
+      .then((res) => {
+        console.log('✅ Summary saved to:', res.path());
+        downloadSummarySavePDF(urlPdf)
+        // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
+      })
+      .catch((err) => {
+        setLoading(false)
+        useToast('Unable to process your request. Please try again.', 0);
+        console.log('❌ Download error', err);
+        // Alert.alert('Error', 'Failed to download invoice.');
+      });
+  };
+
+
+  const downloadSummarySavePDF = async (pdfUrls) => {
+    try {
+      const pdfUrl = pdfUrls; // your pdf url
+      const fileName = 'orderSummary.pdf';
+      const downloadDest =
+        Platform.OS === 'android'
+          ? `${RNFS.DownloadDirectoryPath}/${fileName}`
+          : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+
+      const options = {
+        fromUrl: pdfUrl,
+        toFile: downloadDest,
+      };
+
+      const res = await RNFS.downloadFile(options).promise;
+      setLoading(false)
+      console.log('Download success', res);
+      useToast('Order Summary saved successfully.', 1);
+      // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
+    } catch (err) {
+      setLoading(false)
+      useToast('An error occurred. Please try again.', 0);
+      console.log('Download error', err);
+      // Alert.alert('Error', 'Failed to download file.');
+
+    }
+  };
+
+
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} Pb={hp('25%')}>
         <View style={styles.mainInvoiceView}>
           <TouchableOpacity
-            onPress={() => { (downloadPDF()) }}
+            onPress={() => { (downloadInvoicePDF()) }}
             activeOpacity={0.8}
             style={styles.invocesTouchView}>
             <SvgXml xml={appImagesSvg.billSummaryInvoice} />
@@ -369,7 +440,7 @@ const CardOrderDetails = ({ item }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => { (downloadPDF()) }}
+            onPress={() => { (downloadSummaryPDF()) }}
             activeOpacity={0.8}
             style={styles.invocesTouchView}>
             <SvgXml xml={appImagesSvg.billSummaryInvoice} />

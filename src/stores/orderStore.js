@@ -7,7 +7,9 @@ export default class OrderStore {
   orderHistoryList = [];
   orderTrackingList = [];
   parcelOrderInProgress = [];
-  rideOrderInProgress = []
+  rideOrderInProgress = [];
+  h3PolyData = []
+
 
   parcelsOfUser = async (order_type, limit, handleLoading) => {
     let requestData = {
@@ -129,7 +131,7 @@ export default class OrderStore {
         return [];
       }
     } catch (error) {
-      console.log('error orders Track Order:', error);
+      console.log('error orders getPendingForCustomer:', error);
       // return [];
     }
   };
@@ -221,5 +223,27 @@ export default class OrderStore {
   setRideOrderInProgress = async (data) => {
     this.rideOrderInProgress = data
   }
+
+
+
+
+
+  geth3Polygons = async () => {
+    try {
+      const res = await agent.geth3Polygons();
+      console.log('geth3Polygons Res : ', res);
+      if (res?.statusCode == 200) {
+        res?.data?.length > 0 ? this.h3PolyData = res?.data : this.h3PolyData = []
+        return res?.data;
+      } else {
+        this.h3PolyData = []
+        return [];
+      }
+    } catch (error) {
+      console.log('error geth3Polygons:', error);
+      this.h3PolyData = []
+      return [];
+    }
+  };
 
 }
