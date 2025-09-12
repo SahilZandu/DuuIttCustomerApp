@@ -17,6 +17,7 @@ import { silderArray } from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
 import MapRoute from '../components/MapRoute';
 import Spacer from '../halpers/Spacer'
+import PopUpH3Location from '../components/appPopUp/PopUpH3Location';
 
 const RidePriceForm = ({ navigation }) => {
   const { senderAddress, receiverAddress, setSenderAddress, setReceiverAddress } =
@@ -33,6 +34,8 @@ const RidePriceForm = ({ navigation }) => {
   const [isStatus, setIsStatus] = useState('');
   const [isSecure, setIsSecure] = useState(false);
   const [appUserData, setAppUserData] = useState(appUser ?? {});
+  const [errorShow, setErrorShow] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance.")
 
   useFocusEffect(
     useCallback(() => {
@@ -89,11 +92,19 @@ const RidePriceForm = ({ navigation }) => {
     };
     console.log('newdata--', newdata);
 
-    await addRequestParcelRide(newdata, navigation, handleLoading)
+    await addRequestParcelRide(newdata, navigation, handleLoading, handleErrorMsgShow)
   };
 
   const handleLoading = (v) => {
     setLoading(v)
+  }
+
+  const handleErrorMsgShow = (msg) => {
+    setErrorMsg(msg)
+    setTimeout(() => {
+      setErrorShow(true)
+    }, 500)
+
   }
 
 
@@ -200,6 +211,18 @@ const RidePriceForm = ({ navigation }) => {
           />
         </View>
       </ModalPopUp>
+
+      <PopUpH3Location
+        topIcon={false}
+        CTATitle={'Cancel'}
+        visible={errorShow}
+        type={'Error'}
+        onClose={() => setErrorShow(false)}
+        title={"Oops! Range Issue"}
+        text={
+          errorMsg ?? "We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance."
+        }
+      />
     </View>
   );
 };

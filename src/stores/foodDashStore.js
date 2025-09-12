@@ -234,7 +234,7 @@ export default class FoodDashStore {
         useToast(res?.message, 1);
         handleLoading(false);
         navigation.navigate('orderPlaced', {
-          orderData:res?.data,
+          orderData: res?.data,
         });
       } else {
         const message = res?.message ? res?.message : res?.data?.message;

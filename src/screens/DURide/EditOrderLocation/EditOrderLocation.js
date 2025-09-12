@@ -29,6 +29,7 @@ import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { Wrapper } from '../../../halpers/Wrapper';
+import PopUpH3Location from '../../../components/appPopUp/PopUpH3Location';
 
 let currentLocation = {
     lat: null,
@@ -57,6 +58,8 @@ const EditOrderLocation = ({ navigation, route }) => {
     const [LocationId, setLocationId] = useState('')
     const [loading, setLoading] = useState(false);
     const [checkLocation, setCheckLocation] = useState(false)
+    const [errorShow, setErrorShow] = useState(false)
+    const [errorMsg, setErrorMsg] = useState("We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance.")
 
     useFocusEffect(
         useCallback(() => {
@@ -188,12 +191,20 @@ const EditOrderLocation = ({ navigation, route }) => {
         };
         console.log('requestData--', requestData);
 
-        await editParcelsRides(requestData, navigation, handleLoading)
+        await editParcelsRides(requestData, navigation, handleLoading, handleErrorMsgShow)
 
     };
 
     const handleLoading = (v) => {
         setLoading(v)
+    }
+
+    const handleErrorMsgShow = (msg) => {
+        setErrorMsg(msg)
+        setTimeout(() => {
+            setErrorShow(true)
+        }, 500)
+
     }
 
     const handleCurrentAddress = async () => {
@@ -325,6 +336,17 @@ const EditOrderLocation = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
+            <PopUpH3Location
+                topIcon={false}
+                CTATitle={'Cancel'}
+                visible={errorShow}
+                type={'Error'}
+                onClose={() => setErrorShow(false)}
+                title={"Oops! Range Issue"}
+                text={
+                    errorMsg ?? "We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance."
+                }
+            />
         </Wrapper>
     );
 };

@@ -12,7 +12,7 @@ import Spacer from '../../halpers/Spacer';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../../theme/colors';
 
-const PopUpInProgess = ({topIcon,crossIcon, visible, onDelete, type, text, title, onClose, CTATitle }) => {
+const PopUpInProgess = ({ topIcon, crossIcon, visible, onDelete, type, text, title, onClose, CTATitle }) => {
     const getIconXml = () => {
         if (type == 'warning') {
             return appImagesSvg?.popUpwarning;
@@ -56,7 +56,7 @@ const PopUpInProgess = ({topIcon,crossIcon, visible, onDelete, type, text, title
         <Modal isVisible={visible}>
             <View style={styles.mainView}>
                 <View style={styles.subView}>
-                    {topIcon &&  <PopUpIcon />}
+                    {topIcon && <PopUpIcon />}
                     {crossIcon && <CloseBtn />}
                     <Text style={styles.titleText}>
                         {title ? title : 'You are about to delete an item'}
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
         fontSize: RFValue(13),
         textAlign: 'center',
         paddingVertical: '5%',
+        color: colors.black
     },
     textSecond: {
         fontFamily: fonts.regular,

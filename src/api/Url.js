@@ -17,7 +17,7 @@ export default {
     getMyAddress: 'customers/detail',
     getAppUser: 'customers/detail',
     parcelsRides: 'orders',
-    foodReorder :"cart/reorder-from-order",
+    foodReorder: "cart/reorder-from-order",
     editParcelsRides: "orders/update-order-details",
     parcels_Cancel: 'orders/cancel',
     parcels_find_rider: 'orders/find-rider',
@@ -47,16 +47,16 @@ export default {
     recomendedItems: 'food-order/recomended-items',
     getFoodOrderTracking: 'food-order/get-tracking-order',
     addReviews: 'reviews',
-     foodOrderReviews:"reviews/create-food-order",
+    foodOrderReviews: "reviews/create-food-order",
     completeMealItems: 'food-item/complete-your-meal-items',
     restaurantReview: 'reviews/restaurant-review',
     // restaurantOffers:'offers/all'
     restaurantOffers: 'offers/recomended-offer',
-    restaurantOffersData:'cart/customer-offers',
+    restaurantOffersData: 'cart/customer-offers',
     applyCoupon: 'cart/apply-coupon',
-    removeCoupan:'cart/remove-coupon',
+    removeCoupan: 'cart/remove-coupon',
     appFeedback: 'orders/app-feedback',
-    calculateDeliveryFee:"cart/calculate-delivery-fee",
+    calculateDeliveryFee: "cart/calculate-delivery-fee",
 
 
     wallet: 'wallet',
@@ -75,16 +75,20 @@ export default {
     unseenMessages: 'chat/unseen-messages',
     updateOrderArrivedTime: "orders/update-order-arrived-time",
     userLogout: "customers/logout",
-    reorderCart:"cart/reorder-from-order",
-    getRestaurantFoodReviews:'reviews/restaurant-food-reviews',
-    getRestaurantBanners :"restaurant/get-banners",
-    cancelFoodOrderByCustomer:'food-order/cancel-food-order-by-customer',
-    foodOrdersInvoice:'orders/food-order-invoice',
-    rideParcelOrderInvoice:'orders/rider-parcel-order-invoice',
-    orderSummary :'orders/food-order-summary',
-    geth3Polygons:'h3/polygons'
+    reorderCart: "cart/reorder-from-order",
+    getRestaurantFoodReviews: 'reviews/restaurant-food-reviews',
+    getRestaurantBanners: "restaurant/get-banners",
+    cancelFoodOrderByCustomer: 'food-order/cancel-food-order-by-customer',
+    foodOrdersInvoice: 'orders/food-order-invoice',
+    rideParcelOrderInvoice: 'orders/rider-parcel-order-invoice',
+    orderSummary: 'orders/food-order-summary',
+    // geth3Polygons:'h3/polygons'
+    geth3Polygons: 'h3/get-polygon-only'
 
-   
+
 
 }
+
+
+
 

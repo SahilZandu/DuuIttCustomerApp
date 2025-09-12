@@ -7,22 +7,20 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { appImages } from '../../../commons/AppImages';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import CTA from '../../../components/cta/CTA';
 import { getGeoCodes, getMpaDalta } from '../../../components/GeoCodeAddress';
 import { findPolygonForPoint, getCurrentLocation } from '../../../components/GetAppLocation';
-import Header from '../../../components/header/Header';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import Spacer from '../../../halpers/Spacer';
-import { pickUpHistory } from '../../../stores/DummyData/Home';
 import { rootStore } from '../../../stores/rootStore';
 import { colors } from '../../../theme/colors';
 import { fonts } from '../../../theme/fonts/fonts';
 import { styles } from './styles';
 import { Wrapper } from '../../../halpers/Wrapper';
+import PopUpH3Location from '../../../components/appPopUp/PopUpH3Location';
 
 let geoLocation = {
   lat: null,
@@ -50,7 +48,7 @@ const SetLocationHistory = ({ navigation }) => {
 
     return d ? d : '';
   };
-  const debounceTimeout = useRef(null);
+
   const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
   const [pickDrop, setPickDrop] = useState('pick');
   const [pickUpLocation, setPickUpLocation] = useState('');
@@ -70,6 +68,7 @@ const SetLocationHistory = ({ navigation }) => {
   const [currentAddress, setCurrentAddress] = useState('');
   const [name, setName] = useState('');
   const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
+  const [isNotService, setIsNotService] = useState(false)
 
 
   useFocusEffect(
@@ -157,11 +156,8 @@ const SetLocationHistory = ({ navigation }) => {
     setLocationId(addressData?.place_Id)
     const matchedPolygon = findPolygonForPoint(addressData?.geo_location?.lat, addressData?.geo_location?.lng, polygonArray);
     if (matchedPolygon) {
-      console.log("Point belongs to polygon:", matchedPolygon.name);
-      // Alert.alert(
-      //   "Service Available",
-      //   "Waah! We currently  service this pickup or drop location."
-      // );
+      console.log("Point belongs to polygon:");
+      setIsNotService(false)
       if (pickDrop == 'pick') {
         const newData = {
           address: addressData?.address,
@@ -186,30 +182,10 @@ const SetLocationHistory = ({ navigation }) => {
       }
     } else {
       console.log("Point is outside all polygons");
-      Alert.alert(
-        "Service Not Available",
-        "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
-      );
-
+      setIsNotService(true)
     }
 
 
-  };
-
-  const mohaliChandigarhBounds = {
-    north: 30.8258,
-    south: 30.6600,
-    west: 76.6600,
-    east: 76.8500,
-  };
-
-  const isWithinBounds = (latitude, longitude) => {
-    return (
-      Number(latitude) <= mohaliChandigarhBounds.north &&
-      Number(latitude) >= mohaliChandigarhBounds.south &&
-      Number(longitude) >= mohaliChandigarhBounds.west &&
-      Number(longitude) <= mohaliChandigarhBounds.east
-    );
   };
 
   const handleRegionChangeComplete = (region) => {
@@ -217,56 +193,14 @@ const SetLocationHistory = ({ navigation }) => {
     const matchedPolygon = findPolygonForPoint(region?.geo_location?.lat, region?.geo_location?.lng, polygonArray);
 
     if (matchedPolygon) {
-      console.log("Point belongs to polygon:", matchedPolygon.name);
-      // Alert.alert(
-      //   "Service Available",
-      //   "Waah! We currently  service this pickup or drop location."
-      // );
+      console.log("Point belongs to polygon:",);
+      setIsNotService(false)
       onPressTouch(region)
     } else {
       console.log("Point is outside all polygons");
-      Alert.alert(
-        "Service Not Available",
-        "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
-      );
+      setIsNotService(true)
 
     }
-    // onPressTouch(region)
-    // if (debounceTimeout.current) {
-    //   clearTimeout(debounceTimeout.current);
-    // }
-    // debounceTimeout.current = setTimeout(() => {
-    //   if (!isWithinBounds(region?.geo_location?.lat, region?.geo_location?.lng)) {
-    //     Alert.alert(" ", `Oops! we currently don't service your ${(pickDrop == 'pick' ? "pickup" : 'drop')} location. Please select different location.`);
-    //   } else {
-    //     if (pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
-    //       if (!isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
-    //         Alert.alert(" ", "Oops! we currently don't service your pickup location. Please select different location.");
-    //       } else {
-    //         onPressTouch(region)
-    //       }
-    //     } else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0) {
-    //       if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng)) {
-    //         Alert.alert(" ", "Oops! we currently don't service your drop location. Please select different location.");
-    //       }
-    //       else {
-    //         onPressTouch(region)
-    //       }
-    //     }
-    //     else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0 || pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
-    //       if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng) && !isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
-    //         Alert.alert(" ", "Oops! we currently don't service your pickup and drop location. Please select different location.");
-    //       }
-    //       else {
-    //         onPressTouch(region)
-    //       }
-    //     }
-    //     else {
-    //       onPressTouch(region)
-    //     }
-    //   }
-    // }, 300); // Delay in milliseconds
-
   };
 
 
@@ -497,6 +431,18 @@ const SetLocationHistory = ({ navigation }) => {
             />
           </View>}
       </View>
+
+      <PopUpH3Location
+        topIcon={false}
+        CTATitle={'ok'}
+        visible={isNotService}
+        type={'Error'}
+        onClose={() => setIsNotService(false)}
+        title={"Service Not Available"}
+        text={
+          "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
+        }
+      />
     </Wrapper>
   );
 };

@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(13),
     textAlign: 'center',
     paddingVertical: '5%',
+    color: colors.black
   },
   textSecond: {
     fontFamily: fonts.regular,

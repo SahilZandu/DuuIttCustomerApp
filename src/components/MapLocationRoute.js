@@ -555,6 +555,7 @@ import { colors } from '../theme/colors';
 import * as h3 from "h3-js";
 import { findPolygonForPoint } from './GetAppLocation';
 import { rootStore } from '../stores/rootStore';
+import PopUpH3Location from './appPopUp/PopUpH3Location';
 
 // Constants outside component to prevent recreation
 const DEFAULT_REGION = {
@@ -587,6 +588,7 @@ const MapLocationRoute = React.memo(({
   const [hexagons, setHexagons] = useState([]);
   const [mode, setMode] = useState('single'); // 'single', 'grid', 'polygon', 'multi'
   const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
+  const [isNotService, setIsNotService] = useState(false)
 
 
   useEffect(() => {
@@ -851,19 +853,25 @@ const MapLocationRoute = React.memo(({
       const matchedPolygon = findPolygonForPoint(region?.latitude, region?.longitude, polygonArray);
 
       if (matchedPolygon) {
-        console.log("Point belongs to polygon:", matchedPolygon.name);
+        console.log("Point belongs to polygon:", matchedPolygon?.name);
         // Alert.alert(
         //   "Service Available",
         //   "Waah! We currently  service this pickup or drop location."
         // );
-        onCheckLocation(false)
+        setIsNotService(false);
+        onCheckLocation(false);
+
       } else {
         console.log("Point is outside all polygons");
+        if (isNotService !== true) {
+          setIsNotService(true)
+        }
         onCheckLocation(true)
-        Alert.alert(
-          "Service Not Available",
-          "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
-        );
+
+        // Alert.alert(
+        //   "Service Not Available",
+        //   "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
+        // );
 
       }
 
@@ -1005,6 +1013,17 @@ const MapLocationRoute = React.memo(({
         <Button title="Polygon" onPress={() => setMode('polygon')} color={mode === 'polygon' ? 'blue' : 'gray'} />
         <Button title="Multi" onPress={() => setMode('multi')} color={mode === 'multi' ? 'blue' : 'gray'} />
       </View> */}
+      <PopUpH3Location
+        topIcon={false}
+        CTATitle={'ok'}
+        visible={isNotService}
+        type={'Error'}
+        onClose={() => setIsNotService(false)}
+        title={"Service Not Available"}
+        text={
+          "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
+        }
+      />
     </View>
   );
 });

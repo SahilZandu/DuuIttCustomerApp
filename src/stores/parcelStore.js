@@ -6,7 +6,7 @@ import { useToast } from '../halpers/useToast';
 export default class ParcelStore {
   addParcelInfo = {};
 
-  addRequestParcelRide = async (value, navigation, handleLoading) => {
+  addRequestParcelRide = async (value, navigation, handleLoading, handleErrorMsgShow) => {
     const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
     handleLoading(true);
     let requestData = {
@@ -33,6 +33,9 @@ export default class ParcelStore {
         handleLoading(false);
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
+        if (res?.statusCode === 400) {
+          handleErrorMsgShow(message)
+        }
       }
     } catch (error) {
       console.log('error:', error);
@@ -41,6 +44,9 @@ export default class ParcelStore {
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
+      if (error?.data?.statusCode === 400) {
+        handleErrorMsgShow(m)
+      }
     }
   };
 
@@ -70,6 +76,9 @@ export default class ParcelStore {
         handleLoading(false);
         const message = res?.message ? res?.message : res?.data?.message;
         useToast(message, 0);
+        if (res?.statusCode === 400) {
+          handleErrorMsgShow(message)
+        }
       }
     } catch (error) {
       console.log('error:editParcelsRides', error);
@@ -78,6 +87,10 @@ export default class ParcelStore {
         ? error?.data?.message
         : 'Something went wrong';
       useToast(m, 0);
+      if (error?.data?.statusCode === 400) {
+        handleErrorMsgShow(m)
+      }
+
     }
   };
 
@@ -138,8 +151,8 @@ export default class ParcelStore {
       user_id: value?.customerId,
       reason_of_cancellation: value?.reason,
       // status: 'cancelled',
-     // order_cancel_by: 'customer',
-     
+      // order_cancel_by: 'customer',
+
     };
     console.log('requestData:-', requestData);
     try {
@@ -193,5 +206,4 @@ export default class ParcelStore {
   };
 
 
-  
 }

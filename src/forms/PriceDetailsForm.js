@@ -36,6 +36,7 @@ import { senderReceiverValidations } from './formsValidation/senderReceiverValid
 import { silderArray } from '../stores/DummyData/Home';
 import IncompletedAppRule from '../halpers/IncompletedAppRule';
 import MapRoute from '../components/MapRoute';
+import PopUpH3Location from '../components/appPopUp/PopUpH3Location';
 
 const parcelInst = [
   {
@@ -74,6 +75,8 @@ const PriceDetailsForm = ({ navigation }) => {
     phone: receiverAddress?.phone?.toString(),
   });
   const [appUserData, setAppUserData] = useState(appUser ?? {});
+  const [errorShow, setErrorShow] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance.")
 
   useFocusEffect(
     useCallback(() => {
@@ -124,7 +127,7 @@ const PriceDetailsForm = ({ navigation }) => {
     };
     console.log('newdata--', newdata);
 
-    await addRequestParcelRide(newdata, navigation, handleLoading);
+    await addRequestParcelRide(newdata, navigation, handleLoading, handleErrorMsgShow);
 
     // navigation.navigate('priceConfirmed',{item:newdata});
   };
@@ -132,6 +135,14 @@ const PriceDetailsForm = ({ navigation }) => {
   const handleLoading = v => {
     setLoading(v);
   };
+
+  const handleErrorMsgShow = (msg) => {
+    setErrorMsg(msg)
+    setTimeout(() => {
+      setErrorShow(true)
+    }, 500)
+
+  }
 
   const FormButton = ({ loading, onPress }) => {
     const { dirty, isValid, values } = useFormikContext();
@@ -347,6 +358,17 @@ const PriceDetailsForm = ({ navigation }) => {
           />
         </View>
       </ModalPopUp>
+      <PopUpH3Location
+        topIcon={false}
+        CTATitle={'Cancel'}
+        visible={errorShow}
+        type={'Error'}
+        onClose={() => setErrorShow(false)}
+        title={"Oops! Range Issue"}
+        text={
+          errorMsg ?? "We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance."
+        }
+      />
     </View>
   );
 };

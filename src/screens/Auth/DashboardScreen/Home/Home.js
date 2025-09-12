@@ -178,15 +178,16 @@ export default function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
-        StatusBar.setBarStyle("light-content", true);
-      } else {
-        StatusBar.setBarStyle("dark-content", true);
-      }
-
-      return () => {
-        StatusBar.setBarStyle("dark-content", true);
-      };
+      setTimeout(() => {
+        if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
+          StatusBar.setBarStyle("light-content", true);
+        } else {
+          StatusBar.setBarStyle("dark-content", true);
+        }
+        return () => {
+          StatusBar.setBarStyle("dark-content", true);
+        };
+      }, 2000)
     }, [bannerList])
   );
 
