@@ -210,8 +210,6 @@ export default class OrderStore {
   };
 
 
-
-
   setParcelTrackingOrder = async (data) => {
     this.orderTrackingList = data
   }

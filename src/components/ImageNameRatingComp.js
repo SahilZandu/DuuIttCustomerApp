@@ -29,10 +29,19 @@ const ImageNameRatingComp = ({ parcelInfo }) => {
           }
           resizeMode={FastImage.resizeMode.stretch}
         />
+        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+          <Text numberOfLines={1} style={styles.nameText}>
+            {parcelInfo?.rider?.name}
+          </Text>
+          <FastImage
+            style={{ width: 50, height: 50, marginLeft: '4%' }}
+            source={parcelInfo?.rider?.vehicle_info?.vehicle_type == 'bike' ?
+              appImages.bikeRiderImage :
+              appImages?.scootyRiderImage}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </View>
 
-        <Text numberOfLines={2} style={styles.nameText}>
-          {parcelInfo?.rider?.name}
-        </Text>
         <Rating rating={parcelInfo?.rider?.average_rating !== undefined
           ? Number(parcelInfo?.rider?.average_rating)?.toFixed(1)?.toString()
           : '0.0'} />
@@ -66,6 +75,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginLeft: '4%',
     width: wp('56.2%'),
+    top: '7%'
   },
   bottomLine: {
     height: 1,

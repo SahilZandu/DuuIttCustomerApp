@@ -554,7 +554,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     // },
     {
       id: 2,
-      title: 'Bike Number',
+      title: 'Vehicle Number',
       value: `${parcelInfo?.rider?.vehicle_info?.vehicle_number}`,
     },
   ];
@@ -867,7 +867,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                     {/* {driverArrive?.map((item, i) => {
                       return ( */}
                     <TextRender
-                      title={'Bike Number'}
+                      title={'Vehicle Number'}
                       value={
                         `${parcelInfo?.rider?.vehicle_info?.vehicle_number}`
                         // item?.title == 'Cash'

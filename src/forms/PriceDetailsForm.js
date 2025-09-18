@@ -157,7 +157,6 @@ const PriceDetailsForm = ({ navigation }) => {
         title={'Proceed'}
         onPress={() => onPress(values)}
         loading={loading}
-        isBottom={true}
         width={'90%'}
         textTransform={'capitalize'}
       />
@@ -501,8 +500,9 @@ const styles = StyleSheet.create({
   },
   btnBackColor: {
     backgroundColor: colors.appBackground,
-    height: hp('10%'),
+    height: Platform.OS === 'ios' ? hp('8%') : hp('10%'),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: Platform.OS === 'ios' ? '3%' : 0
   }
 });

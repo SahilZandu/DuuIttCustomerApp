@@ -32,6 +32,7 @@ import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider
 import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
 import { getGeoCodes } from '../../../../components/GeoCodeAddress';
+import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 
 
 let currentLocation = {
@@ -44,6 +45,7 @@ export default function Home({ navigation }) {
   const { saveFcmToken, getCheckDeviceId, getRestaurantBanners } = rootStore.dashboardStore;
   const { setChangeLiveLocation, changeLiveLocation } = rootStore.foodDashboardStore;
   const { setSelectedAddress } = rootStore.cartStore;
+  const { currentAddress } = rootStore.myAddressStore;
   const { geth3Polygons, h3PolyData } = rootStore.orderStore;
   const getLocation = type => {
     let d =
@@ -57,12 +59,13 @@ export default function Home({ navigation }) {
   const [internet, setInternet] = useState(true);
   const [bannerList, setBannerList] = useState([])
   const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
+  const [loading, setLoading] = useState(currentAddress?.address?.length > 0 ? false : true)
 
   useFocusEffect(
     useCallback(() => {
-      if (h3PolyData?.length == 0) {
-        getH3PolygonData();
-      }
+      // if (h3PolyData?.length == 0) {
+      getH3PolygonData();
+      // }
       setCurrentLocation();
       requestUserNotificationPermission();
       getCheckDevice();
@@ -197,8 +200,10 @@ export default function Home({ navigation }) {
 
     if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
       console.log('Permission settings:', settings);
+      setCurrentLocation();
     } else {
       console.log('User declined permissions');
+      setCurrentLocation();
     }
   }
 
@@ -311,6 +316,9 @@ export default function Home({ navigation }) {
   };
 
   return (
+
+
+
     <>
       {bannerList?.length == 0 ? <Wrapper4
         edges={['left', 'right']}
@@ -321,42 +329,48 @@ export default function Home({ navigation }) {
         showProfile={true}
         showHeader
         showLocation={true}
+        onSetlocation={() => { setLoading(false) }}
+        isOnSetlocation={true}
       >
         {/* <View style={styles.container}> */}
-        {internet == false ? (
-          <NoInternet />
-        ) : (
-          <>
-            {/* <DashboardHeader title={appUser?.name ?? "Home"}
+        {loading == true ? (
+          <AnimatedLoader type={'homeScreenLoader'} />
+        ) : (<>
+          {internet == false ? (
+            <NoInternet />
+          ) : (
+            <>
+              {/* <DashboardHeader title={appUser?.name ?? "Home"}
               appUserInfo={appUser}
               navigation={navigation}
               showProfile={true} />  */}
 
-            <View style={styles.mainView}>
-              <AppInputScroll
-                padding={true}
-                keyboardShouldPersistTaps={'handled'}>
-                {/* {bannerList?.length > 0 && (
+              <View style={styles.mainView}>
+                <AppInputScroll
+                  padding={true}
+                  keyboardShouldPersistTaps={'handled'}>
+                  {/* {bannerList?.length > 0 && (
                   <CustomerHomeSlider
                     bannerList={bannerList}
                     data={bannerList[0]?.image_urls}
                     paginationList={true}
                     imageHeight={hp('30%')} />
                 )} */}
-                <View style={styles.innerView}>
-                  <ChangeRoute data={homeCS} navigation={navigation} />
-                </View>
-                <View style={styles.bottomImageView}>
-                  <Image
-                    resizeMode='contain'
-                    style={styles.bottomImage}
-                    source={appImages.mainHomeBootmImage}
-                  />
-                </View>
-              </AppInputScroll>
-            </View>
-          </>
-        )}
+                  <View style={styles.innerView}>
+                    <ChangeRoute data={homeCS} navigation={navigation} />
+                  </View>
+                  <View style={styles.bottomImageView}>
+                    <Image
+                      resizeMode='contain'
+                      style={styles.bottomImage}
+                      source={appImages.mainHomeBootmImage}
+                    />
+                  </View>
+                </AppInputScroll>
+              </View>
+            </>
+          )}
+        </>)}
       </Wrapper4> :
         <View style={styles.container}>
           <StatusBar
@@ -391,18 +405,24 @@ export default function Home({ navigation }) {
                       navigation={navigation}
                       showProfile={true}
                       showLocation={true}
+                      onSetlocation={() => { setLoading(false) }}
+                      isOnSetlocation={true}
                     />
                   </View>
-                  <View style={styles.innerView}>
-                    <ChangeRoute data={homeCS} navigation={navigation} />
-                  </View>
-                  <View style={styles.bottomImageView}>
-                    <Image
-                      resizeMode='contain'
-                      style={styles.bottomImage}
-                      source={appImages.mainHomeBootmImage}
-                    />
-                  </View>
+                  {loading == true ? (
+                    <AnimatedLoader type={'homeScreenLoader'} />
+                  ) : (<>
+                    <View style={styles.innerView}>
+                      <ChangeRoute data={homeCS} navigation={navigation} />
+                    </View>
+                    <View style={styles.bottomImageView}>
+                      <Image
+                        resizeMode='contain'
+                        style={styles.bottomImage}
+                        source={appImages.mainHomeBootmImage}
+                      />
+                    </View>
+                  </>)}
                 </AppInputScroll>
               </View>
 

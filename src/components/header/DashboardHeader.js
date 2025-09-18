@@ -285,7 +285,9 @@ const DashboardHeader = ({ title,
   showProfile,
   backgroundColor,
   textColor,
-  showLocation
+  showLocation,
+  onSetlocation,
+  isOnSetlocation
 }) => {
   const searchInputRef = useRef(null);
   const { currentAddress } = rootStore.myAddressStore;
@@ -314,13 +316,29 @@ const DashboardHeader = ({ title,
         const otherData = nameData?.slice(1)?.join(', ')?.trim();
         setName(nameData[0] ?? '');
         setAddress(otherData ?? currentAddress?.address ?? '');
+        if (isOnSetlocation) {
+          onSetlocation();
+        }
+
       }
-      setTimeout(() => {
+      const locationUpdate = setTimeout(() => {
         if (getLocation) {
           onUpdateLatLng();
           setIsRefersh(true);
         }
       }, 300);
+
+      const timer = setTimeout(() => {
+        if (isOnSetlocation) {
+          onSetlocation();
+        }
+      }, 8000);
+      // later, when you want to cancel it
+      return () => {
+        clearTimeout(timer)
+        clearTimeout(locationUpdate);
+      };
+
     }, [appUserInfo])
   )
 
@@ -350,6 +368,9 @@ const DashboardHeader = ({ title,
     const otherData = nameData?.slice(1)?.join(', ')?.trim();
     setName(nameData[0] ?? '');
     setAddress(otherData ?? addressData?.address);
+    if (isOnSetlocation) {
+      onSetlocation();
+    }
   };
 
   return (
@@ -397,10 +418,10 @@ const DashboardHeader = ({ title,
             style={{
               fontSize: RFValue(11),
               fontFamily: fonts.bold,
-              color: textColor ? textColor : colors.black,
+              color: textColor ? textColor : colors.black85,
               width: wp('71%'),
             }}
-            numberOfLines={2}>
+            numberOfLines={1}>
             {address}
           </Text>}
         </View> :

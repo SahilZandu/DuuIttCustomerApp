@@ -117,6 +117,7 @@ export function DashboardBottomNavigator() {
               )}
               <SvgXml
                 // height={20} width={20} 
+                style={{ marginTop: Platform.OS === 'ios' ? hp('-0.6%') : 0 }}
                 xml={iconName} />
               {(route.name == "tab1" &&
                 (parcelOrdTrack?.length > 0 ||
@@ -161,7 +162,7 @@ export function DashboardBottomNavigator() {
                 // marginTop: '-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('2.3%'),
+                bottom: Platform.OS === 'ios' ? hp('3%') : hp('2.3%'),
               }}>
               <Text
                 style={{
@@ -273,7 +274,9 @@ export function RideBottomNavigator() {
                   animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
-              <SvgXml xml={iconName} />
+              <SvgXml
+                style={{ marginTop: Platform.OS === 'ios' ? hp('-0.3%') : 0 }}
+                xml={iconName} />
             </View>
           );
         },
@@ -302,7 +305,7 @@ export function RideBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('2%'),
+                bottom: Platform.OS === 'ios' ? hp('2.8%') : hp('2%'),
               }}>
               <Text
                 style={{
@@ -408,7 +411,9 @@ export function FoodBottomNavigator() {
                   animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
-              <SvgXml xml={iconName} />
+              <SvgXml
+                style={{ marginTop: Platform.OS === 'ios' ? hp('-0.3%') : 0 }}
+                xml={iconName} />
             </View>
           );
         },
@@ -441,7 +446,7 @@ export function FoodBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('2%'),
+                bottom: Platform.OS === 'ios' ? hp('2.8%') : hp('2%'),
               }}>
               <Text
                 style={{
@@ -549,7 +554,9 @@ export function ParcelBottomNavigator() {
                   animation={'pulse'}
                   iterationCount={1}></Animatable.View>
               )}
-              <SvgXml xml={iconName} />
+              <SvgXml
+                style={{ marginTop: Platform.OS === 'ios' ? hp('-0.3%') : 0 }}
+                xml={iconName} />
             </View>
           );
         },
@@ -578,7 +585,7 @@ export function ParcelBottomNavigator() {
                 // marginTop:'-5%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                bottom: hp('2%'),
+                bottom: Platform.OS === 'ios' ? hp('2.8%') : hp('2%'),
               }}>
               <Text
                 style={{
@@ -644,8 +651,7 @@ const styles = {
     backgroundColor: colors.main,
     width: wp('20%'),
     position: 'absolute',
-    // top: '11%',
-    top: hp('1.4%'),
+    top: Platform.OS == 'ios' ? hp('1.1%') : hp('1.5%'),
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
@@ -675,10 +681,10 @@ const styles = {
   //   },
   tabBarStyle: {
     position: 'absolute',
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
+    // borderTopRightRadius: 15,
+    // borderTopLeftRadius: 15,
     paddingVertical: '2%',
-    height: hp('8%'),
+    height: Platform.OS == 'ios' ? hp('8.5%') : hp('8%'),
     backgroundColor: colors.white, // Make the background transparent
     borderTopWidth: 0,
     paddingBottom: 0,

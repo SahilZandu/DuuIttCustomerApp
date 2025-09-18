@@ -23,6 +23,7 @@ import HomeMapLoader from './HomeMapLoader';
 import SelectedRiderLoader from './SelectedRiderLoader';
 import ChatLoader from './ChatLoader';
 import LiveLocationLoader from './LivelocarionLoader';
+import HomeScreenLoader from './HomeScreenLoader';
 
 const AnimatedLoader = ({type,absolute,height}) => {
   return (
@@ -46,6 +47,8 @@ const AnimatedLoader = ({type,absolute,height}) => {
       {type == 'selectedRiderLoader' && <SelectedRiderLoader/>}
       {type == 'chatLoader' && <ChatLoader/>}
        {type == "liveLocationLoader" && <LiveLocationLoader />}
+        {type == "homeScreenLoader" && <HomeScreenLoader/>}
+       
       
       
       

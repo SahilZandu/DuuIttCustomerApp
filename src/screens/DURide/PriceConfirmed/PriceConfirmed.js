@@ -766,7 +766,7 @@ export default function PriceConfirmed({ navigation, route }) {
                   alignSelf: 'center',
                   paddingHorizontal: 40,
                   height: hp('18%'),
-                  bottom: 0.1,
+                  bottom: Platform.OS == 'ios' ? '-2.1%' : '0.1%',
                   borderTopWidth: 0.3,
                   borderTopColor: colors.main,
                 }}>

@@ -46,7 +46,7 @@ const SetLocationHistory = ({ navigation }) => {
 
     return d ? d : '';
   };
-  
+
   const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
   const [pickDrop, setPickDrop] = useState('pick');
   const [pickUpLocation, setPickUpLocation] = useState('');
@@ -168,29 +168,29 @@ const SetLocationHistory = ({ navigation }) => {
     if (matchedPolygon) {
       console.log("Point belongs to polygon:");
       setIsNotService(false)
-      if (pickDrop == 'pick') {
-        const newData = {
-          address: addressData?.address,
-          geo_location: geoLocation,
-        };
-        console.log('newData--', newData);
-        setSenderAddress(newData);
-        setPickUpLocation(addressData?.address);
-        setLocationId(addressData?.place_Id)
-        setPickDrop('drop');
-      } else {
-        const newData = {
-          address: addressData?.address,
-          geo_location: geoLocation,
-        };
-        console.log('newData--', newData);
-        setReceiverAddress(newData);
-        setDropLocation(addressData?.address);
-        setPickDrop('pick');
-      }
     } else {
       console.log("Point is outside all polygons");
       setIsNotService(true)
+    }
+    if (pickDrop == 'pick') {
+      const newData = {
+        address: addressData?.address,
+        geo_location: geoLocation,
+      };
+      console.log('newData--', newData);
+      setSenderAddress(newData);
+      setPickUpLocation(addressData?.address);
+      setLocationId(addressData?.place_Id)
+      setPickDrop('drop');
+    } else {
+      const newData = {
+        address: addressData?.address,
+        geo_location: geoLocation,
+      };
+      console.log('newData--', newData);
+      setReceiverAddress(newData);
+      setDropLocation(addressData?.address);
+      setPickDrop('pick');
     }
   };
 
@@ -305,7 +305,6 @@ const SetLocationHistory = ({ navigation }) => {
       },
       screenName: receiverAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'
     });
-    // alert('drop')
   };
 
 
@@ -332,7 +331,28 @@ const SetLocationHistory = ({ navigation }) => {
 
 
   const onPressContinue = () => {
-    navigation.navigate('priceDetails');
+    const matchedSenderPolygon = findPolygonForPoint(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng, polygonArray);
+    const matchedReciverPolygon = findPolygonForPoint(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng, polygonArray);
+    if (matchedSenderPolygon && matchedReciverPolygon) {
+      navigation.navigate('priceDetails');
+    } else {
+      setIsNotService(true);
+    }
+  }
+
+  const onNotLocationMatch = () => {
+    // if (pickDrop == 'pick') {
+    //   setReceiverAddress({});
+    //   setDropLocation('');
+    //   setLocationId('')
+    //   setPickDrop('drop');
+    // } else {
+    //   setSenderAddress({});
+    //   setPickUpLocation('');
+    //   setLocationId('')
+    //   setPickDrop('pick');
+    // }
+    setIsNotService(false)
   }
 
   return (
@@ -435,7 +455,7 @@ const SetLocationHistory = ({ navigation }) => {
         CTATitle={'ok'}
         visible={isNotService}
         type={'Error'}
-        onClose={() => setIsNotService(false)}
+        onClose={() => { onNotLocationMatch() }}
         title={"Service Not Available"}
         text={
           "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."

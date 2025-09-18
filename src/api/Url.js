@@ -81,7 +81,8 @@ export default {
     cancelFoodOrderByCustomer: 'food-order/cancel-food-order-by-customer',
     foodOrdersInvoice: 'orders/food-order-invoice',
     rideParcelOrderInvoice: 'orders/rider-parcel-order-invoice',
-    orderSummary: 'orders/food-order-summary',
+    foodOrderSummary: 'orders/food-order-summary',
+    rideParcelOrderSummary:'orders/rider-parcel-order-summary',
     // geth3Polygons:'h3/polygons'
     geth3Polygons: 'h3/get-polygon-only'
 

@@ -390,7 +390,7 @@
 // }
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, Platform } from 'react-native';
 import { appImages, appImagesSvg } from '../../../commons/AppImages';
 import { styles } from './styles';
 import {
@@ -612,7 +612,7 @@ export default function PriceConfirmed({ navigation, route }) {
 
   return (
     <Wrapper
-      edges={['left', 'right','bottom']}
+      edges={['left', 'right', 'bottom']}
       transparentStatusBar
     >
       <View style={styles.container}>
@@ -668,7 +668,7 @@ export default function PriceConfirmed({ navigation, route }) {
                   alignSelf: 'center',
                   paddingHorizontal: 40,
                   height: hp('18%'),
-                  bottom: 0.1,
+                  bottom: Platform.OS == 'ios' ? '-2.1%' : '0.1%',
                   borderTopWidth: 0.3,
                   borderTopColor: colors.main,
                 }}>

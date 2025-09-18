@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>DuuIttApp</string>
+	<string>DuuItt</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,6 +55,8 @@
 	<string>We need access to your microphone to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>DuuItt need to access your PhotoLibrary </string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+     <string>This app needs speech recognition access to process voice input for a better user experience.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>We use your data to send you notifications about updates.</string>
 	<key>UIAppFonts</key>

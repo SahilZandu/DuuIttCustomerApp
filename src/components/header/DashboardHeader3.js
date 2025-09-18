@@ -220,12 +220,12 @@ const DashboardHeader3 = ({
                     </View>
                     {name?.length > 0 ? <Text
                         style={{
-                            fontSize: RFValue(10),
+                            fontSize: RFValue(12),
                             fontFamily: fonts.regular,
                             color: colors.colorA9,
                             width: wp('68%'),
                         }}
-                        numberOfLines={2}>
+                        numberOfLines={1}>
                         {address}
                     </Text> :
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', right: '10%' }}>

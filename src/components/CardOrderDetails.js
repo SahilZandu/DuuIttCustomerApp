@@ -41,7 +41,6 @@ import { useToast } from '../halpers/useToast';
 
 const CardOrderDetails = ({ item }) => {
   console.log('item -- CardOrderDetails', item);
-  const { foodOrdersInvoice } = rootStore.orderStore;
   const [loading, setLoading] = useState(false)
 
   let today = new Date();
@@ -208,24 +207,12 @@ const CardOrderDetails = ({ item }) => {
   };
 
 
-  const onInvoiceDownload = async () => {
-
-    const res = await foodOrdersInvoice(item, handleLoading);
-
-    console.log("res---", res);
-
-
-  }
-
-  const handleLoading = (v) => {
-    console.log("v--", v);
-  }
 
   const downloadInvoicePDF = () => {
     setLoading(true)
 
     let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrdersInvoice}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
-    console.log('urlPdf---', urlPdf);
+    // console.log('urlPdf---', urlPdf);
 
     const { dirs } = RNFetchBlob.fs;
     const fileName = `orderInvoice_${Date.now()}.pdf`;
@@ -250,50 +237,17 @@ const CardOrderDetails = ({ item }) => {
     })
       .fetch('GET', urlPdf)
       .then((res) => {
-        console.log('✅ Invoice saved to:', res.path());
+        // console.log('✅ Invoice saved to:', res.path());
         downloadInvoiceSavePDF(urlPdf)
         // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
       })
       .catch((err) => {
         setLoading(false)
         useToast('Unable to process your request. Please try again.', 0);
-        console.log('❌ Download error', err);
+        // console.log('❌ Download error', err);
         // Alert.alert('Error', 'Failed to download invoice.');
       });
   };
-
-  // const downloadPDF = () => {
-  //   const { dirs } = RNFetchBlob.fs;
-  //   const fileName = `invoice_${Date.now()}.pdf`;
-
-  //   const path =
-  //     Platform.OS === 'android'
-  //       ? `${dirs.DownloadDir}/${fileName}` // 👈 goes to Downloads
-  //       : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox (no public Downloads)
-
-  //   RNFetchBlob.config({
-  //     addAndroidDownloads: {
-  //       useDownloadManager: true,   // 👈 Android Download Manager
-  //       notification: true,         // show progress in notification bar
-  //       path,                       // save in Downloads folder
-  //       title: fileName,
-  //       description: 'Downloading invoice…',
-  //       mime: 'application/pdf',
-  //       mediaScannable: true,       // make it visible in gallery/Files app
-  //     },
-  //     fileCache: true,
-  //     path,
-  //   })
-  //     .fetch('GET', `https://duuitt.hashsoftware.com/orders/food-order-invoice/${'68b6bdd808ba51bf674a95ac'}`)
-  //     .then((res) => {
-  //       downloadSavePDF(`https://duuitt.hashsoftware.com/orders/food-order-invoice/${'68b6bdd808ba51bf674a95ac'}`)
-  //       console.log('Invoice saved to:', res.path());
-  //     })
-  //     .catch((err) => {
-  //       console.log('Download error', err);
-  //     });
-  // };
-
 
   const downloadInvoiceSavePDF = async (pdfUrls) => {
     try {
@@ -311,47 +265,17 @@ const CardOrderDetails = ({ item }) => {
 
       const res = await RNFS.downloadFile(options).promise;
       setLoading(false)
-      console.log('Download success', res);
+      // console.log('Download success', res);
       useToast('Order invoice saved successfully.', 1);
       // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
     } catch (err) {
       setLoading(false)
       useToast('An error occurred. Please try again.', 0);
-      console.log('Download error', err);
+      // console.log('Download error', err);
       // Alert.alert('Error', 'Failed to download file.');
 
     }
   };
-
-
-  // const downloadPDF = () => {
-  //   const { dirs } = RNFetchBlob.fs;
-  //   const fileName = `invoice_${Date.now()}.pdf`;
-  //   const path =
-  //     Platform.OS === 'android'
-  //       ? `${dirs.DownloadDir}/${fileName}`
-  //       : `${dirs.DocumentDir}/${fileName}`;
-
-  //   RNFetchBlob.config({
-  //     fileCache: true,
-  //     path,
-  //     addAndroidDownloads: {
-  //       useDownloadManager: true, // 👈 use system Download Manager
-  //       notification: true,       // 👈 show in notification bar
-  //       title: fileName,
-  //       description: 'Downloading invoice…',
-  //       mime: 'application/pdf',
-  //       mediaScannable: true,
-  //     },
-  //   })
-  //     .fetch('GET', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf')
-  //     .then((res) => {
-  //       console.log('Invoice saved to', res.path());
-  //     })
-  //     .catch((err) => {
-  //       console.log('Download error', err);
-  //     });
-  // };
 
 
 
@@ -359,8 +283,8 @@ const CardOrderDetails = ({ item }) => {
   const downloadSummaryPDF = () => {
     setLoading(true)
 
-    let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.orderSummary}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
-    console.log('urlPdf---', urlPdf);
+    let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrderSummary}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderSummary}/${item?._id}`
+    // console.log('urlPdf---', urlPdf);
 
     const { dirs } = RNFetchBlob.fs;
     const fileName = `orderSummary_${Date.now()}.pdf`;
@@ -385,18 +309,17 @@ const CardOrderDetails = ({ item }) => {
     })
       .fetch('GET', urlPdf)
       .then((res) => {
-        console.log('✅ Summary saved to:', res.path());
+        // console.log('✅ Summary saved to:', res.path());
         downloadSummarySavePDF(urlPdf)
         // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
       })
       .catch((err) => {
         setLoading(false)
         useToast('Unable to process your request. Please try again.', 0);
-        console.log('❌ Download error', err);
+        // console.log('❌ Download error', err);
         // Alert.alert('Error', 'Failed to download invoice.');
       });
   };
-
 
   const downloadSummarySavePDF = async (pdfUrls) => {
     try {
@@ -414,17 +337,19 @@ const CardOrderDetails = ({ item }) => {
 
       const res = await RNFS.downloadFile(options).promise;
       setLoading(false)
-      console.log('Download success', res);
+      // console.log('Download success', res);
       useToast('Order Summary saved successfully.', 1);
       // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
     } catch (err) {
       setLoading(false)
       useToast('An error occurred. Please try again.', 0);
-      console.log('Download error', err);
+      // console.log('Download error', err);
       // Alert.alert('Error', 'Failed to download file.');
 
     }
   };
+
+
 
 
   return (
@@ -648,13 +573,6 @@ const CardOrderDetails = ({ item }) => {
           </View>
           <OrdersInstrucationsComp item={item} />
         </TouchableOpacity>
-        {/* <Spacer space={'10%'} />
-        <BTN
-          title={'Download'}
-          onPress={() => { (downloadPDF()) }}
-        // onPress={() => { (onInvoiceDownload()) }}
-
-        /> */}
       </AppInputScroll>
       {loading && <IndicatorLoader />}
       {/* <View

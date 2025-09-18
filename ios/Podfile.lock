@@ -164,7 +164,7 @@ PODS:
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
   - PromisesObjC (2.4.0)
-  - razorpay-pod (1.4.3)
+  - razorpay-pod (1.4.5)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1977,7 +1977,7 @@ SPEC CHECKSUMS:
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  razorpay-pod: af9d52abe715ed5cc3eed9fdf6fd74340443d0b9
+  razorpay-pod: beab9d68c43e4d1421b1cf39283d126fc082d300
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: 3afceddffa65aee666dafd6f0116f1d975db1584
   RCTRequired: ec1239bc9d8bf63e10fb92bd8b26171a9258e0c1
@@ -2065,6 +2065,6 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 2246eea72aaf1b816a68a35e6e4b74563653ae09
 
-PODFILE CHECKSUM: 7779d1553f86d0f72e7458bf8e1cb200907d32b3
+PODFILE CHECKSUM: ed11ddceed922d97684414149659603776108941
 
 COCOAPODS: 1.16.2

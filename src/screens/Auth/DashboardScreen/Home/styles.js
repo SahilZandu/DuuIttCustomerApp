@@ -21,11 +21,11 @@ export const styles = StyleSheet.create({
 
   },
   bottomImageView: {
-    marginTop: Platform.OS === 'ios' ? '0.5%' : '2%'
+    marginTop: Platform.OS === 'ios' ? '0.5%' : '2%',
   },
   bottomImage: {
     height: hp('30%'),
-    width: wp('100%')
+    width: wp('100%'),
   },
   statusBarBackground: {
     position: 'absolute',
