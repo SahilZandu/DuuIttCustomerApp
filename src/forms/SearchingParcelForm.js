@@ -53,6 +53,7 @@ import { silderArray } from '../stores/DummyData/Home';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 import BackgroundTimer from 'react-native-background-timer';
 import BackBtn from '../components/cta/BackBtn';
+import PickDropImageComp from '../components/PickDropImageComp';
 
 
 
@@ -880,9 +881,18 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                     {/* })} */}
                   </>
                 )}
-                <View style={{ marginLeft: '6%', alignSelf: 'center' }}>
+                <PickDropImageComp
+                  item={{
+                    pickup: parcelInfo?.sender_address?.address,
+                    drop: parcelInfo?.receiver_address?.address,
+                  }}
+                  image={screenName == 'parcel'
+                    ? appImages.packetImage
+                    : appImages.packetRideImage}
+                />
+                {/* <View style={{ marginLeft: '6%', alignSelf: 'center' }}>
                   <HomeSlider data={sliderItems} />
-                </View>
+                </View> */}
               </View>
             </Animated.View>
           </PanGestureHandler>

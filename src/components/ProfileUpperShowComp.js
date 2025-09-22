@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Surface } from 'react-native-paper';
-import { TouchableOpacity, View, Text, Image, StyleSheet, Platform } from 'react-native';
+import { TouchableOpacity, View, Text, Image, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/fonts/fonts';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -9,22 +9,36 @@ import { appImages, appImagesSvg } from '../commons/AppImages';
 import LinearGradient from 'react-native-linear-gradient';
 import Url from '../api/Url';
 import { screenHeight, screenWidth } from '../halpers/matrics';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const ProfileUpperShowComp = ({ navigation, appUser, item }) => {
+
+  const [profileImageLoad, setProfileImageLoad] = useState(false)
+
   return (
     <Surface elevation={2} style={styles.surfaceView}>
       <View style={styles.container}>
         <View style={styles.innerView}>
           <View style={styles.imageTextMainView}>
             <View style={styles.imageView}>
+              {profileImageLoad && (
+                <ActivityIndicator
+                  size='large'
+                  color={colors.green}
+                  style={styles.profileLoader}
+                />
+
+              )}
               <Image
                 resizeMode="cover"
                 style={styles.image}
                 source={
                   appUser?.profile_pic?.length > 0
-                    ? { uri: Url?.Image_Url + appUser?.profile_pic }
+                    ? { uri: appUser?.profile_pic }
                     : appImages.avtarImage
                 }
+                onLoadStart={() => setProfileImageLoad(true)}
+                onLoadEnd={() => setProfileImageLoad(false)}
               />
             </View>
             <View style={styles.textEditImageMainView}>
@@ -127,4 +141,7 @@ const styles = StyleSheet.create({
     color: colors.black75,
     marginTop: '1.5%',
   },
+  profileLoader: {
+    marginTop: hp('1.5%')
+  }
 });

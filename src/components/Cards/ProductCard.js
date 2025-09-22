@@ -267,7 +267,7 @@ const ProductCard = ({
             source={
               item?.image?.length > 0
                 ? {
-                    uri: Url?.Image_Url + item?.image,
+                    uri:item?.image,
                   }
                 : appImages.foodIMage
             }

@@ -79,41 +79,43 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       ),
     })
   );
-  const mohaliChandigarhBounds = {
-    north: 30.8258,
-    south: 30.6600,
-    west: 76.6600,
-    east: 76.8500,
-  };
 
-  const isWithinBounds = (latitude, longitude) => {
-    return (
-      latitude <= mohaliChandigarhBounds.north &&
-      latitude >= mohaliChandigarhBounds.south &&
-      longitude >= mohaliChandigarhBounds.west &&
-      longitude <= mohaliChandigarhBounds.east
-    );
-  };
+  // const mohaliChandigarhBounds = {
+  //   north: 30.8258,
+  //   south: 30.6600,
+  //   west: 76.6600,
+  //   east: 76.8500,
+  // };
 
-  const handleRegionChangeComplete = (region) => {
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
+  // const isWithinBounds = (latitude, longitude) => {
+  //   return (
+  //     latitude <= mohaliChandigarhBounds.north &&
+  //     latitude >= mohaliChandigarhBounds.south &&
+  //     longitude >= mohaliChandigarhBounds.west &&
+  //     longitude <= mohaliChandigarhBounds.east
+  //   );
+  // };
 
-    debounceTimeout.current = setTimeout(() => {
-      if (!isWithinBounds(region.latitude, region.longitude)) {
-        mapRef.current?.animateToRegion({
-          latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
-          longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
-          latitudeDelta: getMpaDalta().latitudeDelta,
-          longitudeDelta: getMpaDalta().longitudeDelta,
-        });
-        Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-      }
-    }, 50); // Delay in milliseconds
+  // const handleRegionChangeComplete = (region) => {
+  //   if (debounceTimeout.current) {
+  //     clearTimeout(debounceTimeout.current);
+  //   }
+
+  //   debounceTimeout.current = setTimeout(() => {
+  //     if (!isWithinBounds(region.latitude, region.longitude)) {
+  //       mapRef.current?.animateToRegion({
+  //         latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
+  //         longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
+  //         latitudeDelta: getMpaDalta().latitudeDelta,
+  //         longitudeDelta: getMpaDalta().longitudeDelta,
+  //       });
+  //       Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+  //     }
+  //   }, 50); // Delay in milliseconds
 
 
-  };
+  // };
+
 
   // Update latitude and longitude based on origin
   useEffect(() => {

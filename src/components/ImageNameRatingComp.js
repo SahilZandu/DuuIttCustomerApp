@@ -22,7 +22,7 @@ const ImageNameRatingComp = ({ parcelInfo }) => {
           source={
             parcelInfo?.rider?.profile_pic?.length > 0
               ? {
-                uri: Url?.Image_Url + parcelInfo?.rider?.profile_pic,
+                uri:parcelInfo?.rider?.profile_pic,
                 priority: FastImage.priority.high,
               }
               : appImages.avtarImage

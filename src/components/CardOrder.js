@@ -19,7 +19,6 @@ import { Surface } from 'react-native-paper';
 import BTN from './cta/BTN';
 import PickDropComp from './PickDropComp';
 import moment from 'moment';
-import Url from '../api/Url';
 import { screenWidth } from '../halpers/matrics';
 import {
   heightPercentageToDP as hp,
@@ -152,7 +151,7 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
                 source=
                 // setImageIcon(item?.order_type)
                 {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
-                  ? { uri: Url?.Image_Url + (item?.restaurant?.banner || item?.restaurant?.logo) }
+                  ? {uri:item?.restaurant?.banner ?? item?.restaurant?.logo}
                   : setImageIcon(item?.order_type)
                 }
               />
@@ -300,7 +299,7 @@ const CardOrder = ({ item, index, handleDetails, navigation }) => {
                 source={
                   setImageIcon(item?.order_type)
                   // item?.rider?.profile_pic?.length > 0
-                  //   ? {uri: Url.Image_Url + item?.rider?.profile_pic}
+                  //   ? {uri:item?.rider?.profile_pic}
                   //   : setImageIcon(item?.order_type)
                 }
               />

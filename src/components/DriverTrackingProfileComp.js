@@ -30,7 +30,7 @@ const DriverTrackingProfileComp = ({topLine, item, onMessage, onCall,unReadMsg})
           style={styles.userImage}
           source={
             item?.image?.toString()?.includes('profile')
-              ? {uri: Url.Image_Url + item?.image}
+              ? {uri:item?.image}
               : item.image
           }
         />

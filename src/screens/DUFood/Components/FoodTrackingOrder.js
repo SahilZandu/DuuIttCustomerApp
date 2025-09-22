@@ -1,26 +1,26 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
-import {Surface} from 'react-native-paper';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { Surface } from 'react-native-paper';
+import { RFValue } from 'react-native-responsive-fontsize';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImages} from '../../../commons/AppImages';
-import {colors} from '../../../theme/colors';
-import {fonts} from '../../../theme/fonts/fonts';
+import { appImages } from '../../../commons/AppImages';
+import { colors } from '../../../theme/colors';
+import { fonts } from '../../../theme/fonts/fonts';
 
-const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
+const FoodTrackingOrder = ({ navigation, trackedArray, bottom }) => {
   const setOrderImage = status => {
     switch (status) {
       case 'food':
-        return appImages.order1;
+        return appImages.foodOrderImage;
       case 'parcel':
-        return appImages.order2;
+        return appImages.parcelOrderImage;
       case 'ride':
-        return appImages.order3;
+        return appImages.rideOrderImage;
       default:
-        return appImages.order1;
+        return appImages.foodOrderImage;
     }
   };
 
@@ -36,13 +36,13 @@ const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
         <Surface elevation={2} style={styles.viewDetailsSurfaceView}>
           <View style={styles.innerView}>
             <Image
-              resizeMode="contain"
+              resizeMode='cover'
               style={styles.image}
               source={setOrderImage(trackedArray[0]?.order_type)}
             />
             <View style={styles.riderIdView}>
               <Text numberOfLines={1} style={styles.riderText}>
-               {trackedArray[0]?.status === 'picked' ? "Rider is on the way" : "Your order is cooking"}
+                {trackedArray[0]?.status === 'picked' ? "Rider is on the way" : "Your order is cooking"}
               </Text>
               <Text numberOfLines={1} style={styles.trackId}>
                 Tracking ID:#{trackedArray[0]?.order_id ?? trackedArray[0]?._id}
@@ -55,16 +55,16 @@ const FoodTrackingOrder = ({navigation, trackedArray, bottom}) => {
         </Surface>
       </TouchableOpacity>
       {trackedArray?.length > 1 &&
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('trackingFoodOrderList');
-        }}
-        activeOpacity={1}
-        style={styles.moreView}>
-        <Surface elevation={2} style={styles.moreSurface}>
-          <Text style={styles.moreText}> +{trackedArray?.length} more</Text>
-        </Surface>
-      </TouchableOpacity>}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('trackingFoodOrderList');
+          }}
+          activeOpacity={1}
+          style={styles.moreView}>
+          <Surface elevation={2} style={styles.moreSurface}>
+            <Text style={styles.moreText}> +{trackedArray?.length} more</Text>
+          </Surface>
+        </TouchableOpacity>}
     </View>
   );
 };
@@ -102,6 +102,8 @@ const styles = StyleSheet.create({
     width: 47,
     height: 47,
     borderRadius: 100,
+    borderWidth: 0.5,
+    borderColor: colors.green
   },
   riderIdView: {
     flex: 1,

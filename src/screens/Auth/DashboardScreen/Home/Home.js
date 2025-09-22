@@ -84,6 +84,13 @@ export default function Home({ navigation }) {
           handleCurrentAddress();
         }, 1000)
       }
+      const timer = setTimeout(() => {
+        setLoading(false)
+      }, 8000);
+      // later, when you want to cancel it
+      return () => {
+        clearTimeout(timer)
+      };
     }, []),
   );
 
@@ -181,16 +188,16 @@ export default function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      setTimeout(() => {
-        if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
-          StatusBar.setBarStyle("light-content", true);
-        } else {
-          StatusBar.setBarStyle("dark-content", true);
-        }
-        return () => {
-          StatusBar.setBarStyle("dark-content", true);
-        };
-      }, 2000)
+      // setTimeout(() => {
+      if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
+        StatusBar.setBarStyle("light-content", true);
+      } else {
+        StatusBar.setBarStyle("dark-content", true);
+      }
+      return () => {
+        StatusBar.setBarStyle("dark-content", true);
+      };
+      // }, 2000)
     }, [bannerList])
   );
 
@@ -386,32 +393,33 @@ export default function Home({ navigation }) {
           ) : (
             <>
               <View style={styles.mainView}>
-                <AppInputScroll
-                  padding={true}
-                  keyboardShouldPersistTaps={'handled'}>
-                  {bannerList?.length > 0 && (
-                    <CustomerHomeSlider
-                      bannerList={bannerList}
-                      data={bannerList[0]?.image_urls}
-                      paginationList={true}
-                      imageHeight={hp('38%')} />
-                  )}
-                  <View style={styles.haederShowView}>
-                    <DashboardHeader
-                      backgroundColor={colors.black05 ?? 'transparent'}
-                      textColor={bannerList[0]?.backgroundColorText ?? colors.black}
-                      title={""}
-                      appUserInfo={appUser}
-                      navigation={navigation}
-                      showProfile={true}
-                      showLocation={true}
-                      onSetlocation={() => { setLoading(false) }}
-                      isOnSetlocation={true}
-                    />
-                  </View>
-                  {loading == true ? (
-                    <AnimatedLoader type={'homeScreenLoader'} />
-                  ) : (<>
+                {loading == true ? (
+                  <AnimatedLoader type={'homeScreenBannerLoader'} />
+                ) : (
+                  <AppInputScroll
+                    padding={true}
+                    keyboardShouldPersistTaps={'handled'}>
+                    {bannerList?.length > 0 && (
+                      <CustomerHomeSlider
+                        bannerList={bannerList}
+                        data={bannerList[0]?.image_urls}
+                        paginationList={true}
+                        imageHeight={hp('38%')} />
+                    )}
+                    <View style={styles.haederShowView}>
+                      <DashboardHeader
+                        backgroundColor={colors.black05 ?? 'transparent'}
+                        textColor={bannerList[0]?.backgroundColorText ?? colors.black}
+                        title={""}
+                        appUserInfo={appUser}
+                        navigation={navigation}
+                        showProfile={true}
+                        showLocation={true}
+                        onSetlocation={() => { setLoading(false) }}
+                        isOnSetlocation={true}
+                      />
+                    </View>
+
                     <View style={styles.innerView}>
                       <ChangeRoute data={homeCS} navigation={navigation} />
                     </View>
@@ -422,8 +430,8 @@ export default function Home({ navigation }) {
                         source={appImages.mainHomeBootmImage}
                       />
                     </View>
-                  </>)}
-                </AppInputScroll>
+
+                  </AppInputScroll>)}
               </View>
 
             </>

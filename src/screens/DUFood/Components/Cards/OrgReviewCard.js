@@ -40,7 +40,7 @@ const OrgReviewCard = ({item, index, isDishRating}) => {
           style={styles.logoImage}
           source={
             item?.customer?.profile_pic
-              ? {uri: Url?.Image_Url + item?.customer?.profile_pic}
+              ? {uri:item?.customer?.profile_pic}
               : appImages.foodIMage
             // appImages.foodIMage
           }
@@ -84,7 +84,7 @@ const OrgReviewCard = ({item, index, isDishRating}) => {
           resizeMode="cover"
           source={
             item?.image
-              ? {uri: Url?.Image_Url + item?.image}
+              ? {uri:item?.image}
               : appImages.foodIMage
           }
         />

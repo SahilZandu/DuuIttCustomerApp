@@ -148,7 +148,7 @@
 //             }}
 //             source={
 //               appUserInfo?.profile_pic?.length > 0
-//                 ? {uri: Url.Image_Url + appUserInfo?.profile_pic}
+//                 ? {uri:appUserInfo?.profile_pic}
 //                 : appImages.profileImage
 //             }
 //           />
@@ -447,7 +447,7 @@ const DashboardHeader = ({ title,
           }}
           source={
             appUserInfo?.profile_pic?.length > 0
-              ? { uri: Url.Image_Url + appUserInfo?.profile_pic }
+              ? { uri:appUserInfo?.profile_pic }
               : appImages.profileImage
           }
         />

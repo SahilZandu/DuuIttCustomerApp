@@ -27,7 +27,7 @@ const TrackingFoodDetailsComp = ({ onViewDetails, item, xml, index }) => {
     }
   };
 
-console.log("item---TrackingFoodDetailsComp",item);
+  console.log("item---TrackingFoodDetailsComp", item);
 
 
   const dateFormate = (date) => {
@@ -54,9 +54,9 @@ console.log("item---TrackingFoodDetailsComp",item);
               style={styles.image}
               source=
               // {setTrackImage(item?.order_type)
-                {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
-                  ? {uri: Url?.Image_Url + (item?.restaurant?.banner || item?.restaurant?.logo)}
-                  : setTrackImage(item?.order_type)
+              {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
+                ? { uri: (item?.restaurant?.banner || item?.restaurant?.logo) }
+                : setTrackImage(item?.order_type)
               }
             />
             <View style={styles.trackIdView}>
@@ -105,6 +105,8 @@ const styles = StyleSheet.create({
     height: 55,
     width: 55,
     borderRadius: 100,
+    borderWidth: 0.5,
+    borderColor: colors.green
   },
   trackIdView: {
     flexDirection: 'column',

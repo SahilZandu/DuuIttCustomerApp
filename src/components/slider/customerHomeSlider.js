@@ -44,7 +44,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                             borderBottomRightRadius: 20,
 
                         }}
-                        source={{ uri: Url?.Image_Url + item }}// your .gif file in assets
+                        source={{ uri:item }}// your .gif file in assets
                         resizeMode={FastImage.resizeMode.cover}
                     />
                     {/* <Image
@@ -55,7 +55,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                             borderBottomLeftRadius: 20,
                             borderBottomRightRadius: 20
                         }}
-                        source={{ uri: Url?.Image_Url + item }}
+                        source={{ uri:item }}
                     /> */}
 
                 </TouchableOpacity>
@@ -90,7 +90,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                         height: hp('5%'),
                                         marginBottom: hp('1%') // Space between image and text
                                     }}
-                                    source={{ uri: Url?.Image_Url + data?.image }}
+                                    source={{ uri:data?.image }}
                                     resizeMode={FastImage.resizeMode.contain} // Better than stretch usually
                                 />
                                 <Text style={{ textAlign: 'center', fontSize: 12 }}>{data?.name}</Text>
@@ -176,7 +176,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                                     bottom: hp('1%'),
                                                     marginRight: hp('1%'),
                                                 }}
-                                                source={{ uri: Url?.Image_Url + data?.image }}
+                                                source={{ uri: data?.image }}
                                                 resizeMode={FastImage.resizeMode.contain}
                                             />
                                         </View>
@@ -188,7 +188,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                                 height: data?.box_type == 'circle' ? wp('21.75%') : hp('10.9%'),
                                                 borderRadius: data?.box_type == 'circle' ? wp('22%') / 2 : 10,
                                             }}
-                                            source={{ uri: Url?.Image_Url + data?.image }}
+                                            source={{ uri:data?.image }}
                                             resizeMode={FastImage.resizeMode.stretch}
                                         />
                                     }
@@ -323,7 +323,7 @@ export default CustomerHomeSlider;
 //                             width: imageWidth ? imageWidth : wp('100%'),
 //                             height:  (imageHeight ? imageHeight : hp('35%'))
 //                         }}
-//                         source={{ uri: Url?.Image_Url + item }}
+//                         source={{ uri: item }}
 //                     />
 
 //                 </TouchableOpacity>

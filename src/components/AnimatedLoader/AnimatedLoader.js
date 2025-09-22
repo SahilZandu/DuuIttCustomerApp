@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,43 +24,46 @@ import SelectedRiderLoader from './SelectedRiderLoader';
 import ChatLoader from './ChatLoader';
 import LiveLocationLoader from './LivelocarionLoader';
 import HomeScreenLoader from './HomeScreenLoader';
+import HomeScreenBannerLoader from './HomeScreenBannerLoader';
 
-const AnimatedLoader = ({type,absolute,height}) => {
+const AnimatedLoader = ({ type, absolute, height }) => {
   return (
-    <View style={{position:absolute ? 'absolute' : 'relative', width: wp('100%')}}>
+    <View style={{ position: absolute ? 'absolute' : 'relative', width: wp('100%') }}>
       {type == 'myAddress' && <MyAddressLoader />}
       {type == 'addMyAddress' && <AddMyAddressLoader />}
       {type == 'locationHistory' && <LocationHistoryLoader />}
       {type == 'orderHistoryLoader' && <OrderHistoryLoader />}
       {type == 'recentOrderLoader' && <RecentOrderLoader />}
-      {type == 'trackingOrderLoader' && <TrackingOrderLoader/>}
-      {type == 'multipleRiderLoader' &&  <MultipleRiderLoader/>}
-      {type == 'foodHomeLoader' &&  <FoodHomeLoader/>}
-      {type == 'restaurantCartLoader' &&  <RestaurantCartLoader/>}
-      {type == 'restaurantItemLoader' && <RestaurantItemLoader/>}
-      {type == 'favoriteRestaurantLoader' && <FavoriteRestaurantLoader/>}
-      {type == 'restaurantReviewsLoader' && <RestaurantReviewsLoader/>}
-      {type == 'coupansListLoader' && <CoupansListLoader/>}
-      {type == 'walletLoader' && <WalletLoader/>}
-      {type == 'transactionHistoryLoader' && <TransactionHistoryLoader/>}
-      {type == 'homeMapLoader' && <HomeMapLoader height={height}/>}
-      {type == 'selectedRiderLoader' && <SelectedRiderLoader/>}
-      {type == 'chatLoader' && <ChatLoader/>}
-       {type == "liveLocationLoader" && <LiveLocationLoader />}
-        {type == "homeScreenLoader" && <HomeScreenLoader/>}
-       
-      
-      
-      
-      
-      
-      
-      
-      
- 
-      
-      
-    
+      {type == 'trackingOrderLoader' && <TrackingOrderLoader />}
+      {type == 'multipleRiderLoader' && <MultipleRiderLoader />}
+      {type == 'foodHomeLoader' && <FoodHomeLoader />}
+      {type == 'restaurantCartLoader' && <RestaurantCartLoader />}
+      {type == 'restaurantItemLoader' && <RestaurantItemLoader />}
+      {type == 'favoriteRestaurantLoader' && <FavoriteRestaurantLoader />}
+      {type == 'restaurantReviewsLoader' && <RestaurantReviewsLoader />}
+      {type == 'coupansListLoader' && <CoupansListLoader />}
+      {type == 'walletLoader' && <WalletLoader />}
+      {type == 'transactionHistoryLoader' && <TransactionHistoryLoader />}
+      {type == 'homeMapLoader' && <HomeMapLoader height={height} />}
+      {type == 'selectedRiderLoader' && <SelectedRiderLoader />}
+      {type == 'chatLoader' && <ChatLoader />}
+      {type == "liveLocationLoader" && <LiveLocationLoader />}
+      {type == "homeScreenLoader" && <HomeScreenLoader />}
+      {type == "homeScreenBannerLoader" && <HomeScreenBannerLoader />}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </View>
   );
 };

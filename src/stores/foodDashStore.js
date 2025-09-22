@@ -327,7 +327,7 @@ export default class FoodDashStore {
       if (res?.statusCode == 200) {
         this.foodOrderTrackingList = res?.data ?? [];
         handleLoading(false);
-        return res?.data;
+        return res;
       } else {
         this.foodOrderTrackingList = [];
         handleLoading(false);

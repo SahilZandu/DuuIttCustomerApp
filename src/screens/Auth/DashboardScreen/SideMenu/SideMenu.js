@@ -330,7 +330,11 @@ export default function SideMenu({ navigation }) {
 
   const getFoodTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleTrackingLoading);
-    setFoodTrackedArray(res);
+    if (res?.data?.length > 0) {
+      setFoodTrackedArray(res?.data);
+    } else {
+      setFoodTrackedArray([]);
+    }
   };
 
   const handleTrackingLoading = (v) => {
@@ -361,7 +365,11 @@ export default function SideMenu({ navigation }) {
 
   const getTrackingParcelOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
-    setTrackedParcelOrder(resTrack);
+    if (resTrack?.data?.length > 0) {
+      setTrackedParcelOrder(resTrack?.data);
+    } else {
+      setTrackedParcelOrder([]);
+    }
   };
 
   const handleLoadingTrack = v => {
@@ -431,7 +439,7 @@ export default function SideMenu({ navigation }) {
     setInitialValues({
       image:
         appUser?.profile_pic?.length > 0
-          ? Url?.Image_Url + appUser?.profile_pic
+          ? appUser?.profile_pic
           : '',
       name: appUser?.name?.length > 0 ? appUser?.name : 'User Name',
       email: appUser?.email?.length > 0 ? appUser?.email : '',

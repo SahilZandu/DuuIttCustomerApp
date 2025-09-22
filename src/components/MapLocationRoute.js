@@ -553,7 +553,7 @@ import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { colors } from '../theme/colors';
 import * as h3 from "h3-js";
-import { findPolygonForPoint } from './GetAppLocation';
+import { findPolygonForPoint, getCurrentLocation } from './GetAppLocation';
 import { rootStore } from '../stores/rootStore';
 import PopUpH3Location from './appPopUp/PopUpH3Location';
 
@@ -580,6 +580,14 @@ const MapLocationRoute = React.memo(({
   height,
   onCheckLocation,
 }) => {
+  const getLocation = type => {
+    let d =
+      type == 'lat'
+        ? getCurrentLocation()?.latitude
+        : getCurrentLocation()?.longitude;
+
+    return d ? d : '';
+  };
   const mapRef = useRef(null);
   const debounceTimeout = useRef(null);
   const lastRegionRef = useRef(null);
@@ -626,7 +634,14 @@ const MapLocationRoute = React.memo(({
         ...getMpaDalta(),
       };
     }
-    return DEFAULT_REGION;
+    return {
+      latitude: getLocation('lat') || 30.7400,
+      longitude: getLocation('lng') || 76.7900,
+      latitudeDelta: 0.0322,
+      longitudeDelta: 0.0322,
+    }
+    // return DEFAULT_REGION;
+
   }, [origin?.lat, origin?.lng]);
 
   // 1. Single Hexagon

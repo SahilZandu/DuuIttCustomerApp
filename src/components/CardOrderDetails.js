@@ -355,24 +355,27 @@ const CardOrderDetails = ({ item }) => {
   return (
     <View style={styles.container}>
       <AppInputScroll padding={true} Pb={hp('25%')}>
-        <View style={styles.mainInvoiceView}>
-          <TouchableOpacity
-            onPress={() => { (downloadInvoicePDF()) }}
-            activeOpacity={0.8}
-            style={styles.invocesTouchView}>
-            <SvgXml xml={appImagesSvg.billSummaryInvoice} />
-            <Text style={styles.invocesText}>{'  '}Download invoice</Text>
-          </TouchableOpacity>
+        {setStatusData(item?.status) !== 'Processing' &&
+          <>
+            <View style={styles.mainInvoiceView}>
+              <TouchableOpacity
+                onPress={() => { (downloadInvoicePDF()) }}
+                activeOpacity={0.8}
+                style={styles.invocesTouchView}>
+                <SvgXml xml={appImagesSvg.billSummaryInvoice} />
+                <Text style={styles.invocesText}>{'  '}Download invoice</Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => { (downloadSummaryPDF()) }}
-            activeOpacity={0.8}
-            style={styles.invocesTouchView}>
-            <SvgXml xml={appImagesSvg.billSummaryInvoice} />
-            <Text style={styles.invocesText}>{'  '}Download summary</Text>
-          </TouchableOpacity>
-        </View>
-        <Spacer space={'6%'} />
+              <TouchableOpacity
+                onPress={() => { (downloadSummaryPDF()) }}
+                activeOpacity={0.8}
+                style={styles.invocesTouchView}>
+                <SvgXml xml={appImagesSvg.billSummaryInvoice} />
+                <Text style={styles.invocesText}>{'  '}Download summary</Text>
+              </TouchableOpacity>
+            </View>
+            <Spacer space={'6%'} />
+          </>}
         <TouchableOpacity style={{ flex: 1 }}
           activeOpacity={0.8}>
           <View style={styles.imageDateView}>
@@ -383,7 +386,7 @@ const CardOrderDetails = ({ item }) => {
                 source=
                 // setImageIcon(item?.order_type)
                 {(item?.restaurant?.banner?.length > 0 || item?.restaurant?.logo?.length > 0)
-                  ? { uri: Url?.Image_Url + (item?.restaurant?.banner || item?.restaurant?.logo) }
+                  ? { uri: item?.restaurant?.banner || item?.restaurant?.logo }
                   : setImageIcon(item?.order_type)
                 }
               />

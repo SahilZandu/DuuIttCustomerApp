@@ -59,7 +59,11 @@ export default function Settings({ navigation }) {
 
   const getFoodTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleTrackingLoading);
-    setFoodTrackedArray(res);
+    if (res?.data?.length > 0) {
+      setFoodTrackedArray(res?.data);
+    } else {
+      setFoodTrackedArray([]);
+    }
   };
 
   const handleTrackingLoading = (v) => {
@@ -103,7 +107,11 @@ export default function Settings({ navigation }) {
 
   const getTrackingParcelOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
-    setTrackedParcelOrder(resTrack);
+    if (resTrack?.data?.length > 0) {
+      setTrackedParcelOrder(resTrack?.data);
+    } else {
+      setTrackedParcelOrder([]);
+    }
   };
 
   const handleLoadingTrack = v => {

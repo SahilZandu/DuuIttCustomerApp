@@ -157,7 +157,7 @@ const RidePriceForm = ({ navigation }) => {
             <MapRoute
               origin={senderAddress?.geo_location}
               destination={receiverAddress?.geo_location}
-              mapContainerView={{ height: Platform.OS == 'ios' ? hp('28%') : hp('28%') }}
+              mapContainerView={{ height: Platform.OS == 'ios' ? hp('42%') : hp('52%') }}
             />
             <Spacer space={hp('2%')} />
             <View style={{ flex: 1, marginHorizontal: 20, }}>
@@ -173,9 +173,9 @@ const RidePriceForm = ({ navigation }) => {
                 drop={'Dropped location'}
               />
             </View>
-            <View style={{ marginHorizontal: 10 }}>
+            {/* <View style={{ marginHorizontal: 10 }}>
               <HomeSlider data={sliderItems} />
-            </View>
+            </View> */}
           </AppInputScroll>
         </KeyboardAvoidingView>
 

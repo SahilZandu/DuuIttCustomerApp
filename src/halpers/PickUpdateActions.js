@@ -1,4 +1,4 @@
-import React, {useCallback, useState,useRef} from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,22 +15,22 @@ import {
   request,
   openSettings,
 } from 'react-native-permissions';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {appImagesSvg} from '../commons/AppImages';
-import {fonts} from '../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { appImagesSvg } from '../commons/AppImages';
+import { fonts } from '../theme/fonts/fonts';
 import {
   NavigationHelpersContext,
   useFocusEffect,
 } from '@react-navigation/native';
-import {useFormikContext} from 'formik';
-import {LaunchCamera, LaunchGallary} from '../components/LaunchGallery';
+import { useFormikContext } from 'formik';
+import { LaunchCamera, LaunchGallery } from '../components/LaunchGallery';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-export default function PickUpdateActions({onSelectUri, name}) {
+export default function PickUpdateActions({ onSelectUri, name }) {
   useFocusEffect(
     useCallback(() => {
       checkPermissions();
@@ -49,13 +49,18 @@ export default function PickUpdateActions({onSelectUri, name}) {
   } = useFormikContext();
 
   const onHandleGallery = async () => {
-    const img = await LaunchGallary();
-    console.log('result', img);
+    const img = await LaunchGallery();
+    console.log('result onHandleGallery', img);
     if (img?.didCancel) {
       console.log('Gallary close');
-    } else {
-      onSelectUri(img?.assets[0]?.uri);
-      setFieldValue(name, img?.assets[0]?.uri);
+    } else if (img?.error) {
+      Alert.alert('Error', img?.error ?? 'Something went wrong, please try again later.');
+    }
+    else {
+      // onSelectUri(img?.assets[0]?.uri);
+      // setFieldValue(name, img?.assets[0]?.uri);
+      onSelectUri(img?.path);
+      setFieldValue(name, img?.path);
     }
   };
 
@@ -70,12 +75,17 @@ export default function PickUpdateActions({onSelectUri, name}) {
 
   const onHandleCamera = async () => {
     const img = await LaunchCamera();
-    console.log('result', img);
+    console.log('result LaunchCamera', img);
     if (img?.didCancel || img?.errorCode == "camera_unavailable") {
       console.log('Camera close');
-    } else {
-      onSelectUri(img?.assets[0]?.uri);
-      setFieldValue(name, img?.assets[0]?.uri);
+    } else if (img?.error) {
+      Alert.alert('Error', img?.error ?? 'Something went wrong, please try again later.');
+    }
+    else {
+      // onSelectUri(img?.assets[0]?.uri);
+      // setFieldValue(name, img?.assets[0]?.uri);
+      onSelectUri(img?.path);
+      setFieldValue(name, img?.path);
     }
   };
 

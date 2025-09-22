@@ -28,7 +28,7 @@ const RecommendedOrder = ({ data,onAddDec,handleRecommendedTouch }) => {
       activeOpacity={0.8}
       onPress={()=>{handleRecommendedTouch(item)}} style={styles.itemContainer(index)}>
         <Image source={item?.item?.image?.length > 0 ?
-          { uri: Url?.Image_Url + item?.item?.image }
+          { uri:item?.item?.image }
           : appImages.foodIMage}
           resizeMode="cover" style={styles.image} />
         <Text numberOfLines={1} style={styles.name}>

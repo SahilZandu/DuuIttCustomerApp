@@ -102,7 +102,8 @@ export default class OrderStore {
           ? (this.orderTrackingList = res?.data)
           : (this.orderTrackingList = []);
         handleLoading(false);
-        return res?.data;
+        // return res?.data;
+        return res;
       } else {
         this.orderTrackingList = [];
         handleLoading(false);

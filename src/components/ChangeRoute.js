@@ -222,7 +222,11 @@ const ChangeRoute = ({ data, navigation }) => {
 
   const getFoodTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleTrackingLoading);
+    if (res?.data?.length > 0) {
     setFoodTrackedArray(res);
+    }else{
+    setFoodTrackedArray([]);
+    }
   };
 
   const handleTrackingLoading = (v) => {
@@ -263,9 +267,9 @@ const ChangeRoute = ({ data, navigation }) => {
 
   const getTrackingParcelOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
-    if (resTrack?.length > 0) {
-      setParcelTrackingOrder(resTrack)
-      setTrackedParcelOrder(resTrack);
+    if (resTrack?.data?.length > 0) {
+      setParcelTrackingOrder(resTrack?.data)
+      setTrackedParcelOrder(resTrack?.data);
     } else {
       setParcelTrackingOrder([])
       setTrackedParcelOrder([]);

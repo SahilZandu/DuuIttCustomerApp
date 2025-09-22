@@ -308,7 +308,7 @@ export default function Chat({ navigation, route }) {
 
   return (
     <Wrapper
-      edges={['left', 'right','bottom',]}
+      edges={['left', 'right', 'bottom',]}
       transparentStatusBar
       onPress={() => {
         navigation.goBack();
@@ -345,7 +345,7 @@ export default function Chat({ navigation, route }) {
             style={{ flex: 1 }} // Adjust paddingTop to header height
             keyboardVerticalOffset={Platform.OS === 'ios'
               ? keyboardVisible ? 0 : 0
-              : keyboardVisible ? (Platform.OS === 'android' && Platform.Version >= 35) ? 100 : 40 : 0}
+              : keyboardVisible ? (Platform.OS === 'android' && Platform.Version >= 35) ? 100 : 85 : 0}
           >
             {/* <TouchableWithoutFeedback
           onPress={Keyboard.dismiss} accessible={false}> */}

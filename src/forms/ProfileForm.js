@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import CTA from '../components/cta/CTA';
 import { Formik, useFormikContext } from 'formik';
@@ -65,8 +66,8 @@ const FormButton = ({ loading, onPress }) => {
 const ProfileForm = ({ navigation, screenName }) => {
   const { updateProfile } = rootStore.dashboardStore;
   const { appUser } = rootStore.commonStore;
-  console.log("appUser--ProfileForm",appUser);
-  
+  console.log("appUser--ProfileForm", appUser);
+
   const refRBSheet = useRef(null);
   const dateFormat = d => {
     var date = new Date(d);
@@ -80,14 +81,14 @@ const ProfileForm = ({ navigation, screenName }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [image, setImage] = useState(
     appUser?.profile_pic?.length > 0
-      ? Url?.Image_Url + appUser?.profile_pic
+      ? appUser?.profile_pic
       : '',
   );
   const [update, setUpdate] = useState(true);
   const [initialValues, setInitialValues] = useState({
     image:
       appUser?.profile_pic?.length > 0
-        ? Url?.Image_Url + appUser?.profile_pic
+        ? appUser?.profile_pic
         : '',
     name: appUser?.name?.length > 0 ? appUser?.name : '',
     email: appUser?.email?.length > 0 ? appUser?.email : '',
@@ -101,8 +102,10 @@ const ProfileForm = ({ navigation, screenName }) => {
       appUser?.date_of_birth?.length > 0
         ? dateFormatApi(appUser?.date_of_birth)
         : '',
-     gender: (appUser?.gender && appUser?.gender?.length > 0)? appUser?.gender : '',
+    gender: (appUser?.gender && appUser?.gender?.length > 0) ? appUser?.gender : '',
   });
+  const [profileImageLoad, setProfileImageLoad] = useState(false)
+
 
   const handleLogin = async values => {
     console.log('values', values);
@@ -118,7 +121,7 @@ const ProfileForm = ({ navigation, screenName }) => {
     const { appUser } = rootStore.commonStore;
     setUpdate(false);
     setInitialValues({
-      image: Url?.Image_Url + appUser?.profile_pic,
+      image: appUser?.profile_pic,
       name: appUser?.name,
       email: appUser?.email,
       mobile: appUser?.phone?.toString(),
@@ -214,11 +217,21 @@ const ProfileForm = ({ navigation, screenName }) => {
                 {/* {<ProfileCoverImage />} */}
                 <View style={styles.imageMainView}>
                   <View style={styles.imageView}>
+                    {profileImageLoad && (
+                      <ActivityIndicator
+                        size='large'
+                        color={colors.green}
+                        style={styles.profileLoader}
+                      />
+
+                    )}
                     <Image
                       style={styles.image}
                       source={
                         image?.length > 0 ? { uri: image } : appImages.avtarImage
                       }
+                      onLoadStart={() => setProfileImageLoad(true)}
+                      onLoadEnd={() => setProfileImageLoad(false)}
                     />
                   </View>
                   <View style={styles.editIconMain}>
@@ -354,4 +367,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 100,
   },
+  profileLoader: {
+    marginTop: hp('4%')
+  }
 });

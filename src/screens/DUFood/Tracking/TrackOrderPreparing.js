@@ -406,7 +406,7 @@ export default function TrackOrderPreparing({ navigation, route }) {
                   resizeMode="cover"
                   source={
                     (item?.rider && item?.rider?.profile_pic?.length > 0) ? {
-                      uri: Url?.Image_Url + item?.rider?.profile_pic
+                      uri:item?.rider?.profile_pic
                     } :
                       appImages.avtarImage
                   }

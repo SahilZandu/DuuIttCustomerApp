@@ -200,9 +200,19 @@ const TrackingFoodOrderForm = ({ navigation }) => {
 
   const getTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleLoading);
-    setTrackedArray(res);
-    setTrackItem(res?.length > 0 ? res[0] : {});
-    setOrigin(res?.length > 0 ? res[0]?.sender_address?.geo_location : {});
+    if (res?.statusCode == 200 && res?.data?.length > 0) {
+      setTrackedArray(res?.data);
+      setTrackItem(res?.data?.length > 0 ? res?.data[0] : {});
+      setOrigin(res?.data?.length > 0 ? res?.data[0]?.sender_address?.geo_location : {});
+    }
+    else {
+      if (res?.statusCode == 200) {
+        setTrackedArray([]);
+        setTrackItem({});
+        setOrigin({});
+        navigation.navigate('food', { screen: 'home' });
+      }
+    }
   };
   // console.log('trackItem---', trackItem);
 
@@ -284,14 +294,15 @@ const TrackingFoodOrderForm = ({ navigation }) => {
   const setTrackImage = status => {
     switch (status) {
       case 'food':
-        return appImages.order1;
+        return appImages.foodOrderImage;
       case 'parcel':
-        return appImages.order2;
+        return appImages.parcelOrderImage;
       case 'ride':
-        return appImages.order3;
+        return appImages.rideOrderImage;
       default:
-        return appImages.order1;
+        return appImages.foodOrderImage;
     }
+
   };
 
   const moreOptions = [

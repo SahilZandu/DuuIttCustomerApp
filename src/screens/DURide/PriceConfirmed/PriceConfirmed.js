@@ -749,13 +749,13 @@ export default function PriceConfirmed({ navigation, route }) {
                         </Text>
                       </View>
                     </Surface>
-                    <View style={styles.homeSliderView}>
+                    {/* <View style={styles.homeSliderView}>
                       <HomeSlider
                         data={sliderItems}
                         imageWidth={wp('92%')}
                         imageHeight={hp('18%')}
                       />
-                    </View>
+                    </View> */}
                   </View>
                 </View>
               </AppInputScroll>

@@ -7,10 +7,9 @@ import {
 import {RFValue} from 'react-native-responsive-fontsize';
 import { fonts} from '../../../theme/fonts/fonts';
 import {appImages} from '../../../commons/AppImages';
-
 import {SvgXml} from 'react-native-svg';
 import {View} from 'react-native-animatable';
-// import Base_Image_Url from '../../api/Url';
+
 
 const textProps = {
   color: '#FFFFFF',
@@ -59,7 +58,6 @@ const DashboardTrackOrderBtn = ({
           // restaurantData?.orgdata?.logo
           //   ? {
           //       uri:
-          //         Base_Image_Url?.Base_Image_Url +
           //         restaurantData?.orgdata?.logo,
           //     }
           //   : appImages.foodIMage

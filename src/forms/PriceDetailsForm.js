@@ -269,7 +269,7 @@ const PriceDetailsForm = ({ navigation }) => {
             style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <AppInputScroll
-              Pb={hp('40%')}
+              Pb={hp('10%')}
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
               <MapRoute
@@ -316,9 +316,9 @@ const PriceDetailsForm = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-              <View style={{ marginHorizontal: 10 }}>
+              {/* <View style={{ marginHorizontal: 10 }}>
                 <HomeSlider data={sliderItems} />
-              </View>
+              </View> */}
             </AppInputScroll>
           </KeyboardAvoidingView>
 

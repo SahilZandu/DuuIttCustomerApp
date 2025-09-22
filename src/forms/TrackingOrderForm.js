@@ -90,7 +90,7 @@ const TrackingOrderForm = ({ navigation }) => {
       handleAndroidBackButton(navigation);
       getTrackingOrder();
       socketServices.initailizeSocket();
-       setCurrentLocation();
+      setCurrentLocation();
     }, []),
   );
 
@@ -171,7 +171,7 @@ const TrackingOrderForm = ({ navigation }) => {
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('dropped', data => {
       console.log('dropped data -- ', data);
-      if (data?.order_type == 'parcel' || data?.order_type == 'food') {
+      if (data?.order_type == 'parcel') {
         getTrackingOrder();
         setIsModalTrack(false);
       }
@@ -254,9 +254,20 @@ const TrackingOrderForm = ({ navigation }) => {
 
   const getTrackingOrder = async () => {
     const res = await ordersTrackOrder(handleLoading);
-    setTrackedArray(res);
-    setTrackItem(res?.length > 0 ? res[0] : {});
-    setOrigin(res?.length > 0 ? res[0]?.sender_address?.geo_location : {});
+    if (res?.statusCode == 200 && res?.data?.length > 0) {
+      setTrackedArray(res?.data);
+      setTrackItem(res?.data?.length > 0 ? res?.data[0] : {});
+      setOrigin(res?.data?.length > 0 ? res?.data[0]?.sender_address?.geo_location : {});
+    }
+    else {
+      if (res?.statusCode == 200) {
+        setTrackedArray([]);
+        setTrackItem({});
+        setOrigin({});
+        navigation.navigate('parcel', { screen: 'home' });
+      }
+    }
+
   };
   console.log('trackItem---', trackItem);
 

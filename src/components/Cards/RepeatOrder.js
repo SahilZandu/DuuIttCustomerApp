@@ -38,7 +38,7 @@ const RepeatOrder = ({ data, onPress ,onPressLikeDislike}) => {
           </TouchableOpacity>
           <Image
             source={item?.restaurant?.banner?.length > 0 ?
-              { uri: Url?.Image_Url + item?.restaurant?.banner }
+              { uri:item?.restaurant?.banner }
               : appImages.foodIMage}
             resizeMode="cover"
             style={styles.image}

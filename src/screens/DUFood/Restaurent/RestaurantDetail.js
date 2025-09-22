@@ -94,7 +94,7 @@ export default function RestaurantDetail({ navigation, route }) {
     if (restaurant?.assets && restaurant?.assets?.length > 0) {
       // restaurant?.assets?.map((item, i) => {
       //   let object = {
-      //     uri:Url?.Image_Url + item?.file_name,
+      //     uri:item?.file_name,
       //   };
       //   asestsArray.push(object);
       // });
@@ -162,7 +162,7 @@ export default function RestaurantDetail({ navigation, route }) {
           style={styles.assetsImage}
           source={
             // appImages.foodIMage
-            { uri: Url?.Image_Url + item }
+            { uri:item }
           }
         />
       </TouchableOpacity>
@@ -307,7 +307,7 @@ export default function RestaurantDetail({ navigation, route }) {
             style={styles.logoImage}
             source={
               // restaurant?.banner
-              //   ? {uri: Url?.Image_Url + restaurant?.banner}
+              //   ? {uri:restaurant?.banner}
               //   :  appImages?.mapImg
               appImages?.mapImg
             }

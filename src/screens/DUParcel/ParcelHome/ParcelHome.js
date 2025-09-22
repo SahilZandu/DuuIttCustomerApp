@@ -168,9 +168,9 @@ export default function ParcelHome({ navigation }) {
 
   const getTrackingOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
-    if (resTrack?.length > 0) {
-      setParcelTrackingOrder(resTrack)
-      setTrackedArray(resTrack);
+    if (resTrack?.data?.length > 0) {
+      setParcelTrackingOrder(resTrack?.data)
+      setTrackedArray(resTrack?.data);
     } else {
       setParcelTrackingOrder([])
       setTrackedArray([]);

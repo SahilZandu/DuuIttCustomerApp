@@ -119,14 +119,17 @@ const DeliveryCart = ({
 
         <DotedLine marginTop={'3%'} />
 
-        <View style={styles.tottalBillView}>
-          <TouchableOpacity activeOpacity={0.8} onPress={onBillDetails}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={onBillDetails}
+          style={styles.tottalBillView}>
+          <View>
             <View style={styles.totalBillInnerView}>
               <SvgXml xml={appImagesSvg.totalBill} />
               <View style={styles.totalBillRatetView}>
                 <View style={styles.totalBillWithRate}>
                   <Text style={styles.totalBillText}>{totalBill}</Text>
-                 {cartBillG?.couponDiscount > 0 && <Text style={styles.crossLineText}>
+                  {cartBillG?.couponDiscount > 0 && <Text style={styles.crossLineText}>
                     {currencyFormat(cartBillG?.grandTotal)}
                     {''}
                   </Text>}
@@ -140,9 +143,9 @@ const DeliveryCart = ({
                 </Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </View>
           <SvgXml xml={appImagesSvg.rightArrow} />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -314,7 +317,7 @@ const styles = StyleSheet.create({
     marginTop: '-0.5%'
   },
   totalBillText: {
-    textAlign:'auto',
+    textAlign: 'auto',
     fontFamily: fonts.medium,
     fontSize: RFValue(12),
     color: colors.color24,

@@ -53,7 +53,7 @@ export default function FavoriteRestaurant({ navigation }) {
             }
             source={
               item?.restaurant?.banner
-                ? { uri: Url?.Image_Url + item?.restaurant?.banner }
+                ? { uri:item?.restaurant?.banner }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}

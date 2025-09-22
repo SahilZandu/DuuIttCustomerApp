@@ -54,7 +54,7 @@
 //         source={
 //           cartData?.restaurant?.logo
 //             ? {
-//                 uri: Url?.Image_Url + cartData?.restaurant?.logo,
+//                 uri: cartData?.restaurant?.logo,
 //               }
 //             : appImages.foodIMage
 //         }
@@ -156,7 +156,7 @@ const DashboardCartBtn = ({
               source={
                 cartData?.restaurant?.logo
                   ? {
-                      uri: Url?.Image_Url + cartData?.restaurant?.logo,
+                      uri:cartData?.restaurant?.logo,
                     }
                   : appImages.foodIMage
               }

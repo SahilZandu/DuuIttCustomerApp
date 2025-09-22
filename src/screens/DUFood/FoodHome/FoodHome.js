@@ -252,7 +252,11 @@ export default function FoodHome({ navigation }) {
 
   const getTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleTrackingLoading);
-    setTrackedArray(res);
+    if (res?.data?.length > 0) {
+      setTrackedArray(res?.data);
+    } else {
+      setTrackedArray([]);
+    }
   };
 
   const handleTrackingLoading = v => {

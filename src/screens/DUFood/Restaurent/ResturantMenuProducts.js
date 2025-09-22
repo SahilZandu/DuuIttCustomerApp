@@ -540,7 +540,7 @@ const ResturantProducts = memo(({ navigation, route }) => {
               ]}
               source={
                 restaurant?.banner?.length > 0
-                  ? { uri: Url?.Image_Url + restaurant?.banner }
+                  ? { uri:restaurant?.banner }
                   : appImages.foodIMage
               }
               resizeMode={FastImage.resizeMode.cover}

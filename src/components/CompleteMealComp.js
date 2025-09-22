@@ -63,7 +63,7 @@ const CompleteMealComp = ({item, index, handleAddDecMeal}) => {
       <Image
         source={
           item?.food_items?.image?.length > 0
-            ? {uri: Url?.Image_Url + item?.food_items?.image}
+            ? {uri:item?.food_items?.image}
             : appImages.foodIMage
         }
         resizeMode="cover"

@@ -1,0 +1,91 @@
+data : {
+    "_id": "68caa4162dc6b7c1f8b91652",
+    "billing_detail": {
+        "cancellation_fee": 0,
+        "delivery_fee": 12,
+        "discount": 0,
+        "distance_fee": 8,
+        "gst_fee": 1.3105000000000002,
+        "platform_fee": 5.9,
+        "time_fee": 0,
+        "wait_fee": 0
+    },
+    "customer": {
+        "_id": "68be4df9bd3244e906eca950",
+        "email": null,
+        "name": "Gullu Malik",
+        "phone": 7983308966,
+        "profile_pic": null
+    },
+    "distance": 0.831,
+    "order_type": "ride",
+    "parcel_otp": {
+        "receiver_otp": 2065,
+        "sender_otp": 7894
+    },
+    "payment_mode": "cash",
+    "rating_review": null,
+    "rating_to_rider": null,
+    "receiver_address": {
+        "address": "Gupta Niwas, Green Enclave, Sahibzada Ajit Singh Nagar, Punjab 160055, India",
+        "geo_location": {
+            "lat": 30.73245445562221,
+            "lng": 76.68667936697602
+        },
+        "location_id": "ChIJ0_Zoo8rvDzkRg6_AhDN9tpM",
+        "name": "TDI TAJ PLAZA"
+    },
+    "rider": {
+        "_id": "68b579ba598ba74fbbffe902",
+        "average_rating": 5,
+        "email": "gavin@gmail.com",
+        "geo_location": {
+            "lat": "30.726063",
+            "lng": "76.6822786"
+        },
+        "name": "Gavin",
+        "phone": 8006386138,
+        "profile_pic": "public/uploads/rider/68b579ba598ba74fbbffe902/profile/profile_pic-1757409932769-308731801.png",
+        "review_count": 5,
+        "vehicle_info": {
+            "_id": "68b58114847ca0418e7d50d3",
+            "status": "approved",
+            "vehicle_number": "DL01S2345",
+            "vehicle_type": "bike"
+        }
+    },
+    "sender_address": {
+        "address": "TDI TAJ PLAZA, Sector 118, Sahibzada Ajit Singh Nagar, Punjab 140307, India",
+        "geo_location": {
+            "lat": 30.7260236,
+            "lng": 76.6822488
+        },
+        "location_id": "ChIJKRLj-rPvDzkRWaAMi8YTVGE"
+    },
+    "status": "accepted",
+    "total_amount": 28,
+    "weight": 20
+}
+
+{
+    "__v": 0,
+    "_id": "68b1a179598ba74fbbffc8f7",
+    "addresses": [],
+    "createdAt": "2025-08-29T12:47:53.261Z",
+    "date_of_birth": "2010-09-08T00:00:00.000Z",
+    "device_id": "5B860A01-B634-4821-92A4-11F77CBD6134",
+    "email": "malik@gmail.com",
+    "fcm_token": "fUqLV6uKwUURvs4gHLcxbM:APA91bECDUZ_Asky-fCeLBTajFL9DT1sE--ljgij1oaejV7WkCsH--nSXxo5yAjLiIuE6rCUMIqnLgZxssyZtyHdPLlHxJLeSxUOcZJw067vPLIakZVy96M",
+    "gender": "male",
+    "isDeleted": false,
+    "isVerified": true,
+    "lastLogin": "2025-09-18T05:37:32.667Z",
+    "name": "Malik shab",
+    "noOfTries": 0,
+    "otp": 6136,
+    "otpExpiresAt": "2025-09-18T05:52:22.438Z",
+    "password": "",
+    "phone": 8006386138,
+    "profile_pic": "public/uploads/customer/68b1a179598ba74fbbffc8f7/profile/profile_pic-1758176716315-103181423.png",
+    "updatedAt": "2025-09-18T06:25:29.722Z"
+}
