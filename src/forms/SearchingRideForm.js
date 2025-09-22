@@ -687,17 +687,34 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     // ridePickupParcel()
   }, []);
 
+  // useEffect(() => {
+  //   // start interval that runs in foreground
+  //   setRideProgessImage(hp('1%'));
+  //   setRideProgess(0.2);
+  //   intervalRef.current = setInterval(() => {
+  //     console.log('Running every 7500ms');
+  //     setRideProgess(prev => prev + 0.1);
+  //     setRideProgessImage(prev => prev + hp('4.2%'));
+  //   }, 7500); // 7500ms = 7.5s
+
+  //   return () => {
+  //     clearInterval(intervalRef.current);
+  //   };
+  // }, []);
+
   useEffect(() => {
+    // start interval that runs in foreground and background
     setRideProgessImage(hp('1%'));
     setRideProgess(0.2);
-    intervalRef.current = setInterval(() => {
-      console.log('Running every 7500ms');
+    const intervalId = BackgroundTimer.setInterval(() => {
+      console.log('Running every 7.5s in background');
       setRideProgess(prev => prev + 0.1);
       setRideProgessImage(prev => prev + hp('4.2%'));
-    }, 7500); // 7500ms = 7.5s
+      // update your progress state here
+    }, 7500);
 
     return () => {
-      clearInterval(intervalRef.current);
+      BackgroundTimer.clearInterval(intervalId);
     };
   }, []);
 
@@ -1492,15 +1509,15 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                   </>
                 )}
 
-            <PickDropImageComp
-              item={{
-                pickup: parcelInfo?.sender_address?.address,
-                drop: parcelInfo?.receiver_address?.address,
-              }}
-              image={screenName == 'parcel'
-              ? appImages.packetImage
-              : appImages.packetRideImage}
-            />
+                <PickDropImageComp
+                  item={{
+                    pickup: parcelInfo?.sender_address?.address,
+                    drop: parcelInfo?.receiver_address?.address,
+                  }}
+                  image={screenName == 'parcel'
+                    ? appImages.packetImage
+                    : appImages.packetRideImage}
+                />
                 {/* <View style={{ marginLeft: wp('6%'), alignSelf: 'center' }}>
                   <HomeSlider imageHeight={hp('16%')} data={sliderItems} />
                 </View> */}

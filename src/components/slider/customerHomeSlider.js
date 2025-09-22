@@ -44,7 +44,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                             borderBottomRightRadius: 20,
 
                         }}
-                        source={{ uri:item }}// your .gif file in assets
+                        source={{ uri: item }}// your .gif file in assets
                         resizeMode={FastImage.resizeMode.cover}
                     />
                     {/* <Image
@@ -188,7 +188,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                                 height: data?.box_type == 'circle' ? wp('21.75%') : hp('10.9%'),
                                                 borderRadius: data?.box_type == 'circle' ? wp('22%') / 2 : 10,
                                             }}
-                                            source={{ uri:data?.image }}
+                                            source={{ uri: data?.image }}
                                             resizeMode={FastImage.resizeMode.stretch}
                                         />
                                     }

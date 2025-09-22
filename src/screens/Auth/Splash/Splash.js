@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, } from 'react-native';
+import { View, StyleSheet, Image, PermissionsAndroid, Platform, } from 'react-native';
 import { appImages } from '../../../commons/AppImages';
 import {
   heightPercentageToDP as hp,
@@ -9,46 +9,76 @@ import { rootStore } from '../../../stores/rootStore';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import { setCurrentLocation } from '../../../components/GetAppLocation';
 import { colors } from '../../../theme/colors';
+import {
+  check,
+  request,
+  PERMISSIONS,
+  requestMultiple,
+  RESULTS,
+} from 'react-native-permissions';
 
 
 export default function Splash({ navigation }) {
-  async function requestUserPermission() {
-    const settings = await notifee.requestPermission();
 
-    if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
-      console.log('Permission settings:', settings);
+  // async function requestUserPermission() {
+  //   const settings = await notifee.requestPermission();
+
+  //   if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+  //     console.log('Permission settings:', settings);
+  //   } else {
+  //     console.log('User declined permissions');
+  //   }
+  // }
+
+  async function RequestPermission() {
+    if (Platform.OS === 'android') {
+      const userResponse = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      ]);
+      console.log('userResponse', userResponse);
+      return userResponse;
     } else {
-      console.log('User declined permissions');
+      Platform.OS === 'ios';
+      {
+        requestMultiple([
+          PERMISSIONS.IOS.LOCATION_ALWAYS,
+          PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+        ]).then(result => {
+          console.log(result);
+        });
+      }
     }
   }
 
 
   useEffect(() => {
-  //   setToken("cwVapDEYR8S2nv5CbVwv-t:APA91bFV5FTZRX3CxdPEBW4nZc9PxtraIYg3L_Lc0F4-JLuDDmKV-6jRBU6SCt0jx3sqyxHH38AwZn8ifAmOWtHyJqO_XkE-JVY6o9Bqt_P_NQ7nJawpWsk")
-  //   setAppUser({
-  //     "__v": 0,
-  //     "_id": "685cdb5ab4c055504dbefa6e",
-  //     "addresses": [
-  //         [Object
-  //         ]
-  //     ],
-  //     "createdAt": "2025-06-26T05:32:10.587Z",
-  //     "date_of_birth": "2013-06-26T00:00:00.000Z",
-  //     "device_id": "8e0c94cc73df4403",
-  //     "email": "ayan@gmail.com",
-  //     "fcm_token": "cwVapDEYR8S2nv5CbVwv-t:APA91bFV5FTZRX3CxdPEBW4nZc9PxtraIYg3L_Lc0F4-JLuDDmKV-6jRBU6SCt0jx3sqyxHH38AwZn8ifAmOWtHyJqO_XkE-JVY6o9Bqt_P_NQ7nJawpWsk",
-  //     "gender": "male",
-  //     "isDeleted": false,
-  //     "isVerified": true,
-  //     "lastLogin": "2025-06-26T05:32:10.598Z",
-  //     "name": "Ayan malik",
-  //     "noOfTries": 0,
-  //     "password": "",
-  //     "phone": 9876543222,
-  //     "profile_pic": "public/uploads/customer/685cdb5ab4c055504dbefa6e/profile/profile_pic-1750933090812-763470547.png",
-  //     "updatedAt": "2025-06-26T10:46:38.792Z"
-  // })
+    //   setToken("cwVapDEYR8S2nv5CbVwv-t:APA91bFV5FTZRX3CxdPEBW4nZc9PxtraIYg3L_Lc0F4-JLuDDmKV-6jRBU6SCt0jx3sqyxHH38AwZn8ifAmOWtHyJqO_XkE-JVY6o9Bqt_P_NQ7nJawpWsk")
+    //   setAppUser({
+    //     "__v": 0,
+    //     "_id": "685cdb5ab4c055504dbefa6e",
+    //     "addresses": [
+    //         [Object
+    //         ]
+    //     ],
+    //     "createdAt": "2025-06-26T05:32:10.587Z",
+    //     "date_of_birth": "2013-06-26T00:00:00.000Z",
+    //     "device_id": "8e0c94cc73df4403",
+    //     "email": "ayan@gmail.com",
+    //     "fcm_token": "cwVapDEYR8S2nv5CbVwv-t:APA91bFV5FTZRX3CxdPEBW4nZc9PxtraIYg3L_Lc0F4-JLuDDmKV-6jRBU6SCt0jx3sqyxHH38AwZn8ifAmOWtHyJqO_XkE-JVY6o9Bqt_P_NQ7nJawpWsk",
+    //     "gender": "male",
+    //     "isDeleted": false,
+    //     "isVerified": true,
+    //     "lastLogin": "2025-06-26T05:32:10.598Z",
+    //     "name": "Ayan malik",
+    //     "noOfTries": 0,
+    //     "password": "",
+    //     "phone": 9876543222,
+    //     "profile_pic": "public/uploads/customer/685cdb5ab4c055504dbefa6e/profile/profile_pic-1750933090812-763470547.png",
+    //     "updatedAt": "2025-06-26T10:46:38.792Z"
+    // })
     // requestUserPermission();
+    RequestPermission();
     setCurrentLocation()
     setTimeout(() => {
       const { token, appUser } = rootStore.commonStore;

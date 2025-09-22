@@ -332,7 +332,7 @@ const DashboardHeader = ({ title,
         if (isOnSetlocation) {
           onSetlocation();
         }
-      }, 8000);
+      }, 10000);
       // later, when you want to cancel it
       return () => {
         clearTimeout(timer)
@@ -447,7 +447,7 @@ const DashboardHeader = ({ title,
           }}
           source={
             appUserInfo?.profile_pic?.length > 0
-              ? { uri:appUserInfo?.profile_pic }
+              ? { uri: appUserInfo?.profile_pic }
               : appImages.profileImage
           }
         />

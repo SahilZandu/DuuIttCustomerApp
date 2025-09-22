@@ -223,9 +223,9 @@ const ChangeRoute = ({ data, navigation }) => {
   const getFoodTrackingOrder = async () => {
     const res = await getFoodOrderTracking(handleTrackingLoading);
     if (res?.data?.length > 0) {
-    setFoodTrackedArray(res);
-    }else{
-    setFoodTrackedArray([]);
+      setFoodTrackedArray(res);
+    } else {
+      setFoodTrackedArray([]);
     }
   };
 
@@ -252,7 +252,7 @@ const ChangeRoute = ({ data, navigation }) => {
 
   const getIncompleteRideOrder = async () => {
     const resIncompleteOrder = await getPendingForCustomer('ride');
-    console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+    console.log('resIncompleteOrder Ride--', resIncompleteOrder);
 
     if (resIncompleteOrder?.length > 0 &&
       (resIncompleteOrder[0]?.status !== 'pending')

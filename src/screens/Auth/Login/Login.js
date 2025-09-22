@@ -15,6 +15,7 @@ import { styles } from './styles';
 import AuthScreenContent from '../../../components/AuthScreenContent';
 import BTN from '../../../components/cta/BTN';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { setCurrentLocation } from '../../../components/GetAppLocation';
 
 export default function Login({ navigation }) {
   const [type, setType] = useState('Mobile');
@@ -24,6 +25,7 @@ export default function Login({ navigation }) {
     useCallback(() => {
       handleAndroidBackButton();
       clearInputs();
+      setCurrentLocation();
     }, []),
   );
 

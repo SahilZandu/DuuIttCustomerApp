@@ -3,7 +3,7 @@ import { rootStore } from '../stores/rootStore';
 import Url from '../api/Url';
 
 // let Source_Url = 'https://duuitt.hashsoft.io/'; // Replace with your server URL
-let Source_Url = Url.Base_Url ?? 'https://duuitt.hashsoftware.com/' // Replace with your server URL
+let Source_Url = Url?.Base_Url // Replace with your server URL
 
 class WSServices {
   // Initialize the WebSocket connection

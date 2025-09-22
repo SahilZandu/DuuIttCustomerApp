@@ -100,18 +100,36 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   };
 
   console.log('paymentMethod--', paymentMethod, addParcelInfo, parcelInfo);
+  // useEffect(() => {
+  //   // start interval that runs in foreground
+  //   setRideProgessImage(hp('1%'));
+  //   setRideProgess(0.2);
+  //   intervalRef.current = setInterval(() => {
+  //     console.log('Running every 7500ms');
+
+  //     setRideProgess(prev => prev + 0.1);
+  //     setRideProgessImage(prev => prev + hp('4.2%'));
+  //   }, 7500); // 7500ms = 7.5s
+
+  //   return () => {
+  //     clearInterval(intervalRef.current);
+  //   };
+  // }, []);
+
+
   useEffect(() => {
+    // start interval that runs in foreground and background
     setRideProgessImage(hp('1%'));
     setRideProgess(0.2);
-    intervalRef.current = setInterval(() => {
-      console.log('Running every 7500ms');
-
+    const intervalId = BackgroundTimer.setInterval(() => {
+      console.log('Running every 7.5s in background');
       setRideProgess(prev => prev + 0.1);
       setRideProgessImage(prev => prev + hp('4.2%'));
-    }, 7500); // 7500ms = 7.5s
+      // update your progress state here
+    }, 7500);
 
     return () => {
-      clearInterval(intervalRef.current);
+      BackgroundTimer.clearInterval(intervalId);
     };
   }, []);
 
@@ -412,7 +430,6 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
   useEffect(() => {
     let intervalId;
-
     if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
       intervalId = BackgroundTimer.setInterval(async () => {
         console.log('⏱️ (BG) Refreshing find rider...');

@@ -85,8 +85,17 @@ export default function Home({ navigation }) {
         }, 1000)
       }
       const timer = setTimeout(() => {
+        if (changeLiveLocation?.address?.length === 0) {
+          setTimeout(() => {
+            currentLocation = {
+              lat: getLocation('lat'),
+              lng: getLocation('lng'),
+            }
+            handleCurrentAddress();
+          }, 1000)
+        }
         setLoading(false)
-      }, 8000);
+      }, 12000);
       // later, when you want to cancel it
       return () => {
         clearTimeout(timer)
