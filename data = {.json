@@ -1,0 +1,84 @@
+data = {
+    "height": 3468,
+    "mime": "image/jpeg",
+    "modificationDate": "1758272739085",
+    "path": "file:///storage/emulated/0/Android/data/com.duuittapp/files/Pictures/image-e4b6b67d-a03a-481d-a3cb-415efe5bf22b4486572914006132085.jpg",
+    "size": 7626446,
+    "width": 4624
+}
+
+ {
+    "_parts": [
+        [
+            "name",
+            "Gullu Malik"
+        ],
+        [
+            "phone",
+            7983308966
+        ],
+        [
+            "gender",
+            "male"
+        ],
+        [
+            "date_of_birth",
+            "2000-09-18"
+        ],
+        [
+            "profile_pic",
+            [Object
+            ]
+        ]
+    ]
+} {
+    "date_of_birth": "2000-09-18",
+    "dob": "18-09-2000",
+    "email": "",
+    "gender": "male",
+    "image": "file:///storage/emulated/0/Android/data/com.duuittapp/cache/temp/1758273086979.jpg",
+    "mobile": "7983308966",
+    "name": "Gullu Malik"
+}
+
+ forground notification: {
+    "collapseKey": "com.duuittapp",
+    "data": {
+        "notification_data": "{\"_id\":\"68cd330b42f9786788a6ba79\",\"rider_id\":\"68b578cf598ba74fbbffe8a9\",\"weight\":20,\"customer_id\":\"68be4df9bd3244e906eca950\",\"sender_address\":{\"address\":\"TDI TAJ PLAZA, Sector 118, Sahibzada Ajit Singh Nagar, Punjab 140307, India\",\"geo_location\":{\"lat\":30.7260236,\"lng\":76.6822488},\"location_id\":\"ChIJKRLj-rPvDzkRWaAMi8YTVGE\"},\"receiver_address\":{\"name\":\"TDI TAJ PLAZA\",\"address\":\"Baliali Rd, Sector 74 A, Baliali, Sahibzada Ajit Singh Nagar, Punjab 160055, India\",\"geo_location\":{\"lat\":30.71925678483793,\"lng\":76.68108930811286},\"location_id\":\"ChIJlyWdE67vDzkRYj5qBPOZF20\"},\"billing_detail\":{\"delivery_fee\":12,\"distance_fee\":8,\"time_fee\":0,\"wait_fee\":0,\"cancellation_fee\":0,\"platform_fee\":5.9,\"discount\":0,\"gst_fee\":1.2754999999999999},\"status\":\"completed\",\"total_amount\":27,\"customer_pickup_time\":\"2025-09-19T10:40:34.444Z\",\"distance\":0.761,\"payment_mode\":\"cash\",\"rating_to_rider\":null,\"rating_review\":null,\"name\":null,\"title\":null,\"order_type\":\"ride\",\"rejected_by_riders\":[],\"parcel_otp\":{\"sender_otp\":5121,\"receiver_otp\":9143},\"tracking_id\":\"IW5G7O\",\"order_id\":\"ORD-3e41bc3a835e35c3\",\"customer_feedback\":null,\"rider_feedback\":null,\"secure\":false,\"arrival_time\":\"04:11 pm\",\"eta_minutes\":\"2\",\"createdAt\":\"2025-09-19T10:40:18.415Z\",\"updatedAt\":\"2025-09-19T10:40:18.415Z\",\"__v\":0}",
+        "route": "dropped"
+    },
+    "from": "243274294480",
+    "messageId": "0:1758278459106274%28e84faf28e84faf",
+    "notification": {
+        "android": {
+            "color": "#FF5733",
+            "smallIcon": "ic_launcher"
+        }
+    },
+    "originalPriority": 1,
+    "priority": 1,
+    "sentTime": 1758278459096,
+    "ttl": 2419200
+}
+
+forground notification: {
+    "collapseKey": "com.duuittapp",
+    "data": {
+        "notification_data": "{\"_id\":\"68cd33de42f9786788a6bed8\",\"rider_id\":\"68b578cf598ba74fbbffe8a9\",\"weight\":20,\"customer_id\":\"68be4df9bd3244e906eca950\",\"sender_address\":{\"address\":\"TDI TAJ PLAZA, Sector 118, Sahibzada Ajit Singh Nagar, Punjab 140307, India\",\"geo_location\":{\"lat\":30.7259842,\"lng\":76.68229389999999},\"location_id\":\"ChIJC8DC-rPvDzkRgj43S0aoPOI\"},\"receiver_address\":{\"name\":\"TDI TAJ PLAZA\",\"address\":\"Tangori, Punjab 140306, India\",\"geo_location\":{\"lat\":30.592887172563483,\"lng\":76.71176573261619},\"location_id\":\"ChIJRWzIQADpDzkRVWUu2K2dokk\"},\"billing_detail\":{\"delivery_fee\":12,\"distance_fee\":226,\"time_fee\":0,\"wait_fee\":0,\"cancellation_fee\":0,\"platform_fee\":5.9,\"discount\":0,\"gst_fee\":12.1945},\"status\":\"accepted\",\"total_amount\":256,\"distance\":15.066,\"payment_mode\":\"cash\",\"order_type\":\"ride\",\"parcel_otp\":{\"sender_otp\":4199,\"receiver_otp\":9108},\"secure\":false,\"rider\":{\"_id\":\"68b578cf598ba74fbbffe8a9\",\"name\":\"Duuitt Rider\",\"email\":\"riderduuitt@yopmail.com\",\"phone\":9559178494,\"profile_pic\":\"https://duitt-new.s3.ap-south-1.amazonaws.com/rider/68b578cf598ba74fbbffe8a9/profile_pic/6c87a22e-a245-4538-ae35-d9b001aa5ae8-coffee-book.jpg.jpg\",\"geo_location\":{\"lat\":\"30.7260756\",\"lng\":\"76.6822813\"},\"vehicle_info\":{\"vehicle_type\":\"bike\",\"vehicle_number\":\"UP51AA4413\",\"status\":\"approved\",\"_id\":\"68b580fd847ca0418e7d50c8\"}},\"customer\":{\"_id\":\"68be4df9bd3244e906eca950\",\"name\":\"Gullu Malik\",\"email\":null,\"phone\":7983308966,\"profile_pic\":\"https://duitt-new.s3.ap-south-1.amazonaws.com/e81d7e00-27bd-438e-96f8-11f5aa5513bb-profile.png\"},\"riderReviews\":{\"averageRating\":5,\"totalReviews\":8},\"route\":\"searchingRide\"}",
+        "route": "searchingRide"
+    },
+    "from": "243274294480",
+    "messageId": "0:1758278635625686%28e84faf28e84faf",
+    "notification": {
+        "android": {
+            "color": "#FF5733",
+            "smallIcon": "ic_launcher"
+        },
+        "body": "Your ride request has been accepted. The ride is on the way.",
+        "title": "Ride request accepted"
+    },
+    "originalPriority": 1,
+    "priority": 1,
+    "sentTime": 1758278635612,
+    "ttl": 2419200
+}

@@ -122,7 +122,7 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                     marginHorizontal: wp('2.5%'), // Equal horizontal margin
                                     // marginBottom: hp('1%'), // Vertical margin
                                     borderRadius: data?.box_type == 'circle' ? wp('22%') / 2 : 10,
-                                    borderWidth: 0.5,
+                                    borderWidth: 0.1,
                                     borderColor: colors.green
                                 }}>
                                     {(data?.name?.length > 0 && data?.box_type !== 'circle') ? <View>
@@ -184,8 +184,10 @@ const CustomerHomeSlider = ({ bannerList, data, onSliderPress, imageWidth, image
                                     </View> :
                                         <FastImage
                                             style={{
-                                                width: Platform.OS == 'ios' ? data?.box_type == 'circle' ? wp('21.52%') : wp('41.70%') : data?.box_type == 'circle' ? wp('21.85%') : wp('41.85%'),
-                                                height: data?.box_type == 'circle' ? wp('21.75%') : hp('10.9%'),
+                                                // width: Platform.OS == 'ios' ? data?.box_type == 'circle' ? wp('21.52%') : wp('41.70%') : data?.box_type == 'circle' ? wp('21.85%') : wp('41.85%'),
+                                                // height: data?.box_type == 'circle' ? wp('21.75%') : hp('10.9%'),
+                                                width: Platform.OS == 'ios' ? data?.box_type == 'circle' ? wp('22%') : wp('42%') : data?.box_type == 'circle' ? wp('22%') : wp('42%'),
+                                                height: data?.box_type == 'circle' ? wp('22%') : hp('11%'),
                                                 borderRadius: data?.box_type == 'circle' ? wp('22%') / 2 : 10,
                                             }}
                                             source={{ uri: data?.image }}

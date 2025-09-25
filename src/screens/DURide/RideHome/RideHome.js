@@ -118,6 +118,19 @@ export default function RideHome({ navigation }) {
   }, []);
 
   useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener('picked', data => {
+      console.log('picked order data -- ', data);
+      if (data?.order_type == 'ride') {
+        getIncompleteOrder();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('dropped', data => {
       console.log('dropped data --Ride ', data);
       if (data?.order_type == 'ride') {

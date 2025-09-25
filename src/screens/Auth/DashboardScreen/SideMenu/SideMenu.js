@@ -559,9 +559,9 @@ export default function SideMenu({ navigation }) {
                 navigation={navigation}
                 appUser={appUser}
               />
-              <ReusableSurfaceComp title={'Food'}>
+              {/* <ReusableSurfaceComp title={'Food'}>
                 <TouchTextRightIconComp firstIcon={true} data={foodOptions} />
-              </ReusableSurfaceComp>
+              </ReusableSurfaceComp> */}
 
               <ReusableSurfaceComp title={'Ride'}>
                 <TouchTextRightIconComp firstIcon={true} data={rideOptions} />

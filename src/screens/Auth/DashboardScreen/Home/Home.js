@@ -356,22 +356,10 @@ export default function Home({ navigation }) {
             <NoInternet />
           ) : (
             <>
-              {/* <DashboardHeader title={appUser?.name ?? "Home"}
-              appUserInfo={appUser}
-              navigation={navigation}
-              showProfile={true} />  */}
-
               <View style={styles.mainView}>
                 <AppInputScroll
                   padding={true}
                   keyboardShouldPersistTaps={'handled'}>
-                  {/* {bannerList?.length > 0 && (
-                  <CustomerHomeSlider
-                    bannerList={bannerList}
-                    data={bannerList[0]?.image_urls}
-                    paginationList={true}
-                    imageHeight={hp('30%')} />
-                )} */}
                   <View style={styles.innerView}>
                     <ChangeRoute data={homeCS} navigation={navigation} />
                   </View>
