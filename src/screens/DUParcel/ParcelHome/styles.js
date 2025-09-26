@@ -1,9 +1,11 @@
-import {Platform, StyleSheet} from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../../theme/colors';
+import { colors } from '../../../theme/colors';
+import { fonts } from '../../../theme/fonts/fonts';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export const styles = StyleSheet.create({
   container: {
@@ -15,18 +17,29 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginTop: '0.5%',
   },
-  imageMainView:{
+  imageMainView: {
     marginTop: '1%',
-     marginHorizontal: 20 
+    marginHorizontal: 20
   },
-  imageView:{
-     justifyContent: 'center',
-     alignItems: 'center',
+  imageView: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  bottomImageView:{
-    marginTop: '-8%',
+  bottomImageView: {
+    marginTop: Platform.OS === 'ios' ? hp('1%') : hp('2%'),
   },
-  bottomImage:{
-    height: hp('35%'), width: wp('100%')
-  }
+  bottomImage: {
+    height: Platform.OS === 'ios' ? hp('31%') : hp('37%'), width: wp('100%')
+  },
+  bottoImageTextMainView: {
+    position: 'absolute', top: hp('3%'),
+    justifyContent: 'center', marginLeft: wp('5%')
+  },
+  duuittText: {
+    fontSize: RFValue(18), fontFamily: fonts.bold, color: colors.green
+  },
+  steadyText: {
+    fontSize: RFValue(38), fontFamily: fonts.bold, color: colors.color85c,
+    marginTop: '4%'
+  },
 });

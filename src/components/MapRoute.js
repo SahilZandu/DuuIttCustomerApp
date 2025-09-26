@@ -1,12 +1,550 @@
+// import React, {
+//   memo,
+//   useCallback,
+//   useEffect,
+//   useMemo,
+//   useRef,
+//   useState,
+// } from 'react';
+// import { StyleSheet, View, Image, Platform, Dimensions, Alert } from 'react-native';
+// import {
+//   heightPercentageToDP as hp,
+//   widthPercentageToDP as wp,
+// } from 'react-native-responsive-screen';
+// import { appImages } from '../commons/AppImages';
+// import MapView, { Marker, AnimatedRegion, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+// import PolylineDecoder from '@mapbox/polyline';
+// import { colors } from '../theme/colors';
+// import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, setMpaDalta, } from './GeoCodeAddress';
+// import { useFocusEffect } from '@react-navigation/native';
+// import { getDistance } from 'geolib';
+
+// const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
+
+// const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
+//   const mapRef = useRef(null);
+//   const bearingRef = useRef(0);
+//   const debounceTimeout = useRef(null);
+//   const markerRef = useRef(null);
+//   const markerDesRef = useRef(null);
+//   const hasAnimatedOnce = useRef(false);
+
+//   useFocusEffect(
+//     useCallback(() => {
+//       setMapManageRideDaltaInitials();
+//       // const distance = getDistance(
+//       //   { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+//       //   { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+//       // );
+//       // console.log(`Distance: ${distance} meters`);
+//     }, [origin])
+//   )
+//   const [destinationLocation, setDestinationLocation] = useState({
+//     lat: null,
+//     lng: null,
+//   });
+//   const [coords, setCoords] = useState([]);
+//   // const [region, setRegion] = useState({
+//   const [mapRegion, setMapRegion] = useState({
+//     latitude: Number(origin?.lat) || 30.7400,
+//     longitude: Number(origin?.lng) || 76.7900,
+//     ...getMapManageRideDalta(getDistance(
+//       { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+//       { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+//     )),
+//   });
+
+//   const [isMapReady, setIsMapReady] = useState(false);
+//   const [animatedCoordinate] = useState(
+//     new AnimatedRegion({
+//       latitude: Number(origin?.lat) || null,
+//       longitude: Number(origin?.lng) || null,
+//       ...getMapManageRideDalta(
+//         getDistance(
+//           { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+//           { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+//         )
+//       ),
+//     })
+//   );
+
+//   const [animatedDesCoordinate] = useState(
+//     new AnimatedRegion({
+//       latitude: Number(destination?.lat) || null,
+//       longitude: Number(destination?.lng) || null,
+//       ...getMapManageRideDalta(getDistance(
+//         { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+//         { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+//       )
+//       ),
+//     })
+//   );
+
+//   // const mohaliChandigarhBounds = {
+//   //   north: 30.8258,
+//   //   south: 30.6600,
+//   //   west: 76.6600,
+//   //   east: 76.8500,
+//   // };
+
+//   // const isWithinBounds = (latitude, longitude) => {
+//   //   return (
+//   //     latitude <= mohaliChandigarhBounds.north &&
+//   //     latitude >= mohaliChandigarhBounds.south &&
+//   //     longitude >= mohaliChandigarhBounds.west &&
+//   //     longitude <= mohaliChandigarhBounds.east
+//   //   );
+//   // };
+
+//   // const handleRegionChangeComplete = (region) => {
+//   //   if (debounceTimeout.current) {
+//   //     clearTimeout(debounceTimeout.current);
+//   //   }
+
+//   //   debounceTimeout.current = setTimeout(() => {
+//   //     if (!isWithinBounds(region.latitude, region.longitude)) {
+//   //       mapRef.current?.animateToRegion({
+//   //         latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
+//   //         longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
+//   //         latitudeDelta: getMpaDalta().latitudeDelta,
+//   //         longitudeDelta: getMpaDalta().longitudeDelta,
+//   //       });
+//   //       Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
+//   //     }
+//   //   }, 50); // Delay in milliseconds
+
+
+//   // };
+
+
+//   // Update latitude and longitude based on origin
+//   useEffect(() => {
+//     console.log('origin--MapRoute', origin, destination);
+//     if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
+//       const newRegion = {
+//         latitude: Number(origin?.lat) || 30.7400,
+//         longitude: Number(origin?.lng) || 76.7900,
+//         ...getMapManageRideDalta(getDistance(
+//           { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+//           { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+//         )),
+//       };
+//       if (mapRegion?.latitude !== newRegion?.latitude) {
+//         setMapRegion(newRegion);
+//       }
+
+//       // // Only animate the first time
+//       // if (!hasAnimatedOnce?.current && mapRef?.current) {
+//       //   mapRef?.current?.animateToRegion(newRegion, 1000);
+//       //   hasAnimatedOnce.current = true; // Prevent further automatic animations
+//       // }
+
+//       if (mapRef?.current) {
+//         mapRef?.current?.animateToRegion(newRegion, 1000);
+//       }
+//     }
+//   }, [origin, destination]);
+
+//   useEffect(() => {
+//     let intervalId;
+//     if (origin && origin?.lat && origin?.lng) {
+//       const newRegion = {
+//         latitude: Number(origin.lat) || 30.7076,
+//         longitude: Number(origin.lng) || 76.7151,
+//         ...getMapManageRideDalta(
+//           getDistance(
+//             { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
+//             { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+//           )
+//         ),
+//       };
+//       if (mapRegion?.latitude !== newRegion?.latitude) {
+//         setMapRegion(newRegion);
+//       }
+//       intervalId = setTimeout(() => {
+//         if (mapRegion?.latitude !== newRegion?.latitude) {
+//           setMapRegion(newRegion);
+//         }
+//         // if (mapRef?.current) {
+//         //   mapRef?.current?.animateToRegion(newRegion, 1000);
+//         // }
+//       }, 5000); // 5 seconds
+//     }
+
+//     // Cleanup interval on unmount or origin change
+//     return () => {
+//       if (intervalId) {
+//         clearTimeout(intervalId);
+//       }
+//     };
+//   }, [coords]);
+
+
+//   useEffect(() => {
+//     if ((coords?.length > 1 && mapRef?.current && !hasAnimatedOnce?.current)) {
+//       const edgePadding = {
+//         top: 30,
+//         right: 20,
+//         bottom: 10, // 👈 Increase bottom padding significantly
+//         left: 20,
+//       };
+//       mapRef?.current.fitToCoordinates(coords, {
+//         edgePadding,
+//         animated: true,
+//       });
+
+//       hasAnimatedOnce.current = true; // Prevent further automatic animations
+//       // Optional: second adjustment after a delay
+
+//       const timeout = setTimeout(() => {
+//         mapRef?.current?.fitToCoordinates(coords, {
+//           edgePadding,
+//           animated: true,
+//         });
+//       }, 6000);
+//       return () => clearTimeout(timeout);
+
+//     }
+
+//   }, [coords]);
+
+
+
+//   // const originMarker = useMemo(
+//   //   () => ({
+//   //     latitude: Number(origin?.lat),
+//   //     longitude: Number(origin?.lng),
+//   //   }),
+//   //   [origin],
+//   // );
+
+//   // const destinationMarker = useMemo(
+//   //   () => ({
+//   //     latitude: Number(destinationLocation?.lat),
+//   //     longitude: Number(destinationLocation?.lng),
+//   //   }),
+//   //   [destinationLocation],
+//   // );
+
+//   const handleMapReady = () => {
+//     // console.log('Map is ready');
+//     if (
+//       animatedDesCoordinate?.latitude?.toString()?.length > 0 &&
+//       animatedCoordinate?.latitude?.toString()?.length > 0
+//     ) {
+//       setTimeout(() => {
+//         setIsMapReady(true);
+//       }, 300);
+//     } else {
+//       setTimeout(() => {
+//         setIsMapReady(true);
+//       }, 1000);
+//     }
+//   };
+
+//   const getBearing = (start, end) => {
+//     const lat1 = (start.lat * Math.PI) / 180;
+//     const lon1 = (start.lng * Math.PI) / 180;
+//     const lat2 = (end.lat * Math.PI) / 180;
+//     const lon2 = (end.lng * Math.PI) / 180;
+//     const dLon = lon2 - lon1;
+//     const y = Math.sin(dLon) * Math.cos(lat2);
+//     const x =
+//       Math.cos(lat1) * Math.sin(lat2) -
+//       Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+//     const bearing = Math.atan2(y, x);
+//     const bearingDeg = (bearing * 180) / Math.PI;
+//     return (bearingDeg + 360) % 360;
+//   };
+
+//   useEffect(() => {
+//     if (!origin || !destination || !mapRef?.current) return;
+
+//     // Ensure lat/lng are numbers
+//     const lat = Number(origin?.lat);
+//     const lng = Number(origin?.lng);
+//     const destLat = Number(destination?.lat);
+//     const destLng = Number(destination?.lng);
+
+//     const newCoord = { latitude: lat, longitude: lng };
+//     const newDesCoord = { latitude: destLat, longitude: destLng };
+//     animatedCoordinate.timing({
+//       ...newCoord,
+//       duration: 500,
+//       useNativeDriver: false,
+//     }).start();
+
+
+//     animatedDesCoordinate.timing({
+//       ...newDesCoord,
+//       duration: 500,
+//       useNativeDriver: false,
+//     }).start();
+
+
+//     setTimeout(() => {
+//       mapRef.current?.animateToRegion({
+//         ...newCoord,
+//         // latitudeDelta: 0.0322,
+//         // longitudeDelta: 0.0321,
+//       }, 500);
+//     }, Platform.OS === 'ios' ? 100 : 0);
+
+//     // If any value is NaN, don't proceed
+//     if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
+//     // const timeout = setInterval(() => {
+//     const timeout = setTimeout(() => {
+//       const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
+
+//       const camera = {
+//         center: {
+//           latitude: lat,
+//           longitude: lng,
+//         },
+//         // heading: bearing || 0,
+//         heading: bearingRef.current || bearing, // Keep the same heading
+//         pitch: 30,
+//         zoom: 17,
+//         altitude: 300,
+//       };
+//       if (mapRef?.current) {
+//         mapRef.current.animateCamera(camera, { duration: 1000 });
+//       }
+//     }, 60000);
+
+//     // return () => clearInterval(timeout);
+//     return () => clearTimeout(timeout);
+
+//   }, [origin, destination]);
+
+
+
+
+//   // useEffect(() => {
+//   //   if (!origin || !destination || !mapRef.current) return;
+
+//   //   // Ensure lat/lng are numbers
+//   //   const lat = Number(origin?.lat);
+//   //   const lng = Number(origin?.lng);
+//   //   const destLat = Number(destination?.lat);
+//   //   const destLng = Number(destination?.lng);
+
+//   //   // If any value is NaN, don't proceed
+//   //   if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
+//   //   const timeout = setTimeout(() => {
+//   //     const bearing = getBearing({lat, lng}, {lat: destLat, lng: destLng});
+
+//   //     const camera = {
+//   //       center: {
+//   //         latitude: lat,
+//   //         longitude: lng,
+//   //       },
+//   //       // heading: bearing || 0,
+//   //       heading: bearingRef.current || bearing, // Keep the same heading
+//   //       pitch: 30,
+//   //       zoom: 17,
+//   //       altitude: 300,
+//   //     };
+//   //     if (mapRef.current) {
+//   //       mapRef.current.animateCamera(camera, {duration: 1000});
+//   //     }
+//   //   }, 2000);
+
+//   //   return () => clearTimeout(timeout);
+//   // }, [origin, destination]);
+
+//   // Fetch and set route only when both origin and destination are defined
+
+//   useEffect(() => {
+//     if (
+//       origin &&
+//       origin?.lat &&
+//       origin?.lng &&
+//       destination &&
+//       destination?.lat &&
+//       destination?.lng
+//     ) {
+//       setDestinationLocation(destination);
+//       fetchRoute(origin, destination);
+//     }
+//   }, [origin, destination]);
+
+//   // Fetch the route from Google Directions API
+//   const fetchRoute = async (origin, destination) => {
+//     try {
+//       const response = await fetch(
+//         `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat
+//         },${origin?.lng}&destination=${Number(destination?.lat)},${Number(
+//           destination?.lng,
+//         )}&key=${API_KEY}`,
+//       );
+//       const json = await response.json();
+
+//       if (json.routes?.length) {
+//         const points = PolylineDecoder.decode(
+//           json.routes[0].overview_polyline.points,
+//         );
+//         const routeCoords = points?.map(point => ({
+//           latitude: point[0],
+//           longitude: point[1],
+//         }));
+//         setCoords(routeCoords);
+//       }
+//     } catch (error) {
+//       console.log('Error fetching route: ', error);
+//     }
+//   };
+
+
+//   return (
+//     <View
+//       pointerEvents={isPendingReq ? 'none' : 'auto'}
+//       style={styles.homeSubContainer}>
+//       {mapRegion?.latitude?.toString()?.length > 0 &&
+//         <MapView
+//           provider={PROVIDER_GOOGLE}
+//           onRegionChange={e => {
+//             setMapManageRideDalta(e);
+//             setMpaDalta(e);
+//             // console.log('e---onRegionChange', e);
+//             // handleRegionChangeComplete(e)
+//           }}
+//           ref={mapRef}
+//           style={[styles.mapContainer, mapContainerView]}
+//           zoomEnabled={true}
+//           scrollEnabled={true}
+//           showsScale={true}
+//           // mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
+//           mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
+//           region={mapRegion}
+//           // initialRegion={mapRegion}
+//           zoomTapEnabled={true}
+//           rotateEnabled={false}
+//           loadingEnabled={true}
+//           showsCompass={false}
+//           cacheEnabled={false}
+//           followsUserLocation={false}
+//           showsUserLocation={false}
+//           // 👇 Set Zoom Limits
+//           minZoomLevel={10}  // prevent zooming out too far
+//           maxZoomLevel={18}  // prevent zooming in too much
+//           // Performance optimizations
+//           showsBuildings={false}
+//           showsTraffic={false}
+//           showsIndoors={false}
+//           showsMyLocationButton={false}
+//           toolbarEnabled={false}
+//           onMapReady={handleMapReady}
+//         >
+//           {/* Origin Marker */}
+//           {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
+//             <Marker.Animated
+//               ref={markerRef}
+//               coordinate={animatedCoordinate}
+//               tracksViewChanges={!isMapReady}
+//             >
+//               <Image
+//                 resizeMode="cover"
+//                 source={appImages.markerRideImage}
+//                 style={styles.markerBikeImage}
+//               />
+//             </Marker.Animated>
+//           )}
+//           {/* {originMarker?.latitude && originMarker?.longitude && (
+//           <Marker 
+//           // tracksViewChanges={!isMapReady}
+//           coordinate={originMarker} 
+//           >
+//             <Image
+//               resizeMode="cover"
+//               source={appImages.markerRideImage}
+//               style={styles.markerBikeImage}
+//             />
+//           </Marker>
+//         )} */}
+
+//           {/* Destination Marker */}
+//           {animatedDesCoordinate?.latitude && animatedDesCoordinate?.longitude && (
+//             <Marker.Animated
+//               ref={markerDesRef}
+//               coordinate={animatedDesCoordinate}
+//               tracksViewChanges={!isMapReady}
+//             >
+//               <Image
+//                 resizeMode="contain"
+//                 source={appImages.markerImage}
+//                 style={styles.markerImage}
+//               />
+//             </Marker.Animated>
+//           )}
+//           {/* {destinationLocation?.lat && destinationLocation?.lng && ( 
+//           <Marker
+//             coordinate={destinationMarker}
+//             tracksViewChanges={!isMapReady}
+//           >
+//             <Image
+//               resizeMode="contain"
+//               source={appImages.markerImage}
+//               style={styles.markerImage}
+//             />
+//           </Marker>
+//         )} */}
+
+//           {/* Polyline for the Route */}
+//           {coords?.length > 0 && (
+//             <Polyline
+//               coordinates={coords}
+//               strokeWidth={4}
+//               strokeColor={colors.main}
+//             />
+//           )}
+//         </MapView>
+//       }
+//     </View>
+//   );
+// };
+
+// export default MapRoute;
+
+// const styles = StyleSheet.create({
+//   homeSubContainer: {
+//     alignItems: 'flex-start',
+//     justifyContent: 'center',
+//     overflow: 'hidden',
+//     shadowRadius: 1,
+//     shadowOffset: { height: 2, width: 0 },
+//   },
+//   mapContainer: {
+//     alignSelf: 'center',
+//     height: hp('35%'),
+//     width: wp('100%'),
+//     overflow: 'hidden',
+//   },
+//   markerImage: {
+//     height: 30,
+//     width: 30,
+//     marginTop: Platform.OS === 'ios' ? '25%' : 0,
+//   },
+//   markerBikeImage: {
+//     height: 30,
+//     width: 30,
+//     marginTop: Platform.OS === 'ios' ? '25%' : 0,
+//   },
+// });
+
+
+
+
+
 import React, {
   memo,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
-import { StyleSheet, View, Image, Platform, Dimensions, Alert } from 'react-native';
+import { StyleSheet, View, Image, Platform } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -15,46 +553,52 @@ import { appImages } from '../commons/AppImages';
 import MapView, { Marker, AnimatedRegion, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import PolylineDecoder from '@mapbox/polyline';
 import { colors } from '../theme/colors';
-import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, setMpaDalta, } from './GeoCodeAddress';
+import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, setMpaDalta } from './GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
-const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA'; // Add your Google Maps API key here
+const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
 
 const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const mapRef = useRef(null);
-  const bearingRef = useRef(0);
-  const debounceTimeout = useRef(null);
+  const hasAnimatedOnce = useRef(false);
   const markerRef = useRef(null);
   const markerDesRef = useRef(null);
-  const hasAnimatedOnce = useRef(false);
+  const bearingRef = useRef(0);
+  const [coords, setCoords] = useState([]);
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: Number(origin?.lat) || 30.7400,
+    longitude: Number(origin?.lng) || 76.7900,
+  });
+
+  // Real-time tracking interval reference
+  const trackingIntervalRef = useRef(null);
 
   useFocusEffect(
     useCallback(() => {
       setMapManageRideDaltaInitials();
-      // const distance = getDistance(
-      //   { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
-      //   { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
-      // );
-      // console.log(`Distance: ${distance} meters`);
-    }, [origin])
-  )
-  const [destinationLocation, setDestinationLocation] = useState({
-    lat: null,
-    lng: null,
-  });
-  const [coords, setCoords] = useState([]);
-  // const [region, setRegion] = useState({
-  const [mapRegion, setMapRegion] = useState({
-    latitude: Number(origin?.lat) || 30.7400,
-    longitude: Number(origin?.lng) || 76.7900,
-    ...getMapManageRideDalta(getDistance(
-      { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
-      { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
-    )),
-  });
+      startRealTimeTracking();
 
-  const [isMapReady, setIsMapReady] = useState(false);
+      return () => {
+        stopRealTimeTracking();
+      };
+    }, [origin, destination])
+  );
+
+  // Start real-time tracking
+  const startRealTimeTracking = () => {
+    // Clear any existing interval
+    stopRealTimeTracking();
+
+    if (!origin || !destination) return;
+
+    // Update location every 5 seconds (adjust as needed)
+    trackingIntervalRef.current = setInterval(() => {
+      updateRealTimeLocation();
+    }, 5000);
+  };
+
   const [animatedCoordinate] = useState(
     new AnimatedRegion({
       latitude: Number(origin?.lat) || null,
@@ -80,168 +624,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     })
   );
 
-  // const mohaliChandigarhBounds = {
-  //   north: 30.8258,
-  //   south: 30.6600,
-  //   west: 76.6600,
-  //   east: 76.8500,
-  // };
-
-  // const isWithinBounds = (latitude, longitude) => {
-  //   return (
-  //     latitude <= mohaliChandigarhBounds.north &&
-  //     latitude >= mohaliChandigarhBounds.south &&
-  //     longitude >= mohaliChandigarhBounds.west &&
-  //     longitude <= mohaliChandigarhBounds.east
-  //   );
-  // };
-
-  // const handleRegionChangeComplete = (region) => {
-  //   if (debounceTimeout.current) {
-  //     clearTimeout(debounceTimeout.current);
-  //   }
-
-  //   debounceTimeout.current = setTimeout(() => {
-  //     if (!isWithinBounds(region.latitude, region.longitude)) {
-  //       mapRef.current?.animateToRegion({
-  //         latitude: Number(30.7400 ?? mapRegion?.latitude) ?? 30.7400,
-  //         longitude: Number(76.7900 ?? mapRegion?.longitude) ?? 76.7900,
-  //         latitudeDelta: getMpaDalta().latitudeDelta,
-  //         longitudeDelta: getMpaDalta().longitudeDelta,
-  //       });
-  //       Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-  //     }
-  //   }, 50); // Delay in milliseconds
-
-
-  // };
-
-
-  // Update latitude and longitude based on origin
-  useEffect(() => {
-    console.log('origin--MapRoute', origin, destination);
-    if (Object?.keys(origin || {})?.length > 0 && mapRef?.current) {
-      const newRegion = {
-        latitude: Number(origin?.lat) || 30.7400,
-        longitude: Number(origin?.lng) || 76.7900,
-        ...getMapManageRideDalta(getDistance(
-          { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
-          { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
-        )),
-      };
-      if (mapRegion?.latitude !== newRegion?.latitude) {
-        setMapRegion(newRegion);
-      }
-
-      // // Only animate the first time
-      // if (!hasAnimatedOnce?.current && mapRef?.current) {
-      //   mapRef?.current?.animateToRegion(newRegion, 1000);
-      //   hasAnimatedOnce.current = true; // Prevent further automatic animations
-      // }
-
-      if (mapRef?.current) {
-        mapRef?.current?.animateToRegion(newRegion, 1000);
-      }
-    }
-  }, [origin, destination]);
-
-  useEffect(() => {
-    let intervalId;
-    if (origin && origin?.lat && origin?.lng) {
-      const newRegion = {
-        latitude: Number(origin.lat) || 30.7076,
-        longitude: Number(origin.lng) || 76.7151,
-        ...getMapManageRideDalta(
-          getDistance(
-            { latitude: Number(origin?.lat), longitude: Number(origin?.lng) },
-            { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
-          )
-        ),
-      };
-      if (mapRegion?.latitude !== newRegion?.latitude) {
-        setMapRegion(newRegion);
-      }
-      intervalId = setTimeout(() => {
-        if (mapRegion?.latitude !== newRegion?.latitude) {
-          setMapRegion(newRegion);
-        }
-        // if (mapRef?.current) {
-        //   mapRef?.current?.animateToRegion(newRegion, 1000);
-        // }
-      }, 5000); // 5 seconds
-    }
-
-    // Cleanup interval on unmount or origin change
-    return () => {
-      if (intervalId) {
-        clearTimeout(intervalId);
-      }
-    };
-  }, [coords]);
-
-
-  useEffect(() => {
-    if ((coords?.length > 1 && mapRef?.current && !hasAnimatedOnce?.current)) {
-      const edgePadding = {
-        top: 30,
-        right: 20,
-        bottom: 10, // 👈 Increase bottom padding significantly
-        left: 20,
-      };
-      mapRef?.current.fitToCoordinates(coords, {
-        edgePadding,
-        animated: true,
-      });
-
-      hasAnimatedOnce.current = true; // Prevent further automatic animations
-      // Optional: second adjustment after a delay
-
-      const timeout = setTimeout(() => {
-        mapRef?.current?.fitToCoordinates(coords, {
-          edgePadding,
-          animated: true,
-        });
-      }, 6000);
-      return () => clearTimeout(timeout);
-
-    }
-
-  }, [coords]);
-
-
-
-  // const originMarker = useMemo(
-  //   () => ({
-  //     latitude: Number(origin?.lat),
-  //     longitude: Number(origin?.lng),
-  //   }),
-  //   [origin],
-  // );
-
-  // const destinationMarker = useMemo(
-  //   () => ({
-  //     latitude: Number(destinationLocation?.lat),
-  //     longitude: Number(destinationLocation?.lng),
-  //   }),
-  //   [destinationLocation],
-  // );
-
-  const handleMapReady = () => {
-    // console.log('Map is ready');
-    if (
-      animatedDesCoordinate?.latitude?.toString()?.length > 0 &&
-      animatedCoordinate?.latitude?.toString()?.length > 0
-    ) {
-      setTimeout(() => {
-        setIsMapReady(true);
-      }, 300);
-    } else {
-      setTimeout(() => {
-        setIsMapReady(true);
-      }, 1000);
-    }
-  };
-
   const getBearing = (start, end) => {
     const lat1 = (start.lat * Math.PI) / 180;
     const lon1 = (start.lng * Math.PI) / 180;
@@ -257,6 +639,68 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     const bearingDeg = (bearing * 180) / Math.PI;
     return (bearingDeg + 360) % 360;
   };
+
+  // Stop real-time tracking
+  const stopRealTimeTracking = () => {
+    if (trackingIntervalRef.current) {
+      clearInterval(trackingIntervalRef.current);
+      trackingIntervalRef.current = null;
+    }
+  };
+
+  // Simulate real-time location updates
+  const updateRealTimeLocation = () => {
+    if (!origin || !destination || !mapRef.current) return;
+
+    // Simulate movement towards destination (replace this with actual GPS data)
+    const newLat = currentLocation.latitude + (Math.random() * 0.0001 - 0.00005);
+    const newLng = currentLocation.longitude + (Math.random() * 0.0001 - 0.00005);
+
+    const updatedLocation = {
+      latitude: newLat,
+      longitude: newLng,
+    };
+
+    setCurrentLocation(updatedLocation);
+
+    // Ensure lat/lng are numbers
+    const lat = Number(origin?.lat);
+    const lng = Number(origin?.lng);
+    const destLat = Number(destination?.lat);
+    const destLng = Number(destination?.lng);
+
+    const newCoord = { latitude: lat, longitude: lng };
+    const newDesCoord = { latitude: destLat, longitude: destLng };
+
+    animatedCoordinate.timing({
+      ...newCoord,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+
+
+    animatedDesCoordinate.timing({
+      ...newDesCoord,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+
+    // Animate map to new location
+    // if (mapRef?.current) {
+    //   mapRef.current.animateToRegion({
+    //     ...updatedLocation,
+    //     ...getMapManageRideDalta(getDistance(
+    //       updatedLocation,
+    //       { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+    //     )),
+    //   }, 1000);
+    // }
+
+
+    // Update polyline with new coordinates
+    setCoords(prevCoords => [...prevCoords, updatedLocation]);
+  };
+
 
   useEffect(() => {
     if (!origin || !destination || !mapRef?.current) return;
@@ -281,7 +725,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       duration: 500,
       useNativeDriver: false,
     }).start();
-
 
     setTimeout(() => {
       mapRef.current?.animateToRegion({
@@ -311,79 +754,85 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       if (mapRef?.current) {
         mapRef.current.animateCamera(camera, { duration: 1000 });
       }
-    }, 60000);
+    }, 5000);
 
     // return () => clearInterval(timeout);
     return () => clearTimeout(timeout);
 
   }, [origin, destination]);
 
-
-
-
-  // useEffect(() => {
-  //   if (!origin || !destination || !mapRef.current) return;
-
-  //   // Ensure lat/lng are numbers
-  //   const lat = Number(origin?.lat);
-  //   const lng = Number(origin?.lng);
-  //   const destLat = Number(destination?.lat);
-  //   const destLng = Number(destination?.lng);
-
-  //   // If any value is NaN, don't proceed
-  //   if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
-  //   const timeout = setTimeout(() => {
-  //     const bearing = getBearing({lat, lng}, {lat: destLat, lng: destLng});
-
-  //     const camera = {
-  //       center: {
-  //         latitude: lat,
-  //         longitude: lng,
-  //       },
-  //       // heading: bearing || 0,
-  //       heading: bearingRef.current || bearing, // Keep the same heading
-  //       pitch: 30,
-  //       zoom: 17,
-  //       altitude: 300,
-  //     };
-  //     if (mapRef.current) {
-  //       mapRef.current.animateCamera(camera, {duration: 1000});
-  //     }
-  //   }, 2000);
-
-  //   return () => clearTimeout(timeout);
-  // }, [origin, destination]);
-
-  // Fetch and set route only when both origin and destination are defined
-
+  // Update region when origin changes
   useEffect(() => {
-    if (
-      origin &&
-      origin?.lat &&
-      origin?.lng &&
-      destination &&
-      destination?.lat &&
-      destination?.lng
-    ) {
-      setDestinationLocation(destination);
+    if (origin?.lat && origin?.lng && mapRef.current) {
+      const newRegion = {
+        latitude: Number(origin.lat),
+        longitude: Number(origin.lng),
+        ...getMapManageRideDalta(getDistance(
+          { latitude: Number(origin.lat), longitude: Number(origin.lng) },
+          { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+        )),
+      };
+
+      setCurrentLocation({
+        latitude: Number(origin.lat),
+        longitude: Number(origin.lng),
+      });
+      // // Only animate the first time
+      if (!hasAnimatedOnce?.current && mapRef?.current) {
+        mapRef?.current?.animateToRegion(newRegion, 1000);
+        hasAnimatedOnce.current = true; // Prevent further automatic animations
+      }
+    }
+  }, [origin, destination]);
+
+  // Fetch route when origin/destination changes
+  useEffect(() => {
+    if (origin?.lat && origin?.lng && destination?.lat && destination?.lng) {
       fetchRoute(origin, destination);
     }
   }, [origin, destination]);
 
-  // Fetch the route from Google Directions API
+  // Fit map to coordinates when route is loaded
+  useEffect(() => {
+    if ((coords?.length > 1 && mapRef?.current && !hasAnimatedOnce?.current)) {
+      const edgePadding = {
+        top: 50,
+        right: 50,
+        bottom: 50, // 👈 Increase bottom padding significantly
+        left: 50,
+      };
+      mapRef?.current.fitToCoordinates(coords, {
+        edgePadding,
+        animated: true,
+      });
+
+      hasAnimatedOnce.current = true; // Prevent further automatic animations
+      // Optional: second adjustment after a delay
+
+      const timeout = setTimeout(() => {
+        mapRef?.current?.fitToCoordinates(coords, {
+          edgePadding,
+          animated: true,
+        });
+      }, 6000);
+      return () => clearTimeout(timeout);
+
+    }
+
+  }, [coords]);
+
+
+
   const fetchRoute = async (origin, destination) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat
-        },${origin?.lng}&destination=${Number(destination?.lat)},${Number(
-          destination?.lng,
-        )}&key=${API_KEY}`,
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin?.lat},${origin?.lng}&destination=${destination?.lat},${destination?.lng}&key=${API_KEY}`
       );
-      const json = await response.json();
+      const json = await response?.json();
 
-      if (json.routes?.length) {
+      if (json?.routes?.length > 0) {
         const points = PolylineDecoder.decode(
-          json.routes[0].overview_polyline.points,
+          json?.routes[0]?.overview_polyline?.points
         );
         const routeCoords = points?.map(point => ({
           latitude: point[0],
@@ -396,47 +845,73 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     }
   };
 
+  // const handleMapReady = () => {
+  //   setIsMapReady(true);
+  // };
+
+
+  const handleMapReady = () => {
+    // console.log('Map is ready');
+    if (
+      animatedDesCoordinate?.latitude?.toString()?.length > 0 &&
+      animatedCoordinate?.latitude?.toString()?.length > 0
+    ) {
+      setTimeout(() => {
+        setIsMapReady(true);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        setIsMapReady(true);
+      }, 1000);
+    }
+  };
+
 
   return (
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
-      style={styles.homeSubContainer}>
-      {mapRegion?.latitude?.toString()?.length > 0 &&
+      style={styles.homeSubContainer}
+    >
+      {currentLocation?.latitude && (
         <MapView
           provider={PROVIDER_GOOGLE}
-          onRegionChange={e => {
-            setMapManageRideDalta(e);
-            setMpaDalta(e);
-            // console.log('e---onRegionChange', e);
-            // handleRegionChangeComplete(e)
-          }}
           ref={mapRef}
           style={[styles.mapContainer, mapContainerView]}
+          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
+          region={{
+            ...currentLocation,
+            ...getMapManageRideDalta(getDistance(
+              currentLocation,
+              { latitude: Number(destination?.lat), longitude: Number(destination?.lng) }
+            )),
+          }}
           zoomEnabled={true}
           scrollEnabled={true}
-          showsScale={true}
-          // mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
-          region={mapRegion}
-          // initialRegion={mapRegion}
-          zoomTapEnabled={true}
-          rotateEnabled={false}
+          rotateEnabled={true}
           loadingEnabled={true}
           showsCompass={false}
-          cacheEnabled={false}
-          followsUserLocation={false}
-          showsUserLocation={false}
-          // 👇 Set Zoom Limits
-          minZoomLevel={10}  // prevent zooming out too far
-          maxZoomLevel={18}  // prevent zooming in too much
-          // Performance optimizations
+          minZoomLevel={10}
+          maxZoomLevel={18}
           showsBuildings={false}
           showsTraffic={false}
-          showsIndoors={false}
-          showsMyLocationButton={false}
-          toolbarEnabled={false}
           onMapReady={handleMapReady}
+          onRegionChangeComplete={(region) => {
+            setMapManageRideDalta(region);
+            setMpaDalta(region);
+          }}
         >
+          {/* Current Location Marker (Moving Marker) */}
+          {/* <Marker
+            coordinate={currentLocation}
+            tracksViewChanges={!isMapReady}
+          >
+            <Image
+              resizeMode="cover"
+              source={appImages.markerRideImage}
+              style={styles.markerBikeImage}
+            />
+          </Marker> */}
+
           {/* Origin Marker */}
           {animatedCoordinate?.latitude && animatedCoordinate?.longitude && (
             <Marker.Animated
@@ -451,18 +926,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
               />
             </Marker.Animated>
           )}
-          {/* {originMarker?.latitude && originMarker?.longitude && (
-          <Marker 
-          // tracksViewChanges={!isMapReady}
-          coordinate={originMarker} 
-          >
-            <Image
-              resizeMode="cover"
-              source={appImages.markerRideImage}
-              style={styles.markerBikeImage}
-            />
-          </Marker>
-        )} */}
 
           {/* Destination Marker */}
           {animatedDesCoordinate?.latitude && animatedDesCoordinate?.longitude && (
@@ -491,35 +954,50 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           </Marker>
         )} */}
 
-          {/* Polyline for the Route */}
+          {/* Destination Marker */}
+          {/* {destination?.lat && destination?.lng && (
+            <Marker
+              coordinate={{
+                latitude: Number(destination?.lat),
+                longitude: Number(destination?.lng),
+              }}
+            >
+              <Image
+                resizeMode="contain"
+                source={appImages.markerImage}
+                style={styles.markerImage}
+              />
+            </Marker>
+          )} */}
+
+          {/* Route Polyline */}
           {coords?.length > 0 && (
             <Polyline
               coordinates={coords}
               strokeWidth={4}
               strokeColor={colors.main}
+              lineCap="round"
+              lineJoin="round"
             />
           )}
         </MapView>
-      }
+      )}
     </View>
   );
 };
 
-export default MapRoute;
+export default memo(MapRoute);
 
 const styles = StyleSheet.create({
   homeSubContainer: {
     alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
-    shadowRadius: 1,
-    shadowOffset: { height: 2, width: 0 },
   },
   mapContainer: {
     alignSelf: 'center',
     height: hp('35%'),
     width: wp('100%'),
-    overflow: 'hidden',
   },
   markerImage: {
     height: 30,
@@ -532,8 +1010,6 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
-
-
 
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, DeviceEventEmitter } from 'react-native';
+import { View, Image, DeviceEventEmitter, Text } from 'react-native';
 import { appImages } from '../../../commons/AppImages';
 import { styles } from './styles';
 import {
@@ -317,7 +317,8 @@ export default function RideHome({ navigation }) {
               <Spacer space={hp('1%')} />
               <AppInputScroll
                 padding={true}
-                Pb={getHeight(trackedArray, incompletedArray)}
+                // Pb={getHeight(trackedArray, incompletedArray)}
+                 Pb={hp('5%')}
                 keyboardShouldPersistTaps={'handled'}>
                 <View style={styles.imageMainView}>
                   <View
@@ -336,10 +337,15 @@ export default function RideHome({ navigation }) {
                 </View>
                 <View style={styles.bottomImageView}>
                   <Image
-                    resizeMode="contain"
+                     resizeMode='stretch'
                     style={styles.bottomImage}
-                    source={appImages.rideHomeBootmImage}
+                    // source={appImages.rideHomeBootmImage}
+                    source={appImages.mainHomeBootmImage}
                   />
+                  <View style={styles.bottoImageTextMainView}>
+                    <Text style={styles.duuittText}>#Duuitt</Text>
+                    <Text style={styles.everyMileText}>Every mile matters</Text>
+                  </View>
                 </View>
               </AppInputScroll>
             </View>

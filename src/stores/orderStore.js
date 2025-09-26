@@ -127,7 +127,10 @@ export default class OrderStore {
       const res = await agent.pendingForCustomer(requestData);
       console.log('pending For Customer Res : ', res);
       if (res?.statusCode == 200) {
-        return res?.data;
+        const resFilter = res?.data?.filter((item) =>
+          item?.order_type?.toLowerCase() === type?.toLowerCase()
+        );
+        return resFilter ?? [];
       } else {
         return [];
       }

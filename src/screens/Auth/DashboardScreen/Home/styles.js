@@ -4,6 +4,8 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import { colors } from '../../../../theme/colors';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../../theme/fonts/fonts';
 
 
 
@@ -21,11 +23,42 @@ export const styles = StyleSheet.create({
 
   },
   bottomImageView: {
-    marginTop: Platform.OS === 'ios' ? '0.5%' : '2%',
+    // marginTop: Platform.OS === 'ios' ? '0.5%' : '2%',
+    marginTop: Platform.OS === 'ios' ? '4%' : '4%',
   },
   bottomImage: {
-    height: hp('30%'),
-    width: wp('100%'),
+    height: Platform.OS === 'ios' ? hp('46%') : hp('58%'),
+    width: wp('110%'),
+    marginHorizontal: wp('-5%'),
+  },
+  bottomImageBanner: {
+    height: Platform.OS === 'ios' ? hp('33%') : hp('36%'),
+    width: wp('110%'),
+    marginHorizontal: wp('-5%'),
+  },
+  mainImageView: {
+    position: 'absolute', justifyContent: 'center', top: hp('3%'),
+    marginLeft: wp('5%')
+  },
+  duuittText: {
+    fontSize: RFValue(18), fontFamily: fonts.bold, color: colors.green
+  },
+  everyText: {
+    fontSize: RFValue(38), fontFamily: fonts.bold, color: colors.color85c,
+    marginTop: '4%'
+  },
+  momentText: {
+    fontSize: RFValue(38), fontFamily: fonts.bold, color: colors.color85c
+  },
+  imageAndMadeTextView: {
+    flexDirection: 'row', alignItems: 'center', marginTop: '5%'
+  },
+  flagImage: {
+    width: 20, height: 20
+  },
+  madeInIndeaText: {
+    fontSize: RFValue(15), fontFamily: fonts.medium, color: colors.color9D,
+    marginLeft: '2%'
   },
   statusBarBackground: {
     position: 'absolute',

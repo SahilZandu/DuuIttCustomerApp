@@ -25,10 +25,21 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
      alignItems: 'center',
   },
-  bottomImageView:{
-    marginTop: '-8%',
+  bottomImageView: {
+    marginTop: Platform.OS === 'ios' ? hp('1%') : hp('2%'),
   },
-  bottomImage:{
-    height: hp('35%'), width: wp('100%')
-  }
+  bottomImage: {
+    height:Platform.OS === 'ios'?hp('31%') : hp('37%'), width: wp('100%')
+  },
+    bottoImageTextMainView: {
+    position: 'absolute', top: hp('3%'),
+    justifyContent: 'center', marginLeft: wp('5%')
+  },
+  duuittText: {
+    fontSize: RFValue(18), fontFamily: fonts.bold, color: colors.green
+  },
+  everyMileText: {
+    fontSize: RFValue(32), fontFamily: fonts.bold, color: colors.color85c,
+    marginTop: '4%'
+  },
 });

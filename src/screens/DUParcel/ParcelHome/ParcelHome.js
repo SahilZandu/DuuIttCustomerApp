@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Image, DeviceEventEmitter, Alert } from 'react-native';
+import { View, Image, DeviceEventEmitter, Alert, Text } from 'react-native';
 import { appImages } from '../../../commons/AppImages';
 import { styles } from './styles';
 import {
@@ -368,7 +368,8 @@ export default function ParcelHome({ navigation }) {
               <Spacer space={hp('1%')} />
               <AppInputScroll
                 padding={true}
-                Pb={getHeight(trackedArray, incompletedArray)}
+                // Pb={getHeight(trackedArray, incompletedArray)}
+                Pb={hp('5%')}
                 keyboardShouldPersistTaps={'handled'}>
                 <View style={styles.imageMainView}>
                   {/* <View>
@@ -432,10 +433,15 @@ export default function ParcelHome({ navigation }) {
                 </View>
                 <View style={styles.bottomImageView}>
                   <Image
-                    resizeMode="contain"
+                    resizeMode='stretch'
                     style={styles.bottomImage}
-                    source={appImages.parcelHomeBootmImage}
+                    // source={appImages.parcelHomeBootmImage}
+                    source={appImages.mainHomeBootmImage}
                   />
+                  <View style={styles.bottoImageTextMainView}>
+                    <Text style={styles.duuittText}>#Duuitt</Text>
+                    <Text style={styles.steadyText}>Stay steady</Text>
+                  </View>
                 </View>
               </AppInputScroll>
             </View>

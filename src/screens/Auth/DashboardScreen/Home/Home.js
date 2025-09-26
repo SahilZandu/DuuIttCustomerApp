@@ -33,6 +33,9 @@ import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
 import { getGeoCodes } from '../../../../components/GeoCodeAddress';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
+import { Text } from 'react-native-paper';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fonts } from '../../../../theme/fonts/fonts';
 
 
 let currentLocation = {
@@ -332,9 +335,6 @@ export default function Home({ navigation }) {
   };
 
   return (
-
-
-
     <>
       {bannerList?.length == 0 ? <Wrapper4
         edges={['left', 'right']}
@@ -359,16 +359,29 @@ export default function Home({ navigation }) {
               <View style={styles.mainView}>
                 <AppInputScroll
                   padding={true}
+                  Pb={hp('5%')}
                   keyboardShouldPersistTaps={'handled'}>
                   <View style={styles.innerView}>
                     <ChangeRoute data={homeCS} navigation={navigation} />
                   </View>
                   <View style={styles.bottomImageView}>
                     <Image
-                      resizeMode='contain'
+                      resizeMode='stretch'
                       style={styles.bottomImage}
                       source={appImages.mainHomeBootmImage}
                     />
+                    <View style={styles.mainImageView}>
+                      <Text style={styles.duuittText}>#Duuitt</Text>
+                      <Text style={styles.everyText}>Elevate every</Text>
+                      <Text style={styles.momentText}>moment !</Text>
+                      <View style={styles.imageAndMadeTextView}>
+                        <Image resizeMode='contain'
+                          style={styles.flagImage} source={appImages.IndianFlag} />
+                        <Text style={styles.madeInIndeaText}>
+                          Made for India
+                        </Text>
+                      </View>
+                    </View>
                   </View>
                 </AppInputScroll>
               </View>
@@ -395,6 +408,7 @@ export default function Home({ navigation }) {
                 ) : (
                   <AppInputScroll
                     padding={true}
+                    Pb={hp('5%')}
                     keyboardShouldPersistTaps={'handled'}>
                     {bannerList?.length > 0 && (
                       <CustomerHomeSlider
@@ -422,11 +436,24 @@ export default function Home({ navigation }) {
                     </View>
                     <View style={styles.bottomImageView}>
                       <Image
-                        resizeMode='contain'
-                        style={styles.bottomImage}
+                        resizeMode='stretch'
+                        style={styles.bottomImageBanner}
                         source={appImages.mainHomeBootmImage}
                       />
+                      <View style={styles.mainImageView}>
+                        <Text style={styles.duuittText}>#Duuitt</Text>
+                        <Text style={styles.everyText}>Elevate every</Text>
+                        <Text style={styles.momentText}>moment !</Text>
+                        <View style={styles.imageAndMadeTextView}>
+                          <Image resizeMode='contain'
+                            style={styles.flagImage} source={appImages.IndianFlag} />
+                          <Text style={styles.madeInIndeaText}>
+                            Made for India
+                          </Text>
+                        </View>
+                      </View>
                     </View>
+
 
                   </AppInputScroll>)}
               </View>

@@ -38,7 +38,9 @@ axios.interceptors.response.use(
         rootStore.dashboardStore.saveFcmToken(null)
         rootStore.commonStore.setToken(null);
         rootStore.commonStore.setAppUser(null);
-        RNRestart.restart();
+        setTimeout(() => {
+          RNRestart.restart();
+        }, 1000);
       });
       return Promise.reject(response);
     }
@@ -69,7 +71,10 @@ axios.interceptors.response.use(
         rootStore.dashboardStore.saveFcmToken(null)
         rootStore.commonStore.setToken(null);
         rootStore.commonStore.setAppUser(null);
-        RNRestart.restart();
+        setTimeout(() => {
+          RNRestart.restart();
+        }, 1000);
+
       });
       // rootStore.dashboardStore.saveFcmToken(null);
       // rootStore.commonStore.setToken(null);
