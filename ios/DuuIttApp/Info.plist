@@ -48,7 +48,7 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Your location is used to enable accurate product pickup and delivery, even when the app is running in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Your location is used to provide accurate product pickup and delivery, even if the app is not actively in use.</string>
+	<string>We need your location to ensure accurate delivery and ride tracking even in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is used to ensure accurate pickup and delivery while the app is open.</string>
 	<key>NSMicrophoneUsageDescription</key>

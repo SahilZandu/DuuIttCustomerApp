@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { DeviceEventEmitter, Text, View, } from 'react-native';
+import { DeviceEventEmitter, StatusBar, Text, View, } from 'react-native';
 import { styles } from './styles';
 import Header from '../../../../components/header/Header';
 import ProfileForm from '../../../../forms/ProfileForm';
@@ -18,6 +18,9 @@ export default function Profile({ navigation, route }) {
     useCallback(() => {
       handleAndroidBackButton(navigation);
       checkInternet();
+      setTimeout(() => {
+        StatusBar.setBarStyle("dark-content", true);
+      }, 300)
     }, []),
   );
 
@@ -43,9 +46,9 @@ export default function Profile({ navigation, route }) {
     <Wrapper
       edges={['left', 'right']}
       transparentStatusBar
-      onPress={()=>{navigation.goBack()}}
+      onPress={() => { navigation.goBack() }}
       title={'Edit Profile'}
-       backArrow={true}
+      backArrow={true}
       showHeader
     >
       <View style={styles.container}>

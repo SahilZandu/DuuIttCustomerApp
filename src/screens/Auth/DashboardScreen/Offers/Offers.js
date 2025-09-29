@@ -4,6 +4,7 @@ import {
   View,
   DeviceEventEmitter,
   Image,
+  StatusBar,
 } from 'react-native';
 import { styles } from './styles';
 import {
@@ -42,6 +43,9 @@ export default function Offers({ navigation }) {
       getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation);
+      setTimeout(() => {
+        StatusBar.setBarStyle("dark-content", true);
+      }, 300)
     }, []),
   );
   const getCheckDevice = async () => {

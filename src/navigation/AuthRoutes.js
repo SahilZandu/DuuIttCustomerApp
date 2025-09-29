@@ -28,7 +28,6 @@ export default function AuthRoutes(props) {
        <Stack.Screen name="myWebComponent" component={MyWebComponent} /> 
        <Stack.Screen name="customerSupport" component={CustomerSupport} /> 
         <Stack.Screen name="personalInfo" component={PersonalInfo} />
-       
     </Stack.Navigator>
   );
 }

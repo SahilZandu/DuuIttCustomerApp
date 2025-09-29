@@ -146,6 +146,7 @@ let lastKnownLocation = null; // Store last known location for immediate access
 // Improved permission handling
 const requestLocationPermission = async () => {
   if (Platform.OS === 'ios') {
+    Geolocation.requestAuthorization('always'); // or 'whenInUse'
     return true; // iOS handles permissions in Info.plist
   }
 
@@ -533,29 +534,29 @@ export const updateLiveLocationOptions = (options) => {
 };
 
 
-export const findPolygonForPoint =(lat, lng, polygons)=> {
-    for (const poly of polygons) {
-      if (pointInPolygon([lat, lng], poly.polygon)) {
-        return poly;
-      }
+export const findPolygonForPoint = (lat, lng, polygons) => {
+  for (const poly of polygons) {
+    if (pointInPolygon([lat, lng], poly.polygon)) {
+      return poly;
     }
-    return null;
+  }
+  return null;
+}
+
+function pointInPolygon(point, vs) {
+  const [x, y] = point;
+  let inside = false;
+
+  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+    const xi = vs[i][0], yi = vs[i][1];
+    const xj = vs[j][0], yj = vs[j][1];
+
+    const intersect =
+      yi > y !== yj > y &&
+      x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+
+    if (intersect) inside = !inside;
   }
 
-   function pointInPolygon(point, vs) {
-    const [x, y] = point;
-    let inside = false;
-
-    for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-      const xi = vs[i][0], yi = vs[i][1];
-      const xj = vs[j][0], yj = vs[j][1];
-
-      const intersect =
-        yi > y !== yj > y &&
-        x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-
-      if (intersect) inside = !inside;
-    }
-
-    return inside;
-  }
+  return inside;
+}

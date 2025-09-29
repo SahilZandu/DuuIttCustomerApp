@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, DeviceEventEmitter, Platform, InteractionManager } from 'react-native';
+import { View, Text, DeviceEventEmitter, Platform, InteractionManager, StatusBar } from 'react-native';
 import { appImagesSvg } from '../../../../commons/AppImages';
 import { styles } from './styles';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
@@ -300,6 +300,9 @@ export default function SideMenu({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      setTimeout(() => {
+        StatusBar.setBarStyle("dark-content", true);
+      },300)
       getCheckDevice();
       socketServices.initailizeSocket();
       checkInternet();

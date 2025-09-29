@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, DeviceEventEmitter, Text } from 'react-native';
+import { View, Image, DeviceEventEmitter, Text, StatusBar } from 'react-native';
 import { appImages } from '../../../commons/AppImages';
 import { styles } from './styles';
 import {
@@ -64,6 +64,9 @@ export default function RideHome({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      setTimeout(() => {
+        StatusBar.setBarStyle("dark-content", true);
+      }, 300)
       getIncompleteOrder();
       setChatData();
       getCheckDevice();
@@ -318,7 +321,7 @@ export default function RideHome({ navigation }) {
               <AppInputScroll
                 padding={true}
                 // Pb={getHeight(trackedArray, incompletedArray)}
-                 Pb={hp('5%')}
+                Pb={hp('5%')}
                 keyboardShouldPersistTaps={'handled'}>
                 <View style={styles.imageMainView}>
                   <View
@@ -337,7 +340,7 @@ export default function RideHome({ navigation }) {
                 </View>
                 <View style={styles.bottomImageView}>
                   <Image
-                     resizeMode='stretch'
+                    resizeMode='stretch'
                     style={styles.bottomImage}
                     // source={appImages.rideHomeBootmImage}
                     source={appImages.mainHomeBootmImage}

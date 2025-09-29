@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Image, DeviceEventEmitter, Alert, Text } from 'react-native';
+import { View, Image, DeviceEventEmitter, Alert, Text, StatusBar } from 'react-native';
 import { appImages } from '../../../commons/AppImages';
 import { styles } from './styles';
 import {
@@ -71,6 +71,9 @@ export default function ParcelHome({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       // setCurrentLocation();
+      setTimeout(() => {
+        StatusBar.setBarStyle("dark-content", true);
+      }, 300)
       setChatData([])
       getCheckDevice();
       setMpaDaltaInitials();

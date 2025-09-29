@@ -200,7 +200,7 @@ export default function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      // setTimeout(() => {
+      setTimeout(() => {
       if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
         StatusBar.setBarStyle("light-content", true);
       } else {
@@ -209,7 +209,7 @@ export default function Home({ navigation }) {
       return () => {
         StatusBar.setBarStyle("dark-content", true);
       };
-      // }, 2000)
+      }, 200)
     }, [bannerList])
   );
 

@@ -5,7 +5,8 @@ import {
   FlatList,
   ActivityIndicator,
   DeviceEventEmitter,
-  Platform
+  Platform,
+  StatusBar
 } from 'react-native';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
 import { styles } from './styles';
@@ -94,6 +95,9 @@ export default function Orders({ navigation, route }) {
       // getCheckFilterData();
       getCheckDevice();
       checkInternet();
+      setTimeout(() => {
+        StatusBar.setBarStyle("dark-content", true);
+      }, 300)
       handleAndroidBackButton(navigation, tabText);
       if (orderHistoryList?.length == 0) {
         getOrderList();
@@ -227,7 +231,7 @@ export default function Orders({ navigation, route }) {
       <>
         <CardOrder item={item} index={i}
           navigation={navigation}
-          handleDetails={(item) => {navigation.navigate('orderDetails', { item: item }) }} />
+          handleDetails={(item) => { navigation.navigate('orderDetails', { item: item }) }} />
       </>
     );
   };
