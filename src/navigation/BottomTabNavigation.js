@@ -193,12 +193,12 @@ export function DashboardBottomNavigator() {
         // options={{tabBarLabel: 'Home'}}
         listeners={{ tabPress: handleAnimation }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tab2"
         component={Offers}
         // options={{tabBarLabel: 'Promo'}}
         listeners={{ tabPress: handleAnimation }}
-      />
+      /> */}
       <Tab.Screen
         name="tab3"
         component={Orders}

@@ -157,14 +157,14 @@ export default function RideHome({ navigation }) {
     console.log('resIncompleteOrder ride--', resIncompleteOrder);
     if (resIncompleteOrder?.length > 0) {
       if ((resIncompleteOrder[0]?.status == 'pending'
-        // || resIncompleteOrder[0]?.status == 'find-rider'
+        || resIncompleteOrder[0]?.status == 'find-rider'
       )
       ) {
         deleteIncompleteOrder(resIncompleteOrder);
       }
       else if (resIncompleteOrder?.length > 0 &&
         (resIncompleteOrder[0]?.status !== 'pending'
-          // || resIncompleteOrder[0]?.status !== 'find-rider'
+        && resIncompleteOrder[0]?.status !== 'find-rider'
         )) {
         setRideOrderInProgress(resIncompleteOrder)
         setAddParcelInfo(resIncompleteOrder[0]);

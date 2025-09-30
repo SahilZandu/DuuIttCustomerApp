@@ -556,6 +556,7 @@ import * as h3 from "h3-js";
 import { findPolygonForPoint, getCurrentLocation } from './GetAppLocation';
 import { rootStore } from '../stores/rootStore';
 import PopUpH3Location from './appPopUp/PopUpH3Location';
+import { DuuittMapTheme } from './DuuittMapTheme';
 
 // Constants outside component to prevent recreation
 const DEFAULT_REGION = {
@@ -944,7 +945,8 @@ const MapLocationRoute = React.memo(({
     provider: PROVIDER_GOOGLE,
     style: [styles.mapContainer, mapContainerView],
     initialRegion: mapRegion,
-    mapType: Platform.OS === 'ios' ? 'mutedStandard' : 'standard',
+    mapType: Platform.OS === 'ios' ? 'standard' : 'standard',
+    customMapStyle:DuuittMapTheme,
     showsCompass: false,
     loadingEnabled: true,
     zoomEnabled: true,

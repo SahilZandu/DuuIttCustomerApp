@@ -17,6 +17,7 @@ import MapView, { Marker, Polygon, Polyline, PROVIDER_GOOGLE, AnimatedRegion } f
 import AnimatedLoader from './AnimatedLoader/AnimatedLoader';
 import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
 import { getCurrentLocation } from './GetAppLocation';
+import { DuuittMapTheme } from './DuuittMapTheme';
 
 let currentLocation = {
   lat: 30.7400,
@@ -184,7 +185,8 @@ const MapCurrentLocationRoute = ({
           scrollEnabled={true}
           showsScale
           // mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'terrain'}
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
+          mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
+          customMapStyle={DuuittMapTheme}
           region={mapRegion}
           // initialRegion={mapRegion}
           zoomTapEnabled

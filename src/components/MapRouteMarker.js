@@ -12,6 +12,7 @@ import MapView, {
   Polyline,
 } from 'react-native-maps';
 import { getMpaDalta, setMpaDalta } from './GeoCodeAddress';
+import { DuuittMapTheme } from './DuuittMapTheme';
 
 const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRideParcel }) => {
   // console.log('markerArray--', markerArray);
@@ -90,7 +91,8 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           scrollEnabled={true}
           showsScale={true}
           // mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
+          mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
+          customMapStyle={DuuittMapTheme}
           paddingAdjustmentBehavior={'automatic'}
           // initialRegion={{
           //   latitude: lat,

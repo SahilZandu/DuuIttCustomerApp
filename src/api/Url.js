@@ -2,9 +2,9 @@ export default {
   // Base_Url: 'https://duuitt.hashsoftware.com/',
   // Image_Url: 'https://duuitt.hashsoftware.com/',
 
-  // Base_Url: 'https://duuitt.hashsoftware.com/', // Develeopment
+  Base_Url: 'https://duuitt.hashsoftware.com/', // Develeopment
 
-  Base_Url: 'https://api.duuitt.com/', // Production
+  // Base_Url: 'https://api.duuitt.com/', // Production
 
   login: 'customers',
   verifyOtp: 'customers/verify-otp',

@@ -556,6 +556,7 @@ import { colors } from '../theme/colors';
 import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, setMpaDalta } from './GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { getDistance } from 'geolib';
+import { DuuittMapTheme } from './DuuittMapTheme';
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
 
@@ -877,7 +878,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           provider={PROVIDER_GOOGLE}
           ref={mapRef}
           style={[styles.mapContainer, mapContainerView]}
-          mapType={Platform.OS === 'ios' ? 'mutedStandard' : 'standard'}
+          mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
+          customMapStyle={DuuittMapTheme}
           region={{
             ...currentLocation,
             ...getMapManageRideDalta(getDistance(

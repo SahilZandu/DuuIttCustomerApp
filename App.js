@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   Platform,
   DeviceEventEmitter,
+  AppState,
 } from 'react-native';
 import Root from './src/navigation/Root';
 import { PaperProvider } from 'react-native-paper';
@@ -21,6 +22,9 @@ import { rootStore } from './src/stores/rootStore';
 import Toast from 'react-native-toast-message';
 import { hideNavigationBar } from 'react-native-navigation-bar-color';
 import { useSafeAreaInsets, SafeAreaProvider } from 'react-native-safe-area-context';
+import socketServices from './src/socketIo/SocketServices';
+import FastImage from 'react-native-fast-image';
+import BackgroundTimer from 'react-native-background-timer'
 
 
 let focusRoute = '';
@@ -29,12 +33,43 @@ function App() {
   const [currentScreen, setcurrentScreen] = useState('splash');
   const [isInternet, setIsInternet] = useState(true);
   const navigationRef = React.createRef();
+  const appState = useRef(AppState.currentState);
 
   const hideIfAndroid15 = () => {
     if (Platform.OS === 'android' && Platform.Version >= 35) {
       hideNavigationBar();
     }
   };
+
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      // Prevent unnecessary calls if state hasn't changed
+      if (appState.current === nextAppState) return;
+
+      if (nextAppState === "background") {
+        console.log("App went to background: stopping services");
+        socketServices.disconnectSocket();
+        FastImage.clearMemoryCache();
+        BackgroundTimer.stopBackgroundTimer();
+      }
+
+      if (nextAppState === "active") {
+        console.log("App became active: restarting services");
+        socketServices.initailizeSocket();
+        // restart any background tasks if needed
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+      // Ensure cleanup
+      BackgroundTimer.stopBackgroundTimer();
+      socketServices.disconnectSocket();
+    };
+  }, []);
 
   useEffect(() => {
     hideIfAndroid15();
@@ -74,20 +109,20 @@ function App() {
       }}
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
-          <NavigationContainer
-            ref={navigationRef}
-            onStateChange={() => {
-              focusRoute = navigationRef.current.getCurrentRoute().name;
-              setcurrentScreen(navigationRef.current.getCurrentRoute().name);
-            }}>
-            {/* <SafeAreaView
+        <NavigationContainer
+          ref={navigationRef}
+          onStateChange={() => {
+            focusRoute = navigationRef.current.getCurrentRoute().name;
+            setcurrentScreen(navigationRef.current.getCurrentRoute().name);
+          }}>
+          {/* <SafeAreaView
               style={{
                 flex: 0,
                 backgroundColor: setBarColor(currentScreen),
                 opacity: 1,
               }}
             /> */}
-            {/* <SafeAreaView
+          {/* <SafeAreaView
             style={{
               flex: 1,
               backgroundColor:
@@ -102,13 +137,13 @@ function App() {
                 setStatusBar(currentScreen)
               }
             /> */}
-            {/* <SafeAreaInsetsHandler currentScreen={currentScreen}> */}
-              {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
-              <Root />
-            {/* </SafeAreaInsetsHandler> */}
-            {/* </SafeAreaView> */}
-          </NavigationContainer>
-          <Toast />
+          {/* <SafeAreaInsetsHandler currentScreen={currentScreen}> */}
+          {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
+          <Root />
+          {/* </SafeAreaInsetsHandler> */}
+          {/* </SafeAreaView> */}
+        </NavigationContainer>
+        <Toast />
       </GestureHandlerRootView>
     </PaperProvider>
   );
