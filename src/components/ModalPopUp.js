@@ -8,6 +8,7 @@ const ModalPopUp = ({isVisible, onClose, children}) => {
     <Modal
       animationType="slide"
       isVisible={isVisible}
+      avoidKeyboard={true}
       animationIn="fadeIn"
       animationOut="fadeOut"
       style={{justifyContent: 'flex-end', margin: 0}}>

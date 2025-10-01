@@ -9,6 +9,7 @@ import { fonts } from '../../../../theme/fonts/fonts';
 
 
 
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -37,18 +38,15 @@ export const styles = StyleSheet.create({
     marginHorizontal: wp('-5%'),
   },
   mainImageView: {
-    position: 'absolute', justifyContent: 'center', top: hp('3%'),
+    position: 'absolute',  top: hp('3%'),
     marginLeft: wp('5%')
   },
   duuittText: {
     fontSize: RFValue(18), fontFamily: fonts.bold, color: colors.green
   },
   everyText: {
-    fontSize: RFValue(38), fontFamily: fonts.bold, color: colors.color85c,
+    fontSize: RFValue(32), fontFamily:fonts.bold, color: colors.color85c,
     marginTop: '4%'
-  },
-  momentText: {
-    fontSize: RFValue(38), fontFamily: fonts.bold, color: colors.color85c
   },
   imageAndMadeTextView: {
     flexDirection: 'row', alignItems: 'center', marginTop: '5%'

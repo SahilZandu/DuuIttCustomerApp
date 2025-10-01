@@ -134,7 +134,7 @@ export function getMapManageRideDalta(distanceMeter) {
   const newDelta = { ...manageRideDalta }; // clone original
 
   const d = parseFloat(Number(distance)); // convert string back to number
-  console.log("d--", d);
+  // console.log("d--", d);
   // if (d > 0 && d < 1) {
   //   newDelta.latitudeDelta = 0.03;
   //   newDelta.longitudeDelta = 0.03;

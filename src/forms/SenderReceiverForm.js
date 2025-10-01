@@ -181,7 +181,7 @@ import { useToast } from '../halpers/useToast';
 const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure, isSecure }) => {
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
 
-  console.log('pickDrop--item', pickDrop, item);
+  // console.log('pickDrop--item', pickDrop, item);
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({
     address_detail: item?.address ? item?.address_detail : '',
@@ -210,14 +210,14 @@ const SenderReceiverForm = ({ navigation, pickDrop, item, onClose, onPressSecure
   };
 
   const handleLogin = values => {
-    console.log('values', values, item, pickDrop);
+    // console.log('values', values, item, pickDrop);
     const newData = {
       ...values,
       address: item?.address,
       geo_location: item?.geo_location,
       // phone:Number(phone)
     };
-    console.log('newData--', newData);
+    // console.log('newData--', newData);
 
     if (pickDrop == 'pick') {
       setSenderAddress(newData);

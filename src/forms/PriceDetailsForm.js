@@ -77,6 +77,7 @@ const PriceDetailsForm = ({ navigation }) => {
   const [appUserData, setAppUserData] = useState(appUser ?? {});
   const [errorShow, setErrorShow] = useState(false)
   const [errorMsg, setErrorMsg] = useState("We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance.")
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -259,6 +260,21 @@ const PriceDetailsForm = ({ navigation }) => {
     setIsSecure(data)
   }
 
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+
   return (
     <View style={{ flex: 1 }}>
       <Formik
@@ -344,7 +360,7 @@ const PriceDetailsForm = ({ navigation }) => {
           setIsAddressModal(false);
         }}>
         <View
-          style={{ height: hp('58%'), backgroundColor: colors.appBackground }}>
+          style={{ height: keyboardVisible ? hp('45%') : hp('58%'), backgroundColor: colors.appBackground }}>
           <SenderReceiverForm
             navigation={navigation}
             pickDrop={isStatus}

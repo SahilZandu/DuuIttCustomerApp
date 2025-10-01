@@ -50,15 +50,33 @@ axios.interceptors.response.use(
   error => {
     console.log('❌ Axios Error:', error);
 
-    if (error.message === 'Network Error' && !error.response) {
-      Alert.alert("Network Error. Please check your internet connection and try again.")
-      return Promise.reject(error);
+
+    const errMsg = error?.message || "";
+
+    // ✅ Normalize network errors (iOS + Android)
+    if (
+      (!error?.response &&
+        (errMsg.includes("Network Error") ||
+          errMsg.includes("offline") ||
+          errMsg.includes("timed out"))) ||
+      error?.code === "ECONNABORTED"
+    ) {
+      Alert.alert(
+        "Network Error",
+        "No internet connection. Please check your network and try again."
+      );
+      return Promise.reject(new Error("Normalized Network Error"));
     }
 
-    if (error.code === 'ECONNABORTED') {
-      Alert.alert("The request is taking longer than expected. Please check your internet connection and try again.")
-      return Promise.reject(new Error('Network/Server timeout error'));
-    }
+    // if (error.message === 'Network Error' && !error.response) {
+    //   Alert.alert("Network Error. Please check your internet connection and try again.")
+    //   return Promise.reject(error);
+    // }
+
+    // if (error.code === 'ECONNABORTED') {
+    //   Alert.alert("The request is taking longer than expected. Please check your internet connection and try again.")
+    //   return Promise.reject(new Error('Network/Server timeout error'));
+    // }
 
     const status = error?.response?.status || error?.statusCode;
 

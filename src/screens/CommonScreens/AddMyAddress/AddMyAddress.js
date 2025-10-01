@@ -88,6 +88,7 @@ export default function AddMyAddress({ navigation, route }) {
   });
   const [loadingAddress, setLoadingAddress] = useState(true);
   const [checkLocation, setCheckLocation] = useState(false)
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -515,8 +516,6 @@ export default function AddMyAddress({ navigation, route }) {
   // };
 
 
-
-
   const handleCurrentAddress = async () => {
     setCurrentLocation();
     const addressData = await getGeoCodes(
@@ -551,6 +550,20 @@ export default function AddMyAddress({ navigation, route }) {
     //setGeoLocation(addressData?.geo_location);
     setGeoLocation(newLocation);
   };
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   return (
     <Wrapper
@@ -651,10 +664,11 @@ export default function AddMyAddress({ navigation, route }) {
           <Modal
             animationType="slide"
             isVisible={visible}
-            // swipeDirection="down"
+            avoidKeyboard={true}
             animationIn="fadeIn"
             animationOut="fadeOut"
             style={{ justifyContent: 'flex-end', margin: 0 }}>
+
             <TouchableOpacity
               onPress={() => {
                 setVisible(false);
@@ -676,11 +690,10 @@ export default function AddMyAddress({ navigation, route }) {
               <View
                 style={{
                   backgroundColor: colors.appBackground,
-                  width: '100%',
+                  width: wp('100%'),
                   borderTopLeftRadius: 10,
                   borderTopRightRadius: 10,
-                  // paddingBottom: '12%',
-                  height: hp('82%'),
+                  height: keyboardVisible ? hp('50') : hp('82%'),
                 }}>
                 <Spacer space={'2%'} />
                 <KeyboardAvoidingView
@@ -690,13 +703,18 @@ export default function AddMyAddress({ navigation, route }) {
                   <AppInputScroll
                     padding={true}
                     keyboardShouldPersistTaps={'handled'}
-                    Pb={hp('15%')}>
+                    Pb={hp('15%')}
+                  >
                     {OpenDetails()}
                   </AppInputScroll>
                 </KeyboardAvoidingView>
               </View>
             </View>
           </Modal>
+
+
+
+
         </View>
       </View>
     </Wrapper>

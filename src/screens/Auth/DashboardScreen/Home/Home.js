@@ -7,6 +7,7 @@ import {
   DeviceEventEmitter,
   SafeAreaView,
   StatusBar,
+  Text
 } from 'react-native';
 import { appImages } from '../../../../commons/AppImages';
 import DashboardHeader from '../../../../components/header/DashboardHeader';
@@ -33,9 +34,6 @@ import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
 import { getGeoCodes } from '../../../../components/GeoCodeAddress';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
-import { Text } from 'react-native-paper';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fonts } from '../../../../theme/fonts/fonts';
 
 
 let currentLocation = {
@@ -335,7 +333,7 @@ export default function Home({ navigation }) {
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       {bannerList?.length == 0 ? <Wrapper4
         edges={['left', 'right']}
         transparentStatusBar
@@ -358,6 +356,7 @@ export default function Home({ navigation }) {
             <>
               <View style={styles.mainView}>
                 <AppInputScroll
+                bounces={false}
                   padding={true}
                   Pb={hp('5%')}
                   keyboardShouldPersistTaps={'handled'}>
@@ -372,8 +371,7 @@ export default function Home({ navigation }) {
                     />
                     <View style={styles.mainImageView}>
                       <Text style={styles.duuittText}>#Duuitt</Text>
-                      <Text style={styles.everyText}>Elevate every</Text>
-                      <Text style={styles.momentText}>moment !</Text>
+                      <Text style={styles.everyText}>Elevate every moment !</Text>
                       <View style={styles.imageAndMadeTextView}>
                         <Image resizeMode='contain'
                           style={styles.flagImage} source={appImages.IndianFlag} />
@@ -407,6 +405,7 @@ export default function Home({ navigation }) {
                   <AnimatedLoader type={'homeScreenBannerLoader'} />
                 ) : (
                   <AppInputScroll
+                    bounces={false}
                     padding={true}
                     Pb={hp('5%')}
                     keyboardShouldPersistTaps={'handled'}>
@@ -442,8 +441,7 @@ export default function Home({ navigation }) {
                       />
                       <View style={styles.mainImageView}>
                         <Text style={styles.duuittText}>#Duuitt</Text>
-                        <Text style={styles.everyText}>Elevate every</Text>
-                        <Text style={styles.momentText}>moment !</Text>
+                        <Text style={styles.everyText}>Elevate every moment !</Text>
                         <View style={styles.imageAndMadeTextView}>
                           <Image resizeMode='contain'
                             style={styles.flagImage} source={appImages.IndianFlag} />
@@ -464,7 +462,7 @@ export default function Home({ navigation }) {
         </View>
       }
 
-    </>
+    </View>
 
 
   );

@@ -56,9 +56,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>DuuItt requires access to your photo library so you can choose and set a profile picture. </string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-     <string>This app uses speech recognition to convert your voice into text for easier input.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>We use your data to provide personalized notifications and updates relevant to you.</string>
+	<string>This app uses speech recognition to convert your voice into text for easier input.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>KumbhSans-Regular.ttf</string>
@@ -96,6 +94,10 @@
 		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
