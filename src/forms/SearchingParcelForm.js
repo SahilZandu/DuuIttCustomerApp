@@ -844,7 +844,19 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                 {minMaxHp == screenHeight(69) && (
                   <>
                     <ImageNameRatingComp parcelInfo={parcelInfo} />
-                    <DriverArrivingComp
+                    <View style={{ marginTop: hp('-3.5%') }}>
+                      <TextRender
+                        title={'Vehicle Number'}
+                        value={
+                          `${parcelInfo?.rider?.vehicle_info?.vehicle_number}`
+                          // item?.title == 'Cash'
+                          //   ? currencyFormat(Number(item?.value))
+                          //   : item?.value
+                        }
+                      // bottomLine={true}
+                      />
+                    </View>
+                    {/* <DriverArrivingComp
                       unReadMsg={readMsg}
                       topLine={false}
                       title={`${kms?.distance_km ?? 0} km Pickup in ${kms?.eta ?? '0m 0s'}`}
@@ -855,7 +867,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                       onCall={() => {
                         hanldeLinking('call');
                       }}
-                    />
+                    /> */}
 
                     <View
                       style={{
@@ -881,10 +893,22 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                         marginHorizontal: -20,
                       }}
                     />
-
-                    {/* {driverArrive?.map((item, i) => {
-                      return ( */}
-                    <TextRender
+                    <View style={{ marginTop: hp('2%') }}>
+                      <DriverArrivingComp
+                        unReadMsg={readMsg}
+                        topLine={false}
+                        title={`${kms?.distance_km ?? 0} km Pickup in ${kms?.eta ?? '0m 0s'}`}
+                        onMessage={() => {
+                          onChat()
+                          // hanldeLinking('email');
+                        }}
+                        onCall={() => {
+                          hanldeLinking('call');
+                        }}
+                        bottomLine={true}
+                      />
+                    </View>
+                    {/* <TextRender
                       title={'Vehicle Number'}
                       value={
                         `${parcelInfo?.rider?.vehicle_info?.vehicle_number}`
@@ -893,9 +917,8 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                         //   : item?.value
                       }
                       bottomLine={true}
-                    />
-                    {/* ); */}
-                    {/* })} */}
+                    /> */}
+
                   </>
                 )}
                 <PickDropImageComp

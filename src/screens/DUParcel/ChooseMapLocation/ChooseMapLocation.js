@@ -126,7 +126,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setTimeout(() => {
       if (Object?.keys(item || {})?.length > 0) {
         setGeoLocation(item?.geo_location);
-        if (pickDrop == 'pick' || screenName == "priceDetails") {
+        if ((pickDrop === 'pick' || screenName === "priceDetails")) {
           setAddress(item?.address);
           setName(item?.name);
           setLocationId(item?.location_id)

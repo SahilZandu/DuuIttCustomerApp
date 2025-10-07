@@ -60,7 +60,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [name, setName] = useState('');
   const [LocationId, setLocationId] = useState('')
   const [loading, setLoading] = useState(false)
-  const [checkLocation ,setCheckLocation]=useState(false)
+  const [checkLocation, setCheckLocation] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -72,9 +72,9 @@ const ChooseMapLocation = ({ navigation, route }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (item?.geo_location?.lat) {
+      if ((item && item?.geo_location?.lat)) {
         setGeoLocation(item?.geo_location);
-        if (pickDrop == 'pick' || screenName == "priceDetails") {
+        if ((pickDrop == 'pick' || screenName == "priceDetails")) {
           setAddress(item?.address);
           setName(item?.name);
           setLocationId(item?.location_id ?? "")
@@ -82,6 +82,8 @@ const ChooseMapLocation = ({ navigation, route }) => {
       }
     }, 1000);
   }, [item]);
+
+
 
   useEffect(() => {
     currentLocation = {
@@ -334,7 +336,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
               ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
               : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)
             }
-            onCheckLocation={(data)=>setCheckLocation(data)}
+            onCheckLocation={(data) => setCheckLocation(data)}
             checkLocation={checkLocation}
           />
           {/* <MapRoute

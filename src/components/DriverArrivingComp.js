@@ -16,7 +16,7 @@ import {appImages, appImagesSvg} from '../commons/AppImages';
 import {colors} from '../theme/colors';
 import {fonts} from '../theme/fonts/fonts';
 
-const DriverArrivingComp = ({topLine, title, onMessage, onCall,unReadMsg}) => {
+const DriverArrivingComp = ({topLine, title, onMessage, onCall,unReadMsg,bottomLine,lineStyle}) => {
   return (
     <View>
       {topLine && <View style={styles.topLineView} />}
@@ -41,6 +41,7 @@ const DriverArrivingComp = ({topLine, title, onMessage, onCall,unReadMsg}) => {
         </View>
       </View>
       <Text style={styles.titleText}>{title}</Text>
+        {bottomLine && <View style={[styles.bottomLine, lineStyle]} />}
     </View>
   );
 };
@@ -75,5 +76,11 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.colorAA,
     marginTop: '-4%',
+  },
+   bottomLine: {
+    height: 1,
+    backgroundColor: colors.colorD9,
+    marginTop: '6%',
+    marginHorizontal: -20,
   },
 });

@@ -94,8 +94,8 @@ const NoInternet = ({ currentScreen, onReload, onAppJs }) => {
           paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         }}
       >
-        <Icon name={'sync-disabled'} size={18} color={colors.red} />
-        <Text style={{ fontSize: RFValue(12), color: colors.red, marginLeft: 10 }}>No Internet Connection</Text>
+        <Icon name={'sync-disabled'} size={18} color={colors.black} />
+        <Text style={{ fontSize: RFValue(12), color: colors.black, marginLeft: 10 }}>No Internet Connection</Text>
       </SafeAreaView>
     );
   } else {

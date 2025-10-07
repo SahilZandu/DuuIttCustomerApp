@@ -560,8 +560,8 @@ import { DuuittMapTheme } from './DuuittMapTheme';
 
 // Constants outside component to prevent recreation
 const DEFAULT_REGION = {
-  latitude: 30.7400,
-  longitude: 76.7900,
+  latitude: 30.4766,
+  longitude: 76.5905,
   latitudeDelta: 0.0322,
   longitudeDelta: 0.0322,
 };
@@ -636,8 +636,8 @@ const MapLocationRoute = React.memo(({
       };
     }
     return {
-      latitude: getLocation('lat') || 30.7400,
-      longitude: getLocation('lng') || 76.7900,
+      latitude: getLocation('lat') || 30.4766,
+      longitude: getLocation('lng') || 76.5905,
       latitudeDelta: 0.0322,
       longitudeDelta: 0.0322,
     }
@@ -946,7 +946,7 @@ const MapLocationRoute = React.memo(({
     style: [styles.mapContainer, mapContainerView],
     initialRegion: mapRegion,
     mapType: Platform.OS === 'ios' ? 'standard' : 'standard',
-    customMapStyle:DuuittMapTheme,
+    customMapStyle: DuuittMapTheme,
     showsCompass: false,
     loadingEnabled: true,
     zoomEnabled: true,

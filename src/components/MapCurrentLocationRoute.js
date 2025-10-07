@@ -34,8 +34,8 @@ const MapCurrentLocationRoute = ({
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const [mapRegion, setMapRegion] = useState({
-    latitude: origin?.lat || getCurrentLocation()?.latitude || 30.7400,
-    longitude: origin?.lng || getCurrentLocation()?.longitude || 76.7900,
+    latitude: origin?.lat || getCurrentLocation()?.latitude || 30.4766,
+    longitude: origin?.lng || getCurrentLocation()?.longitude || 76.5905,
     ...getMpaDalta(),
     //   latitudeDelta: getMpaDalta().latitudeDelta,
     //   longitudeDelta: getMpaDalta().longitudeDelta,

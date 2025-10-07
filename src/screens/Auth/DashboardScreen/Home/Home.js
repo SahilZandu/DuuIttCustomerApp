@@ -86,15 +86,15 @@ export default function Home({ navigation }) {
         }, 1000)
       }
       const timer = setTimeout(() => {
-        if (changeLiveLocation?.address?.length === 0) {
-          setTimeout(() => {
-            currentLocation = {
-              lat: getLocation('lat'),
-              lng: getLocation('lng'),
-            }
-            handleCurrentAddress();
-          }, 1000)
-        }
+        // if (changeLiveLocation?.address?.length === 0) {
+        setTimeout(() => {
+          currentLocation = {
+            lat: getLocation('lat'),
+            lng: getLocation('lng'),
+          }
+          handleCurrentAddress();
+        }, 1000)
+        // }
         setLoading(false)
       }, 12000);
       // later, when you want to cancel it
@@ -199,14 +199,14 @@ export default function Home({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       setTimeout(() => {
-      if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
-        StatusBar.setBarStyle("light-content", true);
-      } else {
-        StatusBar.setBarStyle("dark-content", true);
-      }
-      return () => {
-        StatusBar.setBarStyle("dark-content", true);
-      };
+        if ((bannerList.length > 0 && bannerList[0]?.backgroundColorText !== '#000000')) {
+          StatusBar.setBarStyle("light-content", true);
+        } else {
+          StatusBar.setBarStyle("dark-content", true);
+        }
+        return () => {
+          StatusBar.setBarStyle("dark-content", true);
+        };
       }, 200)
     }, [bannerList])
   );
@@ -356,7 +356,7 @@ export default function Home({ navigation }) {
             <>
               <View style={styles.mainView}>
                 <AppInputScroll
-                bounces={false}
+                  bounces={false}
                   padding={true}
                   Pb={hp('5%')}
                   keyboardShouldPersistTaps={'handled'}>
