@@ -21,6 +21,7 @@ import { fonts } from '../../../theme/fonts/fonts';
 import { styles } from './styles';
 import { Wrapper } from '../../../halpers/Wrapper';
 import PopUpH3Location from '../../../components/appPopUp/PopUpH3Location';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 let geoLocation = {
   lat: null,
@@ -36,6 +37,7 @@ const SetLocationHistory = ({ navigation }) => {
     senderAddress,
     receiverAddress,
   } = rootStore.myAddressStore;
+  const { appUser } = rootStore.commonStore;
   const { geth3Polygons, h3PolyData } = rootStore.orderStore
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
@@ -67,6 +69,26 @@ const SetLocationHistory = ({ navigation }) => {
   const [name, setName] = useState('');
   const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
   const [isNotService, setIsNotService] = useState(false)
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'SetLocationHistoryParcel',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
 
   useFocusEffect(
     useCallback(() => {

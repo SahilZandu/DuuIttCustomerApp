@@ -28,6 +28,7 @@ import PromotionsFlatList from '../../../../components/slider/promotionsSlider';
 import TwoTextSlider from '../../../../components/slider/twoTextSlider';
 import { appImages } from '../../../../commons/AppImages';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 
 export default function Offers({ navigation }) {
@@ -51,6 +52,25 @@ export default function Offers({ navigation }) {
   const getCheckDevice = async () => {
     await getCheckDeviceId()
   }
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Explore',
+        payload: {
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
 
   useEffect(() => {
     DeviceEventEmitter.addListener('tab2', event => {

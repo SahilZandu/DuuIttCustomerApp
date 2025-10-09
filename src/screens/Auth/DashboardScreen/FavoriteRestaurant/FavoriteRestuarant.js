@@ -16,11 +16,33 @@ import FastImage from 'react-native-fast-image';
 import Url from '../../../../api/Url';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 export default function FavoriteRestaurant({ navigation }) {
   const { restaurantLikedByCustomer, favoriteRestaurantList } = rootStore.foodDashboardStore;
+  const { appUser } = rootStore.commonStore;
   const [loading, setLoading] = useState(favoriteRestaurantList?.length > 0 ? false : true);
   const [likeRestaurant, setLikeRestaurant] = useState(favoriteRestaurantList ?? []);
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'FavoriteRestaurant',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -53,7 +75,7 @@ export default function FavoriteRestaurant({ navigation }) {
             }
             source={
               item?.restaurant?.banner
-                ? { uri:item?.restaurant?.banner }
+                ? { uri: item?.restaurant?.banner }
                 : appImages.foodIMage
             }
             resizeMode={FastImage.resizeMode.cover}

@@ -511,6 +511,7 @@ import Slider from '@react-native-community/slider';
 import AppInputScroll from '../../../halpers/AppInputScroll';
 import BackBtn from '../../../components/cta/BackBtn';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 let priceArray = [0, 10, 20, 30, 40, 50];
 
@@ -520,6 +521,7 @@ export default function PriceConfirmed({ navigation, route }) {
   const { item } = route.params;
   console.log('Price item---', item);
   const { setAddParcelInfo, } = rootStore.parcelStore;
+  const { appUser } = rootStore.commonStore;
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
   const [initialValues, setInitialValues] = useState({
@@ -534,6 +536,27 @@ export default function PriceConfirmed({ navigation, route }) {
   const [selectedWidth, setSelectedWidth] = useState('0%');
   const [fireValue, setFireValue] = useState(0);
   console.log('fireValue--', fireValue);
+
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'PriceConfirmed',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

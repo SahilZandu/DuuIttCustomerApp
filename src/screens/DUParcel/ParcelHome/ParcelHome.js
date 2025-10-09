@@ -27,6 +27,7 @@ import { setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute';
 import Spacer from '../../../halpers/Spacer';
 import { Wrapper2 } from '../../../halpers/Wrapper2';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 let geoLocation = {
   lat: null,
@@ -67,6 +68,26 @@ export default function ParcelHome({ navigation }) {
 
     return d ? d : '';
   };
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'ParcelHome',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

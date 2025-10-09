@@ -30,6 +30,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { Wrapper } from '../../../halpers/Wrapper';
 import PopUpH3Location from '../../../components/appPopUp/PopUpH3Location';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 let currentLocation = {
     lat: null,
@@ -40,6 +41,7 @@ const EditOrderLocation = ({ navigation, route }) => {
     const { pickDrop, item, orderItem } = route.params;
     console.log('pickDrop--EditOrderLocation', pickDrop, item, orderItem);
     const { editParcelsRides } = rootStore.parcelStore;
+    const { appUser } = rootStore.commonStore;
     const getLocation = type => {
         // console.log('gettt', getCurrentLocation());
         let d =
@@ -61,6 +63,25 @@ const EditOrderLocation = ({ navigation, route }) => {
     const [errorShow, setErrorShow] = useState(false)
     const [errorMsg, setErrorMsg] = useState("We currently operate within a 30 kilometer service range. Please ensure the pickup and drop-off locations are within this distance.")
 
+
+    useEffect(() => {
+        onAppEvents();
+    }, [])
+
+    const onAppEvents = async () => {
+        try {
+            await AppEvents({
+                eventName: 'EditOrderLocationParcel',
+                payload: {
+                    name: appUser?.name ?? '',
+                    phone: appUser?.phone?.toString() ?? '',
+                }
+            })
+        } catch (error) {
+            console.log("Error---", error);
+        }
+
+    }
 
 
     useFocusEffect(

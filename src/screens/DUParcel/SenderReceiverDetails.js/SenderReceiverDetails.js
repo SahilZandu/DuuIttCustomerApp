@@ -474,11 +474,36 @@ import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import Header from '../../../components/header/Header';
 import SenderReceiverForm from '../../../forms/SenderReceiverForm';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
+import { rootStore } from '../../../stores/rootStore';
 
 
 
 export default function SenderReceiverDetails({ navigation, route }) {
   const { pickDrop, item } = route.params
+  const { appUser } = rootStore.commonStore;
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'SenderReceiverDetailsParcel',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
+  
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();

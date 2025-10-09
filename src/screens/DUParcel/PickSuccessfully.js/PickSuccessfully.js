@@ -16,8 +16,33 @@ import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
 import socketServices from '../../../socketIo/SocketServices';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
+import { rootStore } from '../../../stores/rootStore';
 
 export default function PickSuccessfully({ navigation }) {
+
+  const { appUser } = rootStore.commonStore;
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'PickSuccessfullyParcel',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
+
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton('', 'parcel', 'parcel', navigation);

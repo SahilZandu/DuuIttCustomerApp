@@ -1144,6 +1144,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       console.log('🎯 Marker updated to:', { lat, lng });
     });
 
+    fetchRoute(newLocation, currentDestination);
+
     // Optionally update camera to follow marker
     // if (mapRef?.current) {
     //   mapRef.current.animateCamera(
@@ -1186,7 +1188,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   // Fetch route when origin/destination changes
   useEffect(() => {
-    if (origin?.lat && origin?.lng && destination?.lat && destination?.lng) {
+    if (origin && destination) {
       fetchRoute(origin, destination);
     }
   }, [origin, destination]);

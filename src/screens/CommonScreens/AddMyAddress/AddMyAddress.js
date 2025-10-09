@@ -42,6 +42,7 @@ import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import FieldErrorMessage from '../../../components/FieldErrorMessage';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 
 
@@ -55,6 +56,7 @@ export default function AddMyAddress({ navigation, route }) {
   console.log("type, data, screenName", type, data, screenName);
 
   const { myAddress } = rootStore.myAddressStore;
+  const { appUser } = rootStore.commonStore;
 
   const getLocation = type => {
     // console.log('gettt', getCurrentLocation());
@@ -89,6 +91,25 @@ export default function AddMyAddress({ navigation, route }) {
   const [loadingAddress, setLoadingAddress] = useState(true);
   const [checkLocation, setCheckLocation] = useState(false)
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'AddMyAddress',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

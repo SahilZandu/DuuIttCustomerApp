@@ -29,6 +29,7 @@ import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 let currentLocation = {
   lat: null,
@@ -39,6 +40,7 @@ let currentLocation = {
 const ChooseMapLocation = ({ navigation, route }) => {
   const { setSenderAddress, setReceiverAddress, senderAddress, receiverAddress } =
     rootStore.myAddressStore;
+  const { appUser } = rootStore.commonStore;
 
   const debounceTimeout = useRef(null);
   const { pickDrop, item, screenName } = route.params;
@@ -61,6 +63,25 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [LocationId, setLocationId] = useState('')
   const [loading, setLoading] = useState(false)
   const [checkLocation, setCheckLocation] = useState(false)
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'ChooseMapLocation',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

@@ -29,6 +29,7 @@ import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute
 import PopUpDontService from '../../../components/PopUpDontService';
 import Spacer from '../../../halpers/Spacer';
 import { Wrapper2 } from '../../../halpers/Wrapper2';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 let geoLocation = {
   lat: null,
@@ -61,6 +62,25 @@ export default function RideHome({ navigation }) {
 
     return d ? d : '';
   };
+
+  useEffect(() => {
+      onAppEvents();
+    }, [])
+  
+    const onAppEvents = async () => {
+      try {
+        await AppEvents({
+          eventName: 'RideHome',
+          payload: {
+            name: appUser?.name ?? '',
+            phone: appUser?.phone?.toString() ?? '',
+          }
+        })
+      } catch (error) {
+        console.log("Error---", error);
+      }
+  
+    }
 
   useFocusEffect(
     useCallback(() => {

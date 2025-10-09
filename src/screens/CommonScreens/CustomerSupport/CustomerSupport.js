@@ -14,10 +14,32 @@ import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { rootStore } from '../../../stores/rootStore';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 export default function CustomerSupport({ navigation }) {
   const { getAdminInfo, getSupportInfo } = rootStore.authStore;
   const [infoData, setInfoData] = useState({});
+  const { appUser } = rootStore.commonStore;
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'CustomerSupport',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -92,7 +114,7 @@ export default function CustomerSupport({ navigation }) {
               bottomCheck={15}
               textTransform={'capitalize'}
             />
-             {/* 
+            {/* 
             // <BTN
             //   disable={infoData?.phone?.toString()?.length > 0 ? false : true}
             //   width={wp('40%')}
@@ -103,7 +125,7 @@ export default function CustomerSupport({ navigation }) {
             //   bottomCheck={15}
             //   textTransform={'capitalize'}
             // /> 
-            */}  
+            */}
           </View>
         </View>
       </View>

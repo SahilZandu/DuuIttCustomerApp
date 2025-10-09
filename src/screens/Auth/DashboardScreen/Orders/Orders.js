@@ -25,6 +25,7 @@ import NoInternet from '../../../../components/NoInternet';
 import { colors } from '../../../../theme/colors';
 import IndicatorLoader from '../../../../halpers/IndicatorLoader';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 const tabs = [
   { text: 'All Orders' },
@@ -89,6 +90,25 @@ export default function Orders({ navigation, route }) {
   //   }, 15000);
 
   // }, [tabText])
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Orders',
+        payload: {
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

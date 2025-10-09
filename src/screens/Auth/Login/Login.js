@@ -16,6 +16,7 @@ import AuthScreenContent from '../../../components/AuthScreenContent';
 import BTN from '../../../components/cta/BTN';
 import { Wrapper } from '../../../halpers/Wrapper';
 import { setCurrentLocation } from '../../../components/GetAppLocation';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 export default function Login({ navigation }) {
   const [type, setType] = useState('Mobile');
@@ -29,6 +30,25 @@ export default function Login({ navigation }) {
     }, []),
   );
 
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'LoginRegister',
+        payload: {
+          email: 'test@gmail.com',
+        }
+      })
+
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   const clearInputs = () => {
     setUpdate(false);
@@ -44,24 +64,24 @@ export default function Login({ navigation }) {
   };
 
   return (
-     <Wrapper
-        edges={['left', 'right']}
-        transparentStatusBar
-      >
-    <View style={styles.container}>
-      <ScrollView
-        bounces={false}
-        keyboardShouldPersistTaps={'handled'}
-        style={{ flex: 1 }}>
-        <View style={styles.screen}>
-          <AuthScreenContent
-            marginTop={'35%'}
-            title={Strings?.sign_In}
-            subTitle={Strings?.accessYourAccount}
-          />
-          <Spacer space={'6%'} />
-          {update && <LoginForm navigation={navigation} type={type} />}
-          {/* <Text style={styles.orText}>{Strings.Or}</Text>
+    <Wrapper
+      edges={['left', 'right']}
+      transparentStatusBar
+    >
+      <View style={styles.container}>
+        <ScrollView
+          bounces={false}
+          keyboardShouldPersistTaps={'handled'}
+          style={{ flex: 1 }}>
+          <View style={styles.screen}>
+            <AuthScreenContent
+              marginTop={'35%'}
+              title={Strings?.sign_In}
+              subTitle={Strings?.accessYourAccount}
+            />
+            <Spacer space={'6%'} />
+            {update && <LoginForm navigation={navigation} type={type} />}
+            {/* <Text style={styles.orText}>{Strings.Or}</Text>
           <Spacer space={'5%'} />
           <BTN
           backgroundColor={colors.white}
@@ -74,7 +94,7 @@ export default function Login({ navigation }) {
             textTransform={'capitalize'}
             onPress={handleType}
           /> */}
-          {/* <Pressable
+            {/* <Pressable
             style={styles.touchView}
             onPress={handleType}>
             <Text style={styles.login}>
@@ -82,35 +102,35 @@ export default function Login({ navigation }) {
             </Text>
           </Pressable> */}
 
-          <View style={styles.termsPolicyMainView}>
-            <Text style={styles.agreeText}>
-              By proceeding, you agree with our
-            </Text>
-            <View style={styles.termsPolicyView}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('myWebComponent', {
-                    type: 'terms',
-                  });
-                }}
-                activeOpacity={0.8}>
-                <Text style={styles.termsText}>Terms & Conditions</Text>
-              </TouchableOpacity>
-              <Text style={styles.andText}> & </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('myWebComponent', {
-                    type: 'policy',
-                  });
-                }}
-                activeOpacity={0.8}>
-                <Text style={styles.privacyText}>Privacy Policy</Text>
-              </TouchableOpacity>
+            <View style={styles.termsPolicyMainView}>
+              <Text style={styles.agreeText}>
+                By proceeding, you agree with our
+              </Text>
+              <View style={styles.termsPolicyView}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('myWebComponent', {
+                      type: 'terms',
+                    });
+                  }}
+                  activeOpacity={0.8}>
+                  <Text style={styles.termsText}>Terms & Conditions</Text>
+                </TouchableOpacity>
+                <Text style={styles.andText}> & </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('myWebComponent', {
+                      type: 'policy',
+                    });
+                  }}
+                  activeOpacity={0.8}>
+                  <Text style={styles.privacyText}>Privacy Policy</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
     </Wrapper>
   );
 }

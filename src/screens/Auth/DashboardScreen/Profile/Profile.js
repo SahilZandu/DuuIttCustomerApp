@@ -8,11 +8,34 @@ import { useFocusEffect } from '@react-navigation/native';
 import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../../components/NoInternet';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
+import { rootStore } from '../../../../stores/rootStore';
 
 
 export default function Profile({ navigation, route }) {
   const [internet, setInternet] = useState(true);
+  const { appUser } = rootStore.commonStore;
   const { screenName } = route.params;
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Profile',
+        payload: {
+          name: appUser?.name ?? '',
+          email: appUser?.email ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

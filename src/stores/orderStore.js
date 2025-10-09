@@ -80,8 +80,11 @@ export default class OrderStore {
       const res = await agent.ordersRecentOrder(requestData);
       console.log('orders Recent Order Res : ', res);
       if (res?.statusCode == 200) {
+        const resFilter = await res?.data?.filter((item) =>
+          item?.order_type?.toLowerCase() === type?.toLowerCase()
+        );
         handleLoading(false);
-        return res?.data;
+        return resFilter ?? res?.data;
       } else {
         handleLoading(false);
         return [];
@@ -98,12 +101,14 @@ export default class OrderStore {
       const res = await agent.ordersTrackOrder();
       console.log('orders Track Order Res : ', res);
       if (res?.statusCode == 200) {
-        res?.data?.length > 0
-          ? (this.orderTrackingList = res?.data)
+        const filterList = await res?.data?.filter((item) =>
+          item?.order_type?.toLowerCase() == 'parcel'
+        );
+        filterList?.length > 0
+          ? (this.orderTrackingList = filterList)
           : (this.orderTrackingList = []);
         handleLoading(false);
-        // return res?.data;
-        return res;
+        return filterList?.length > 0 ? res : {};
       } else {
         this.orderTrackingList = [];
         handleLoading(false);

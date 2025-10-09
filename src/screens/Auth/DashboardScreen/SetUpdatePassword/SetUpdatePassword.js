@@ -10,12 +10,34 @@ import Header from '../../../../components/header/Header';
 import UserSetPasswordForm from '../../../../forms/UserSetPasswordForm';
 import UserUpdatePasswordForm from '../../../../forms/UserUpdatePasswordForm';
 import { rootStore } from '../../../../stores/rootStore';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 
 
 
 export default function SetUpdatePass({ navigation }) {
     const { appUser } = rootStore.commonStore;
+
+
+    useEffect(() => {
+        onAppEvents();
+    }, [])
+
+    const onAppEvents = async () => {
+        try {
+            await AppEvents({
+                eventName: 'SetUpdatePass',
+                payload: {
+                    name: appUser?.name ?? '',
+                    phone: appUser?.phone?.toString() ?? '',
+                }
+            })
+        } catch (error) {
+            console.log("Error---", error);
+        }
+
+    }
+
 
     return (
         <Wrapper

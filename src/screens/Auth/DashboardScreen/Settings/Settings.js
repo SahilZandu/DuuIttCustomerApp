@@ -11,6 +11,7 @@ import socketServices from '../../../../socketIo/SocketServices';
 import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 import handleAndroidBackButton from '../../../../halpers/handleAndroidBackButton';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 export default function Settings({ navigation }) {
   const { deleteAccount } = rootStore.dashboardStore;
@@ -32,6 +33,27 @@ export default function Settings({ navigation }) {
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
   const [isProgress, setIsProgress] = useState(false);
   const [foodTrackedArray, setFoodTrackedArray] = useState(foodOrderTrackingList ?? [])
+
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Settings',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

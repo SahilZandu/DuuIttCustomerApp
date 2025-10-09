@@ -18,6 +18,7 @@ import socketServices from '../../../../socketIo/SocketServices';
 import PopUp from '../../../../components/appPopUp/PopUp';
 import PopUpInProgess from '../../../../components/appPopUp/PopUpInProgess';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 
 export default function SideMenu({ navigation }) {
@@ -180,6 +181,19 @@ export default function SideMenu({ navigation }) {
     },
   ];
 
+  const onAppEventsLogout = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Logout',
+        payload: {
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+  }
+
   const moreOptions = [
     // {
     //   id: '0',
@@ -273,6 +287,7 @@ export default function SideMenu({ navigation }) {
       title: 'Logout',
       onPress: async () => {
         // setIsLogout(true);
+        onAppEventsLogout();
         if ((incompletedParcelOrder?.length > 0
           || incompletedRideOrder?.length > 0
           || trackedParcelOrder?.length > 0
@@ -298,11 +313,29 @@ export default function SideMenu({ navigation }) {
     // },
   ];
 
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'SideMenu',
+        payload: {
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
   useFocusEffect(
     useCallback(() => {
       setTimeout(() => {
         StatusBar.setBarStyle("dark-content", true);
-      },300)
+      }, 300)
       getCheckDevice();
       socketServices.initailizeSocket();
       checkInternet();

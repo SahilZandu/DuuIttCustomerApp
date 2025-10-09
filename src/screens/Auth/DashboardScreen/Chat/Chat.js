@@ -38,6 +38,7 @@ import socketServices from '../../../../socketIo/SocketServices';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 import Spacer from '../../../../halpers/Spacer';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 // let item ={}
 export default function Chat({ navigation, route }) {
@@ -55,6 +56,27 @@ export default function Chat({ navigation, route }) {
   const hanldeLinking = () => {
     Linking.openURL(`tel:${item?.rider?.phone?.toString() ?? '1234567890'}`);
   };
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Chat',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardVisible(true);

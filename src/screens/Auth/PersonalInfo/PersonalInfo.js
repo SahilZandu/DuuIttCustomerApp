@@ -25,6 +25,7 @@ import { rootStore } from '../../../stores/rootStore';
 import socketServices from '../../../socketIo/SocketServices';
 import { colors } from '../../../theme/colors';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 
 
@@ -40,6 +41,25 @@ export default function PersonalInfo({ navigation, route }) {
       socketServices.initailizeSocket();
     }, []),
   );
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'PersonalInfo',
+        payload: {
+          phone: appUser?.phone ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
 
   const handleLogout = async () => {

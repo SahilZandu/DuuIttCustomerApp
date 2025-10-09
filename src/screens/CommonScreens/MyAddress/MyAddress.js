@@ -23,6 +23,7 @@ import PopUp from '../../../components/appPopUp/PopUp';
 import { fetch } from '@react-native-community/netinfo';
 import NoInternet from '../../../components/NoInternet';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 export default function MyAddress({ navigation, route }) {
   const { screenName } = route.params || {};
@@ -30,12 +31,32 @@ export default function MyAddress({ navigation, route }) {
   const { getMyAddress, getAddress, deleteMyAddress } = rootStore.myAddressStore;
   const { setSelectedAddress } = rootStore.cartStore;
   const { getCheckDeviceId } = rootStore.dashboardStore;
+  const { appUser } = rootStore.commonStore;
   const [loading, setLoading] = useState(getAddress?.length > 0 ? false : true);
   const [myAddress, setMyAddress] = useState(getAddress);
   const [isDelete, setIsDelete] = useState(false);
   const [isDeleteIndex, setIsDeleteIndex] = useState('');
   const [isDeleteItem, setIsDeleteItem] = useState('');
   const [internet, setInternet] = useState(true);
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'MyAddress',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -77,11 +98,11 @@ export default function MyAddress({ navigation, route }) {
   };
 
   const onSuccess = () => {
-     getAppUser();
+    getAppUser();
     myAddress.splice(isDeleteIndex, 1);
     setMyAddress([...myAddress]);
     setIsDelete(false);
- 
+
   };
 
   const handleLoading = v => {
@@ -89,7 +110,7 @@ export default function MyAddress({ navigation, route }) {
   };
 
   const renderItem = ({ item, index }) => {
-    console.log("item--setSelectedAddress",item)
+    console.log("item--setSelectedAddress", item)
     return (
       <AddressCard
         item={item}

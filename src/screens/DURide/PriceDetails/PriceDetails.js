@@ -439,7 +439,7 @@
 
 
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   View,
 } from 'react-native';
@@ -449,11 +449,36 @@ import { useFocusEffect } from '@react-navigation/native';
 import Header from '../../../components/header/Header';
 import RidePriceForm from '../../../forms/RidePriceForm'
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
+import { rootStore } from '../../../stores/rootStore';
 
 
 
 
 export default function PriceDetails({ navigation }) {
+
+  const { appUser } = rootStore.commonStore;
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'PriceDetails',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton(navigation);

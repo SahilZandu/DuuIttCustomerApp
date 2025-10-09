@@ -14,14 +14,37 @@ import Header from '../../../../components/header/Header';
 import CardOrderDetails from '../../../../components/CardOrderDetails';
 import AppInputScroll from '../../../../halpers/AppInputScroll';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
+import { rootStore } from '../../../../stores/rootStore';
 
 
 
 
 export default function OrderDetails({ navigation, route }) {
   const { item } = route.params;
+  const { appUser } = rootStore.commonStore;
 
   console.log("item===", item);
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Help',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

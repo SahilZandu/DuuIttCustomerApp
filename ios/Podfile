@@ -62,6 +62,7 @@ pod 'FirebaseCoreInternal', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true
 $RNFirebaseAsStaticFramework = true
+$RNFirebaseAnalyticsEnableAdSupport = true
 
 target 'DuuIttApp' do
   config = use_native_modules!

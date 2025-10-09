@@ -13,6 +13,7 @@ import { colors } from '../../../theme/colors';
 import { styles } from './styles';
 import { useFocusEffect } from '@react-navigation/native';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 
 
@@ -21,6 +22,25 @@ export default function MyWebComponent({ navigation, route }) {
   const { type } = route?.params;
 
   let link = type == 'policy' ? privacyPolicyLink : type == 'terms' ? termsAndConditionsLink : openSourceyLink;
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'WebViewScreen',
+        payload: {
+          link: 'Policy/Terms/OpenSource',
+        }
+      })
+
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useEffect(() => {
     if (type == 'policy') {
@@ -76,7 +96,7 @@ export default function MyWebComponent({ navigation, route }) {
                 Platform.OS === 'ios' ?
                   hp('-20%') : hp('-10%')
             }}
-            size="large" color={colors.main} />
+              size="large" color={colors.main} />
           </View>
         )}
         <View style={styles.webMainView}>

@@ -42,6 +42,7 @@ import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import FieldErrorMessage from '../../../components/FieldErrorMessage';
 import { Wrapper } from '../../../halpers/Wrapper';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 
 
@@ -83,6 +84,25 @@ export default function AddRestaurantLocation({ navigation }) {
     //     id: data?._id,
     // });
     const [loadingAddress, setLoadingAddress] = useState(true);
+
+    useEffect(() => {
+        onAppEvents();
+    }, [])
+
+    const onAppEvents = async () => {
+        try {
+            await AppEvents({
+                eventName: 'AddRestaurantLocation',
+                payload: {
+                    name: appUser?.name ?? '',
+                    phone: appUser?.phone?.toString() ?? '',
+                }
+            })
+        } catch (error) {
+            console.log("Error---", error);
+        }
+
+    }
 
     useEffect(() => {
         setGeoLocation({

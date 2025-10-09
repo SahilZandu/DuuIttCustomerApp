@@ -13,13 +13,37 @@ import Spacer from '../../../../halpers/Spacer';
 import { colors } from '../../../../theme/colors';
 import { styles } from './styles';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
+import { rootStore } from '../../../../stores/rootStore';
 
 
 
 export default function Help({ navigation }) {
 
+  const { appUser } = rootStore.commonStore;
+
   const [loading, setLoading] = useState(false);
   const [openClose, setOpenClose] = useState('');
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Help',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   let helpArray = [
     {

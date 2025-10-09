@@ -34,6 +34,7 @@ import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
 import { getGeoCodes } from '../../../../components/GeoCodeAddress';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 
 let currentLocation = {
@@ -61,6 +62,25 @@ export default function Home({ navigation }) {
   const [bannerList, setBannerList] = useState([])
   const [polygonArray, setPolygonArray] = useState(h3PolyData ?? [])
   const [loading, setLoading] = useState(currentAddress?.address?.length > 0 ? false : true)
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'MainHome',
+        payload: {
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
+
 
   useFocusEffect(
     useCallback(() => {

@@ -267,6 +267,8 @@ const ChangeRoute = ({ data, navigation }) => {
 
   const getTrackingParcelOrder = async () => {
     const resTrack = await ordersTrackOrder(handleLoadingTrack);
+    console.log("resTrack--",resTrack);
+    
     if (resTrack?.data?.length > 0) {
       setParcelTrackingOrder(resTrack?.data)
       setTrackedParcelOrder(resTrack?.data);

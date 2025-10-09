@@ -16,13 +16,35 @@ import { feedbackValidations } from '../../../../forms/formsValidation/feedbackV
 import { Strings } from '../../../../translates/strings';
 import { rootStore } from '../../../../stores/rootStore';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
 
 export default function Feedback({ navigation }) {
   const { appFeedback } = rootStore.dashboardStore;
+  const { appUser } = rootStore.commonStore;
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({
     feedback: '',
   });
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'Feedback',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
   useFocusEffect(
     useCallback(() => {

@@ -27,6 +27,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { Wrapper } from '../../../halpers/Wrapper';
 import BTN from '../../../components/cta/BTN';
+import { AppEvents } from '../../../halpers/events/AppEvents';
 
 
 
@@ -49,6 +50,25 @@ export default function VerifyOtp({ navigation, route }) {
       setMobileEmail(value);
     }
   }, [value]);
+
+
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'VerityOtp',
+        payload: {
+          phone: mobileEmail?.mobile,
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
+    }
+
+  }
 
 
   useFocusEffect(

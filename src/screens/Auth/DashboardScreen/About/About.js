@@ -1,4 +1,4 @@
-import React, { useCallback, } from 'react';
+import React, { useCallback, useEffect, } from 'react';
 import { View, } from 'react-native';
 import Header from '../../../../components/header/Header';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,8 +8,31 @@ import AppInputScroll from '../../../../halpers/AppInputScroll';
 import TouchTextRightIconComp from '../../../../components/TouchTextRightIconComp';
 import { appImagesSvg } from '../../../../commons/AppImages';
 import { Wrapper } from '../../../../halpers/Wrapper';
+import { AppEvents } from '../../../../halpers/events/AppEvents';
+import { rootStore } from '../../../../stores/rootStore';
 
 export default function About({ navigation }) {
+
+    const { appUser } = rootStore.commonStore;
+
+    useEffect(() => {
+        onAppEvents();
+    }, [])
+
+    const onAppEvents = async () => {
+        try {
+            await AppEvents({
+                eventName: 'About',
+                payload: {
+                    name: appUser?.name ?? '',
+                    phone: appUser?.phone?.toString() ?? '',
+                }
+            })
+        } catch (error) {
+            console.log("Error---", error);
+        }
+
+    }
 
     useFocusEffect(
         useCallback(() => {
