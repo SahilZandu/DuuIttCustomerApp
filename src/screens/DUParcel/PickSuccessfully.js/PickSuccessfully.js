@@ -48,7 +48,7 @@ export default function PickSuccessfully({ navigation }) {
       handleAndroidBackButton('', 'parcel', 'parcel', navigation);
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
-      socketServices.disconnectSocket();
+      // socketServices.disconnectSocket();
 
       const timeOut = setTimeout(() => {
         navigation.navigate('parcel', { screen: 'home' });

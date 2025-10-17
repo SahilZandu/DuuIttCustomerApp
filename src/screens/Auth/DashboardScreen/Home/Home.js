@@ -29,6 +29,7 @@ import NoInternet from '../../../../components/NoInternet';
 import messaging from '@react-native-firebase/messaging';
 import { getUniqueId } from 'react-native-device-info';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
+import { Notifications } from 'react-native-notifications';
 import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
 import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
@@ -81,9 +82,16 @@ export default function Home({ navigation }) {
 
   }
 
+// Clear all notifications from the notification drawer
+  const onRemoveNotificationDrawer = async () => {
+    Notifications.removeAllDeliveredNotifications();
+    await notifee.cancelAllNotifications();
+  }
+
 
   useFocusEffect(
     useCallback(() => {
+      onRemoveNotificationDrawer();
       // if (h3PolyData?.length == 0) {
       getH3PolygonData();
       // }
@@ -341,9 +349,9 @@ export default function Home({ navigation }) {
           };
           saveFcmToken(token);
           socketServices.emit('update-fcm-token', request);
-          setTimeout(() => {
-            socketServices.disconnectSocket();
-          }, 500);
+          // setTimeout(() => {
+          //   socketServices.disconnectSocket();
+          // }, 500);
         }, 1500);
       }
       //  await saveFcmToken(token)

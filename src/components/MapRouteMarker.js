@@ -88,8 +88,9 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           ref={mapRef}
           style={[styles.mapContainer, mapContainerView]}
           zoomEnabled={true}
-          scrollEnabled={true}
-          showsScale={true}
+          scrollEnabled={false}
+          showsScale={false}
+          loadingEnabled={true}
           // mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
           mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
           customMapStyle={DuuittMapTheme}
@@ -108,7 +109,6 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           }}
           zoomTapEnabled
           rotateEnabled={false}
-          loadingEnabled
           showsCompass={false}
           // 👇 Set Zoom Limits
           minZoomLevel={10}  // prevent zooming out too far

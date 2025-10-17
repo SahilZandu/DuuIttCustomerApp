@@ -41,6 +41,7 @@ export default function ParcelHome({ navigation }) {
     // ordersRecentOrder,
     ordersTrackOrder,
     orderTrackingList,
+    parcelOrderInProgress,
     getPendingForCustomer,
     updateOrderStatus,
     setParcelTrackingOrder,
@@ -52,8 +53,8 @@ export default function ParcelHome({ navigation }) {
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [recentOrder, setRecentOrder] = useState({});
   const [loading, setLoading] = useState(false);
-  const [trackedArray, setTrackedArray] = useState(orderTrackingList);
-  const [incompletedArray, setIncompletedArray] = useState([]);
+  const [trackedArray, setTrackedArray] = useState(orderTrackingList ?? []);
+  const [incompletedArray, setIncompletedArray] = useState(parcelOrderInProgress ?? []);
   const [internet, setInternet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const [isReviewRider, setIsReviewRider] = useState(false);
@@ -92,6 +93,8 @@ export default function ParcelHome({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       // setCurrentLocation();
+      getTrackingOrder();
+      getIncompleteOrder();
       setTimeout(() => {
         StatusBar.setBarStyle("dark-content", true);
       }, 300)
@@ -101,11 +104,9 @@ export default function ParcelHome({ navigation }) {
       checkInternet();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();
-      getTrackingOrder();
-      getIncompleteOrder();
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
-      socketServices.disconnectSocket();
+      // socketServices.disconnectSocket();
       setSenderAddress({});
       setReceiverAddress({});
       setTimeout(() => {

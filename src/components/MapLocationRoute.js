@@ -908,6 +908,7 @@ const MapLocationRoute = React.memo(({
 
       if (latDiff > 0.0001 || lngDiff > 0.0001) {
         lastRegionRef.current = region;
+        onCheckLocation(true);
         onTouchLocation({
           latitude: currentLat,
           longitude: currentLng,
@@ -962,7 +963,7 @@ const MapLocationRoute = React.memo(({
     showsIndoors: false,
     showsMyLocationButton: false,
     toolbarEnabled: false,
-    onRegionChange: (e) => { setMpaDalta(e) },
+    onRegionChange: (e) => { setMpaDalta(e),onCheckLocation(false)},
     onRegionChangeComplete: handleRegionChangeComplete,
     onMapReady: handleMapReady,
   }), [mapRegion, mapContainerView, handleRegionChangeComplete, handleMapReady]);

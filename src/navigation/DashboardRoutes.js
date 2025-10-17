@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DashboardBottomNavigator } from './BottomTabNavigation';
 import Profile from '../screens/Auth/DashboardScreen/Profile/Profile';
 import Feedback from '../screens/Auth/DashboardScreen/Feedback/Feedback';
@@ -29,6 +29,7 @@ import CustomerSupport from '../screens/CommonScreens/CustomerSupport/CustomerSu
 import Chat from '../screens/Auth/DashboardScreen/Chat/Chat';
 import MyWebComponent from '../screens/Auth/MyWebComponent/MyWebComponent';
 import About from '../screens/Auth/DashboardScreen/About/About';
+import { Text, TouchableOpacity } from 'react-native';
 
 
 const Stack = createNativeStackNavigator();
@@ -40,44 +41,45 @@ export default function DashboardRoutes(props) {
         headerShown: false,
         headerBackTitleVisible: false,
         gestureEnabled: false,
+       
       }}
-      
-      initialRouteName="home"> 
-       <Stack.Screen name="home" component={DashboardBottomNavigator} />
-       <Stack.Screen name="profile" component={Profile} />
-       <Stack.Screen name="feedback" component={Feedback} />
-       <Stack.Screen name="help" component={Help} />
-       <Stack.Screen name="giftCard" component={GiftCard} />
-       <Stack.Screen name="giftCardPurchase" component={GiftCardPurchase} />
-       <Stack.Screen name="claimGiftCard" component={ClaimGiftCard} />
-       <Stack.Screen name="claimGiftQRCode" component={ClaimGiftQRCode} />
-       <Stack.Screen name="paymentMethod" component={PaymentMethod} />
-       <Stack.Screen name="vouchers" component={Vouchers} />
-       <Stack.Screen name="vouchersDetails" component={VouchersDetails} />
-       <Stack.Screen name="rewards" component={Rewards} />
-       <Stack.Screen name="rewardQRCode" component={RewardQRCode} />
-       <Stack.Screen name="claimRewardCard" component={ClaimRewardCard} />
-       <Stack.Screen name="favoriteRestaurant" component={FavoriteRestaurant} />
-       <Stack.Screen name="wallet" component={Wallet} />
-       <Stack.Screen name="duuIttCredit" component={DuuIttCredit} />
-       <Stack.Screen name="claimGiftCardList" component={ClaimGiftCardList} />
-       <Stack.Screen name="giftCardPurcahseList" component={GiftCardPurcahseList} />
-       <Stack.Screen name="rewardsStars" component={RewardsStars} />
-       <Stack.Screen name="myAddress" component={MyAddress} />
-       <Stack.Screen name="addMyAddress" component={AddMyAddress} />
-       <Stack.Screen name="settings" component={Settings} />
-       <Stack.Screen name="orderDetails" component={OrderDetails} />  
-       <Stack.Screen name="transactionHistory" component={TransactionHistory} />
-       <Stack.Screen name="setUpdatePass" component={SetUpdatePass} />
-       <Stack.Screen name="customerSupport" component={CustomerSupport} /> 
-       <Stack.Screen name="chat" component={Chat} /> 
-        <Stack.Screen name="myWebComponent" component={MyWebComponent} /> 
-        <Stack.Screen name="about" component={About} /> 
-        
-       
-       
-       
-  
+
+      initialRouteName="home">
+      <Stack.Screen name="home" component={DashboardBottomNavigator} />
+      <Stack.Screen name="profile" component={Profile} />
+      <Stack.Screen name="feedback" component={Feedback} />
+      <Stack.Screen name="help" component={Help} />
+      <Stack.Screen name="giftCard" component={GiftCard} />
+      <Stack.Screen name="giftCardPurchase" component={GiftCardPurchase} />
+      <Stack.Screen name="claimGiftCard" component={ClaimGiftCard} />
+      <Stack.Screen name="claimGiftQRCode" component={ClaimGiftQRCode} />
+      <Stack.Screen name="paymentMethod" component={PaymentMethod} />
+      <Stack.Screen name="vouchers" component={Vouchers} />
+      <Stack.Screen name="vouchersDetails" component={VouchersDetails} />
+      <Stack.Screen name="rewards" component={Rewards} />
+      <Stack.Screen name="rewardQRCode" component={RewardQRCode} />
+      <Stack.Screen name="claimRewardCard" component={ClaimRewardCard} />
+      <Stack.Screen name="favoriteRestaurant" component={FavoriteRestaurant} />
+      <Stack.Screen name="wallet" component={Wallet} />
+      <Stack.Screen name="duuIttCredit" component={DuuIttCredit} />
+      <Stack.Screen name="claimGiftCardList" component={ClaimGiftCardList} />
+      <Stack.Screen name="giftCardPurcahseList" component={GiftCardPurcahseList} />
+      <Stack.Screen name="rewardsStars" component={RewardsStars} />
+      <Stack.Screen name="myAddress" component={MyAddress} />
+      <Stack.Screen name="addMyAddress" component={AddMyAddress} />
+      <Stack.Screen name="settings" component={Settings} />
+      <Stack.Screen name="orderDetails" component={OrderDetails} />
+      <Stack.Screen name="transactionHistory" component={TransactionHistory} />
+      <Stack.Screen name="setUpdatePass" component={SetUpdatePass} />
+      <Stack.Screen name="customerSupport" component={CustomerSupport} />
+      <Stack.Screen name="chat" component={Chat} />
+      <Stack.Screen name="myWebComponent" component={MyWebComponent} />
+      <Stack.Screen name="about" component={About} />
+
+
+
+
+
     </Stack.Navigator>
   );
 }

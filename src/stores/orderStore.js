@@ -135,6 +135,11 @@ export default class OrderStore {
         const resFilter = await res?.data?.filter((item) =>
           item?.order_type?.toLowerCase() === type?.toLowerCase()
         );
+        if (type?.toLowerCase() === 'ride') {
+          this.rideOrderInProgress = resFilter
+        } else {
+          this.parcelOrderInProgress = resFilter
+        }
         return resFilter ?? [];
       } else {
         return [];
@@ -252,5 +257,36 @@ export default class OrderStore {
       return [];
     }
   };
+
+
+
+
+  getCustomerWiseRiderLocation = async (order) => {
+    let requestData = {
+      order_id: order?._id,
+    };
+    console.log('getCustomerWiseRiderLocation request ', requestData);
+    try {
+      const res = await agent.getCustomerWiseRiderLocation(requestData);
+      console.log('getCustomerWiseRiderLocation Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+        return res?.data
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+        return []
+      }
+    } catch (error) {
+      console.log('error update Order Status:', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+      return []
+    }
+  };
+
+
 
 }

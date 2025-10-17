@@ -36,6 +36,7 @@ import RNFS from 'react-native-fs';
 import RNFetchBlob from 'react-native-blob-util';
 import IndicatorLoader from '../halpers/IndicatorLoader';
 import { useToast } from '../halpers/useToast';
+import Share from 'react-native-share';
 
 
 
@@ -208,144 +209,269 @@ const CardOrderDetails = ({ item }) => {
 
 
 
-  const downloadInvoicePDF = () => {
-    setLoading(true)
+  // const downloadInvoicePDF = () => {
+  //   setLoading(true)
 
-    let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrdersInvoice}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
-    // console.log('urlPdf---', urlPdf);
+  //   let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrdersInvoice}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`
+  //   // console.log('urlPdf---', urlPdf);
 
-    const { dirs } = RNFetchBlob.fs;
-    const fileName = `orderInvoice_${Date.now()}.pdf`;
+  //   const { dirs } = RNFetchBlob.fs;
+  //   const fileName = `orderInvoice_${Date.now()}.pdf`;
 
-    const path =
-      Platform.OS === 'android'
-        ? `${dirs.DownloadDir}/${fileName}` // 👈 Android public Downloads folder
-        : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
+  //   const path =
+  //     Platform.OS === 'android'
+  //       ? `${dirs.DownloadDir}/${fileName}` // 👈 Android public Downloads folder
+  //       : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
 
-    RNFetchBlob.config({
-      addAndroidDownloads: {
-        useDownloadManager: true,   // 👈 Android system Download Manager
-        notification: true,         // 👈 show progress in notification bar
-        path,                       // 👈 save to Downloads
-        title: fileName,
-        description: 'Downloading invoice…',
-        mime: 'application/pdf',
-        mediaScannable: true,       // 👈 makes file visible in Files/My Files
-      },
-      fileCache: true,
-      path,
-    })
-      .fetch('GET', urlPdf)
-      .then((res) => {
-        // console.log('✅ Invoice saved to:', res.path());
-        downloadInvoiceSavePDF(urlPdf)
-        // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
-      })
-      .catch((err) => {
-        setLoading(false)
-        useToast('Unable to process your request. Please try again.', 0);
-        // console.log('❌ Download error', err);
-        // Alert.alert('Error', 'Failed to download invoice.');
-      });
-  };
+  //   RNFetchBlob.config({
+  //     addAndroidDownloads: {
+  //       useDownloadManager: true,   // 👈 Android system Download Manager
+  //       notification: true,         // 👈 show progress in notification bar
+  //       path,                       // 👈 save to Downloads
+  //       title: fileName,
+  //       description: 'Downloading invoice…',
+  //       mime: 'application/pdf',
+  //       mediaScannable: true,       // 👈 makes file visible in Files/My Files
+  //     },
+  //     fileCache: true,
+  //     path,
+  //   })
+  //     .fetch('GET', urlPdf)
+  //     .then((res) => {
+  //       // console.log('✅ Invoice saved to:', res.path());
+  //       downloadInvoiceSavePDF(urlPdf)
+  //       // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
+  //     })
+  //     .catch((err) => {
+  //       setLoading(false)
+  //       useToast('Unable to process your request. Please try again.', 0);
+  //       // console.log('❌ Download error', err);
+  //       // Alert.alert('Error', 'Failed to download invoice.');
+  //     });
+  // };
 
-  const downloadInvoiceSavePDF = async (pdfUrls) => {
+  // const downloadInvoiceSavePDF = async (pdfUrls) => {
+  //   try {
+  //     const pdfUrl = pdfUrls; // your pdf url
+  //     const fileName = 'orderInvoice.pdf';
+  //     const downloadDest =
+  //       Platform.OS === 'android'
+  //         ? `${RNFS.DownloadDirectoryPath}/${fileName}`
+  //         : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+
+  //     const options = {
+  //       fromUrl: pdfUrl,
+  //       toFile: downloadDest,
+  //     };
+
+  //     const res = await RNFS.downloadFile(options).promise;
+  //     setLoading(false)
+  //     // console.log('Download success', res);
+  //     useToast('Order invoice saved successfully.', 1);
+  //     // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
+  //   } catch (err) {
+  //     setLoading(false)
+  //     useToast('An error occurred. Please try again.', 0);
+  //     // console.log('Download error', err);
+  //     // Alert.alert('Error', 'Failed to download file.');
+
+  //   }
+  // };
+
+
+
+
+  const downloadInvoicePDF = async () => {
     try {
-      const pdfUrl = pdfUrls; // your pdf url
-      const fileName = 'orderInvoice.pdf';
-      const downloadDest =
+      setLoading(true);
+
+      let urlPdf =
+        item?.order_type == 'food'
+          ? `${Url.Base_Url}${Url.foodOrdersInvoice}/${item?._id}`
+          : `${Url.Base_Url}${Url.rideParcelOrderInvoice}/${item?._id}`;
+
+      const fileName = `orderInvoice_${Date.now()}.pdf`;
+
+      const { dirs } = RNFetchBlob.fs;
+      const path =
         Platform.OS === 'android'
-          ? `${RNFS.DownloadDirectoryPath}/${fileName}`
-          : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+          ? `${dirs.DownloadDir}/${fileName}` // Android public Downloads
+          : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
 
-      const options = {
-        fromUrl: pdfUrl,
-        toFile: downloadDest,
-      };
+      const res = await RNFetchBlob.config({
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          path,
+          title: fileName,
+          description: 'Downloading invoice…',
+          mime: 'application/pdf',
+          mediaScannable: true,
+        },
+        fileCache: true,
+        path,
+      }).fetch('GET', urlPdf);
 
-      const res = await RNFS.downloadFile(options).promise;
-      setLoading(false)
-      // console.log('Download success', res);
-      useToast('Order invoice saved successfully.', 1);
-      // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
+      // ✅ For iOS: open share dialog so user can save it to Files / iCloud
+      if (Platform.OS === 'ios') {
+        const result = await Share.open({
+          title: 'Save Invoice PDF',
+          url: `file://${path}`,
+          type: 'application/pdf',
+          failOnCancel: false,
+        });
+        if (result?.success || result?.app) {
+          setLoading(false);
+          console.log('PDF shared successfully', result);
+          useToast('Order invoice saved successfully.', 1);
+        } else {
+          setLoading(false);
+          console.log('Share modal closed without sharing.');
+          useToast('Download cancelled.', 0);
+        }
+      } else {
+        setLoading(false);
+        useToast('Order invoice saved successfully.', 1);
+      }
     } catch (err) {
-      setLoading(false)
-      useToast('An error occurred. Please try again.', 0);
-      // console.log('Download error', err);
-      // Alert.alert('Error', 'Failed to download file.');
-
+      console.log('❌ Download error', err);
+      setLoading(false);
+      useToast('Unable to process your request. Please try again.', 0);
     }
   };
 
 
 
 
-  const downloadSummaryPDF = () => {
-    setLoading(true)
 
-    let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrderSummary}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderSummary}/${item?._id}`
-    // console.log('urlPdf---', urlPdf);
+  // const downloadSummaryPDF = () => {
+  //   setLoading(true)
 
-    const { dirs } = RNFetchBlob.fs;
-    const fileName = `orderSummary_${Date.now()}.pdf`;
+  //   let urlPdf = item?.order_type == 'food' ? `${Url.Base_Url}${Url.foodOrderSummary}/${item?._id}` : `${Url.Base_Url}${Url.rideParcelOrderSummary}/${item?._id}`
+  //   // console.log('urlPdf---', urlPdf);
 
-    const path =
-      Platform.OS === 'android'
-        ? `${dirs.DownloadDir}/${fileName}` // 👈 Android public Downloads folder
-        : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
+  //   const { dirs } = RNFetchBlob.fs;
+  //   const fileName = `orderSummary_${Date.now()}.pdf`;
 
-    RNFetchBlob.config({
-      addAndroidDownloads: {
-        useDownloadManager: true,   // 👈 Android system Download Manager
-        notification: true,         // 👈 show progress in notification bar
-        path,                       // 👈 save to Downloads
-        title: fileName,
-        description: 'Downloading summary…',
-        mime: 'application/pdf',
-        mediaScannable: true,       // 👈 makes file visible in Files/My Files
-      },
-      fileCache: true,
-      path,
-    })
-      .fetch('GET', urlPdf)
-      .then((res) => {
-        // console.log('✅ Summary saved to:', res.path());
-        downloadSummarySavePDF(urlPdf)
-        // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
-      })
-      .catch((err) => {
-        setLoading(false)
-        useToast('Unable to process your request. Please try again.', 0);
-        // console.log('❌ Download error', err);
-        // Alert.alert('Error', 'Failed to download invoice.');
-      });
-  };
+  //   const path =
+  //     Platform.OS === 'android'
+  //       ? `${dirs.DownloadDir}/${fileName}` // 👈 Android public Downloads folder
+  //       : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
 
-  const downloadSummarySavePDF = async (pdfUrls) => {
+  //   RNFetchBlob.config({
+  //     addAndroidDownloads: {
+  //       useDownloadManager: true,   // 👈 Android system Download Manager
+  //       notification: true,         // 👈 show progress in notification bar
+  //       path,                       // 👈 save to Downloads
+  //       title: fileName,
+  //       description: 'Downloading summary…',
+  //       mime: 'application/pdf',
+  //       mediaScannable: true,       // 👈 makes file visible in Files/My Files
+  //     },
+  //     fileCache: true,
+  //     path,
+  //   })
+  //     .fetch('GET', urlPdf)
+  //     .then((res) => {
+  //       // console.log('✅ Summary saved to:', res.path());
+  //       downloadSummarySavePDF(urlPdf)
+  //       // Alert.alert('Downloaded', `File saved to: ${res.path()}`);
+  //     })
+  //     .catch((err) => {
+  //       setLoading(false)
+  //       useToast('Unable to process your request. Please try again.', 0);
+  //       // console.log('❌ Download error', err);
+  //       // Alert.alert('Error', 'Failed to download invoice.');
+  //     });
+  // };
+
+  // const downloadSummarySavePDF = async (pdfUrls) => {
+  //   try {
+  //     const pdfUrl = pdfUrls; // your pdf url
+  //     const fileName = 'orderSummary.pdf';
+  //     const downloadDest =
+  //       Platform.OS === 'android'
+  //         ? `${RNFS.DownloadDirectoryPath}/${fileName}`
+  //         : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+
+  //     const options = {
+  //       fromUrl: pdfUrl,
+  //       toFile: downloadDest,
+  //     };
+
+  //     const res = await RNFS.downloadFile(options).promise;
+  //     setLoading(false)
+  //     // console.log('Download success', res);
+  //     useToast('Order Summary saved successfully.', 1);
+  //     // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
+  //   } catch (err) {
+  //     setLoading(false)
+  //     useToast('An error occurred. Please try again.', 0);
+  //     // console.log('Download error', err);
+  //     // Alert.alert('Error', 'Failed to download file.');
+
+  //   }
+  // };
+
+  const downloadSummaryPDF = async () => {
     try {
-      const pdfUrl = pdfUrls; // your pdf url
-      const fileName = 'orderSummary.pdf';
-      const downloadDest =
+      setLoading(true);
+
+      let urlPdf =
+        item?.order_type == 'food'
+          ? `${Url.Base_Url}${Url.foodOrderSummary}/${item?._id}`
+          : `${Url.Base_Url}${Url.rideParcelOrderSummary}/${item?._id}`;
+
+      const fileName = `orderSummary_${Date.now()}.pdf`;
+
+      const { dirs } = RNFetchBlob.fs;
+      const path =
         Platform.OS === 'android'
-          ? `${RNFS.DownloadDirectoryPath}/${fileName}`
-          : `${RNFS.DocumentDirectoryPath}/${fileName}`;
+          ? `${dirs.DownloadDir}/${fileName}` // Android public Downloads
+          : `${dirs.DocumentDir}/${fileName}`; // iOS sandbox
 
-      const options = {
-        fromUrl: pdfUrl,
-        toFile: downloadDest,
-      };
+      const res = await RNFetchBlob.config({
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          path,
+          title: fileName,
+          description: 'Downloading invoice…',
+          mime: 'application/pdf',
+          mediaScannable: true,
+        },
+        fileCache: true,
+        path,
+      }).fetch('GET', urlPdf);
 
-      const res = await RNFS.downloadFile(options).promise;
-      setLoading(false)
-      // console.log('Download success', res);
-      useToast('Order Summary saved successfully.', 1);
-      // Alert.alert('Downloaded', `File saved to: ${downloadDest}`);
+      // ✅ For iOS: open share dialog so user can save it to Files / iCloud
+      if (Platform.OS === 'ios') {
+        const result = await Share.open({
+          title: 'Save Summary PDF',
+          url: `file://${path}`,
+          type: 'application/pdf',
+          failOnCancel: false,
+        });
+
+        if (result?.success || result?.app) {
+          setLoading(false);
+          console.log('PDF shared successfully', result);
+          useToast('Order summary saved successfully.', 1);
+        } else {
+          setLoading(false);
+          console.log('Share modal closed without sharing.');
+          useToast('Download cancelled.', 0);
+        }
+      } else {
+        setLoading(false);
+        useToast('Order summary saved successfully.', 1);
+      }
+
+
     } catch (err) {
-      setLoading(false)
-      useToast('An error occurred. Please try again.', 0);
-      // console.log('Download error', err);
-      // Alert.alert('Error', 'Failed to download file.');
-
+      console.log('❌ Download error', err);
+      setLoading(false);
+      useToast('Unable to process your request. Please try again.', 0);
     }
   };
 

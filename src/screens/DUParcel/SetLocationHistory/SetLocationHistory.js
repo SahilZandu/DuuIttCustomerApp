@@ -322,7 +322,7 @@ const SetLocationHistory = ({ navigation }) => {
       item: {
         name: name,
         address: dropLocation ? dropLocation : currentAddress,
-        geo_location: receiverAddress?.address?.length > 0 ? geoLocation2 ?? receiverAddress?.geo_location : geoLocation,
+        geo_location: receiverAddress?.address?.length > 0 ? geoLocation2 ?? receiverAddress?.geo_location : null, //geoLocation,
         location_id: receiverAddress?.location_id?.length > 0 ? receiverAddress?.location_id : locationId,
       },
       screenName: receiverAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'

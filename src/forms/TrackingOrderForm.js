@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Linking,
   DeviceEventEmitter,
   Platform,
+  AppState,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -36,6 +37,7 @@ import {
   getCurrentLocation,
   setCurrentLocation,
 } from '../components/GetAppLocation';
+import MapRouteTracking from '../components/MapRouteTracking';
 
 const trackArray = [
   {
@@ -63,6 +65,7 @@ const trackArray = [
 const TrackingOrderForm = ({ navigation }) => {
   const { ordersTrackOrder, orderTrackingList } = rootStore.orderStore;
   const { appUser } = rootStore.commonStore;
+  const appState = useRef(AppState.currentState);
   const { unseenMessages, setChatNotificationStatus, setChatData } = rootStore.chatStore;
   const [loading, setLoading] = useState(
     orderTrackingList?.length?.length > 0 ? false : true,
@@ -74,6 +77,7 @@ const TrackingOrderForm = ({ navigation }) => {
   const [isModalTrack, setIsModalTrack] = useState(false);
   const [trackItem, setTrackItem] = useState({});
   const [origin, setOrigin] = useState({});
+  const [isTracking, setIsTracking] = useState(true)
 
   const getLocation = type => {
     let d =
@@ -91,7 +95,7 @@ const TrackingOrderForm = ({ navigation }) => {
       getTrackingOrder();
       socketServices.initailizeSocket();
       setCurrentLocation();
-    }, []),
+    }, [isTracking]),
   );
 
   useEffect(() => {
@@ -104,16 +108,16 @@ const TrackingOrderForm = ({ navigation }) => {
         fcm_token: appUser?.fcm_token,
       };
       socketServices.emit('update-location', query);
-      socketServices.on('getremainingdistance', data => {
-        console.log(
-          'Remaining distance data-- tracking:',
-          data,
-          data?.location,
-        );
-        if (data && data?.location) {
-          setOrigin(data?.location);
-        }
-      });
+      // socketServices.on('getremainingdistance', data => {
+      //   console.log(
+      //     'Remaining distance data-- tracking:',
+      //     data,
+      //     data?.location,
+      //   );
+      //   if (data && data?.location) {
+      //     setOrigin(data?.location);
+      //   }
+      // });
 
       // socketServices.on('testevent', data => {
       //   console.log('test event tracking', data);
@@ -121,6 +125,36 @@ const TrackingOrderForm = ({ navigation }) => {
     }, 2000);
     return () => {
       clearTimeout(timeoutId);
+      // socketServices.removeListener('getremainingdistance')
+      socketServices.removeListener('testevent')
+    };
+  }, [isTracking]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      // Prevent unnecessary calls if state hasn't changed
+      if (appState.current === nextAppState) return;
+
+      if (nextAppState === "background") {
+        console.log("App went to background: stopping services");
+        // alert('no');
+        setIsTracking(false)
+      }
+
+      if (nextAppState === "active") {
+        // alert('yes');
+        setTimeout(() => {
+          socketServices.initailizeSocket();
+        }, 2000)
+        setIsTracking(true)
+        // restart any background tasks if needed
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
     };
   }, []);
 
@@ -260,12 +294,12 @@ const TrackingOrderForm = ({ navigation }) => {
       setOrigin(res?.data?.length > 0 ? res?.data[0]?.sender_address?.geo_location : {});
     }
     else {
-      if (res?.statusCode == 200) {
-        setTrackedArray([]);
-        setTrackItem({});
-        setOrigin({});
-        navigation.navigate('parcel', { screen: 'home' });
-      }
+      // if (res?.statusCode == 200) {
+      setTrackedArray([]);
+      setTrackItem({});
+      setOrigin({});
+      navigation.navigate('parcel', { screen: 'home' });
+      // }
     }
 
   };
@@ -467,11 +501,18 @@ const TrackingOrderForm = ({ navigation }) => {
         <View style={styles.modalMainView}>
           <Text style={styles.liveTrackingText}>Live Tracking</Text>
           <View style={styles.mapRouteView}>
-            <MapRoute
+            <MapRouteTracking
+              riderCustomerDetails={trackItem}
               origin={origin}
               destination={trackItem?.receiver_address?.geo_location}
               mapContainerView={{ height: hp('60%') }}
+
             />
+            {/* <MapRoute
+              origin={origin}
+              destination={trackItem?.receiver_address?.geo_location}
+              mapContainerView={{ height: hp('60%') }}
+            /> */}
           </View>
         </View>
       </ModalPopUp>

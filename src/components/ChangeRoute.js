@@ -152,18 +152,19 @@ const ChangeRoute = ({ data, navigation }) => {
     setRideOrderInProgress,
     setParcelTrackingOrder,
     setParcelOrderInProgress,
+    parcelOrderInProgress,
+    rideOrderInProgress,
   } = rootStore.orderStore;
   const { getCart, cartItemData } = rootStore.cartStore;
   const {
     getFoodOrderTracking,
     foodOrderTrackingList,
   } = rootStore.foodDashboardStore;
-  const [incompletedParcelOrder, setIncompletedParcelOrder] = useState([])
-  const [incompletedRideOrder, setIncompletedRideOrder] = useState([])
+  const [incompletedParcelOrder, setIncompletedParcelOrder] = useState(parcelOrderInProgress?? [])
+  const [incompletedRideOrder, setIncompletedRideOrder] = useState(rideOrderInProgress ?? [])
   const [trackedParcelOrder, setTrackedParcelOrder] = useState(orderTrackingList ?? [])
   const [foodTrackedArray, setFoodTrackedArray] = useState(foodOrderTrackingList ?? [])
   const [cartItems, setCartItems] = useState(cartItemData ?? {})
-
 
   useFocusEffect(
     useCallback(() => {

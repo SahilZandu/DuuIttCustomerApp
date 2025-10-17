@@ -541,7 +541,6 @@ export default function SideMenu({ navigation }) {
       if (query?.user_id) {
         socketServices?.emit?.('remove-user', query);
       }
-
       socketServices?.disconnectSocket?.();
       await setToken(null);
       await setAppUser(null);

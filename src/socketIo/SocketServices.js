@@ -15,11 +15,14 @@ class WSServices {
           token: token,
         },
         // transports: ['websocket'],
+        path: '/socket.io',
         reconnection: true, // Enable reconnection
         reconnectionAttempts: Infinity, // Unlimited reconnection attempts
         reconnectionDelay: 1000, // Delay before attempting to reconnect
         reconnectionDelayMax: 5000, // Maximum delay for reconnection attempts
-        // timeout: 200000, // Connection timeout
+        timeout: 200000, // Connection timeout
+        forceNew: true, // Create new connection each time
+        autoConnect: true,
       });
 
       console.log('Initializing socket...', this.socket);
@@ -30,8 +33,19 @@ class WSServices {
       });
 
       // Handle disconnection
-      this.socket.on('disconnect', () => {
-        console.log('=== Socket disconnected ===');
+      // this.socket.on('disconnect', () => {
+      //   console.log('=== Socket disconnected ===');
+      //   // if (reason === 'io server disconnect') {
+      //   //   this.socket.connect(); // reconnect manually if the server disconnected us
+      //   // } else {
+      //   this.socket.connect(); // reconnect manually if the server disconnected us
+      //   // }
+      // });
+      this.socket.on('disconnect', (reason) => {
+        if (reason === 'io server disconnect' || reason === 'transport close') {
+          this.socket.auth = { token: token };
+          this.socket.connect();
+        }
       });
 
       // Handle connection errors
@@ -54,7 +68,7 @@ class WSServices {
       this.socket.emit(event, data);
       console.log(`Emitted event: ${event} with data:`, data);
     } else {
-      console.log(`Socket is not connected, cannot emit event: ${event}`);
+      console.log(`Socket is not connected, cannot emit event: ${event}`)
     }
   }
 
@@ -85,6 +99,7 @@ class WSServices {
     } else {
       console.log(
         `Socket is not connected, cannot remove listener: ${listenerName}`,
+
       );
     }
   }

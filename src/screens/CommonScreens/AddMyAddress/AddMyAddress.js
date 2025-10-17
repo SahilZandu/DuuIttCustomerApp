@@ -588,7 +588,7 @@ export default function AddMyAddress({ navigation, route }) {
 
   return (
     <Wrapper
-      edges={['left', 'right', 'bottom']}
+      edges={['left', 'right']}
       transparentStatusBar
       title={type == 'add' ? 'Add My Address' : 'Update My Address'}
       backArrow={true}

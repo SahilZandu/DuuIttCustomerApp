@@ -27,7 +27,8 @@ export const styles = StyleSheet.create({
     paddingVertical: '1%',
     // marginTop: '3%',
     backgroundColor: colors.white,
-    borderRadius: 20
+    borderRadius: 20,
+    bottom: (Platform.OS === 'android' && Platform.Version >= 35) ? hp('3%') : 0
   },
   chooseText: {
     textAlign: 'center', marginTop: hp('9%'),
@@ -37,7 +38,9 @@ export const styles = StyleSheet.create({
   },
   currentLocTouch: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? hp('21.5%') : hp('25%'),
+    bottom: Platform.OS === 'ios' ? hp('21.5%') :
+      (Platform.OS === 'android' && Platform.Version >= 35)
+        ? hp('23%') : hp('25%'),
     right: '3%',
     backgroundColor: colors.white,
     borderRadius: 10,

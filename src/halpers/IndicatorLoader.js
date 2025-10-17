@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { colors } from '../theme/colors';
 
@@ -18,9 +18,9 @@ export default IndicatorLoader;
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: hp('30%'),
+        top: Platform.OS === 'ios' ? hp('30%') : hp('40%'),
         alignSelf: 'center',
-        right: wp('40%'),
+        // right: wp('40%'),
 
     },
     innerView: {

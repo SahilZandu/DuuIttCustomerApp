@@ -587,6 +587,7 @@ import {
   Animated,
   DeviceEventEmitter,
   TouchableOpacity,
+  AppState,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -636,6 +637,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 import BackBtn from '../components/cta/BackBtn';
 import PickDropImageComp from '../components/PickDropImageComp';
+import MapRouteTracking from '../components/MapRouteTracking';
 
 
 
@@ -644,6 +646,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     rootStore.parcelStore;
   const intervalRef = useRef(null);
   const { appUser } = rootStore.commonStore;
+  const appState = useRef(AppState.currentState);
   const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
   const { unseenMessages, setChatNotificationStatus } = rootStore.chatStore;
   const { paymentMethod, totalAmount } = route.params;
@@ -671,6 +674,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     distance_km: 0,
     eta: '0m 0s'
   });
+  const [isTracking, setIsTracking] = useState(true)
+  const [runingBike, setRuningBike] = useState(false)
+
 
   const getLocation = type => {
     let d =
@@ -685,7 +691,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   useEffect(() => {
     socketServices.initailizeSocket();
     // ridePickupParcel()
-  }, []);
+  }, [isTracking]);
 
   // useEffect(() => {
   //   // start interval that runs in foreground
@@ -704,19 +710,20 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   useEffect(() => {
     // start interval that runs in foreground and background
-    setRideProgessImage(hp('1%'));
-    setRideProgess(0.2);
-    const intervalId = BackgroundTimer.setInterval(() => {
-      console.log('Running every 7.5s in background');
-      setRideProgess(prev => prev + 0.1);
-      setRideProgessImage(prev => prev + hp('4.2%'));
-      // update your progress state here
-    }, 7500);
-
-    return () => {
-      BackgroundTimer.clearInterval(intervalId);
-    };
-  }, []);
+    if (runingBike) {
+      setRideProgessImage(hp('1%'));
+      setRideProgess(0.2);
+      const intervalId = BackgroundTimer.setInterval(() => {
+        console.log('Running every 7.5s in background');
+        setRideProgess(prev => prev + 0.1);
+        setRideProgessImage(prev => prev + hp('4.2%'));
+        // update your progress state here
+      }, 7500);
+      return () => {
+        BackgroundTimer.clearInterval(intervalId);
+      };
+    }
+  }, [runingBike]);
 
   useFocusEffect(
     useCallback(() => {
@@ -727,7 +734,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         const intervalId = setInterval(() => {
           setCurrentLocation();
           setTimeout(() => {
-            getSocketLocation(socketServices);
+            getSocketLocation();
           }, 1500);
         }, 20000);
         return () => {
@@ -741,8 +748,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     setTimeout(() => {
       getIncompleteOrder();
     }, 500)
-
   }, [])
+
 
   const getIncompleteOrder = async () => {
     if (totalAmount == 0) {
@@ -755,9 +762,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         }
       }
       else {
-        if (resIncompleteOrder?.length == 0) {
-          navigation.navigate('ride', { screen: 'home' });
-        }
+        // if (resIncompleteOrder?.length == 0) {
+        navigation.navigate('ride', { screen: 'home' });
+        // }
       }
     }
   };
@@ -939,6 +946,34 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   }, []);
 
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      // Prevent unnecessary calls if state hasn't changed
+      if (appState.current === nextAppState) return;
+
+      if (nextAppState === "background") {
+        console.log("App went to background: stopping services");
+        // alert('no');
+        setIsTracking(false)
+      }
+
+      if (nextAppState === "active") {
+        // alert('yes');
+        setTimeout(() => {
+          socketServices.initailizeSocket();
+        }, 2000)
+        setIsTracking(true)
+        // restart any background tasks if needed
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
 
 
 
@@ -952,12 +987,12 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         fcm_token: appUser?.fcm_token,
       };
       socketServices.emit('update-location', query);
-      socketServices.on('getremainingdistance', data => {
-        console.log('Remaining distance data--:', data, data?.location);
-        if (data && data?.location) {
-          setRiderDest(data?.location);
-        }
-      });
+      // socketServices.on('getremainingdistance', data => {
+      //   console.log('Remaining distance data--:', data, data?.location);
+      //   if ((data && data?.location && data?.location?.lat)) {
+      //     setRiderDest(data?.location);
+      //   }
+      // });
 
       socketServices.on('getEtaToCustomer', (data) => {
         console.log('Distance (km):', data, data.distance_km);
@@ -965,25 +1000,55 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         setKms(data)
       });
 
-      socketServices.on('testevent', data => {
-        console.log('test event', data);
-      });
+      // socketServices.on('testevent', data => {
+      //   console.log('test event', data);
+      // });
+
       socketServices.on('near-by-riders', data => {
         console.log('near-by-riders data--:', data, data?.data);
         if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
-          // setNearByRider(data);
+          setNearByRider(data);
         } else {
-          // setNearByRider([]);
+          setNearByRider([]);
         }
       });
-    }, 2000);
+    }, 2500);
+
+
+    // socketServices.on('getremainingdistance', data => {
+    //   console.log('Remaining distance data--:', data, data?.location);
+    //   if ((data && data?.location && data?.location?.lat)) {
+    //     setRiderDest(data?.location);
+    //   }
+    // });
+
+    socketServices.on('near-by-riders', data => {
+      console.log('near-by-riders data--:', data, data?.data);
+      if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
+        setNearByRider(data);
+      } else {
+        setNearByRider([]);
+      }
+    });
+    socketServices.on('getEtaToCustomer', (data) => {
+      console.log('Distance (km):', data, data.distance_km);
+      console.log('ETA:', data.eta);
+      setKms(data)
+    });
+
+    // socketServices.on('testevent', data => {
+    //   console.log('test event', data);
+    // });
+
+
+
     return () => {
       clearTimeout(timeoutId);
       socketServices.removeListener('getremainingdistance')
       socketServices.removeListener('testevent')
       socketServices.removeListener('near-by-riders')
     };
-  }, []);
+  }, [isTracking]);
 
 
 
@@ -1035,6 +1100,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       intervalId = setInterval(async () => {
         console.log('⏱️ Refreshing find rider...');
         setSearchingFind('refresh');
+        setRuningBike(false)
         await updateOrderStatus(
           parcelInfo?._id,
           'pending',
@@ -1057,6 +1123,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       intervalId = BackgroundTimer.setInterval(async () => {
         console.log('⏱️ (BG) Refreshing find rider...');
         setSearchingFind('refresh');
+        setRuningBike(false)
         await updateOrderStatus(
           parcelInfo?._id,
           'pending',
@@ -1115,7 +1182,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     backToHome();
   }
 
-  const getSocketLocation = async socketServices => {
+  const getSocketLocation = async () => {
     const { appUser } = rootStore.commonStore;
     let query = {
       lat: getLocation('lat')?.toString(),
@@ -1161,8 +1228,13 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     console.log('res-- parcels Find Rider - ', res, value);
     if (res?.length > 0 && res[0]?.geo_location) {
       setNearByRider(res);
+      setRuningBike(true)
+      setMultipleRider(false);
     } else {
       setNearByRider([]);
+      setRuningBike(true)
+      setMultipleRider(false);
+      socketServices.emit('find-nearby-riders', query);
     }
 
     setTimeout(() => {
@@ -1314,7 +1386,31 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
           ) : (
             <>
               {/* {riderDest?.lng && senderLocation?.lng ? ( */}
-              <MapRoute
+              {/* <MapRoute
+                riderCustomerDetails={parcelInfo}
+                origin={riderDest}
+                destination={
+                  parcelInfo?.status == 'picked' ? destination : senderLocation
+                }
+                mapContainerView={
+                  Platform.OS == 'ios'
+                    ? {
+                      height:
+                        minMaxHp == screenHeight(69)
+                          ? screenHeight(31)
+                          : screenHeight(58),
+                    }
+                    : {
+                      height:
+                        minMaxHp == screenHeight(69)
+                          ? screenHeight(31)
+                          : screenHeight(68),
+                    }
+                }
+              /> */}
+              {/* {(riderDest?.lat && riderDest?.lng) && */}
+              <MapRouteTracking
+                riderCustomerDetails={parcelInfo}
                 origin={riderDest}
                 destination={
                   parcelInfo?.status == 'picked' ? destination : senderLocation
@@ -1335,6 +1431,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                     }
                 }
               />
+              {/* }  */}
               {/* ) : null} */}
               {/* {parcelInfo?.status == 'picked' && (
                 <TouchableOpacity
@@ -1420,6 +1517,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
                 onRefershFindRiders={() => {
                   setRideProgessImage(hp('0%'));
                   setRideProgess(0.2);
+                  setNearByRider([]);
                   refershFindRidersData();
                 }}
                 onBackToHome={() => {

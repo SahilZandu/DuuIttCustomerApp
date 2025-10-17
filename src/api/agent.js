@@ -10,7 +10,7 @@ axios.defaults.baseURL = Base_Url;
 
 axios.interceptors.request.use(
   config => {
-    config.timeout = 10000;
+    config.timeout = 5000;
     const token = rootStore.commonStore.token;
     console.log('token----', token);
     if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -20,6 +20,11 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+
+const api = axios.create({
+  baseURL: Base_Url,
+  timeout: 10000, // 10 seconds
+});
 
 
 axios.interceptors.response.use(
@@ -47,25 +52,49 @@ axios.interceptors.response.use(
 
     return response;
   },
-  error => {
+  async error => {
     console.log('❌ Axios Error:', error);
 
 
-    const errMsg = error?.message || "";
+    const errMsg = error?.message?.toLowerCase() || "";
+    const originalRequest = error?.config;
 
     // ✅ Normalize network errors (iOS + Android)
+    // if (
+    //   (!error?.response &&
+    //     (errMsg.includes("Network Error") ||
+    //       errMsg.includes("offline") ||
+    //       errMsg.includes("timed out"))) ||
+    //   error?.code === "ECONNABORTED"
+    // ) {
+    //   Alert.alert(
+    //     "Network Error",
+    //     "No internet connection. Please check your network and try again."
+    //   );
+    //   return Promise.reject(new Error("Normalized Network Error"));
+    // }
+
+
+    // Retry logic: only retry if network error or timeout
     if (
-      (!error?.response &&
-        (errMsg.includes("Network Error") ||
-          errMsg.includes("offline") ||
-          errMsg.includes("timed out"))) ||
-      error?.code === "ECONNABORTED"
+      !originalRequest?._retry &&
+      (!error?.response ||
+        error?.code === 'ECONNABORTED' ||
+        errMsg.includes('network error') ||
+        errMsg.includes('timed out') ||
+        errMsg.includes('offline'))
     ) {
-      Alert.alert(
-        "Network Error",
-        "No internet connection. Please check your network and try again."
-      );
-      return Promise.reject(new Error("Normalized Network Error"));
+      originalRequest._retry = true;
+      console.log('🔁 Retrying API due to timeout/network issue...');
+
+      await new Promise(resolve => setTimeout(resolve, 2000)); // wait 2 seconds before retry
+
+      try {
+        return api(originalRequest); // 👈 proper retry
+      } catch (retryError) {
+        console.log('⚠️ Retry failed:', retryError?.message);
+        return Promise.reject(retryError);
+      }
     }
 
     // if (error.message === 'Network Error' && !error.response) {
@@ -90,8 +119,11 @@ axios.interceptors.response.use(
         rootStore.commonStore.setToken(null);
         rootStore.commonStore.setAppUser(null);
         setTimeout(() => {
+          rootStore.dashboardStore.saveFcmToken(null)
+          rootStore.commonStore.setAppUser(null);
+          rootStore.commonStore.setToken(null);
           RNRestart.restart();
-        }, 1000);
+        }, 2000);
 
       });
       // rootStore.dashboardStore.saveFcmToken(null);
@@ -222,6 +254,9 @@ export const agent = {
   foodOrdersInvoice: body => requests.get(
     `${Url.foodOrdersInvoice}/${body?.orderId}`),
   geth3Polygons: () => requests.get(Url.geth3Polygons),
+
+  getCustomerWiseRiderLocation: body => requests.post(Url.getCustomerWiseRiderLocation, body),
+
 
 
 

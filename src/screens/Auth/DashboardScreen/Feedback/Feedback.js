@@ -17,6 +17,7 @@ import { Strings } from '../../../../translates/strings';
 import { rootStore } from '../../../../stores/rootStore';
 import { Wrapper } from '../../../../halpers/Wrapper';
 import { AppEvents } from '../../../../halpers/events/AppEvents';
+import SwipeGestureScreen from '../../../../halpers/SwipeGestureScreen';
 
 export default function Feedback({ navigation }) {
   const { appFeedback } = rootStore.dashboardStore;
@@ -79,18 +80,20 @@ export default function Feedback({ navigation }) {
   }
 
   return (
-    <Wrapper
-      edges={['left', 'right']}
-      transparentStatusBar
-      onPress={() => {
-        navigation.goBack();
-      }}
-      title={'Send Feedback'}
-      backArrow={true}
-      showHeader
-    >
-      <View style={styles.container}>
-        {/* <Header
+    <SwipeGestureScreen>
+      <Wrapper
+        edges={['left', 'right']}
+        transparentStatusBar
+        onPress={() => {
+          navigation.goBack();
+        }}
+        title={'Send Feedback'}
+        backArrow={true}
+        showHeader
+      >
+
+        <View style={styles.container}>
+          {/* <Header
         onPress={() => {
           navigation.goBack();
         }}
@@ -98,34 +101,36 @@ export default function Feedback({ navigation }) {
         backArrow={true}
           /> */}
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={feedbackValidations()}
-        >
-          <View style={styles.mainView}>
-            <AppInputScroll padding={true} Pb={hp('15%')}>
-              <View style={styles.inputView}>
-                <InputFieldMultiLine
-                  maxLength={350}
-                  inputLabel={''}
-                  name={'feedback'}
-                  placeholder={'Enter Feedback'}
-                />
-                <Text
-                  style={styles.tellAboutText}>
-                  {Strings.TellUsLoveAbout}
-                </Text>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={feedbackValidations()}
+          >
+            <View style={styles.mainView}>
+              <AppInputScroll padding={true} Pb={hp('15%')}>
+                <View style={styles.inputView}>
+                  <InputFieldMultiLine
+                    maxLength={350}
+                    inputLabel={''}
+                    name={'feedback'}
+                    placeholder={'Enter Feedback'}
+                  />
+                  <Text
+                    style={styles.tellAboutText}>
+                    {Strings.TellUsLoveAbout}
+                  </Text>
+                </View>
+              </AppInputScroll>
+              <View
+                style={styles.bottomBtnView}>
+                <FormButton loading={loading} onPress={handleFeedback} />
               </View>
-            </AppInputScroll>
-            <View
-              style={styles.bottomBtnView}>
-              <FormButton loading={loading} onPress={handleFeedback} />
             </View>
-          </View>
-        </Formik>
+          </Formik>
 
-      </View>
-    </Wrapper>
+        </View>
+
+      </Wrapper>
+    </SwipeGestureScreen>
   );
 }
 

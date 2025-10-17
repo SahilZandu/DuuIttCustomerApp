@@ -25,6 +25,8 @@ import { useSafeAreaInsets, SafeAreaProvider } from 'react-native-safe-area-cont
 import socketServices from './src/socketIo/SocketServices';
 import FastImage from 'react-native-fast-image';
 import BackgroundTimer from 'react-native-background-timer'
+import notifee from '@notifee/react-native';
+import { Notifications } from 'react-native-notifications';
 
 
 let focusRoute = '';
@@ -41,8 +43,14 @@ function App() {
     }
   };
 
+// Clear all notifications from the notification drawer
+  const onRemoveNotificationDrawer =async()=>{
+     Notifications.removeAllDeliveredNotifications();
+     await notifee.cancelAllNotifications();
+  }
 
   useEffect(() => {
+     onRemoveNotificationDrawer()
     const subscription = AppState.addEventListener("change", nextAppState => {
       // Prevent unnecessary calls if state hasn't changed
       if (appState.current === nextAppState) return;

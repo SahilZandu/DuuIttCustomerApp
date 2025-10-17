@@ -41,13 +41,13 @@ let ratingData = {};
 export default function RideHome({ navigation }) {
   const { appUser } = rootStore.commonStore;
   const { setChatData } = rootStore.chatStore;
-  const { getPendingForCustomer, updateOrderStatus, setRideOrderInProgress } = rootStore.orderStore;
+  const { getPendingForCustomer, updateOrderStatus, setRideOrderInProgress, rideOrderInProgress } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
   const { getCheckDeviceId } = rootStore.dashboardStore;
   const [appUserInfo, setAppUserInfo] = useState(appUser);
   const [trackedArray, setTrackedArray] = useState([]);
-  const [incompletedArray, setIncompletedArray] = useState([]);
+  const [incompletedArray, setIncompletedArray] = useState(rideOrderInProgress ?? []);
   const [internet, setInternet] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const [originLocation, setOriginLocation] = useState({});
@@ -64,30 +64,30 @@ export default function RideHome({ navigation }) {
   };
 
   useEffect(() => {
-      onAppEvents();
-    }, [])
-  
-    const onAppEvents = async () => {
-      try {
-        await AppEvents({
-          eventName: 'RideHome',
-          payload: {
-            name: appUser?.name ?? '',
-            phone: appUser?.phone?.toString() ?? '',
-          }
-        })
-      } catch (error) {
-        console.log("Error---", error);
-      }
-  
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'RideHome',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
     }
+
+  }
 
   useFocusEffect(
     useCallback(() => {
+      getIncompleteOrder();
       setTimeout(() => {
         StatusBar.setBarStyle("dark-content", true);
       }, 300)
-      getIncompleteOrder();
       setChatData();
       getCheckDevice();
       setMpaDaltaInitials();
@@ -97,7 +97,7 @@ export default function RideHome({ navigation }) {
       onUpdateUserInfo();
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
-      socketServices.disconnectSocket();
+      // socketServices.disconnectSocket();
       setSenderAddress({});
       setReceiverAddress({});
       setTimeout(() => {
@@ -184,7 +184,7 @@ export default function RideHome({ navigation }) {
       }
       else if (resIncompleteOrder?.length > 0 &&
         (resIncompleteOrder[0]?.status !== 'pending'
-        // && resIncompleteOrder[0]?.status !== 'find-rider'
+          // && resIncompleteOrder[0]?.status !== 'find-rider'
         )) {
         setRideOrderInProgress(resIncompleteOrder)
         setAddParcelInfo(resIncompleteOrder[0]);
