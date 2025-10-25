@@ -283,7 +283,7 @@ export default function Orders({ navigation, route }) {
         ) : (
           <>
             {/* <DashboardHeader title={'Orders'} /> */}
-            <View style={styles.mainView}>
+            <View pointerEvents={filterLoading ? 'none' : null} style={styles.mainView}>
               <Tabs3
                 isRating={true}
                 tabs={tabs}

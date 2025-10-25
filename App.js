@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import {
   Text,
   View,
@@ -34,7 +34,7 @@ let focusRoute = '';
 function App() {
   const [currentScreen, setcurrentScreen] = useState('splash');
   const [isInternet, setIsInternet] = useState(true);
-  const navigationRef = React.createRef();
+  const navigationRef = createRef();
   const appState = useRef(AppState.currentState);
 
   const hideIfAndroid15 = () => {
@@ -43,14 +43,14 @@ function App() {
     }
   };
 
-// Clear all notifications from the notification drawer
-  const onRemoveNotificationDrawer =async()=>{
-     Notifications.removeAllDeliveredNotifications();
-     await notifee.cancelAllNotifications();
+  // Clear all notifications from the notification drawer
+  const onRemoveNotificationDrawer = async () => {
+    Notifications.removeAllDeliveredNotifications();
+    await notifee.cancelAllNotifications();
   }
 
   useEffect(() => {
-     onRemoveNotificationDrawer()
+    onRemoveNotificationDrawer()
     const subscription = AppState.addEventListener("change", nextAppState => {
       // Prevent unnecessary calls if state hasn't changed
       if (appState.current === nextAppState) return;
@@ -122,7 +122,8 @@ function App() {
           onStateChange={() => {
             focusRoute = navigationRef.current.getCurrentRoute().name;
             setcurrentScreen(navigationRef.current.getCurrentRoute().name);
-          }}>
+          }}
+        >
           {/* <SafeAreaView
               style={{
                 flex: 0,

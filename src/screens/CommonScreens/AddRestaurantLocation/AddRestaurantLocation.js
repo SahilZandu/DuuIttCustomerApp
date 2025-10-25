@@ -249,7 +249,15 @@ export default function AddRestaurantLocation({ navigation }) {
                             origin={geoLocation}
                             onTouchLocation={handleTouchAddress}
                             height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
-                            onCheckLocation={(data) => setCheckLocation(data)}
+                            onCheckLocation={(data) => {
+                                if (Platform.OS === 'android') {
+                                    setCheckLocation(data)
+                                } else {
+                                    setTimeout(() => {
+                                        setCheckLocation(data)
+                                    },1000)
+                                }
+                            }}
                             checkLocation={checkLocation}
                         />
                         <AutoCompleteGooglePlaceHolder

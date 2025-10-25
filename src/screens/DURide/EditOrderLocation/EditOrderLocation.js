@@ -298,7 +298,15 @@ const EditOrderLocation = ({ navigation, route }) => {
                             ? screenHeight(70)
                             : screenHeight(74)
                         }
-                        onCheckLocation={(data) => setCheckLocation(data)}
+                        onCheckLocation={(data) => {
+                            if (Platform.OS === 'android') {
+                                setCheckLocation(data)
+                            } else {
+                                setTimeout(() => {
+                                    setCheckLocation(data)
+                                }, 1000)
+                            }
+                        }}
                         checkLocation={checkLocation}
                     />
                     {/* <MapRoute

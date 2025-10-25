@@ -883,7 +883,6 @@ const MapLocationRoute = React.memo(({
           setIsNotService(true)
         }
         onCheckLocation(true)
-
         // Alert.alert(
         //   "Service Not Available",
         //   "Oops! We currently don't service this pickup or drop location. Please select a different location within our service area."
@@ -916,6 +915,13 @@ const MapLocationRoute = React.memo(({
       }
 
     }, Platform.OS === 'ios' ? 100 : 300);
+    return (
+      () => {
+        if (debounceTimeout.current) {
+          clearTimeout(debounceTimeout.current);
+        }
+      }
+    )
   }, [onTouchLocation]);
 
   // Generate initial hexagons
@@ -941,6 +947,11 @@ const MapLocationRoute = React.memo(({
     };
   }, []);
 
+  const onRegionChange = (region) => {
+    setMpaDalta(region);
+    onCheckLocation(false);
+  }
+ 
   // Memoized map props
   const mapProps = useMemo(() => ({
     provider: PROVIDER_GOOGLE,
@@ -963,10 +974,14 @@ const MapLocationRoute = React.memo(({
     showsIndoors: false,
     showsMyLocationButton: false,
     toolbarEnabled: false,
-    onRegionChange: (e) => { setMpaDalta(e),onCheckLocation(false)},
+    onRegionChange: onRegionChange,
+    // onRegionChange: (e) => {
+    //   setMpaDalta(e)
+    //   // onCheckLocation(false)
+    // },
     onRegionChangeComplete: handleRegionChangeComplete,
     onMapReady: handleMapReady,
-  }), [mapRegion, mapContainerView, handleRegionChangeComplete, handleMapReady]);
+  }), [mapRegion, mapContainerView, handleRegionChangeComplete, handleMapReady, onRegionChange]);
 
   // Render hexagons with different styles based on mode
   const renderHexagons = useMemo(() => {

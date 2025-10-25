@@ -292,65 +292,65 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}
     >
-      {(origin?.lat && destination?.lat) ?
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          ref={mapRef}
-          style={[styles.mapContainer, mapContainerView]}
-          mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
-          customMapStyle={DuuittMapTheme}
-          region={{
-            latitude: Number(origin?.lat) || 30.7400,
-            longitude: Number(origin?.lng) || 76.7900,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005
-          }}
-          zoomEnabled={false}
-          scrollEnabled={false}
-          rotateEnabled={false}
-          loadingEnabled={true}
-          showsCompass={false}
-          minZoomLevel={10}
-          maxZoomLevel={18}
-          showsBuildings={false}
-          //  showsUserLocation={true}
-          followsUserLocation={true}
-          showsTraffic={false}
-          onMapReady={handleMapReady}
-          onRegionChangeComplete={(region) => {
-            setMapManageRideDalta(region);
-            setMpaDalta(region);
-          }}
+      {/* {(origin && destination) ? */}
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        ref={mapRef}
+        style={[styles.mapContainer, mapContainerView]}
+        mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
+        customMapStyle={DuuittMapTheme}
+        region={{
+          latitude: Number(origin?.lat) || 30.7400,
+          longitude: Number(origin?.lng) || 76.7900,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
+        }}
+        zoomEnabled={false}
+        scrollEnabled={false}
+        rotateEnabled={false}
+        loadingEnabled={true}
+        showsCompass={false}
+        minZoomLevel={10}
+        maxZoomLevel={18}
+        showsBuildings={false}
+        //  showsUserLocation={true}
+        followsUserLocation={true}
+        showsTraffic={false}
+        onMapReady={handleMapReady}
+        onRegionChangeComplete={(region) => {
+          setMapManageRideDalta(region);
+          setMpaDalta(region);
+        }}
+      >
+
+        {/* Origin Marker */}
+        <Marker.Animated
+          ref={markerRef}
+          coordinate={animatedCoordinate}
+          tracksViewChanges={!isMapReady}
         >
+          <Image
+            resizeMode="cover"
+            source={appImages.markerRideImage}
+            style={styles.markerBikeImage}
+          />
+        </Marker.Animated>
 
-          {/* Origin Marker */}
-          <Marker.Animated
-            ref={markerRef}
-            coordinate={animatedCoordinate}
-            tracksViewChanges={!isMapReady}
-          >
-            <Image
-              resizeMode="cover"
-              source={appImages.markerRideImage}
-              style={styles.markerBikeImage}
-            />
-          </Marker.Animated>
+        {/* Destination Marker */}
+        <Marker.Animated
+          ref={markerDesRef}
+          coordinate={animatedDesCoordinate}
+          tracksViewChanges={!isMapReady}
+        >
+          <Image
+            resizeMode="contain"
+            source={appImages.markerImage}
+            style={styles.markerImage}
+          />
+        </Marker.Animated>
 
-          {/* Destination Marker */}
-          <Marker.Animated
-            ref={markerDesRef}
-            coordinate={animatedDesCoordinate}
-            tracksViewChanges={!isMapReady}
-          >
-            <Image
-              resizeMode="contain"
-              source={appImages.markerImage}
-              style={styles.markerImage}
-            />
-          </Marker.Animated>
-
-          {/* Route Polyline */}
-          {/* {Object.keys(destination)?.length > 0 && (<MapViewDirections
+        {/* Route Polyline */}
+        {/* {Object.keys(destination)?.length > 0 && (<MapViewDirections
           origin={{
             latitude: Number(origin?.lat) || 30.7400,
             longitude: Number(origin?.lng) || 76.7900,
@@ -385,17 +385,17 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
             // console.log('GOT AN ERROR');
           }}
         />)} */}
-          {coords?.length > 0 && (
-            <Polyline
-              coordinates={coords}
-              strokeWidth={4}
-              strokeColor={colors.main}
-            />
-          )}
-        </MapView>
-        :
+        {coords?.length > 0 && (
+          <Polyline
+            coordinates={coords}
+            strokeWidth={4}
+            strokeColor={colors.main}
+          />
+        )}
+      </MapView>
+      {/* :
         <View style={[styles.mapContainer, mapContainerView]}>
-        </View>}
+        </View>} */}
     </View>
   );
 };
@@ -424,19 +424,6 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

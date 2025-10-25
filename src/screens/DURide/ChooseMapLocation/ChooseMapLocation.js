@@ -357,7 +357,15 @@ const ChooseMapLocation = ({ navigation, route }) => {
               ? (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(70) : screenHeight(100)
               : (pickDrop == 'pick' || screenName == "priceDetails" || address?.length > 0) ? screenHeight(74) : screenHeight(100)
             }
-            onCheckLocation={(data) => setCheckLocation(data)}
+            onCheckLocation={(data) => {
+              if (Platform.OS === 'android') {
+                setCheckLocation(data)
+              } else {
+                setTimeout(() => {
+                  setCheckLocation(data)
+                },1000)
+              }
+            }}
             checkLocation={checkLocation}
           />
           {/* <MapRoute

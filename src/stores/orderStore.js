@@ -25,9 +25,9 @@ export default class OrderStore {
       const res = await agent.parcelsOfUser(requestData);
       console.log('parcelsOfUser Res : ', res);
       if (res?.statusCode == 200) {
-        this.orderHistoryList = res?.data;
+        this.orderHistoryList = res?.data?.orders;
         handleLoading(false);
-        return res?.data;
+        return res?.data?.orders;
       } else {
         handleLoading(false);
         return [];
@@ -149,6 +149,7 @@ export default class OrderStore {
       // return [];
     }
   };
+
 
   updateOrderStatus = async (
     parcelId,

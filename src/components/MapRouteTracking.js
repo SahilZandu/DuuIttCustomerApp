@@ -21,7 +21,7 @@ import { DuuittMapTheme } from './DuuittMapTheme';
 import MapViewDirections from 'react-native-maps-directions';
 import socketServices from '../socketIo/SocketServices';
 import { rootStore } from '../stores/rootStore';
-import { object } from 'yup';
+
 
 const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
 
@@ -35,6 +35,20 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   const bearingRef = useRef(0);
   const [coords, setCoords] = useState([]);
   const [isMapReady, setIsMapReady] = useState(false);
+  const [update, setUpdate] = useState(true);
+
+  useEffect(() => {
+  if (origin && destination) {
+    setUpdate(false);
+
+    const updateRes = setTimeout(() => {
+      setUpdate(true);
+    }, 1500);
+
+    // ✅ Proper cleanup
+    return () => clearTimeout(updateRes);
+  }
+}, [origin, destination]);
 
   // Use animated regions for smooth marker movement
   const [animatedCoordinate] = useState(
@@ -241,6 +255,17 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
         edgePadding,
         animated: true,
       });
+    
+      // setTimeout(() => {
+      //   mapRef.current?.animateCamera({
+      //     center: {
+      //       latitude: lastCoord.latitude,
+      //       longitude: lastCoord.longitude,
+      //     },
+      //     zoom: 16,
+      //   });
+
+      // }, 1000); // Delay to let fitToCoordinates finish first
 
       hasAnimatedOnce.current = true;
     }
@@ -288,12 +313,14 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
     }, 1000);
   };
 
+  // if(update){
+
   return (
     <View
       pointerEvents={isPendingReq ? 'none' : 'auto'}
       style={styles.homeSubContainer}
     >
-      {(origin?.lat && destination?.lat) ?
+      {/* {(origin && destination) ? */}
         <MapView
           provider={PROVIDER_GOOGLE}
           ref={mapRef}
@@ -331,8 +358,10 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
             tracksViewChanges={!isMapReady}
           >
             <Image
-              resizeMode="cover"
-              source={appImages.markerRideImage}
+              // resizeMode='contain'
+                  resizeMode="cover"
+                 source={appImages.markerRideImage}
+               // source={appImages.markerMoveImage}
               style={styles.markerBikeImage}
             />
           </Marker.Animated>
@@ -394,11 +423,14 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
             />
           )}
         </MapView>
-        :
+         {/* :
         <View style={[styles.mapContainer, mapContainerView]}>
-        </View>}
+        </View>}  */}
     </View>
   );
+// }else{
+//   return null
+// }
 };
 
 export default MapRouteTracking;
@@ -420,8 +452,8 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
   markerBikeImage: {
-    height: 30,
-    width: 30,
+    height: 30,  //60,
+    width: 30,   //80,
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });

@@ -299,7 +299,7 @@ export default function AddMyAddress({ navigation, route }) {
       <Formik
         initialValues={initialValues}
         validationSchema={addMyAddressValidations()}>
-        <View style={{ marginTop: '2%', justifyContent: 'center' }}>
+        <View pointerEvents={loading ? 'none' : null} style={{ marginTop: '2%', justifyContent: 'center' }}>
           <Text
             style={{
               fontSize: RFValue(17),
@@ -622,7 +622,15 @@ export default function AddMyAddress({ navigation, route }) {
               origin={geoLocation}
               onTouchLocation={(loaction) => { handleTouchAddress(loaction) }}
               height={Platform.OS == 'ios' ? hp('66%') : hp('74%')}
-              onCheckLocation={(data) => setCheckLocation(data)}
+              onCheckLocation={(data) => {
+                if (Platform.OS === 'android') {
+                  setCheckLocation(data)
+                } else {
+                  setTimeout(() => {
+                    setCheckLocation(data)
+                  }, 1000)
+                }
+              }}
               checkLocation={checkLocation}
             />
             {/* </>} */}

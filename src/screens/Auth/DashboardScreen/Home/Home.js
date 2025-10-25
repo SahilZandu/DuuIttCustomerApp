@@ -27,7 +27,6 @@ import { useNotifications } from '../../../../halpers/useNotifications';
 import socketServices from '../../../../socketIo/SocketServices';
 import NoInternet from '../../../../components/NoInternet';
 import messaging from '@react-native-firebase/messaging';
-import { getUniqueId } from 'react-native-device-info';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import { Notifications } from 'react-native-notifications';
 import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
@@ -82,7 +81,7 @@ export default function Home({ navigation }) {
 
   }
 
-// Clear all notifications from the notification drawer
+  // Clear all notifications from the notification drawer
   const onRemoveNotificationDrawer = async () => {
     Notifications.removeAllDeliveredNotifications();
     await notifee.cancelAllNotifications();
@@ -257,8 +256,7 @@ export default function Home({ navigation }) {
   };
 
   const getCheckDevice = async () => {
-    const deviceId = await getUniqueId();
-    await getCheckDeviceId(deviceId)
+    await getCheckDeviceId()
   }
 
   useEffect(() => {

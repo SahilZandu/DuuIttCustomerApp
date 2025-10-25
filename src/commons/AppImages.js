@@ -916,7 +916,7 @@ export const appImages = {
   detailsIcon: require('../assets/detailsIcon.png'),
   weDeliver: require('../assets/weDeliver.png'),
   // mainHomeBootmImage: require('../assets/mainHomeBottomImage.png'),
-    mainHomeBootmImage: require('../assets/mainHomeBottomImage2.png'),
+  mainHomeBootmImage: require('../assets/mainHomeBottomImage2.png'),
   rideHomeBootmImage: require('../assets/rideHomeBottomImage.png'),
   parcelHomeBootmImage: require('../assets/parcelHomeBottomImage.png'),
   pickedGreenImage: require('../assets/pickedGreenImage.png'),
@@ -984,6 +984,7 @@ export const appImages = {
   dubbleRightArrow: require('../assets/dubbleRightArrow.png'),
   bikeRiderImage: require('../assets/bikeRiderImage.png'),
   scootyRiderImage: require('../assets/scootyRiderImage.png'),
-   IndianFlag: require('../assets/indianFlag.png'),
+  IndianFlag: require('../assets/indianFlag.png'),
+  markerMoveImage: require('../assets/markerMoveImage.png'),
 
 };

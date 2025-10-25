@@ -3,6 +3,8 @@ import { agent } from '../api/agent';
 import { rootStore } from './rootStore';
 import { useToast } from '../halpers/useToast';
 import { getUniqueId } from 'react-native-device-info';
+import RNRestart from 'react-native-restart';
+
 
 export default class DashboardStore {
   restaurentOfferCoupan = [];
@@ -572,6 +574,12 @@ export default class DashboardStore {
         ? error?.data?.message
         : 'Something went wrong';
       // useToast(m, 0);
+      rootStore.dashboardStore.saveFcmToken(null)
+      rootStore.commonStore.setAppUser(null);
+      rootStore.commonStore.setToken(null);
+      setTimeout(() => {
+        RNRestart.restart();
+      }, 1000);
     }
   };
 

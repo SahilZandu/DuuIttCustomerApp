@@ -744,30 +744,64 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
       }
     }, [parcelInfo]),
   );
+
   useEffect(() => {
-    setTimeout(() => {
+    const updateRes = setTimeout(() => {
       getIncompleteOrder();
     }, 500)
+    return () => clearTimeout(updateRes);
   }, [])
 
-
   const getIncompleteOrder = async () => {
-    if (totalAmount == 0) {
-      const resIncompleteOrder = await getPendingForCustomer('ride');
-      console.log('ride--getIncompleteOrder', resIncompleteOrder);
-      if (resIncompleteOrder?.length > 0) {
-        if (resIncompleteOrder[0]?.status !== "pending") {
+    // if (totalAmount == 0) {
+    const resIncompleteOrder = await getPendingForCustomer('ride');
+    console.log('ride--getIncompleteOrder', resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if (resIncompleteOrder[0]?.status !== "pending") {
+        if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
           setParcelInfo(resIncompleteOrder[0]);
           setAddParcelInfo(resIncompleteOrder[0]);
         }
       }
-      else {
-        // if (resIncompleteOrder?.length == 0) {
-        navigation.navigate('ride', { screen: 'home' });
-        // }
-      }
+    }
+    else {
+      // if (resIncompleteOrder?.length == 0) {
+      navigation.navigate('ride', { screen: 'home' });
     }
   };
+
+
+  useEffect(() => {
+    // start interval that runs in foreground and background
+    const intervalId = BackgroundTimer.setInterval(() => {
+      console.log('Running every 7s in background');
+      getCheckingIncompleteOrder();
+      // update your ride progress state here
+    }, 10000);
+    return () => {
+      BackgroundTimer.clearInterval(intervalId);
+    };
+  }, []);
+
+
+  const getCheckingIncompleteOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('ride');
+    console.log('ride--getIncompleteOrder', resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if (resIncompleteOrder[0]?.status !== "pending") {
+        if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
+          setParcelInfo(resIncompleteOrder[0]);
+          setAddParcelInfo(resIncompleteOrder[0]);
+        }
+      }
+    }
+
+  }
+
+
+
+
+
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -800,9 +834,12 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     const subscription = DeviceEventEmitter.addListener('picked', data => {
       console.log('picked data -- ', data);
       // navigation.navigate('parcel', {screen: 'home'});
-      if (data?.order_type == 'ride') {
+      if (data?.order_type === 'ride') {
         setParcelInfo(data);
         setAddParcelInfo(data);
+        setRiderDest(data?.rider?.geo_location);
+        setSenderLocation(data?.sender_address?.geo_location);
+        setDestination(data?.receiver_address?.geo_location);
         setSearchArrive('arrive');
         if (screenName == 'parcel') {
           navigation.navigate('pickSuccessfully');
@@ -1369,19 +1406,21 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         <View style={styles.mapView}>
           {searchArrive == 'search' ? (
             <>
-              {multipleRider == true ? (
-                <AnimatedLoader type="multipleRiderLoader" />
-              ) : (
-                <MapRouteMarker
-                  searchingRideParcel={appImages.searchingRide}
-                  origin={senderLocation}
-                  markerArray={nearbyRider}
-                  mapContainerView={{
-                    height: screenHeight(80),
-                    // height: hp('82%')
-                  }}
-                />
-              )}
+              {multipleRider == true
+                // || !senderLocation 
+                ? (
+                  <AnimatedLoader type="multipleRiderLoader" />
+                ) : (
+                  <MapRouteMarker
+                    searchingRideParcel={appImages.searchingRide}
+                    origin={senderLocation}
+                    markerArray={nearbyRider}
+                    mapContainerView={{
+                      height: screenHeight(80),
+                      // height: hp('82%')
+                    }}
+                  />
+                )}
             </>
           ) : (
             <>
@@ -1665,6 +1704,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
               ? appImages.packetImage
               : appImages.packetRideImage
           }
+          riderLoading={riderLoading}
         />
 
         <PopUpCancelInstruction

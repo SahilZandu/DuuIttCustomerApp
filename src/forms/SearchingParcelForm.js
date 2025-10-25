@@ -176,6 +176,9 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       if (data?.order_type == 'parcel') {
         setParcelInfo(data);
         setAddParcelInfo(data);
+        setRiderDest(data?.rider?.geo_location);
+        setSenderLocation(data?.sender_address?.geo_location);
+        setDestination(data?.receiver_address?.geo_location);
         if (screenName == 'parcel') {
           navigation.navigate('pickSuccessfully');
           setSearchArrive('search');
@@ -402,34 +405,75 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   );
 
   useEffect(() => {
-    setTimeout(() => {
+    const updateRes = setTimeout(() => {
       getIncompleteOrder();
     }, 500)
+    return () => clearTimeout(updateRes);
   }, [])
 
   const getIncompleteOrder = async () => {
-    if (totalAmount == 0) {
-      const resIncompleteOrder = await getPendingForCustomer('parcel');
-      console.log('resIncompleteOrder ride--', resIncompleteOrder);
-      if (resIncompleteOrder?.length > 0) {
-        if (resIncompleteOrder[0]?.status !== "pending") {
-          if (resIncompleteOrder[0]?.status === "picked") {
+    // if (totalAmount == 0) {
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder ride--', resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if (resIncompleteOrder[0]?.status !== "pending") {
+        if (resIncompleteOrder[0]?.status === "picked") {
+          setParcelInfo(resIncompleteOrder[0]);
+          setAddParcelInfo(resIncompleteOrder[0]);
+          navigation.navigate('pickSuccessfully');
+          setSearchArrive('search');
+        } else {
+          if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
             setParcelInfo(resIncompleteOrder[0]);
             setAddParcelInfo(resIncompleteOrder[0]);
-            navigation.navigate('pickSuccessfully');
-            setSearchArrive('search');
-          } else {
-            setParcelInfo(resIncompleteOrder[0]);
           }
         }
       }
-      else {
-        // if (resIncompleteOrder?.length == 0) {
-        navigation.navigate('parcel', { screen: 'home' });
-        // }
+    }
+    else {
+      // if (resIncompleteOrder?.length == 0) {
+      navigation.navigate('parcel', { screen: 'home' });
+      // }
+    }
+  }
+
+
+
+  useEffect(() => {
+    // start interval that runs in foreground and background
+    const intervalId = BackgroundTimer.setInterval(() => {
+      console.log('Running every 7s in background');
+      getCheckingIncompleteOrder();
+      // update your ride progress state here
+    }, 10000);
+    return () => {
+      BackgroundTimer.clearInterval(intervalId);
+    };
+  }, []);
+
+
+  const getCheckingIncompleteOrder = async () => {
+    const resIncompleteOrder = await getPendingForCustomer('parcel');
+    console.log('resIncompleteOrder ride--', resIncompleteOrder);
+    if (resIncompleteOrder?.length > 0) {
+      if (resIncompleteOrder[0]?.status !== "pending") {
+        if (resIncompleteOrder[0]?.status === "picked") {
+          setParcelInfo(resIncompleteOrder[0]);
+          setAddParcelInfo(resIncompleteOrder[0]);
+          navigation.navigate('pickSuccessfully');
+          setSearchArrive('search');
+        } else {
+          if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
+            setParcelInfo(resIncompleteOrder[0]);
+            setAddParcelInfo(resIncompleteOrder[0]);
+          }
+        }
       }
     }
-  };
+
+  }
+
+
 
   // useEffect(() => {
   //   if (parcelInfo?.status !== 'accepted' && searchingFind == 'searching') {
@@ -907,7 +951,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                 onRefershFindRiders={() => {
                   setRideProgessImage(hp('0%'));
                   setRideProgess(0.2);
-                   setNearByRider([]);
+                  setNearByRider([]);
                   refershFindRidersData();
                 }}
                 onBackToHome={() => {
@@ -1050,6 +1094,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
               ? appImages.packetImage
               : appImages.packetRideImage
           }
+          riderLoading={riderLoading}
         />
 
         <PopUpCancelInstruction

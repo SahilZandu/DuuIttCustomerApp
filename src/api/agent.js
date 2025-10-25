@@ -10,7 +10,7 @@ axios.defaults.baseURL = Base_Url;
 
 axios.interceptors.request.use(
   config => {
-    config.timeout = 5000;
+    config.timeout = 7000;
     const token = rootStore.commonStore.token;
     console.log('token----', token);
     if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -44,6 +44,9 @@ axios.interceptors.response.use(
         rootStore.commonStore.setToken(null);
         rootStore.commonStore.setAppUser(null);
         setTimeout(() => {
+          rootStore.dashboardStore.saveFcmToken(null)
+          rootStore.commonStore.setAppUser(null);
+          rootStore.commonStore.setToken(null);
           RNRestart.restart();
         }, 1000);
       });
@@ -123,13 +126,9 @@ axios.interceptors.response.use(
           rootStore.commonStore.setAppUser(null);
           rootStore.commonStore.setToken(null);
           RNRestart.restart();
-        }, 2000);
+        }, 1000);
 
       });
-      // rootStore.dashboardStore.saveFcmToken(null);
-      // rootStore.commonStore.setToken(null);
-      // rootStore.commonStore.setAppUser(null);
-      // RNRestart.restart();
       return Promise.reject(error.response || error);
     }
 
@@ -256,9 +255,6 @@ export const agent = {
   geth3Polygons: () => requests.get(Url.geth3Polygons),
 
   getCustomerWiseRiderLocation: body => requests.post(Url.getCustomerWiseRiderLocation, body),
-
-
-
 
 
 };

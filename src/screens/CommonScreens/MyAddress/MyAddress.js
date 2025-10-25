@@ -60,10 +60,11 @@ export default function MyAddress({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
+      getAddressDetails();
       getCheckDevice();
       checkInternet();
       handleAndroidBackButton(navigation);
-      getAddressDetails();
+
     }, []),
   );
   const getCheckDevice = async () => {

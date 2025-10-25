@@ -23,6 +23,7 @@ const PopUpRideDetails = ({
   onPressCancelRide,
   packetImage,
   loading,
+  riderLoading
 }) => {
   return (
     <Modal
@@ -95,6 +96,7 @@ const PopUpRideDetails = ({
               }}>
               {info?.status !== 'picked' &&
                 <BTN
+                  disable={riderLoading}
                   backgroundColor={colors.lightGreen}
                   labelColor={colors.lightRed}
                   width={wp('42%')}
