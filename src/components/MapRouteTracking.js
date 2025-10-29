@@ -32,6 +32,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   const hasAnimatedCameraRef = useRef(false)
   const markerRef = useRef(null);
   const markerDesRef = useRef(null);
+  const prevLocationRef = useRef(null);
   const bearingRef = useRef(0);
   const [coords, setCoords] = useState([]);
   const [isMapReady, setIsMapReady] = useState(false);
@@ -40,7 +41,6 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   useEffect(() => {
   if (origin && destination) {
     setUpdate(false);
-
     const updateRes = setTimeout(() => {
       setUpdate(true);
     }, 1500);
@@ -48,7 +48,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
     // ✅ Proper cleanup
     return () => clearTimeout(updateRes);
   }
-}, [origin, destination]);
+}, []);
 
   // Use animated regions for smooth marker movement
   const [animatedCoordinate] = useState(
@@ -105,12 +105,20 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
       console.log("res?.rider?.current_location--", res?.rider);
 
       const currentLoc = res?.rider?.current_location;
-
       // ✅ Corrected: Object.keys (not Object.key)
-      if (currentLoc && Object.keys(currentLoc)?.length > 0) {
+      if (currentLoc && Object.keys(currentLoc)?.length > 0 ) {
         console.log("✅ Rider current location:", currentLoc);
+         if (
+        !prevLocationRef.current ||
+        prevLocationRef.current?.lat !== currentLoc?.lat ||
+        prevLocationRef.current?.lng !== currentLoc?.lng
+      ) {
         animate(currentLoc?.lat, currentLoc?.lng, currentLoc, destination);
-        // alert('yes1')
+          // Save the new location for next comparison
+        prevLocationRef.current = { lat: currentLoc?.lat, lng: currentLoc?.lng };
+      } else {
+        console.log("Same location — skipping update",currentLoc, prevLocationRef.current);
+      }
       } else {
         console.log("⚠️ No current location found.");
       }
@@ -280,8 +288,8 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
       const json = await response?.json();
 
       if (json?.routes?.length) {
-        const points = PolylineDecoder.decode(
-          json.routes[0].overview_polyline.points,
+        const points = PolylineDecoder?.decode(
+          json?.routes[0]?.overview_polyline?.points,
         );
         const routeCoords = points?.map(point => ({
           latitude: point[0],

@@ -13,7 +13,7 @@ import DashboardHeader2 from '../../../components/header/DashboardHeader2';
 import { homeParcelCS } from '../../../stores/DummyData/Home';
 import ChangeRoute2 from '../../../components/ChangeRoute2';
 import SearchTextIcon from '../../../components/SearchTextIcon';
-import { getCurrentLocation } from '../../../components/GetAppLocation';
+import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import { rootStore } from '../../../stores/rootStore';
 import moment from 'moment';
 import TrackingOrderComp from '../../../components/TrackingOrderComp';
@@ -92,7 +92,7 @@ export default function ParcelHome({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      // setCurrentLocation();
+      setCurrentLocation();
       getTrackingOrder();
       getIncompleteOrder();
       setTimeout(() => {
@@ -120,6 +120,7 @@ export default function ParcelHome({ navigation }) {
 
     }, []),
   );
+
   const getCheckDevice = async () => {
     await getCheckDeviceId();
   }

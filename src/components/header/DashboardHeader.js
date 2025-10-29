@@ -373,6 +373,21 @@ const DashboardHeader = ({ title,
     }
   };
 
+  useEffect(() => {
+    const updateLocation = setInterval(() => {
+      setCurrentLocation();
+      setTimeout(() => {
+        onUpdateLatLng();
+      }, 5000)
+
+    }, 120000); // 120000 ms = 2 minutes
+
+    return () => {
+      clearInterval(updateLocation);
+    };
+  }, []);
+
+
   return (
     <View
       style={{

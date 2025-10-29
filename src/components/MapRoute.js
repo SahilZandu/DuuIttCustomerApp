@@ -254,8 +254,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
       const json = await response?.json();
 
       if (json?.routes?.length) {
-        const points = PolylineDecoder.decode(
-          json.routes[0].overview_polyline.points,
+        const points = PolylineDecoder?.decode(
+          json?.routes[0]?.overview_polyline?.points,
         );
         const routeCoords = points?.map(point => ({
           latitude: point[0],

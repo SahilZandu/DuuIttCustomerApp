@@ -890,7 +890,6 @@ const MapLocationRoute = React.memo(({
 
       }
 
-
       // if (!isWithinBounds(region?.latitude, region?.longitude, POLYGON_BOUNDARY)) {
       //   Alert.alert(
       //     "Service Not Available",
@@ -951,7 +950,7 @@ const MapLocationRoute = React.memo(({
     setMpaDalta(region);
     onCheckLocation(false);
   }
- 
+
   // Memoized map props
   const mapProps = useMemo(() => ({
     provider: PROVIDER_GOOGLE,

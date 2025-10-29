@@ -10,7 +10,7 @@ import {
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import CTA from '../../../components/cta/CTA';
 import { getGeoCodes, getMpaDalta } from '../../../components/GeoCodeAddress';
-import { findPolygonForPoint, getCurrentLocation } from '../../../components/GetAppLocation';
+import { findPolygonForPoint, getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -95,6 +95,7 @@ const SetLocationHistory = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      setCurrentLocation();
       handleAndroidBackButton(navigation);
       getAddressDetails();
       // getCheckSenderReciever();
@@ -317,8 +318,8 @@ const SetLocationHistory = ({ navigation }) => {
       pickDrop: 'drop',
       item: {
         name: name,
-        address: dropLocation ? dropLocation :  currentAddress ,
-        geo_location: receiverAddress?.address?.length > 0 ? geoLocation2 ?? receiverAddress?.geo_location : null , // geoLocation,
+        address: dropLocation ? dropLocation : currentAddress,
+        geo_location: receiverAddress?.address?.length > 0 ? geoLocation2 ?? receiverAddress?.geo_location : null, // geoLocation,
         location_id: receiverAddress?.location_id?.length > 0 ? receiverAddress?.location_id : locationId,
       },
       screenName: receiverAddress?.location_id?.length > 0 ? "priceDetails" : 'setLocationHistory'

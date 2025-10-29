@@ -10,7 +10,7 @@ import {
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import CTA from '../../../components/cta/CTA';
 import { getGeoCodes } from '../../../components/GeoCodeAddress';
-import { findPolygonForPoint, getCurrentLocation } from '../../../components/GetAppLocation';
+import { findPolygonForPoint, getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
@@ -92,6 +92,7 @@ const SetLocationHistory = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      setCurrentLocation();
       handleAndroidBackButton(navigation);
       getAddressDetails();
       // getCheckSenderReciever();

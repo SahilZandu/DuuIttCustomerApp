@@ -24,7 +24,6 @@ import { hideNavigationBar } from 'react-native-navigation-bar-color';
 import { useSafeAreaInsets, SafeAreaProvider } from 'react-native-safe-area-context';
 import socketServices from './src/socketIo/SocketServices';
 import FastImage from 'react-native-fast-image';
-import BackgroundTimer from 'react-native-background-timer'
 import notifee from '@notifee/react-native';
 import { Notifications } from 'react-native-notifications';
 
@@ -59,7 +58,6 @@ function App() {
         console.log("App went to background: stopping services");
         socketServices.disconnectSocket();
         FastImage.clearMemoryCache();
-        BackgroundTimer.stopBackgroundTimer();
       }
 
       if (nextAppState === "active") {
@@ -74,7 +72,6 @@ function App() {
     return () => {
       subscription.remove();
       // Ensure cleanup
-      BackgroundTimer.stopBackgroundTimer();
       socketServices.disconnectSocket();
     };
   }, []);

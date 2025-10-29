@@ -363,7 +363,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
               } else {
                 setTimeout(() => {
                   setCheckLocation(data)
-                },1000)
+                }, 1000)
               }
             }}
             checkLocation={checkLocation}

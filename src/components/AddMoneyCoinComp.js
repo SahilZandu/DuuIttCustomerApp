@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Pressable,
   Text,
@@ -9,18 +9,18 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
-import {SvgXml} from 'react-native-svg';
-import {colors} from '../theme/colors';
-import {fonts} from '../theme/fonts/fonts';
-import {Strings} from '../translates/strings';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { SvgXml } from 'react-native-svg';
+import { colors } from '../theme/colors';
+import { fonts } from '../theme/fonts/fonts';
+import { Strings } from '../translates/strings';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {appImagesSvg} from '../commons/AppImages';
-import {currencyFormat} from '../halpers/currencyFormat';
-import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
+import { appImagesSvg } from '../commons/AppImages';
+import { currencyFormat } from '../halpers/currencyFormat';
+import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
 
 const AddMoneyCoinComp = ({
   item,
@@ -46,18 +46,18 @@ const AddMoneyCoinComp = ({
         {onAddMoney && (
           <TouchableOpacity
             disabled={value == 0 ? false : value >= 50 ? false : true}
-            onPress={()=>{onAddMoney(addBtn ? (value > 0 ? 'Add' : 'Cancel') : '+ Add Money')}}
+            onPress={() => { onAddMoney(addBtn ? (value > 0 ? 'Add' : 'Cancel') : '+ Add Money') }}
             activeOpacity={0.8}
             style={[
               styles.addMoneyBtn,
-              {opacity: value == 0 ? 1 : value >= 50 ? 1 : 0.5},
+              { opacity: value == 0 ? 1 : value >= 50 ? 1 : 0.5 },
             ]}>
-              {loading == true ?
+            {loading == true ?
               <ActivityIndicator size="small" color={colors.white} />
               :
-             <Text style={styles.addMoneyText}>
-              {addBtn ? (value > 0 ? 'Add' : 'Cancel') : '+ Add Money'}
-            </Text>}
+              <Text style={styles.addMoneyText}>
+                {addBtn ? (value > 0 ? 'Add' : 'Cancel') : '+ Add Money'}
+              </Text>}
           </TouchableOpacity>
         )}
       </View>

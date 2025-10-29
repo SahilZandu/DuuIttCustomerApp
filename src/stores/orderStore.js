@@ -151,6 +151,36 @@ export default class OrderStore {
   };
 
 
+
+  getCheckingPendingForCustomer = async type => {
+    let requestData = {
+      type: type,
+      sender: 'customer',
+    };
+
+    try {
+      const res = await agent.pendingForCustomer(requestData);
+      console.log('get Checking PendingForCustomer Res : ', res);
+      if (res?.statusCode == 200) {
+        const resFilter = await res?.data?.filter((item) =>
+          item?.order_type?.toLowerCase() === type?.toLowerCase()
+        );
+        if (type?.toLowerCase() === 'ride') {
+          this.rideOrderInProgress = resFilter
+        } else {
+          this.parcelOrderInProgress = resFilter
+        }
+        return res;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log('error orders getCheckingPendingForCustomer:', error);
+      // return [];
+    }
+  };
+
+
   updateOrderStatus = async (
     parcelId,
     status,

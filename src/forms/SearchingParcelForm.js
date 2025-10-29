@@ -52,12 +52,13 @@ import RiderNotAvailableComp from '../components/RiderNotAvailableComp';
 import ImageNameRatingComp from '../components/ImageNameRatingComp';
 import { silderArray } from '../stores/DummyData/Home';
 import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
-import BackgroundTimer from 'react-native-background-timer';
 import BackBtn from '../components/cta/BackBtn';
 import PickDropImageComp from '../components/PickDropImageComp';
 import MapRouteTracking from '../components/MapRouteTracking';
 
 
+let rideProgessRide = 0.2
+let checkRiderStatus = {}
 
 const SearchingParcelForm = ({ navigation, route, screenName }) => {
   const { addParcelInfo, setAddParcelInfo, parcels_Cancel, parcelsFindRider } =
@@ -65,7 +66,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   const intervalRef = useRef(null);
   const { appUser } = rootStore.commonStore;
   const appState = useRef(AppState.currentState);
-  const { getPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
+  const { getPendingForCustomer, getCheckingPendingForCustomer, updateOrderStatus } = rootStore.orderStore;
   const { unseenMessages, setChatNotificationStatus } = rootStore.chatStore;
   const { paymentMethod, totalAmount } = route.params;
   const [searching, setSearching] = useState(true);
@@ -128,15 +129,19 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     if (runingBike) {
       setRideProgessImage(hp('1%'));
       setRideProgess(0.2);
-      const intervalId = BackgroundTimer.setInterval(() => {
-        console.log('Running every 7.5s in background');
-        setRideProgess(prev => prev + 0.1);
-        setRideProgessImage(prev => prev + hp('4.2%'));
+      rideProgessRide = 0.2
+      const intervalId = setInterval(() => {
+        console.log('Running every 7.5s in background', rideProgess, rideProgessRide);
+        if ((rideProgess || rideProgessRide) !== 1) {
+          setRideProgess(prev => prev + 0.1);
+          rideProgessRide = rideProgessRide + 0.1;
+          setRideProgessImage(prev => prev + hp('4.2%'));
+        }
         // update your progress state here
       }, 7500);
 
       return () => {
-        BackgroundTimer.clearInterval(intervalId);
+        clearInterval(intervalId);
       };
     }
   }, [runingBike]);
@@ -162,6 +167,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       if (data?.order_type == 'parcel') {
         navigation.navigate(screenName, { screen: 'home' });
         setSearchArrive('search');
+        checkRiderStatus = {}
       }
     });
     return () => {
@@ -179,6 +185,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         setRiderDest(data?.rider?.geo_location);
         setSenderLocation(data?.sender_address?.geo_location);
         setDestination(data?.receiver_address?.geo_location);
+        checkRiderStatus = data
         if (screenName == 'parcel') {
           navigation.navigate('pickSuccessfully');
           setSearchArrive('search');
@@ -199,6 +206,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         if (screenName == 'ride') {
           navigation.navigate(screenName, { screen: 'home' });
           setSearchArrive('search');
+          checkRiderStatus = {}
         }
       }
     });
@@ -413,61 +421,120 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
   const getIncompleteOrder = async () => {
     // if (totalAmount == 0) {
-    const resIncompleteOrder = await getPendingForCustomer('parcel');
-    console.log('resIncompleteOrder ride--', resIncompleteOrder);
-    if (resIncompleteOrder?.length > 0) {
-      if (resIncompleteOrder[0]?.status !== "pending") {
-        if (resIncompleteOrder[0]?.status === "picked") {
-          setParcelInfo(resIncompleteOrder[0]);
-          setAddParcelInfo(resIncompleteOrder[0]);
-          navigation.navigate('pickSuccessfully');
-          setSearchArrive('search');
-        } else {
-          if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
-            setParcelInfo(resIncompleteOrder[0]);
-            setAddParcelInfo(resIncompleteOrder[0]);
+    // const resIncompleteOrder = await getPendingForCustomer('parcel');
+
+    // console.log('resIncompleteOrder ride--', resIncompleteOrder);
+    // if (resIncompleteOrder?.length > 0) {
+    //   if (resIncompleteOrder[0]?.status !== "pending") {
+    //     if (resIncompleteOrder[0]?.status === "picked") {
+    //       setParcelInfo(resIncompleteOrder[0]);
+    //       setAddParcelInfo(resIncompleteOrder[0]);
+    //       navigation.navigate('pickSuccessfully');
+    //       setSearchArrive('search');
+    //     } else {
+    //       if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
+    //         setParcelInfo(resIncompleteOrder[0]);
+    //         setAddParcelInfo(resIncompleteOrder[0]);
+    //       }
+    //     }
+    //   }
+    // }
+    // else {
+    //   // if (resIncompleteOrder?.length == 0) {
+    //   navigation.navigate('parcel', { screen: 'home' });
+    //   // }
+    // }
+
+    const resIncompleteOrder = await getCheckingPendingForCustomer('parcel');
+    // console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+    if (resIncompleteOrder?.statusCode == 200) {
+      const resFilter = await resIncompleteOrder?.data?.filter((item) =>
+        item?.order_type?.toLowerCase() === 'parcel'
+      );
+      if (resFilter?.length > 0) {
+        checkRiderStatus = resFilter[0]
+        if (resFilter[0]?.status !== "pending") {
+          if (resFilter[0]?.status === "picked") {
+            setParcelInfo(resFilter[0]);
+            setAddParcelInfo(resFilter[0]);
+            navigation.navigate('pickSuccessfully');
+            setSearchArrive('search');
+          } else {
+            if (resFilter[0]?.status !== checkRiderStatus?.status) {
+              setParcelInfo(resFilter[0]);
+              setAddParcelInfo(resFilter[0]);
+            }
           }
         }
       }
+      else {
+        navigation.navigate('parcel', { screen: 'home' });
+        checkRiderStatus = {}
+      }
     }
-    else {
-      // if (resIncompleteOrder?.length == 0) {
-      navigation.navigate('parcel', { screen: 'home' });
-      // }
-    }
+
   }
 
 
 
   useEffect(() => {
     // start interval that runs in foreground and background
-    const intervalId = BackgroundTimer.setInterval(() => {
+    const intervalId = setInterval(() => {
       console.log('Running every 7s in background');
       getCheckingIncompleteOrder();
       // update your ride progress state here
     }, 10000);
     return () => {
-      BackgroundTimer.clearInterval(intervalId);
+      clearInterval(intervalId);
     };
   }, []);
 
 
   const getCheckingIncompleteOrder = async () => {
-    const resIncompleteOrder = await getPendingForCustomer('parcel');
-    console.log('resIncompleteOrder ride--', resIncompleteOrder);
-    if (resIncompleteOrder?.length > 0) {
-      if (resIncompleteOrder[0]?.status !== "pending") {
-        if (resIncompleteOrder[0]?.status === "picked") {
-          setParcelInfo(resIncompleteOrder[0]);
-          setAddParcelInfo(resIncompleteOrder[0]);
-          navigation.navigate('pickSuccessfully');
-          setSearchArrive('search');
-        } else {
-          if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
-            setParcelInfo(resIncompleteOrder[0]);
-            setAddParcelInfo(resIncompleteOrder[0]);
+
+    // const resIncompleteOrder = await getPendingForCustomer('parcel');
+    // console.log('resIncompleteOrder ride--', resIncompleteOrder);
+    // if (resIncompleteOrder?.length > 0) {
+    //   if (resIncompleteOrder[0]?.status !== "pending") {
+    //     if (resIncompleteOrder[0]?.status === "picked") {
+    //       setParcelInfo(resIncompleteOrder[0]);
+    //       setAddParcelInfo(resIncompleteOrder[0]);
+    //       navigation.navigate('pickSuccessfully');
+    //       setSearchArrive('search');
+    //     } else {
+    //       if (resIncompleteOrder[0]?.status !== parcelInfo?.status) {
+    //         setParcelInfo(resIncompleteOrder[0]);
+    //         setAddParcelInfo(resIncompleteOrder[0]);
+    //       }
+    //     }
+    //   }
+    // }
+
+    const resIncompleteOrder = await getCheckingPendingForCustomer('parcel');
+    // console.log('resIncompleteOrder parcel--', resIncompleteOrder);
+    if (resIncompleteOrder?.statusCode == 200) {
+      const resFilter = await resIncompleteOrder?.data?.filter((item) =>
+        item?.order_type?.toLowerCase() === 'parcel'
+      );
+      if (resFilter?.length > 0) {
+        if (resFilter[0]?.status !== "pending") {
+          if (resFilter[0]?.status === "picked") {
+            setParcelInfo(resFilter[0]);
+            setAddParcelInfo(resFilter[0]);
+            navigation.navigate('pickSuccessfully');
+            setSearchArrive('search');
+          } else {
+            if (resFilter[0]?.status !== checkRiderStatus?.status) {
+              checkRiderStatus = resFilter[0]
+              setParcelInfo(resFilter[0]);
+              setAddParcelInfo(resFilter[0]);
+            }
           }
         }
+      }
+      else {
+        navigation.navigate('parcel', { screen: 'home' });
+        checkRiderStatus = {}
       }
     }
 
@@ -541,7 +608,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   useEffect(() => {
     let intervalId;
     if (parcelInfo?.status !== 'accepted' && searchingFind === 'searching') {
-      intervalId = BackgroundTimer.setInterval(async () => {
+      intervalId = setInterval(async () => {
         console.log('⏱️ (BG) Refreshing find rider...');
         setSearchingFind('refresh');
         setRuningBike(false)
@@ -556,7 +623,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     }
 
     return () => {
-      BackgroundTimer.clearInterval(intervalId);
+      clearInterval(intervalId);
     };
   }, [parcelInfo?.status, searchingFind]);
 
@@ -951,6 +1018,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                 onRefershFindRiders={() => {
                   setRideProgessImage(hp('0%'));
                   setRideProgess(0.2);
+                  rideProgessRide = 0.2;
                   setNearByRider([]);
                   refershFindRidersData();
                 }}

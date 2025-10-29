@@ -124,6 +124,19 @@ const DashboardHeader2 = ({
     setAddress(otherData ?? addressData?.address);
   };
 
+  useEffect(() => {
+    const updateLocation = setInterval(() => {
+      setCurrentLocation();
+      setTimeout(() => {
+        onUpdateLatLng();
+      }, 5000)
+    }, 120000); // 120000 ms = 2 minutes
+
+    return () => {
+      clearInterval(updateLocation);
+    };
+  }, []);
+
   return (
     <View
       style={{
@@ -228,7 +241,7 @@ const DashboardHeader2 = ({
             }}
             source={
               appUserInfo?.profile_pic?.length > 0
-                ? { uri:appUserInfo?.profile_pic }
+                ? { uri: appUserInfo?.profile_pic }
                 : appImages.profileImage
               // appImages.profileImage
             }
