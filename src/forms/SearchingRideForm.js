@@ -782,9 +782,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         item?.order_type?.toLowerCase() === 'ride'
       );
       if (resFilter?.length > 0) {
-        checkRiderStatus = resFilter[0]
         if (resFilter[0]?.status !== "pending") {
           if (resFilter[0]?.status !== checkRiderStatus?.status) {
+            checkRiderStatus = resFilter[0]
             setParcelInfo(resFilter[0]);
             setAddParcelInfo(resFilter[0]);
           }

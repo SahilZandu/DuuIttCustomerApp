@@ -22,8 +22,9 @@ import MapViewDirections from 'react-native-maps-directions';
 import socketServices from '../socketIo/SocketServices';
 import { rootStore } from '../stores/rootStore';
 import { object } from 'yup';
+import { MAP_KEY } from '../halpers/AppLink';
 
-const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
+
 
 const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const { getCustomerWiseRiderLocation } = rootStore.orderStore;
@@ -246,25 +247,63 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   }, [coords]);
 
   // Fetch the route from Google Directions API
+  // const fetchRoute = async (origin, destination) => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${MAP_KEY}`,
+  //     );
+  //     const json = await response?.json();
+
+  //     if (json?.routes?.length) {
+  //       const points = PolylineDecoder?.decode(
+  //         json?.routes[0]?.overview_polyline?.points,
+  //       );
+  //       const routeCoords = points?.map(point => ({
+  //         latitude: point[0],
+  //         longitude: point[1],
+  //       }));
+  //       setCoords(routeCoords);
+  //     }
+  //   } catch (error) {
+  //     console.log('Error fetching route: ', error);
+  //   }
+  // };
   const fetchRoute = async (origin, destination) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`,
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`
       );
+
       const json = await response?.json();
 
-      if (json?.routes?.length) {
-        const points = PolylineDecoder?.decode(
-          json?.routes[0]?.overview_polyline?.points,
-        );
+      if (json?.routes?.length > 0) {
+        // ✅ Find the shortest route based on total distance
+        let shortestRoute = json?.routes[0];
+        let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
+
+        json?.routes?.forEach(route => {
+          const distance = route?.legs[0]?.distance?.value;
+          if (distance < minDistance) {
+            minDistance = distance;
+            shortestRoute = route;
+          }
+        });
+
+        // ✅ Decode the shortest route polyline
+        const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
         const routeCoords = points?.map(point => ({
           latitude: point[0],
           longitude: point[1],
         }));
+
+        // ✅ Update state
         setCoords(routeCoords);
+        console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
+      } else {
+        console.log('⚠️ No routes found.');
       }
     } catch (error) {
-      console.log('Error fetching route: ', error);
+      console.log('❌ Error fetching route:', error);
     }
   };
 
@@ -305,8 +344,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005
         }}
-        zoomEnabled={false}
-        scrollEnabled={false}
+        zoomEnabled={true}
+        scrollEnabled={true}
         rotateEnabled={false}
         loadingEnabled={true}
         showsCompass={false}
@@ -328,6 +367,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           ref={markerRef}
           coordinate={animatedCoordinate}
           tracksViewChanges={!isMapReady}
+          centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
+          anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image
             resizeMode="cover"
@@ -341,6 +382,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           ref={markerDesRef}
           coordinate={animatedDesCoordinate}
           tracksViewChanges={!isMapReady}
+          centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
+          anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image
             resizeMode="contain"
@@ -350,7 +393,9 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         </Marker.Animated>
 
         {/* Route Polyline */}
-        {/* {Object.keys(destination)?.length > 0 && (<MapViewDirections
+        {/* {(Object.keys(origin)?.length > 0 &&
+         Object.keys(destination)?.length > 0)
+         && (<MapViewDirections
           origin={{
             latitude: Number(origin?.lat) || 30.7400,
             longitude: Number(origin?.lng) || 76.7900,
@@ -358,12 +403,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
             longitudeDelta: 0.005
           }}
           destination={
-             {latitude: Number(destination?.lat),
-            longitude: Number(destination?.lng)}
+            {
+              latitude: Number(destination?.lat),
+              longitude: Number(destination?.lng)
+            }
           }
-          apikey={API_KEY}
+          apikey={MAP_KEY}
           strokeWidth={6}
-          strokeColor="red"
+          strokeColor={colors.main}
           optimizeWaypoints={true}
           onStart={(params) => {
             console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
@@ -372,17 +419,17 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
             console.log(`Distance: ${result.distance} km`)
             console.log(`Duration: ${result.duration} min.`)
             // fetchTime(result.distance, result.duration),
-              mapRef.current.fitToCoordinates(result.coordinates, {
-                edgePadding: {
-                  // right: 30,
-                  // bottom: 300,
-                  // left: 30,
-                  // top: 100,
-                },
-              });
+            mapRef.current.fitToCoordinates(result?.coordinates, {
+              edgePadding: {
+                right: 50,
+                bottom: 50,
+                left: 50,
+                top: 50,
+              },
+            });
           }}
           onError={(errorMessage) => {
-            // console.log('GOT AN ERROR');
+            console.log('GOT AN ERROR', errorMessage);
           }}
         />)} */}
         {coords?.length > 0 && (
@@ -457,8 +504,8 @@ const styles = StyleSheet.create({
 // import { getDistance } from 'geolib';
 // import { DuuittMapTheme } from './DuuittMapTheme';
 // import MapViewDirections from 'react-native-maps-directions';
+// import { MAP_KEY } from '../halpers/AppLink';
 
-// const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
 
 // const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 //   const mapRef = useRef(null);
@@ -708,7 +755,7 @@ const styles = StyleSheet.create({
 //   const fetchRoute = async (origin, destination) => {
 //     try {
 //       const response = await fetch(
-//         `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`,
+//         `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${MAP_KEY}`,
 //       );
 //       const json = await response?.json();
 

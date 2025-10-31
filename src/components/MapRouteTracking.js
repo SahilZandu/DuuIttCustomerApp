@@ -21,10 +21,10 @@ import { DuuittMapTheme } from './DuuittMapTheme';
 import MapViewDirections from 'react-native-maps-directions';
 import socketServices from '../socketIo/SocketServices';
 import { rootStore } from '../stores/rootStore';
+import { MAP_KEY } from '../halpers/AppLink';
 
 
-const API_KEY = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
-
+let currentLiveRiderLocation =  {}
 const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq, riderCustomerDetails }) => {
   const { getCustomerWiseRiderLocation } = rootStore.orderStore;
   const mapRef = useRef(null);
@@ -37,6 +37,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   const [coords, setCoords] = useState([]);
   const [isMapReady, setIsMapReady] = useState(false);
   const [update, setUpdate] = useState(true);
+  const [heading ,setHeading]=useState(0)
 
   useEffect(() => {
   if (origin && destination) {
@@ -76,10 +77,30 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
     longitude: Number(origin?.lng) || 76.7900,
   });
 
+    const getDistanceInMeters = (lat1, lon1, lat2, lon2) => {
+  const R = 6371e3; // radius of Earth in meters
+  const toRad = (x) => (x * Math.PI) / 180;
+  const φ1 = toRad(lat1);
+  const φ2 = toRad(lat2);
+  const Δφ = toRad(lat2 - lat1);
+  const Δλ = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) *
+    Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // distance in meters
+};
+
+
   useFocusEffect(
     useCallback(() => {
       setMapManageRideDaltaInitials();
       if ((origin && destination)) {
+        currentLiveRiderLocation = origin ;
+         prevLocationRef.current = origin
         animate(origin?.lat, origin?.lng, origin, destination)
       }
 
@@ -89,7 +110,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
 
         const intervalId = setInterval(() => {
           onUpdateCutomerLocation(riderCustomerDetails);
-        }, 6000);
+        }, 5000);
 
         return () => {
           clearInterval(intervalId);
@@ -107,15 +128,31 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
       const currentLoc = res?.rider?.current_location;
       // ✅ Corrected: Object.keys (not Object.key)
       if (currentLoc && Object.keys(currentLoc)?.length > 0 ) {
-        console.log("✅ Rider current location:", currentLoc);
+        currentLiveRiderLocation = currentLoc
+         console.log("✅ Rider current location:", currentLoc);
          if (
         !prevLocationRef.current ||
         prevLocationRef.current?.lat !== currentLoc?.lat ||
         prevLocationRef.current?.lng !== currentLoc?.lng
       ) {
-        animate(currentLoc?.lat, currentLoc?.lng, currentLoc, destination);
+        
+     const distance = getDistanceInMeters(
+      prevLocationRef?.current?.lat,
+      prevLocationRef?.current?.lng,
+      currentLoc?.lat,
+      currentLoc?.lng
+      );
+
+         console.log("distance--customer",distance);
+         
+             // Only update if moved more than 100 meters
+         if (distance >= 100) {
+          animate(currentLoc?.lat, currentLoc?.lng, currentLoc, destination);
           // Save the new location for next comparison
-        prevLocationRef.current = { lat: currentLoc?.lat, lng: currentLoc?.lng };
+         prevLocationRef.current = { lat: currentLoc?.lat, lng: currentLoc?.lng };
+         }else{
+           console.log("Your are not cover the 50 meter distance",distance);
+         }
       } else {
         console.log("Same location — skipping update",currentLoc, prevLocationRef.current);
       }
@@ -128,51 +165,49 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   };
 
 
-  // const onUpdateCutomerLocation = async (order) => {
-
-  //   const res = await getCustomerWiseRiderLocation(order);
-  //   console.log("res?.rider?.current_location--", res?.rider);
-
-  //   if (Object.key(res?.rider?.current_location)?.length > 0) {
-  //     // console.log("res?.rider?.current_location--", res?.rider?.current_location);
-  //     alert("yes1")
-  //     animate(res?.rider?.current_location?.lat, res?.rider?.current_location?.lng, res?.rider?.current_location, destination)
-  //   } else {
-  //     alert("yes2")
-  //   }
-
-  // }
 
 
+useEffect(() => {
+  socketServices.initailizeSocket();
 
+  socketServices.on('getremainingdistance', data => {
+    console.log('Remaining distance data--:', data, data?.location);
 
-  useEffect(() => {
-    socketServices.initailizeSocket();
+    const newLocation = data?.location;
+    if (!newLocation?.lat || !newLocation?.lng) return;
 
-    socketServices.on('getremainingdistance', data => {
-      console.log('Remaining distance data--:', data, data?.location);
-      if ((data && data?.location && data?.location?.lat)) {
+    // If no previous location, set it immediately
+    if (!prevLocationRef.current) {
+      prevLocationRef.current = newLocation;
+      currentLiveRiderLocation = newLocation;
+      animate(newLocation?.lat, newLocation?.lng, newLocation, destination);
+      return;
+    }
 
-        animate(data?.location?.lat, data?.location?.lng, data?.location, destination)
-      }
-    });
-  }, [])
+    // Calculate distance between previous and current locations
+    const distance = getDistanceInMeters(
+      prevLocationRef?.current?.lat,
+      prevLocationRef?.current?.lng,
+      newLocation?.lat,
+      newLocation?.lng
+    );
 
-  // const animate = (latitude, longitude, newLocation, currentDestination) => {
-  //   const newCoordinate = { latitude, longitude };
-  //   console.log("newCoordinate--", newCoordinate, latitude, longitude);
-  //   fetchRoute(newLocation, currentDestination);
-  //   if (Platform.OS == 'android') {
-  //     if (markerRef?.current) {
-  //       markerRef.current.animateMarkerToCoordinate(newCoordinate, 7000);
-  //       fetchRoute(newLocation, currentDestination);
-  //     }
-  //   } else {
-  //     animatedCoordinate.timing(newCoordinate).start();
-  //     fetchRoute(newLocation, currentDestination);
-  //   }
-  // }
+    console.log('Distance moved:', distance, 'meters');
 
+    // Only update if moved more than 50 meters
+    if (distance >= 50) {
+      prevLocationRef.current = newLocation;
+      currentLiveRiderLocation = newLocation;
+      animate(newLocation.lat, newLocation.lng, newLocation, destination);
+    }else{
+     console.log("Your are not cover the 50 meter distance socket",distance);
+    }
+  });
+
+  return () => {
+    socketServices.removeListener('getremainingdistance');
+  };
+}, []);
 
   const animate = (latitude, longitude, newLocation, currentDestination) => {
     const newCoordinate = { latitude, longitude };
@@ -190,14 +225,6 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
     }).start();
   };
 
-
-  // Fetch route when origin/destination changes
-  // useEffect(() => {
-  //   if (origin && destination) {
-  //     fetchRoute(origin, destination);
-  //   }
-  // }, [origin, destination]);
-
   // Initialize markers and camera when data is available
   useEffect(() => {
     if (!origin || !destination) return;
@@ -206,8 +233,6 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
     const lng = Number(origin?.lng);
     const destLat = Number(destination?.lat);
     const destLng = Number(destination?.lng);
-
-    // if (isNaN(lat) || isNaN(lng) || isNaN(destLat) || isNaN(destLng)) return;
 
     // Initialize current position
     currentPositionRef.current = { latitude: lat, longitude: lng };
@@ -228,30 +253,26 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
     }).start();
 
     fetchRoute(origin, destination);
-
-    // if (!hasAnimatedCameraRef?.current) {
-    //   const timeout = setTimeout(() => {
-    //     const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
-    //     bearingRef.current = bearing;
-
-    //     const camera = {
-    //       center: { latitude: lat, longitude: lng },
-    //       heading: bearing,
-    //       pitch: 30,
-    //       zoom: 17,
-    //       altitude: 300,
-    //     };
-
-    //     mapRef.current?.animateCamera(camera, { duration: 1000 });
-    //     hasAnimatedCameraRef.current = true; // ✅ prevent re-triggering
-    //   }, 60000)
-    //   return () => clearTimeout(timeout);
-    // }
+    
   }, [origin, destination]);
 
   // Fit map to coordinates when route is loaded (only once)
+ const getBearing = (start, end) => {
+    const lat1 = (start.lat * Math.PI) / 180;
+    const lon1 = (start.lng * Math.PI) / 180;
+    const lat2 = (end.lat * Math.PI) / 180;
+    const lon2 = (end.lng * Math.PI) / 180;
+    const dLon = lon2 - lon1;
+    const y = Math.sin(dLon) * Math.cos(lat2);
+    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+    const bearing = Math.atan2(y, x);
+    const bearingDeg = (bearing * 180) / Math.PI;
+    return (bearingDeg + 360) % 360;
+  };
+
+
   useEffect(() => {
-    if (coords?.length > 1 && mapRef?.current) {
+    if ((coords?.length > 1 && mapRef?.current && !hasAnimatedOnce?.current)) {
       const edgePadding = {
         top: 50,
         right: 50,
@@ -264,56 +285,76 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
         animated: true,
       });
     
-      // setTimeout(() => {
-      //   mapRef.current?.animateCamera({
-      //     center: {
-      //       latitude: lastCoord.latitude,
-      //       longitude: lastCoord.longitude,
-      //     },
-      //     zoom: 16,
-      //   });
-
-      // }, 1000); // Delay to let fitToCoordinates finish first
-
       hasAnimatedOnce.current = true;
     }
   }, [coords]);
 
-  // Fetch the route from Google Directions API
-  const fetchRoute = async (origin, destination) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${API_KEY}`,
+   useEffect(() => {
+    if (currentLiveRiderLocation && destination && mapRef?.current && coords) {
+      const bearing = getBearing(currentLiveRiderLocation ?? origin, destination);
+      setHeading(bearing);
+      const lastCoord = coords[(coords?.length) / 2 - 1];
+      mapRef.current.animateCamera(
+        {
+          center: lastCoord,
+          // { latitude: currentLiveRiderLocation?.lat ?? origin?.lat, longitude: currentLiveRiderLocation?.lng ?? origin?.lng },
+          heading: bearing, // rotate toward destination
+          pitch: 0,
+          zoom: 15.5, // keep zoom fixed
+          edgePadding: {
+            top: 50,
+            right: 50,
+            bottom: 50,
+            left: 50
+          },
+          animated: true,
+        },
+        { duration: 500 }
       );
-      const json = await response?.json();
-
-      if (json?.routes?.length) {
-        const points = PolylineDecoder?.decode(
-          json?.routes[0]?.overview_polyline?.points,
-        );
-        const routeCoords = points?.map(point => ({
-          latitude: point[0],
-          longitude: point[1],
-        }));
-        setCoords(routeCoords);
-      }
-    } catch (error) {
-      console.log('Error fetching route: ', error);
     }
-  };
+  }, [currentLiveRiderLocation, coords]);
 
-  const getBearing = (start, end) => {
-    const lat1 = (start.lat * Math.PI) / 180;
-    const lon1 = (start.lng * Math.PI) / 180;
-    const lat2 = (end.lat * Math.PI) / 180;
-    const lon2 = (end.lng * Math.PI) / 180;
-    const dLon = lon2 - lon1;
-    const y = Math.sin(dLon) * Math.cos(lat2);
-    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-    const bearing = Math.atan2(y, x);
-    const bearingDeg = (bearing * 180) / Math.PI;
-    return (bearingDeg + 360) % 360;
-  };
+  
+  const fetchRoute = async (sender, receiver) => {
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${ Number(currentLiveRiderLocation?.lat ??  sender?.lat)},${Number(currentLiveRiderLocation?.lng ?? sender?.lng)}&destination=${Number(receiver?.lat)},${Number(receiver?.lng)}&alternatives=true&key=${MAP_KEY}`
+        );
+  
+        const json = await response?.json();
+  
+        if (json?.routes?.length > 0) {
+          // ✅ Find the shortest route based on total distance
+          let shortestRoute = json?.routes[0];
+          let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
+  
+          json?.routes?.forEach(route => {
+            const distance = route?.legs[0]?.distance?.value;
+            if (distance < minDistance) {
+              minDistance = distance;
+              shortestRoute = route;
+            }
+          });
+  
+          // ✅ Decode the shortest route polyline
+          const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
+          const routeCoords = points?.map(point => ({
+            latitude: point[0],
+            longitude: point[1],
+          }));
+  
+          // ✅ Update state
+          setCoords(routeCoords);
+          console.log(`✅ Shortest route selected customer — ${(minDistance / 1000).toFixed(2)} km`);
+        } else {
+          console.log('⚠️ No routes found.');
+        }
+      } catch (error) {
+        console.log('❌ Error fetching route:', error);
+      }
+    };
+
+ 
 
   const handleMapReady = () => {
     setTimeout(() => {
@@ -364,12 +405,15 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
             ref={markerRef}
             coordinate={animatedCoordinate}
             tracksViewChanges={!isMapReady}
+             centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
+            anchor={{ x: 0.5, y: 0.5 }}
+            // rotation={heading}
           >
             <Image
               // resizeMode='contain'
                   resizeMode="cover"
                  source={appImages.markerRideImage}
-               // source={appImages.markerMoveImage}
+              //  source={appImages.markerMoveImage}
               style={styles.markerBikeImage}
             />
           </Marker.Animated>
@@ -379,6 +423,8 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
             ref={markerDesRef}
             coordinate={animatedDesCoordinate}
             tracksViewChanges={!isMapReady}
+             centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
+             anchor={{ x: 0.5, y: 0.5 }}
           >
             <Image
               resizeMode="contain"
@@ -388,20 +434,21 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
           </Marker.Animated>
 
           {/* Route Polyline */}
-          {/* {Object.keys(destination)?.length > 0 && (<MapViewDirections
+          {/* {(Object.keys(currentLiveRiderLocation ?? origin)?.length > 0 &&
+           Object.keys(destination)?.length > 0) &&  (<MapViewDirections
           origin={{
-            latitude: Number(origin?.lat) || 30.7400,
-            longitude: Number(origin?.lng) || 76.7900,
+            latitude: Number(currentLiveRiderLocation?.lat ?? origin?.lat) || 30.7400,
+            longitude: Number(currentLiveRiderLocation?.lng ?? origin?.lng) || 76.7900,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005
           }}
           destination={
              {latitude: Number(destination?.lat),
-            longitude: Number(destination?.lng)}
-          }
-          apikey={API_KEY}
+             longitude: Number(destination?.lng)}
+           }
+          apikey={MAP_KEY}
           strokeWidth={6}
-          strokeColor="red"
+          strokeColor={colors.main}
           optimizeWaypoints={true}
           onStart={(params) => {
             console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
@@ -412,15 +459,15 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
             // fetchTime(result.distance, result.duration),
               mapRef.current.fitToCoordinates(result.coordinates, {
                 edgePadding: {
-                  // right: 30,
-                  // bottom: 300,
-                  // left: 30,
-                  // top: 100,
+                  // right: 50,
+                  // bottom: 50,
+                  // left: 50,
+                  // top: 50,
                 },
               });
           }}
           onError={(errorMessage) => {
-            // console.log('GOT AN ERROR');
+            console.log('GOT AN ERROR',errorMessage);
           }}
         />)} */}
           {coords?.length > 0 && (

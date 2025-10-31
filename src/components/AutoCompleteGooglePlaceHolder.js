@@ -17,6 +17,7 @@ import { appImagesSvg } from '../commons/AppImages';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/fonts/fonts';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { MAP_KEY } from '../halpers/AppLink';
 
 
 
@@ -54,8 +55,10 @@ const AutoCompleteGooglePlaceHolder = ({ onPressAddress, address }) => {
           ref={GooglePlacesRef}
           fetchDetails={true}
           placeholder="Enter Location"
+          minLength={3}
+          debounce={500} // ⏳ Wait 5m seconds after typing stops
           query={{
-            key: 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA',
+            key: MAP_KEY,
             language: 'en',
             type: ['geocode', 'hotel'],
             location: '30.7400,76.7900', // Central point between Mohali & Chandigarh

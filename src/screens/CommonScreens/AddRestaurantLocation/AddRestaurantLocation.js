@@ -160,6 +160,13 @@ export default function AddRestaurantLocation({ navigation }) {
         setAddress(details?.formatted_address);
         setGeoLocation(details?.geometry?.location);
         setLocationId(details?.place_id);
+         setTimeout(() => {
+        setName(details?.name);
+        setAddress(details?.formatted_address);
+        setGeoLocation(details?.geometry?.location);
+        setLocationId(details?.place_id);
+    }, 2000);
+
     };
 
     const handleConfirm = () => {

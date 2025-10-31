@@ -249,6 +249,12 @@ export default function AddMyAddress({ navigation, route }) {
     setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id);
+    setTimeout(() => {
+      setAddress(shortAddress);
+      setGeoLocation(details?.geometry?.location);
+      setLocationId(details?.place_id);
+    }, 2000);
+
   };
 
   const handleConfirm = () => {

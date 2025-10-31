@@ -32,6 +32,7 @@ class WSServices {
         console.log('=== Socket connected ===');
       });
 
+
       // Handle disconnection
       // this.socket.on('disconnect', () => {
       //   console.log('=== Socket disconnected ===');
@@ -42,15 +43,23 @@ class WSServices {
       //   // }
       // });
       this.socket.on('disconnect', (reason) => {
-        if (reason === 'io server disconnect' || reason === 'transport close') {
-          this.socket.auth = { token: token };
-          this.socket.connect();
-        }
+        console.log("disconnect", reason);
+        // if (reason === 'io server disconnect' || reason === 'transport close') {
+        //   this.socket.auth = { token: token };
+        //   this.socket.connect();
+        // }
       });
 
       // Handle connection errors
       this.socket.on('connect_error', error => {
         console.log('=== Socket connection error ===', error);
+        setTimeout(() => {
+          if (this.socket && !this.socket.connected) {
+            console.log('🔁 Retrying socket connection...');
+            this.socket.auth = { token: token };
+            this.socket.connect();
+          }
+        }, 3000);
       });
 
       // Other error handling
@@ -103,6 +112,17 @@ class WSServices {
       );
     }
   }
+
+  // Remove all event listeners
+  removeAllListeners() {
+    if (this.socket) {
+      this.socket.removeAllListeners();
+      console.log('✅ All socket listeners removed');
+    } else {
+      console.log('⚠️ Socket not connected — no listeners to remove');
+    }
+  }
+
   disconnectSocket() {
     if (this.socket) {
       this.socket.disconnect();
@@ -111,6 +131,11 @@ class WSServices {
       console.log('=== No socket connection to disconnect ===');
     }
   }
+
+  isSocketConnected() {
+    return this.socket?.connected || false;
+  }
+
 }
 
 // Exporting an instance of the socket service

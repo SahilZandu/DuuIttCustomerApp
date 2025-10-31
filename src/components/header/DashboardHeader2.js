@@ -124,18 +124,18 @@ const DashboardHeader2 = ({
     setAddress(otherData ?? addressData?.address);
   };
 
-  useEffect(() => {
-    const updateLocation = setInterval(() => {
-      setCurrentLocation();
-      setTimeout(() => {
-        onUpdateLatLng();
-      }, 5000)
-    }, 120000); // 120000 ms = 2 minutes
+  // useEffect(() => {
+  //   const updateLocation = setInterval(() => {
+  //     setCurrentLocation();
+  //     setTimeout(() => {
+  //       onUpdateLatLng();
+  //     }, 5000)
+  //   }, 120000); // 120000 ms = 2 minutes
 
-    return () => {
-      clearInterval(updateLocation);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(updateLocation);
+  //   };
+  // }, []);
 
   return (
     <View

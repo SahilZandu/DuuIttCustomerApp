@@ -56,6 +56,7 @@ function App() {
 
       if (nextAppState === "background") {
         console.log("App went to background: stopping services");
+        socketServices.removeAllListeners();
         socketServices.disconnectSocket();
         FastImage.clearMemoryCache();
       }
@@ -72,6 +73,7 @@ function App() {
     return () => {
       subscription.remove();
       // Ensure cleanup
+      socketServices.removeAllListeners();
       socketServices.disconnectSocket();
     };
   }, []);

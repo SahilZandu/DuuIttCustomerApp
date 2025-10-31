@@ -168,6 +168,15 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id)
+
+    setTimeout(() => {
+      setName(details?.name);
+      const shortAddress = filterAddress(details?.formatted_address)
+      console.log("shortAddress----", shortAddress);
+      setAddress(shortAddress);
+      setGeoLocation(details?.geometry?.location);
+      setLocationId(details?.place_id)
+    }, 2000);
   };
 
   const onHandleConfirm = () => {
