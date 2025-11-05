@@ -1134,7 +1134,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
     return () => {
       clearTimeout(timeoutId);
-      socketServices.removeListener('getremainingdistance')
+      // socketServices.removeListener('getremainingdistance')
       socketServices.removeListener('testevent')
       socketServices.removeListener('near-by-riders')
     };
@@ -1453,6 +1453,15 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
     }
   };
 
+  const onUpdateKmsTime = (distanceInKm, eta) => {
+    console.log("distanceInKm, eta -- ", distanceInKm, eta);
+    setKms({
+      distance_km: distanceInKm ?? 0,
+      eta: eta ?? '0m 0s'
+    });
+  }
+
+
   return (
     <GestureHandlerRootView style={styles.main}>
       <View style={styles.main}>
@@ -1502,6 +1511,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
               /> */}
               {/* {(riderDest?.lat && riderDest?.lng) && */}
               <MapRouteTracking
+                onKmsTime={onUpdateKmsTime}
                 riderCustomerDetails={parcelInfo}
                 origin={riderDest}
                 destination={

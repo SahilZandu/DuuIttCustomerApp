@@ -1116,8 +1116,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-background-timer (2.4.1):
-    - React-Core
   - react-native-blob-util (0.22.2):
     - React-Core
   - react-native-date-picker (5.0.4):
@@ -1706,7 +1704,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-audio-waveform (from `../node_modules/@simform_solutions/react-native-audio-waveform`)"
-  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
@@ -1856,8 +1853,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-audio-waveform:
     :path: "../node_modules/@simform_solutions/react-native-audio-waveform"
-  react-native-background-timer:
-    :path: "../node_modules/react-native-background-timer"
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
   react-native-date-picker:
@@ -2026,7 +2021,6 @@ SPEC CHECKSUMS:
   React-logger: 257858bd55f3a4e1bc0cf07ddc8fb9faba6f8c7c
   React-Mapbuffer: 6c1cacdbf40b531f549eba249e531a7d0bfd8e7f
   react-native-audio-waveform: 8998480697963c9bf2699e5dede94c00c31ed246
-  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-blob-util: 3c3dc88417b94e750c46c185662a07b2816a6b5e
   react-native-date-picker: 6891317e850deae5b53d51355226e07a495aba61
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b

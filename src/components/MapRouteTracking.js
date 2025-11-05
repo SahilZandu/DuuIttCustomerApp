@@ -22,10 +22,15 @@ import MapViewDirections from 'react-native-maps-directions';
 import socketServices from '../socketIo/SocketServices';
 import { rootStore } from '../stores/rootStore';
 import { MAP_KEY } from '../halpers/AppLink';
+import PopUpInProgess from './appPopUp/PopUpInProgess';
 
 
 let currentLiveRiderLocation =  {}
-const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq, riderCustomerDetails }) => {
+let updateTimerValue = 20 // meters
+let updateHeading = 0;
+let showPickDesPopUpModal = false
+
+const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq, riderCustomerDetails,onKmsTime }) => {
   const { getCustomerWiseRiderLocation } = rootStore.orderStore;
   const mapRef = useRef(null);
   const hasAnimatedOnce = useRef(false);
@@ -38,6 +43,37 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   const [isMapReady, setIsMapReady] = useState(false);
   const [update, setUpdate] = useState(true);
   const [heading ,setHeading]=useState(0)
+  const [showPickDesPopUp, setShowPickDesPopUp] = useState(false)
+
+
+    const onUpdateRiderMoveValue = (kms) => {
+    // console.log('kms',kms);
+    if (kms >= 30) {
+      updateTimerValue = 400;
+    } else if (kms >= 25) {
+      updateTimerValue = 300;
+    } else if (kms >= 20) {
+      updateTimerValue = 250;
+    } else if (kms >= 15) {
+      updateTimerValue = 200;
+    } else if (kms >= 10) {
+      updateTimerValue = 150;
+    } else if (kms >= 7) {
+      updateTimerValue = 100;
+    } else if (kms >= 4) {
+      updateTimerValue = 80;
+    } else if (kms >= 2) {
+      updateTimerValue = 50;
+    } else if (kms >= 1) {
+      updateTimerValue = 30;
+    } else if (kms >= 0.5) {
+      updateTimerValue = 20;
+    } else {
+      updateTimerValue = 10;
+    }
+
+
+  }
 
   useEffect(() => {
   if (origin && destination) {
@@ -116,6 +152,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
           clearInterval(intervalId);
         };
       }
+      showPickDesPopUpModal = false
 
     }, [origin, destination, riderCustomerDetails])
   );
@@ -126,6 +163,8 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
       console.log("res?.rider?.current_location--", res?.rider);
 
       const currentLoc = res?.rider?.current_location;
+          updateHeading = res?.rider?.rider_moment ?? 0;
+           setHeading(res?.rider?.rider_moment ?? 0);
       // ✅ Corrected: Object.keys (not Object.key)
       if (currentLoc && Object.keys(currentLoc)?.length > 0 ) {
         currentLiveRiderLocation = currentLoc
@@ -143,10 +182,9 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
       currentLoc?.lng
       );
 
-         console.log("distance--customer",distance);
-         
-             // Only update if moved more than 100 meters
-         if (distance >= 100) {
+     console.log("distance--customer",distance,updateTimerValue ,distance >=  updateTimerValue);
+             // Only update if moved more than 50 meters
+         if (distance >=  updateTimerValue ?? 50) {
           animate(currentLoc?.lat, currentLoc?.lng, currentLoc, destination);
           // Save the new location for next comparison
          prevLocationRef.current = { lat: currentLoc?.lat, lng: currentLoc?.lng };
@@ -165,8 +203,6 @@ const MapRouteTracking = ({ mapContainerView, origin, destination, isPendingReq,
   };
 
 
-
-
 useEffect(() => {
   socketServices.initailizeSocket();
 
@@ -175,6 +211,8 @@ useEffect(() => {
 
     const newLocation = data?.location;
     if (!newLocation?.lat || !newLocation?.lng) return;
+       updateHeading = data?.rider_moment
+        setHeading(data?.rider_moment)
 
     // If no previous location, set it immediately
     if (!prevLocationRef.current) {
@@ -195,7 +233,7 @@ useEffect(() => {
     console.log('Distance moved:', distance, 'meters');
 
     // Only update if moved more than 50 meters
-    if (distance >= 50) {
+    if (distance >= updateTimerValue ?? 50) {
       prevLocationRef.current = newLocation;
       currentLiveRiderLocation = newLocation;
       animate(newLocation.lat, newLocation.lng, newLocation, destination);
@@ -292,9 +330,9 @@ useEffect(() => {
    useEffect(() => {
     if (currentLiveRiderLocation && destination && mapRef?.current && coords) {
       const bearing = getBearing(currentLiveRiderLocation ?? origin, destination);
-      setHeading(bearing);
-      const lastCoord = coords[(coords?.length) / 2 - 1];
-      mapRef.current.animateCamera(
+      // const lastCoord = coords[(coords?.length) / 2 - 1];
+      const lastCoord = coords[0];
+      mapRef?.current?.animateCamera(
         {
           center: lastCoord,
           // { latitude: currentLiveRiderLocation?.lat ?? origin?.lat, longitude: currentLiveRiderLocation?.lng ?? origin?.lng },
@@ -315,44 +353,106 @@ useEffect(() => {
   }, [currentLiveRiderLocation, coords]);
 
   
-  const fetchRoute = async (sender, receiver) => {
-      try {
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/directions/json?origin=${ Number(currentLiveRiderLocation?.lat ??  sender?.lat)},${Number(currentLiveRiderLocation?.lng ?? sender?.lng)}&destination=${Number(receiver?.lat)},${Number(receiver?.lng)}&alternatives=true&key=${MAP_KEY}`
-        );
+  // const fetchRoute = async (sender, receiver) => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://maps.googleapis.com/maps/api/directions/json?origin=${ Number(currentLiveRiderLocation?.lat ??  sender?.lat)},${Number(currentLiveRiderLocation?.lng ?? sender?.lng)}&destination=${Number(receiver?.lat)},${Number(receiver?.lng)}&alternatives=true&key=${MAP_KEY}`
+  //       );
   
-        const json = await response?.json();
+  //       const json = await response?.json();
   
-        if (json?.routes?.length > 0) {
-          // ✅ Find the shortest route based on total distance
-          let shortestRoute = json?.routes[0];
-          let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
+  //       if (json?.routes?.length > 0) {
+  //         // ✅ Find the shortest route based on total distance
+  //         let shortestRoute = json?.routes[0];
+  //         let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
   
-          json?.routes?.forEach(route => {
-            const distance = route?.legs[0]?.distance?.value;
-            if (distance < minDistance) {
-              minDistance = distance;
-              shortestRoute = route;
-            }
-          });
+  //         json?.routes?.forEach(route => {
+  //           const distance = route?.legs[0]?.distance?.value;
+  //           if (distance < minDistance) {
+  //             minDistance = distance;
+  //             shortestRoute = route;
+  //           }
+  //         });
   
-          // ✅ Decode the shortest route polyline
-          const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
-          const routeCoords = points?.map(point => ({
-            latitude: point[0],
-            longitude: point[1],
-          }));
+  //         // ✅ Decode the shortest route polyline
+  //         const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
+  //         const routeCoords = points?.map(point => ({
+  //           latitude: point[0],
+  //           longitude: point[1],
+  //         }));
   
-          // ✅ Update state
-          setCoords(routeCoords);
-          console.log(`✅ Shortest route selected customer — ${(minDistance / 1000).toFixed(2)} km`);
-        } else {
-          console.log('⚠️ No routes found.');
+  //         // ✅ Update state
+  //         setCoords(routeCoords);
+  //         console.log(`✅ Shortest route selected customer — ${(minDistance / 1000).toFixed(2)} km`);
+  //       } else {
+  //         console.log('⚠️ No routes found.');
+  //       }
+  //     } catch (error) {
+  //       console.log('❌ Error fetching route:', error);
+  //     }
+  //   };
+
+
+    const fetchRoute = async (sender, receiver) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(currentLiveRiderLocation?.lat ?? sender?.lat)},${Number(currentLiveRiderLocation?.lng ?? sender?.lng)}&destination=${Number(receiver?.lat)},${Number(receiver?.lng)}&alternatives=true&key=${MAP_KEY}`
+      );
+
+      const json = await response?.json();
+
+      if (json?.routes?.length > 0) {
+        // ✅ Find the shortest route based on total distance
+        let shortestRoute = json?.routes[0];
+        let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
+        let minDuration = json?.routes[0]?.legs[0]?.duration?.value; // in seconds
+
+        json?.routes?.forEach(route => {
+          const distance = route?.legs[0]?.distance?.value;
+          if (distance < minDistance) {
+            minDistance = distance;
+            minDuration = route?.legs[0]?.duration?.value;
+            shortestRoute = route;
+          }
+        });
+
+        // ✅ Decode the shortest route polyline
+        const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline.points);
+        const routeCoords = points?.map(point => ({
+          latitude: point[0],
+          longitude: point[1],
+        }));
+
+        // ✅ Convert to readable values
+        const distanceInKm = (minDistance / 1000).toFixed(2);
+        const durationInMin = Math.floor(minDuration / 60);
+        const durationInSec = Math.floor(minDuration % 60);
+
+        console.log(`🚗 Shortest route: ${distanceInKm} km, ⏱️
+         ${durationInMin} min ${durationInSec} sec`);
+
+        // ✅ Format ETA as "Xm Ys"
+        const eta = `${durationInMin}m ${durationInSec}s`;
+
+        // console.log(`🚗 Shortest route: ${distanceInKm} km, ⏱️ ${eta}`);
+
+        // ✅ Update state or send callback
+        if ((distanceInKm <= 0.20 && !showPickDesPopUpModal && riderCustomerDetails?.status == 'picked')) {
+          showPickDesPopUpModal = true;
+          setShowPickDesPopUp(true);
         }
-      } catch (error) {
-        console.log('❌ Error fetching route:', error);
+        setCoords(routeCoords);
+        onUpdateRiderMoveValue(distanceInKm)
+        onKmsTime?.(distanceInKm, eta);
+
+
+      } else {
+        console.log('⚠️ No routes found.');
       }
-    };
+    } catch (error) {
+      console.log('❌ Error fetching route:', error);
+    }
+  };
 
  
 
@@ -407,14 +507,18 @@ useEffect(() => {
             tracksViewChanges={!isMapReady}
              centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
             anchor={{ x: 0.5, y: 0.5 }}
-            // rotation={heading}
+            rotation={ updateHeading ?? heading}
           >
             <Image
-              // resizeMode='contain'
-                  resizeMode="cover"
-                 source={appImages.markerRideImage}
+              resizeMode='contain'
+                  // resizeMode="cover"
+                 source={appImages.moveBike
+                  // markerRideImage
+                }
               //  source={appImages.markerMoveImage}
-              style={styles.markerBikeImage}
+              style={[styles.markerBikeImage,
+                  //  { transform: [{ rotate: `${70}deg` }] }
+                 ]}
             />
           </Marker.Animated>
 
@@ -481,6 +585,17 @@ useEffect(() => {
          {/* :
         <View style={[styles.mapContainer, mapContainerView]}>
         </View>}  */}
+          <PopUpInProgess
+            topIcon={false}
+            CTATitle={'ok'}
+           visible={showPickDesPopUp}
+          type={'Error'}
+        onClose={() => { setShowPickDesPopUp(false), showPickDesPopUpModal = true }}
+        title={riderCustomerDetails?.status == 'picked' ? "Dropped Location" : "Pickup Location"}
+        text={
+          riderCustomerDetails?.status == 'picked' ? "Rider has reached and completed the ride at the destination" : "Rider has arrived at the pickup location"
+        }
+              />
     </View>
   );
 // }else{
@@ -507,8 +622,8 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
   markerBikeImage: {
-    height: 30,  //60,
-    width: 30,   //80,
+    height:70,  //30,
+    width: 70,   //30,
     marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });

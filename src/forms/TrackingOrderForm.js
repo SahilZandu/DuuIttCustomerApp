@@ -468,6 +468,14 @@ const TrackingOrderForm = ({ navigation }) => {
     );
   };
 
+  const onUpdateKmsTime = (distanceInKm, eta) => {
+    console.log("distanceInKm, eta -- tracking", distanceInKm, eta);
+    // setKms({
+    //   distance_km: distanceInKm ?? 0,
+    //   eta: eta ?? '0m 0s'
+    // });
+  }
+
 
 
 
@@ -502,6 +510,7 @@ const TrackingOrderForm = ({ navigation }) => {
           <Text style={styles.liveTrackingText}>Live Tracking</Text>
           <View style={styles.mapRouteView}>
             <MapRouteTracking
+              onKmsTime={onUpdateKmsTime}
               riderCustomerDetails={trackItem}
               origin={origin}
               destination={trackItem?.receiver_address?.geo_location}

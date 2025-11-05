@@ -986,5 +986,6 @@ export const appImages = {
   scootyRiderImage: require('../assets/scootyRiderImage.png'),
   IndianFlag: require('../assets/indianFlag.png'),
   markerMoveImage: require('../assets/markerMoveImage.png'),
+  moveBike: require('../assets/moveBike.png'),
 
 };

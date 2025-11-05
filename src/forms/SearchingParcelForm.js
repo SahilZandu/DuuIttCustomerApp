@@ -864,6 +864,14 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     }
   };
 
+  const onUpdateKmsTime = (distanceInKm, eta) => {
+    console.log("distanceInKm, eta -- ", distanceInKm, eta);
+    setKms({
+      distance_km: distanceInKm ?? 0,
+      eta: eta ?? '0m 0s'
+    });
+  }
+
   return (
     <GestureHandlerRootView style={styles.main}>
       <View style={styles.main}>
@@ -910,6 +918,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
                 }
               /> */}
               <MapRouteTracking
+                onKmsTime={onUpdateKmsTime}
                 riderCustomerDetails={parcelInfo}
                 origin={riderDest}
                 destination={

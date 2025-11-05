@@ -125,16 +125,16 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
 
 
-  useEffect(() => {
-    socketServices.initailizeSocket();
+  // useEffect(() => {
+  //   socketServices.initailizeSocket();
 
-    socketServices.on('getremainingdistance', data => {
-      console.log('Remaining distance data--:', data, data?.location);
-      if ((data && data?.location && data?.location?.lat)) {
-        animate(data?.location?.lat, data?.location?.lng, data?.location, destination)
-      }
-    });
-  }, [])
+  //   socketServices.on('getremainingdistance', data => {
+  //     console.log('Remaining distance data--:', data, data?.location);
+  //     if ((data && data?.location && data?.location?.lat)) {
+  //       animate(data?.location?.lat, data?.location?.lng, data?.location, destination)
+  //     }
+  //   });
+  // }, [])
 
   // const animate = (latitude, longitude, newLocation, currentDestination) => {
   //   const newCoordinate = { latitude, longitude };
