@@ -26,6 +26,7 @@ import socketServices from './src/socketIo/SocketServices';
 import FastImage from 'react-native-fast-image';
 import notifee from '@notifee/react-native';
 import { Notifications } from 'react-native-notifications';
+import { startBackgroundTask, stopBackgroundTask } from './src/halpers/BackgroundServices/BackgroundServices';
 
 
 let focusRoute = '';
@@ -48,22 +49,48 @@ function App() {
     await notifee.cancelAllNotifications();
   }
 
+  const onStartBackgroundTask = async () => {
+    setTimeout(async () => {
+      try {
+        await startBackgroundTask();
+        console.log('✅ Background task started from app');
+      } catch (error) {
+        console.log('❌ Error starting background task:', error);
+      }
+    }, 2000)
+  };
+
+  const onStopBackgroundTask = async () => {
+    setTimeout(async () => {
+      try {
+        await stopBackgroundTask();
+        console.log('✅ Background task stop from app');
+      } catch (error) {
+        console.log('❌ Error stopping background task:', error);
+      }
+    }, 2000)
+  };
+
   useEffect(() => {
     onRemoveNotificationDrawer()
     const subscription = AppState.addEventListener("change", nextAppState => {
       // Prevent unnecessary calls if state hasn't changed
-      if (appState.current === nextAppState) return;
+      // if (appState.current === nextAppState) return;
 
       if (nextAppState === "background") {
         console.log("App went to background: stopping services");
         socketServices.removeAllListeners();
         socketServices.disconnectSocket();
         FastImage.clearMemoryCache();
+        onStartBackgroundTask();
+
       }
 
       if (nextAppState === "active") {
         console.log("App became active: restarting services");
+        // onStopBackgroundTask();
         socketServices.initailizeSocket();
+
         // restart any background tasks if needed
       }
 
@@ -75,6 +102,7 @@ function App() {
       // Ensure cleanup
       socketServices.removeAllListeners();
       socketServices.disconnectSocket();
+      // 
     };
   }, []);
 

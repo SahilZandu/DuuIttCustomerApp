@@ -95,6 +95,9 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   });
   const [isTracking, setIsTracking] = useState(true)
   const [runingBike, setRuningBike] = useState(false)
+  const isMountedRef = useRef(true);
+  const socketListenersRef = useRef([]);
+  const appStateTimeoutRef = useRef(null);
 
   const getLocation = type => {
     let d =
@@ -293,7 +296,17 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   }, []);
 
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
+    // Clean up previous listeners
+    socketListenersRef.current.forEach(({ event, handler }) => {
+      socketServices.removeListener(event, handler);
+    });
+    socketListenersRef.current = [];
+
     const timeoutId = setTimeout(() => {
+      if (!isMountedRef.current) return;
+      
       let query = {
         lat: getLocation('lat')?.toString(),
         lng: getLocation('lng')?.toString(),
@@ -302,64 +315,43 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         fcm_token: appUser?.fcm_token,
       };
       socketServices.emit('update-location', query);
-      // socketServices.on('getremainingdistance', data => {
-      //   console.log('Remaining distance data--:', data, data?.location);
-      //   if ((data && data?.location && data?.location?.lat)) {
-      //     setRiderDest(data?.location);
-      //   }
-      // });
-      socketServices.on('getEtaToCustomer', (data) => {
+
+      // Define handlers with mounted checks
+      const handleEtaToCustomer = (data) => {
+        if (!isMountedRef.current) return;
         console.log('Distance (km):', data, data.distance_km);
         console.log('ETA:', data.eta);
-        setKms(data)
-      });
+        setKms(data);
+      };
 
-      // socketServices.on('testevent', data => {
-      //   console.log('test event', data);
-      // });
-
-      socketServices.on('near-by-riders', data => {
+      const handleNearByRiders = (data) => {
+        if (!isMountedRef.current) return;
         console.log('near-by-riders data--:', data, data?.data);
         if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
           setNearByRider(data);
         } else {
           setNearByRider([]);
         }
-      });
+      };
+
+      // Register listeners
+      socketServices.on('getEtaToCustomer', handleEtaToCustomer);
+      socketServices.on('near-by-riders', handleNearByRiders);
+
+      // Store references for cleanup
+      socketListenersRef.current = [
+        { event: 'getEtaToCustomer', handler: handleEtaToCustomer },
+        { event: 'near-by-riders', handler: handleNearByRiders },
+      ];
     }, 2500);
-
-
-    // socketServices.on('getremainingdistance', data => {
-    //   console.log('Remaining distance data--:', data, data?.location);
-    //   if ((data && data?.location && data?.location?.lat)) {
-    //     setRiderDest(data?.location);
-    //   }
-    // });
-    socketServices.on('near-by-riders', data => {
-      console.log('near-by-riders data--:', data, data?.data);
-      if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
-        setNearByRider(data);
-      } else {
-        setNearByRider([]);
-      }
-    });
-    socketServices.on('getEtaToCustomer', (data) => {
-      console.log('Distance (km):', data, data.distance_km);
-      console.log('ETA:', data.eta);
-      setKms(data)
-    });
-
-    // socketServices.on('testevent', data => {
-    //   console.log('test event', data);
-    // });
-
-
 
     return () => {
       clearTimeout(timeoutId);
-      // socketServices.removeListener('getremainingdistance');
-      socketServices.removeListener('testevent');
-      socketServices.removeListener('near-by-riders');
+      // Clean up all socket listeners
+      socketListenersRef.current.forEach(({ event, handler }) => {
+        socketServices.removeListener(event, handler);
+      });
+      socketListenersRef.current = [];
     };
   }, [isTracking]);
 
@@ -371,17 +363,25 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
       if (nextAppState === "background") {
         console.log("App went to background: stopping services");
-        // alert('no');
-        setIsTracking(false)
+        if (isMountedRef.current) {
+          setIsTracking(false);
+        }
       }
 
       if (nextAppState === "active") {
-        // alert('yes');
-        setTimeout(() => {
-          socketServices.initailizeSocket();
-        }, 2000)
-        setIsTracking(true)
-        // restart any background tasks if needed
+        // Clear any existing timeout
+        if (appStateTimeoutRef.current) {
+          clearTimeout(appStateTimeoutRef.current);
+        }
+        
+        appStateTimeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current && !socketServices.isSocketConnected()) {
+            socketServices.initailizeSocket();
+          }
+          if (isMountedRef.current) {
+            setIsTracking(true);
+          }
+        }, 2000);
       }
 
       appState.current = nextAppState;
@@ -389,26 +389,45 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
     return () => {
       subscription.remove();
+      // Clear timeout on unmount
+      if (appStateTimeoutRef.current) {
+        clearTimeout(appStateTimeoutRef.current);
+        appStateTimeoutRef.current = null;
+      }
     };
   }, []);
 
   useFocusEffect(
     useCallback(() => {
+      isMountedRef.current = true;
       checkUnseenMsg();
       setChatNotificationStatus(true);
       handleAndroidBackButton('', 'parcel', 'parcel', navigation);
+      
+      let intervalId = null;
+      let locationTimeoutId = null;
+      
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
-        const intervalId = setInterval(() => {
+        intervalId = setInterval(() => {
+          if (!isMountedRef.current) return;
           setCurrentLocation();
-          setTimeout(() => {
-            getSocketLocation(socketServices);
+          locationTimeoutId = setTimeout(() => {
+            if (isMountedRef.current) {
+              getSocketLocation(socketServices);
+            }
           }, 1500);
         }, 20000);
-        return () => {
-          // This will run when the screen is unfocused
-          clearInterval(intervalId);
-        };
       }
+      
+      return () => {
+        isMountedRef.current = false;
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+        if (locationTimeoutId) {
+          clearTimeout(locationTimeoutId);
+        }
+      };
     }, [parcelInfo]),
   );
 
@@ -446,29 +465,38 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     // }
 
     const resIncompleteOrder = await getCheckingPendingForCustomer('parcel');
+    if (!isMountedRef.current) return;
     // console.log('resIncompleteOrder parcel--', resIncompleteOrder);
     if (resIncompleteOrder?.statusCode == 200) {
       const resFilter = await resIncompleteOrder?.data?.filter((item) =>
         item?.order_type?.toLowerCase() === 'parcel'
       );
+      if (!isMountedRef.current) return;
+      
       if (resFilter?.length > 0) {
         checkRiderStatus = resFilter[0]
         if (resFilter[0]?.status !== "pending") {
           if (resFilter[0]?.status === "picked") {
-            setParcelInfo(resFilter[0]);
-            setAddParcelInfo(resFilter[0]);
-            navigation.navigate('pickSuccessfully');
-            setSearchArrive('search');
-          } else {
-            if (resFilter[0]?.status !== checkRiderStatus?.status) {
+            if (isMountedRef.current) {
               setParcelInfo(resFilter[0]);
               setAddParcelInfo(resFilter[0]);
+              navigation.navigate('pickSuccessfully');
+              setSearchArrive('search');
+            }
+          } else {
+            if (resFilter[0]?.status !== checkRiderStatus?.status) {
+              if (isMountedRef.current) {
+                setParcelInfo(resFilter[0]);
+                setAddParcelInfo(resFilter[0]);
+              }
             }
           }
         }
       }
       else {
-        navigation.navigate('parcel', { screen: 'home' });
+        if (isMountedRef.current) {
+          navigation.navigate('parcel', { screen: 'home' });
+        }
         checkRiderStatus = {}
       }
     }
@@ -480,6 +508,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   useEffect(() => {
     // start interval that runs in foreground and background
     const intervalId = setInterval(() => {
+      if (!isMountedRef.current) return;
       console.log('Running every 7s in background');
       getCheckingIncompleteOrder();
       // update your ride progress state here
@@ -491,6 +520,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
 
   const getCheckingIncompleteOrder = async () => {
+    if (!isMountedRef.current) return;
 
     // const resIncompleteOrder = await getPendingForCustomer('parcel');
     // console.log('resIncompleteOrder ride--', resIncompleteOrder);
@@ -511,6 +541,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
     // }
 
     const resIncompleteOrder = await getCheckingPendingForCustomer('parcel');
+    if (!isMountedRef.current) return;
     // console.log('resIncompleteOrder parcel--', resIncompleteOrder);
     if (resIncompleteOrder?.statusCode == 200) {
       const resFilter = await resIncompleteOrder?.data?.filter((item) =>
@@ -1209,6 +1240,23 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       </View>
     </GestureHandlerRootView>
   );
+  
+  // Component unmount cleanup
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      // Clean up all socket listeners
+      socketListenersRef.current.forEach(({ event, handler }) => {
+        socketServices.removeListener(event, handler);
+      });
+      socketListenersRef.current = [];
+      // Clear timeout
+      if (appStateTimeoutRef.current) {
+        clearTimeout(appStateTimeoutRef.current);
+        appStateTimeoutRef.current = null;
+      }
+    };
+  }, []);
 };
 
 export default SearchingParcelForm;

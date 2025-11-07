@@ -78,6 +78,8 @@ const TrackingOrderForm = ({ navigation }) => {
   const [trackItem, setTrackItem] = useState({});
   const [origin, setOrigin] = useState({});
   const [isTracking, setIsTracking] = useState(true)
+  const isMountedRef = useRef(true);
+  const appStateTimeoutRef = useRef(null);
 
   const getLocation = type => {
     let d =
@@ -137,17 +139,25 @@ const TrackingOrderForm = ({ navigation }) => {
 
       if (nextAppState === "background") {
         console.log("App went to background: stopping services");
-        // alert('no');
-        setIsTracking(false)
+        if (isMountedRef.current) {
+          setIsTracking(false);
+        }
       }
 
       if (nextAppState === "active") {
-        // alert('yes');
-        setTimeout(() => {
-          socketServices.initailizeSocket();
-        }, 2000)
-        setIsTracking(true)
-        // restart any background tasks if needed
+        // Clear any existing timeout
+        if (appStateTimeoutRef.current) {
+          clearTimeout(appStateTimeoutRef.current);
+        }
+        
+        appStateTimeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current && !socketServices.isSocketConnected()) {
+            socketServices.initailizeSocket();
+          }
+          if (isMountedRef.current) {
+            setIsTracking(true);
+          }
+        }, 2000);
       }
 
       appState.current = nextAppState;
@@ -155,23 +165,42 @@ const TrackingOrderForm = ({ navigation }) => {
 
     return () => {
       subscription.remove();
+      // Clear timeout on unmount
+      if (appStateTimeoutRef.current) {
+        clearTimeout(appStateTimeoutRef.current);
+        appStateTimeoutRef.current = null;
+      }
     };
   }, []);
 
   useFocusEffect(
     useCallback(() => {
+      isMountedRef.current = true;
+      
+      let intervalId = null;
+      let locationTimeoutId = null;
+      
       if (trackedArray?.length > 0) {
-        const intervalId = setInterval(() => {
+        intervalId = setInterval(() => {
+          if (!isMountedRef.current) return;
           setCurrentLocation();
-          setTimeout(() => {
-            getSocketLocation(socketServices, trackItem);
+          locationTimeoutId = setTimeout(() => {
+            if (isMountedRef.current) {
+              getSocketLocation(socketServices, trackItem);
+            }
           }, 1500);
         }, 10000);
-        return () => {
-          // This will run when the screen is unfocused
-          clearInterval(intervalId);
-        };
       }
+      
+      return () => {
+        isMountedRef.current = false;
+        if (intervalId) {
+          clearInterval(intervalId);
+        }
+        if (locationTimeoutId) {
+          clearTimeout(locationTimeoutId);
+        }
+      };
     }, [trackItem, trackedArray]),
   );
 
@@ -527,6 +556,18 @@ const TrackingOrderForm = ({ navigation }) => {
       </ModalPopUp>
     </View>
   );
+  
+  // Component unmount cleanup
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      // Clear timeout
+      if (appStateTimeoutRef.current) {
+        clearTimeout(appStateTimeoutRef.current);
+        appStateTimeoutRef.current = null;
+      }
+    };
+  }, []);
 };
 
 export default TrackingOrderForm;

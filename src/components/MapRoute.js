@@ -36,6 +36,9 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   const bearingRef = useRef(0);
   const [coords, setCoords] = useState([]);
   const [isMapReady, setIsMapReady] = useState(false);
+  const isMountedRef = useRef(true);
+  const fetchAbortControllerRef = useRef(null);
+  const mapReadyTimeoutRef = useRef(null);
 
   // Use animated regions for smooth marker movement
   const [animatedCoordinate] = useState(
@@ -65,24 +68,25 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   useFocusEffect(
     useCallback(() => {
+      isMountedRef.current = true;
       setMapManageRideDaltaInitials();
       if ((origin && destination)) {
         animate(origin?.lat, origin?.lng, origin, destination)
       }
 
-      // Fixed: Combined location effects to prevent conflicts
-      // if (riderCustomerDetails) {
-      //   onUpdateCutomerLocation(riderCustomerDetails);
-
-      //   const intervalId = setInterval(() => {
-      //     onUpdateCutomerLocation(riderCustomerDetails);
-      //   }, 6000);
-
-      //   return () => {
-      //     clearInterval(intervalId);
-      //   };
-      // }
-
+      return () => {
+        isMountedRef.current = false;
+        // Cancel any ongoing fetch requests
+        if (fetchAbortControllerRef.current) {
+          fetchAbortControllerRef.current.abort();
+          fetchAbortControllerRef.current = null;
+        }
+        // Clear timeout
+        if (mapReadyTimeoutRef.current) {
+          clearTimeout(mapReadyTimeoutRef.current);
+          mapReadyTimeoutRef.current = null;
+        }
+      };
     }, [origin, destination])
   );
 
@@ -153,6 +157,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
 
   const animate = (latitude, longitude, newLocation, currentDestination) => {
+    if (!isMountedRef.current) return;
+    
     const newCoordinate = { latitude, longitude };
 
     console.log("Animating to:", newCoordinate);
@@ -160,12 +166,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     // Fetch new route (if needed)
     fetchRoute(newLocation, currentDestination);
     // Use AnimatedRegion for both platforms to keep a single code path
-    animatedCoordinate.timing({
-      latitude: Number(newCoordinate?.latitude),
-      longitude: Number(newCoordinate?.longitude),
-      duration: 7000,
-      useNativeDriver: false,
-    }).start();
+    if (isMountedRef.current) {
+      animatedCoordinate.timing({
+        latitude: Number(newCoordinate?.latitude),
+        longitude: Number(newCoordinate?.longitude),
+        duration: 7000,
+        useNativeDriver: false,
+      }).start();
+    }
   };
 
 
@@ -178,7 +186,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   // Initialize markers and camera when data is available
   useEffect(() => {
-    if (!origin || !destination) return;
+    if (!origin || !destination || !isMountedRef.current) return;
 
     const lat = Number(origin?.lat);
     const lng = Number(origin?.lng);
@@ -191,90 +199,77 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     currentPositionRef.current = { latitude: lat, longitude: lng };
 
     // Set initial marker positions
-    animatedCoordinate.timing({
-      latitude: lat,
-      longitude: lng,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
+    if (isMountedRef.current) {
+      animatedCoordinate.timing({
+        latitude: lat,
+        longitude: lng,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
 
-    animatedDesCoordinate.timing({
-      latitude: destLat,
-      longitude: destLng,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
+      animatedDesCoordinate.timing({
+        latitude: destLat,
+        longitude: destLng,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
 
-    fetchRoute(origin, destination);
+      fetchRoute(origin, destination);
+    }
 
-    // if (!hasAnimatedCameraRef?.current) {
-    //   const timeout = setTimeout(() => {
-    //     const bearing = getBearing({ lat, lng }, { lat: destLat, lng: destLng });
-    //     bearingRef.current = bearing;
-
-    //     const camera = {
-    //       center: { latitude: lat, longitude: lng },
-    //       heading: bearing,
-    //       pitch: 30,
-    //       zoom: 17,
-    //       altitude: 300,
-    //     };
-
-    //     mapRef.current?.animateCamera(camera, { duration: 1000 });
-    //     hasAnimatedCameraRef.current = true; // ✅ prevent re-triggering
-    //   }, 60000)
-    //   return () => clearTimeout(timeout);
-    // }
+    return () => {
+      // Cancel any ongoing operations when dependencies change
+      if (fetchAbortControllerRef.current) {
+        fetchAbortControllerRef.current.abort();
+        fetchAbortControllerRef.current = null;
+      }
+    };
   }, [origin, destination]);
 
   // Fit map to coordinates when route is loaded (only once)
   useEffect(() => {
-    if (coords?.length > 1 && mapRef?.current) {
-      const edgePadding = {
-        top: 50,
-        right: 50,
-        bottom: 50, // Increased bottom padding
-        left: 50,
-      };
+    if (coords?.length > 1 && mapRef?.current && isMountedRef.current) {
+      try {
+        const edgePadding = {
+          top: 50,
+          right: 50,
+          bottom: 50, // Increased bottom padding
+          left: 50,
+        };
 
-      mapRef.current.fitToCoordinates(coords, {
-        edgePadding,
-        animated: true,
-      });
+        mapRef.current.fitToCoordinates(coords, {
+          edgePadding,
+          animated: true,
+        });
 
-      hasAnimatedOnce.current = true;
+        hasAnimatedOnce.current = true;
+      } catch (error) {
+        console.log('Error fitting map to coordinates:', error);
+      }
     }
   }, [coords]);
 
   // Fetch the route from Google Directions API
-  // const fetchRoute = async (origin, destination) => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&key=${MAP_KEY}`,
-  //     );
-  //     const json = await response?.json();
-
-  //     if (json?.routes?.length) {
-  //       const points = PolylineDecoder?.decode(
-  //         json?.routes[0]?.overview_polyline?.points,
-  //       );
-  //       const routeCoords = points?.map(point => ({
-  //         latitude: point[0],
-  //         longitude: point[1],
-  //       }));
-  //       setCoords(routeCoords);
-  //     }
-  //   } catch (error) {
-  //     console.log('Error fetching route: ', error);
-  //   }
-  // };
   const fetchRoute = async (origin, destination) => {
+    // Cancel previous request if still in progress
+    if (fetchAbortControllerRef.current) {
+      fetchAbortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    fetchAbortControllerRef.current = new AbortController();
+
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`,
+        { signal: fetchAbortControllerRef.current.signal }
       );
 
+      if (!isMountedRef.current) return;
+
       const json = await response?.json();
+
+      if (!isMountedRef.current) return;
 
       if (json?.routes?.length > 0) {
         // ✅ Find the shortest route based on total distance
@@ -296,14 +291,22 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
           longitude: point[1],
         }));
 
-        // ✅ Update state
-        setCoords(routeCoords);
-        console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
+        // ✅ Update state only if component is still mounted
+        if (isMountedRef.current) {
+          setCoords(routeCoords);
+          console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
+        }
       } else {
         console.log('⚠️ No routes found.');
       }
     } catch (error) {
-      console.log('❌ Error fetching route:', error);
+      if (error.name === 'AbortError') {
+        console.log('Route fetch cancelled');
+      } else if (isMountedRef.current) {
+        console.log('❌ Error fetching route:', error);
+      }
+    } finally {
+      fetchAbortControllerRef.current = null;
     }
   };
 
@@ -321,10 +324,34 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
   };
 
   const handleMapReady = () => {
-    setTimeout(() => {
-      setIsMapReady(true);
+    // Clear any existing timeout
+    if (mapReadyTimeoutRef.current) {
+      clearTimeout(mapReadyTimeoutRef.current);
+    }
+    
+    mapReadyTimeoutRef.current = setTimeout(() => {
+      if (isMountedRef.current) {
+        setIsMapReady(true);
+      }
     }, 1000);
   };
+
+  // Component unmount cleanup
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      // Cancel any ongoing fetch requests
+      if (fetchAbortControllerRef.current) {
+        fetchAbortControllerRef.current.abort();
+        fetchAbortControllerRef.current = null;
+      }
+      // Clear timeout
+      if (mapReadyTimeoutRef.current) {
+        clearTimeout(mapReadyTimeoutRef.current);
+        mapReadyTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <View
@@ -357,8 +384,14 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         showsTraffic={false}
         onMapReady={handleMapReady}
         onRegionChangeComplete={(region) => {
-          setMapManageRideDalta(region);
-          setMpaDalta(region);
+          if (isMountedRef.current && region) {
+            try {
+              setMapManageRideDalta(region);
+              setMpaDalta(region);
+            } catch (error) {
+              console.log('Error updating map region:', error);
+            }
+          }
         }}
       >
 
