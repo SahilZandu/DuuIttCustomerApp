@@ -82,6 +82,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
         versionName "1.0"
+        
+        // Support for 16 KB page sizes (required for Android 15+)
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
     }
     signingConfigs {
         debug {
@@ -109,6 +114,13 @@ android {
               shrinkResources false
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+    
+    // Support for 16 KB page sizes (required for Android 15+)
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 

@@ -48,7 +48,7 @@ const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 const veryIntensiveTask = async (taskDataArguments) => {
     const { delay } = taskDataArguments;
     try {
-        while (BackgroundService.isRunning()) {
+        while (BackgroundService?.isRunning()) {
             try {
                 console.log('Background service running...');
                 // const newDesc = `Tracking update at ${new Date().toLocaleTimeString()}`;
@@ -68,13 +68,13 @@ const veryIntensiveTask = async (taskDataArguments) => {
 // Create options with drawable icon (ic_stat_notification exists in drawable folder)
 const createOptions = (useIcon = true) => {
     const options = {
-        taskName: 'DuuItt Tracking',
-        taskTitle: 'DuuItt is tracking your location',
-        taskDesc: 'Live tracking is active in background.',
+        taskName: 'DuuItt',
+        taskTitle: 'DuuItt app alive',
+        taskDesc: 'DuuItt app is active in background.',
         color: colors.green,
-        linkingURI: 'duuittapp // open',
+        linkingURI: 'duuittapp://open',
         parameters: {
-            delay: 60000, // 1 minute
+            delay: 180000, // 3 minute
         },
     };
 

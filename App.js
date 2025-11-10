@@ -73,16 +73,25 @@ function App() {
 
   useEffect(() => {
     onRemoveNotificationDrawer()
+    onStartBackgroundTask();
     const subscription = AppState.addEventListener("change", nextAppState => {
       // Prevent unnecessary calls if state hasn't changed
-      // if (appState.current === nextAppState) return;
+      if (appState.current === nextAppState) return;
 
-      if (nextAppState === "background") {
+      if (nextAppState === "background" || nextAppState === "inactive") {
         console.log("App went to background: stopping services");
         socketServices.removeAllListeners();
         socketServices.disconnectSocket();
         FastImage.clearMemoryCache();
-        onStartBackgroundTask();
+        // // Start background task with delay
+        // setTimeout(async () => {
+        //   try {
+        //     await startBackgroundTask();
+        //     console.log("✅ Background task started successfully");
+        //   } catch (error) {
+        //     console.log("❌ Error starting background task:", error);
+        //   }
+        // }, 2000);
 
       }
 
@@ -90,6 +99,15 @@ function App() {
         console.log("App became active: restarting services");
         // onStopBackgroundTask();
         socketServices.initailizeSocket();
+        // // Stop background task with delay
+        // setTimeout(async () => {
+        //   try {
+        //     await stopBackgroundTask();
+        //     console.log("✅ Background task stopped successfully");
+        //   } catch (error) {
+        //     console.log("❌ Error stopping background task:", error);
+        //   }
+        // }, 2000);
 
         // restart any background tasks if needed
       }
@@ -100,6 +118,7 @@ function App() {
     return () => {
       subscription.remove();
       // Ensure cleanup
+      stopBackgroundTask().catch(console.error);
       socketServices.removeAllListeners();
       socketServices.disconnectSocket();
       // 

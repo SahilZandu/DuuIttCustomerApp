@@ -4,7 +4,7 @@ buildscript {
         minSdkVersion = 23
         compileSdkVersion = 35 // 34
         targetSdkVersion = 35
-        ndkVersion = "26.1.10909125"
+        ndkVersion = "26.1.10909125" // NDK 26+ supports 16KB page sizes
         kotlinVersion = "1.9.22"
         googlePlayServicesVersion = "21.0.0" //add this line
         

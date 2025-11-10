@@ -7,7 +7,7 @@ const IndicatorLoader = () => {
     return (
         <View style={styles.container}>
             <View style={styles.innerView}>
-                <ActivityIndicator size="large" color={colors.green} />
+                <ActivityIndicator size="large" color={colors.white} />
             </View>
         </View>
     );
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     innerView: {
         height: hp('10%'),
         width: wp('20%'),
-        backgroundColor: colors.white,
+        backgroundColor: colors.green,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
