@@ -24,11 +24,12 @@ const styles = StyleSheet.create({
 
     },
     innerView: {
-        height: hp('10%'),
+        height: hp('9%'),
         width: wp('20%'),
         backgroundColor: colors.green,
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'center',
         borderRadius: 10,
     }
 });

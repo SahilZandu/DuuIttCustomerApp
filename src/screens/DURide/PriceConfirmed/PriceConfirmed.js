@@ -734,6 +734,7 @@ export default function PriceConfirmed({ navigation, route }) {
     >
       <View style={styles.container}>
         <MapRoute
+          orderData={pickDropDetails}
           origin={pickDropDetails?.sender_address?.geo_location}
           destination={pickDropDetails?.receiver_address?.geo_location}
           mapContainerView={{ height: hp('48%') }}

@@ -354,6 +354,7 @@ export default function TrackOrderPreparing({ navigation, route }) {
             <View style={styles.restaurantConatiner}>
               {((origin?.lng && destination?.lng) && orderStep == 2) ? (
                 <MapRoute
+                  orderData={itemDetails}
                   origin={origin}
                   destination={destination}
                   mapContainerView={{ height: hp('45%') }}
@@ -406,7 +407,7 @@ export default function TrackOrderPreparing({ navigation, route }) {
                   resizeMode="cover"
                   source={
                     (item?.rider && item?.rider?.profile_pic?.length > 0) ? {
-                      uri:item?.rider?.profile_pic
+                      uri: item?.rider?.profile_pic
                     } :
                       appImages.avtarImage
                   }

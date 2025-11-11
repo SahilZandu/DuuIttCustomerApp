@@ -323,7 +323,7 @@ export default function Orders({ navigation, route }) {
             </View>
           </>
         )}
-      </View>x
+      </View>
 
     </Wrapper4>
   );

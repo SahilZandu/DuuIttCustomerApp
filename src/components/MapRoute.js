@@ -26,8 +26,8 @@ import { MAP_KEY } from '../halpers/AppLink';
 
 
 
-const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
-  const { getCustomerWiseRiderLocation } = rootStore.orderStore;
+const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderData }) => {
+  const { getCustomerWiseRiderLocation, ordersDirectionGooglemapHit } = rootStore.orderStore;
   const mapRef = useRef(null);
   const hasAnimatedOnce = useRef(false);
   const hasAnimatedCameraRef = useRef(false)
@@ -158,7 +158,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
 
   const animate = (latitude, longitude, newLocation, currentDestination) => {
     if (!isMountedRef.current) return;
-    
+
     const newCoordinate = { latitude, longitude };
 
     console.log("Animating to:", newCoordinate);
@@ -265,11 +265,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
         { signal: fetchAbortControllerRef.current.signal }
       );
 
-      if (!isMountedRef.current) return;
-
       const json = await response?.json();
-
-      if (!isMountedRef.current) return;
+       ordersDirectionGooglemapHit(orderData, 'Route Directions')
 
       if (json?.routes?.length > 0) {
         // ✅ Find the shortest route based on total distance
@@ -328,7 +325,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq }) => {
     if (mapReadyTimeoutRef.current) {
       clearTimeout(mapReadyTimeoutRef.current);
     }
-    
+
     mapReadyTimeoutRef.current = setTimeout(() => {
       if (isMountedRef.current) {
         setIsMapReady(true);

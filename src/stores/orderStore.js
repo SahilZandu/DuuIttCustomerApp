@@ -319,5 +319,33 @@ export default class OrderStore {
   };
 
 
+  ordersDirectionGooglemapHit = async (order, apiName) => {
+    let requestData = {
+      orderId: order?._id ?? "Without Order Id",
+      type: "customer",
+      apiName: apiName ?? "Route Directions"
+    };
+    console.log('ordersDirectionGooglemapHit request ', requestData);
+    try {
+      const res = await agent.ordersDirectionGooglemapHit(requestData);
+      console.log('ordersDirectionGooglemapHit Res : ', res);
+      if (res?.statusCode == 200) {
+        // useToast(res?.message, 1);
+
+      } else {
+        const message = res?.message ? res?.message : res?.data?.message;
+        // useToast(message, 0);
+      }
+    } catch (error) {
+      console.log('error ordersDirectionGooglemapHit :', error);
+      const m = error?.data?.message
+        ? error?.data?.message
+        : 'Something went wrong';
+      // useToast(m, 0);
+    }
+  };
+
+
+
 
 }

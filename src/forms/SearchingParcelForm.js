@@ -25,7 +25,6 @@ import TextRender from '../components/TextRender';
 import OtpShowComp from '../components/OtpShowComp';
 import MapRouteMarker from '../components/MapRouteMarker';
 import { rootStore } from '../stores/rootStore';
-import MapRoute from '../components/MapRoute';
 import MeetingPickupComp from '../components/MeetPickupComp';
 import HomeSlider from '../components/slider/homeSlider';
 import PopUpRideDetails from '../components/PopUpRideDetails';
@@ -925,29 +924,6 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
             </>
           ) : (
             <>
-              {/* {riderDest?.lng && senderLocation?.lng ? ( */}
-              {/* <MapRoute
-                riderCustomerDetails={parcelInfo}
-                origin={riderDest}
-                destination={
-                  parcelInfo?.status == 'picked' ? destination : senderLocation
-                }
-                mapContainerView={
-                  Platform.OS == 'ios'
-                    ? {
-                      height:
-                        minMaxHp == screenHeight(69)
-                          ? screenHeight(31)
-                          : screenHeight(58),
-                    }
-                    : {
-                      height:
-                        minMaxHp == screenHeight(69)
-                          ? screenHeight(31)
-                          : screenHeight(68),
-                    }
-                }
-              /> */}
               <MapRouteTracking
                 onKmsTime={onUpdateKmsTime}
                 riderCustomerDetails={parcelInfo}

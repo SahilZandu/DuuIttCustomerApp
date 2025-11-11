@@ -31,7 +31,6 @@ import handleAndroidBackButton from '../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
 import OtpShowComp from '../components/OtpShowComp';
 import ModalPopUp from '../components/ModalPopUp';
-import MapRoute from '../components/MapRoute';
 import socketServices from '../socketIo/SocketServices';
 import {
   getCurrentLocation,
@@ -546,11 +545,6 @@ const TrackingOrderForm = ({ navigation }) => {
               mapContainerView={{ height: hp('60%') }}
 
             />
-            {/* <MapRoute
-              origin={origin}
-              destination={trackItem?.receiver_address?.geo_location}
-              mapContainerView={{ height: hp('60%') }}
-            /> */}
           </View>
         </View>
       </ModalPopUp>

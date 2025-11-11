@@ -489,6 +489,7 @@ const TrackingFoodOrderForm = ({ navigation }) => {
           <Text style={styles.liveTrackingText}>Live Tracking</Text>
           <View style={styles.mapRouteView}>
             <MapRoute
+               orderData={trackItem}
               origin={origin}
               destination={trackItem?.receiver_address?.geo_location}
               mapContainerView={{ height: hp('60%') }}

@@ -83,7 +83,8 @@ export default {
   rideParcelOrderSummary: 'orders/rider-parcel-order-summary',
   // geth3Polygons:'h3/polygons'
   geth3Polygons: 'h3/get-polygon-only',
-  getCustomerWiseRiderLocation: "orders/get-customer-wise-order-rider-detail"
+  getCustomerWiseRiderLocation: "orders/get-customer-wise-order-rider-detail",
+  ordersDirectionGooglemapHit :'orders/direction-googlemap-logs-hit'
 
 
 

@@ -428,7 +428,7 @@ export default function PriceConfirmed({ navigation, route }) {
   const { item } = route.params;
   console.log('Price item---', item);
   const { setAddParcelInfo, } = rootStore.parcelStore;
-  const {appUser}=rootStore.commonStore;
+  const { appUser } = rootStore.commonStore;
   const [pickUpLocation, setPickUpLocation] = useState('');
   const [dropLocation, setDropLocation] = useState('');
   const [initialValues, setInitialValues] = useState({
@@ -445,24 +445,24 @@ export default function PriceConfirmed({ navigation, route }) {
   console.log('fireValue--', fireValue);
 
 
-   useEffect(() => {
-      onAppEvents();
-    }, [])
-  
-    const onAppEvents = async () => {
-      try {
-        await AppEvents({
-          eventName: 'PriceConfirmedParcel',
-          payload: {
-            name: appUser?.name ?? '',
-            phone: appUser?.phone?.toString() ?? '',
-          }
-        })
-      } catch (error) {
-        console.log("Error---", error);
-      }
-  
+  useEffect(() => {
+    onAppEvents();
+  }, [])
+
+  const onAppEvents = async () => {
+    try {
+      await AppEvents({
+        eventName: 'PriceConfirmedParcel',
+        payload: {
+          name: appUser?.name ?? '',
+          phone: appUser?.phone?.toString() ?? '',
+        }
+      })
+    } catch (error) {
+      console.log("Error---", error);
     }
+
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -639,6 +639,7 @@ export default function PriceConfirmed({ navigation, route }) {
     >
       <View style={styles.container}>
         <MapRoute
+          orderData={pickDropDetails}
           origin={pickDropDetails?.sender_address?.geo_location}
           destination={pickDropDetails?.receiver_address?.geo_location}
           mapContainerView={{ height: hp('48%') }}

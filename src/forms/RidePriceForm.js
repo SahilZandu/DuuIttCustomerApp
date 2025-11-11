@@ -155,6 +155,9 @@ const RidePriceForm = ({ navigation }) => {
             padding={true}
             keyboardShouldPersistTaps={'handled'}>
             <MapRoute
+              orderData={{
+                _id:"Without Order Id"
+              }}
               origin={senderAddress?.geo_location}
               destination={receiverAddress?.geo_location}
               mapContainerView={{ height: Platform.OS == 'ios' ? hp('42%') : hp('52%') }}

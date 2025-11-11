@@ -289,6 +289,9 @@ const PriceDetailsForm = ({ navigation }) => {
               padding={true}
               keyboardShouldPersistTaps={'handled'}>
               <MapRoute
+                orderData={{
+                  _id: "Without Order Id"
+                }}
                 origin={senderAddress?.geo_location}
                 destination={receiverAddress?.geo_location}
                 mapContainerView={{

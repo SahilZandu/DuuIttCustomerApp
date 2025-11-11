@@ -10,7 +10,7 @@ axios.defaults.baseURL = Base_Url;
 
 axios.interceptors.request.use(
   config => {
-    config.timeout = 7000;
+    config.timeout = 10000;
     const token = rootStore.commonStore.token;
     console.log('token----', token);
     if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -253,8 +253,9 @@ export const agent = {
   foodOrdersInvoice: body => requests.get(
     `${Url.foodOrdersInvoice}/${body?.orderId}`),
   geth3Polygons: () => requests.get(Url.geth3Polygons),
-
   getCustomerWiseRiderLocation: body => requests.post(Url.getCustomerWiseRiderLocation, body),
+
+  ordersDirectionGooglemapHit: body => requests.post(Url.ordersDirectionGooglemapHit, body),
 
 
 };

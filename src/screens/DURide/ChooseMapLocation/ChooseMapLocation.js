@@ -12,7 +12,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import MapRoute from '../../../components/MapRoute';
 import { styles } from './styles';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import CTA from '../../../components/cta/CTA';
@@ -377,14 +376,6 @@ const ChooseMapLocation = ({ navigation, route }) => {
             }}
             checkLocation={checkLocation}
           />
-          {/* <MapRoute
-          mapContainerView={
-            Platform.OS == 'ios'
-              ? {height: screenHeight(70)}
-              : {height: screenHeight(74)}
-          }
-          origin={geoLocation}
-        /> */}
           <AutoCompleteGooglePlaceHolder
             onPressAddress={onPressAddress}
             address={address}
