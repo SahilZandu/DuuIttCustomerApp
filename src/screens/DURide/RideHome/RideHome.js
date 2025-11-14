@@ -30,6 +30,7 @@ import PopUpDontService from '../../../components/PopUpDontService';
 import Spacer from '../../../halpers/Spacer';
 import { Wrapper2 } from '../../../halpers/Wrapper2';
 import { AppEvents } from '../../../halpers/events/AppEvents';
+import { stopKeepAwakeScreen } from '../../../components/ScreenKeepAlive';
 
 let geoLocation = {
   lat: null,
@@ -84,6 +85,7 @@ export default function RideHome({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      stopKeepAwakeScreen();
       getIncompleteOrder();
       setTimeout(() => {
         StatusBar.setBarStyle("dark-content", true);

@@ -28,6 +28,7 @@ import MapCurrentLocationRoute from '../../../components/MapCurrentLocationRoute
 import Spacer from '../../../halpers/Spacer';
 import { Wrapper2 } from '../../../halpers/Wrapper2';
 import { AppEvents } from '../../../halpers/events/AppEvents';
+import { stopKeepAwakeScreen } from '../../../components/ScreenKeepAlive';
 
 let geoLocation = {
   lat: null,
@@ -92,6 +93,7 @@ export default function ParcelHome({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      stopKeepAwakeScreen();
       setCurrentLocation();
       getTrackingOrder();
       getIncompleteOrder();

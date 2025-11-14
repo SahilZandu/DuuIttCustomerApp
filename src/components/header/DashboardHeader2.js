@@ -20,7 +20,7 @@ import {
 } from 'react-native-responsive-screen';
 import Url from '../../api/Url';
 import { getCurrentLocation, setCurrentLocation } from '../GetAppLocation';
-import { getGeoCodes } from '../GeoCodeAddress';
+import { getCurrentAddressGeoCodes, getGeoCodes } from '../GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { rootStore } from '../../stores/rootStore';
 import { currencyFormat } from '../../halpers/currencyFormat';
@@ -115,7 +115,7 @@ const DashboardHeader2 = ({
   };
 
   const getCurrentAddress = async () => {
-    const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
+    const addressData = await getCurrentAddressGeoCodes(geoLocation?.lat, geoLocation?.lng);
     console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);

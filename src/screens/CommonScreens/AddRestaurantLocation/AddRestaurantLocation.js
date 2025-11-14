@@ -14,33 +14,18 @@ import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fonts } from '../../../theme/fonts/fonts';
-import { colors } from '../../../theme/colors';
-import AppInputScroll from '../../../halpers/AppInputScroll';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
-import Header from '../../../components/header/Header';
-import MapRouteMarker from '../../../components/MapRouteMarker';
 import AutoCompleteGooglePlaceHolder from '../../../components/AutoCompleteGooglePlaceHolder';
-import { Formik, useFormikContext } from 'formik';
-import FieldInput from '../../../components/FieldInput';
 import Spacer from '../../../halpers/Spacer';
 import CTA from '../../../components/cta/CTA';
-import { Strings } from '../../../translates/strings';
-import { addMyAddressValidations } from '../../../forms/formsValidation/addMyAddressValidations';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import { getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
-import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
+import { getCurrentAddressGeoCodes, getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import { appImages } from '../../../commons/AppImages';
-import Modal from 'react-native-modal';
-import Tabs2 from '../../../components/Tabs2';
-import { Surface } from 'react-native-paper';
 import { rootStore } from '../../../stores/rootStore';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
-import InputFieldLabel from '../../../components/InputFieldLabel';
 import MapLocationRoute from '../../../components/MapLocationRoute';
-import FieldErrorMessage from '../../../components/FieldErrorMessage';
 import { Wrapper } from '../../../halpers/Wrapper';
 import { AppEvents } from '../../../halpers/events/AppEvents';
 
@@ -144,7 +129,7 @@ export default function AddRestaurantLocation({ navigation }) {
     }, [address]);
 
     const getCurrentAddress = async () => {
-        const addressData = await getGeoCodes(geoLocation?.lat?.toString(), geoLocation?.lng?.toString());
+        const addressData = await getCurrentAddressGeoCodes(geoLocation?.lat?.toString(), geoLocation?.lng?.toString());
         // console.log('addressData', addressData);
         const nameData = addressData?.address?.split(',');
         // console.log('nameData--', nameData[0]);
@@ -160,12 +145,12 @@ export default function AddRestaurantLocation({ navigation }) {
         setAddress(details?.formatted_address);
         setGeoLocation(details?.geometry?.location);
         setLocationId(details?.place_id);
-         setTimeout(() => {
-        setName(details?.name);
-        setAddress(details?.formatted_address);
-        setGeoLocation(details?.geometry?.location);
-        setLocationId(details?.place_id);
-    }, 2000);
+        setTimeout(() => {
+            setName(details?.name);
+            setAddress(details?.formatted_address);
+            setGeoLocation(details?.geometry?.location);
+            setLocationId(details?.place_id);
+        }, 2000);
 
     };
 
@@ -195,7 +180,7 @@ export default function AddRestaurantLocation({ navigation }) {
 
     const handleCurrentAddress = async () => {
         setCurrentLocation();
-        const addressData = await getGeoCodes(
+        const addressData = await getCurrentAddressGeoCodes(
             currentLocation?.lat,
             currentLocation?.lng,
         );
@@ -262,7 +247,7 @@ export default function AddRestaurantLocation({ navigation }) {
                                 } else {
                                     setTimeout(() => {
                                         setCheckLocation(data)
-                                    },1000)
+                                    }, 1000)
                                 }
                             }}
                             checkLocation={checkLocation}

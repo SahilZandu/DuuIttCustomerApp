@@ -264,7 +264,7 @@ import Url from '../../api/Url';
 import { rootStore } from '../../stores/rootStore';
 import { useFocusEffect } from '@react-navigation/native';
 import { getCurrentLocation, setCurrentLocation } from '../GetAppLocation';
-import { getGeoCodes } from '../GeoCodeAddress';
+import { getCurrentAddressGeoCodes, getGeoCodes } from '../GeoCodeAddress';
 import { ActivityIndicator } from 'react-native-paper';
 import AnimatedLoader from '../AnimatedLoader/AnimatedLoader';
 
@@ -361,7 +361,7 @@ const DashboardHeader = ({ title,
 
 
   const getCurrentAddress = async () => {
-    const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
+    const addressData = await getCurrentAddressGeoCodes(geoLocation?.lat, geoLocation?.lng);
     console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);

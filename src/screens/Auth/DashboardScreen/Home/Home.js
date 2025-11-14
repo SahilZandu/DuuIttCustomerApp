@@ -32,9 +32,10 @@ import { Notifications } from 'react-native-notifications';
 import CustomerHomeSlider from '../../../../components/slider/customerHomeSlider';
 import { colors } from '../../../../theme/colors';
 import { Wrapper4 } from '../../../../halpers/Wrapper4';
-import { getGeoCodes } from '../../../../components/GeoCodeAddress';
+import { getCurrentAddressGeoCodes, getGeoCodes } from '../../../../components/GeoCodeAddress';
 import AnimatedLoader from '../../../../components/AnimatedLoader/AnimatedLoader';
 import { AppEvents } from '../../../../halpers/events/AppEvents';
+import { stopKeepAwakeScreen } from '../../../../components/ScreenKeepAlive';
 
 
 let currentLocation = {
@@ -90,6 +91,7 @@ export default function Home({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      stopKeepAwakeScreen();
       onRemoveNotificationDrawer();
       // if (h3PolyData?.length == 0) {
       getH3PolygonData();
@@ -184,7 +186,7 @@ export default function Home({ navigation }) {
 
   const handleCurrentAddress = async () => {
     setCurrentLocation();
-    const addressData = await getGeoCodes(
+    const addressData = await getCurrentAddressGeoCodes(
       currentLocation?.lat,
       currentLocation?.lng,
     );

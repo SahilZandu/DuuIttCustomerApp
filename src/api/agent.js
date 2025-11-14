@@ -10,7 +10,7 @@ axios.defaults.baseURL = Base_Url;
 
 axios.interceptors.request.use(
   config => {
-    config.timeout = 10000;
+    config.timeout = 7000;
     const token = rootStore.commonStore.token;
     console.log('token----', token);
     if (token) config.headers.Authorization = `Bearer ${token}`;

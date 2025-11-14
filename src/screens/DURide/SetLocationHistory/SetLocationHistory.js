@@ -9,7 +9,7 @@ import {
 } from 'react-native-responsive-screen';
 import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import CTA from '../../../components/cta/CTA';
-import { getGeoCodes, getMpaDalta } from '../../../components/GeoCodeAddress';
+import { getCurrentAddressGeoCodes, getGeoCodes, getMpaDalta } from '../../../components/GeoCodeAddress';
 import { findPolygonForPoint, getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import LocationHistoryCard from '../../../components/LocationHistoryCard';
 import PickDropLocation from '../../../components/PickDropLocation';
@@ -169,7 +169,7 @@ const SetLocationHistory = ({ navigation }) => {
   };
 
   const getCurrentAddress = async () => {
-    const addressData = await getGeoCodes(geoLocation?.lat, geoLocation?.lng);
+    const addressData = await getCurrentAddressGeoCodes(geoLocation?.lat, geoLocation?.lng);
     console.log('addressData', addressData);
     const nameData = addressData?.address?.split(',');
     // console.log('nameData--', nameData[0]);

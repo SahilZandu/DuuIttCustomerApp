@@ -21,7 +21,6 @@ import { DuuittMapTheme } from './DuuittMapTheme';
 import MapViewDirections from 'react-native-maps-directions';
 import socketServices from '../socketIo/SocketServices';
 import { rootStore } from '../stores/rootStore';
-import { object } from 'yup';
 import { MAP_KEY } from '../halpers/AppLink';
 
 
@@ -266,7 +265,7 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
       );
 
       const json = await response?.json();
-       ordersDirectionGooglemapHit(orderData, 'Route Directions')
+      ordersDirectionGooglemapHit(orderData, 'Route Directions')
 
       if (json?.routes?.length > 0) {
         // ✅ Find the shortest route based on total distance

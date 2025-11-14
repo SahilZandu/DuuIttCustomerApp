@@ -22,7 +22,7 @@ import AnimatedLoader from '../../../components/AnimatedLoader/AnimatedLoader';
 import { screenHeight } from '../../../halpers/matrics';
 import { rootStore } from '../../../stores/rootStore';
 import { appImages } from '../../../commons/AppImages';
-import { getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
+import { getCurrentAddressGeoCodes, getGeoCodes, setMpaDaltaInitials } from '../../../components/GeoCodeAddress';
 import { filterAddress, getCurrentLocation, setCurrentLocation } from '../../../components/GetAppLocation';
 import MapLocationRoute from '../../../components/MapLocationRoute';
 import { useFocusEffect } from '@react-navigation/native';
@@ -62,6 +62,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
   const [LocationId, setLocationId] = useState('')
   const [loading, setLoading] = useState(false)
   const [checkLocation, setCheckLocation] = useState(false)
+  const [locationShow, setLocationShow] = useState(0)
 
   useEffect(() => {
     onAppEvents();
@@ -112,58 +113,17 @@ const ChooseMapLocation = ({ navigation, route }) => {
     };
   }, []);
 
-  const mohaliChandigarhBounds = {
-    north: 30.8258,
-    south: 30.6600,
-    west: 76.6600,
-    east: 76.8500,
-  };
 
-  const isWithinBounds = (latitude, longitude) => {
-    return (
-      latitude <= mohaliChandigarhBounds.north &&
-      latitude >= mohaliChandigarhBounds.south &&
-      longitude >= mohaliChandigarhBounds.west &&
-      longitude <= mohaliChandigarhBounds.east
-    );
-  };
 
   const handleRegionChangeComplete = (region) => {
     onHandleConfirm()
-    // if (debounceTimeout.current) {
-    //   clearTimeout(debounceTimeout.current);
-    // }
-
-    // debounceTimeout.current = setTimeout(() => {
-    //   if (!isWithinBounds(region.lat, region.lng)) {
-    //     Alert.alert(" ", `Oops! we currently don't service your ${(pickDrop == 'pick' ?"pickup":'drop')} location. Please select different location.`);
-    //   } else {
-    //     if (pickDrop !== 'pick' && senderAddress?.address?.length > 0) {
-    //       if (!isWithinBounds(senderAddress?.geo_location?.lat, senderAddress?.geo_location?.lng)) {
-    //         Alert.alert(" ", "Oops! we currently don't service your pickup location. Please select different location.");
-    //       }else {
-    //         onHandleConfirm()
-    //        }
-    //     } else if (pickDrop !== 'drop' && receiverAddress?.address?.length > 0) {
-    //       if (!isWithinBounds(receiverAddress?.geo_location?.lat, receiverAddress?.geo_location?.lng)) {
-    //         Alert.alert(" ", "Oops! we currently don't service your drop location. Please select different location.");
-    //       }
-    //       else {
-    //         onHandleConfirm()
-    //        }
-    //     }
-    //      else {
-    //       onHandleConfirm()
-    //      }
-    //   }
-    // },300); // Delay in milliseconds
   };
 
   const onPressAddress = (data, details) => {
-    console.log('data ,details 333', data, "----------------", details);
+    // console.log('data ,details 333', data, "----------------", details);
     setName(details?.name);
     const shortAddress = filterAddress(details?.formatted_address)
-    console.log("shortAddress----", shortAddress);
+    // console.log("shortAddress----", shortAddress);
     setAddress(shortAddress);
     setGeoLocation(details?.geometry?.location);
     setLocationId(details?.place_id)
@@ -171,7 +131,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
     setTimeout(() => {
       setName(details?.name);
       const shortAddress = filterAddress(details?.formatted_address)
-      console.log("shortAddress----", shortAddress);
+      // console.log("shortAddress----", shortAddress);
       setAddress(shortAddress);
       setGeoLocation(details?.geometry?.location);
       setLocationId(details?.place_id)
@@ -298,7 +258,7 @@ const ChooseMapLocation = ({ navigation, route }) => {
 
   const handleCurrentAddress = async () => {
     setCurrentLocation();
-    const addressData = await getGeoCodes(
+    const addressData = await getCurrentAddressGeoCodes(
       currentLocation?.lat,
       currentLocation?.lng,
     );
@@ -314,22 +274,47 @@ const ChooseMapLocation = ({ navigation, route }) => {
 
   const handleTouchAddress = async (loaction) => {
     console.log("loaction---", loaction);
-    const addressData = await getGeoCodes(
-      loaction?.latitude,
-      loaction?.longitude,
-    );
-    console.log('addressData handleTouchAddress', addressData);
-    const nameData = addressData?.address?.split(',');
-    // console.log('nameData--', nameData[0]);
-    let newLocation = {
-      lat: loaction?.latitude,
-      lng: loaction?.longitude,
-    };
-    setName(nameData[0]);
-    setAddress(addressData?.address);
-    // setGeoLocation(addressData?.geo_location);
-    setGeoLocation(newLocation);
-    setLocationId(addressData?.place_Id)
+    const newLocation = locationShow + 1
+    setLocationShow(newLocation)
+    if ((locationShow > 0 && Platform.OS === 'ios')) {
+      const addressData = await getGeoCodes(
+        loaction?.latitude,
+        loaction?.longitude,
+      );
+      console.log('addressData handleTouchAddress', addressData);
+      const nameData = addressData?.address?.split(',');
+      // console.log('nameData--', nameData[0]);
+      let newLocation = {
+        lat: loaction?.latitude,
+        lng: loaction?.longitude,
+      };
+      setName(nameData[0]);
+      setAddress(addressData?.address);
+      // setGeoLocation(addressData?.geo_location);
+      setGeoLocation(newLocation);
+      setLocationId(addressData?.place_Id)
+    } else {
+      if (Platform.OS === 'android') {
+        const addressData = await getGeoCodes(
+          loaction?.latitude,
+          loaction?.longitude,
+        );
+        console.log('addressData handleTouchAddress', addressData);
+        const nameData = addressData?.address?.split(',');
+        // console.log('nameData--', nameData[0]);
+        let newLocation = {
+          lat: loaction?.latitude,
+          lng: loaction?.longitude,
+        };
+        setName(nameData[0]);
+        setAddress(addressData?.address);
+        // setGeoLocation(addressData?.geo_location);
+        setGeoLocation(newLocation);
+        setLocationId(addressData?.place_Id)
+      }
+
+    }
+
   };
 
   return (

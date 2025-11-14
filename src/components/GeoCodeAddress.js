@@ -1,7 +1,7 @@
 import { rootStore } from '../stores/rootStore';
 import { filterAddress } from './GetAppLocation';
-
-const myApiKey = 'AIzaSyAGYLXByGkajbYglfVPK4k7VJFOFsyS9EA';
+import { MAP_KEY } from '../halpers/AppLink';
+import haversine from "haversine-distance";
 
 let dalta = {
   latitudeDelta: 0.0322,
@@ -13,41 +13,186 @@ let manageRideDalta = {
   longitudeDelta: 0.0650,
 }
 
+// export const getCurrentAdddressGeoCodes = (latitude, longitude) => {
+//   console.log('latitude, longitude', latitude, longitude);
+//   const { setCurrentAddress, currentAddress } = rootStore.myAddressStore;
+//   if ((currentAddress?.checkAddressLocation?.latitude !== latitude
+//     && currentAddress?.checkAddressLocation?.longitude !== longitude)){
+
+//     return new Promise((resolve, reject) => {
+//       fetch(
+//         'https://maps.googleapis.com/maps/api/geocode/json?address=' +
+//         latitude +
+//         ',' +
+//         longitude +
+//         '&key=' +
+//         MAP_KEY,
+//       )
+//         .then(response => response.json())
+//         .then(responseJson => {
+//           console.log('responseJson---', responseJson);
+//           if (responseJson.status === 'OK') {
+//             console.log('responseJson---', responseJson?.results);
+//             const shortAddress = filterAddress(responseJson?.results?.[0]?.formatted_address)
+//             // console.log("shortAddress----", shortAddress);
+//             const data = {
+//               address: shortAddress ? shortAddress : responseJson?.results?.[0]?.formatted_address,
+//               place_Id: responseJson?.results?.[0]?.place_id,
+//               geo_location: responseJson?.results?.[0]?.geometry?.location,
+//               checkAddressLocation: {
+//                 latitude: latitude,
+//                 longitude: longitude
+//               }
+//             };
+//             setCurrentAddress(data);
+//             resolve(data);
+//             // resolve(responseJson?.results?.[0]?.formatted_address);
+//           } else {
+//             // resolve('not found')
+//             reject('not found');
+//           }
+//         })
+//         .catch(error => {
+//           reject(error);
+//         });
+//     });
+//   } else{
+//      resolve(currentAddress);
+//   }
+
+// };
+let geocodeDebounceTimer = null;
+let geoDebounceTimer = null
+
+export const isSameLocation = (pointA, pointB, threshold = 5) => {
+  if (!pointB?.latitude || !pointB?.longitude) return true; // first time
+  const distance = haversine(pointA, pointB); // meters
+  return distance >= threshold;
+};
+
+
+export const getCurrentAddressGeoCodes = (latitude, longitude) => {
+  console.log("latitude, longitude", latitude, longitude);
+
+  const { setCurrentAddress, currentAddress } = rootStore.myAddressStore;
+
+  return new Promise((resolve, reject) => {
+
+    // ❗ Avoid duplicate calls if same location
+    // distance in meters
+
+    const customerLocation = {
+      latitude: latitude,
+      longitude: longitude,
+    };
+
+    // point to compare
+    const checkLocation = {
+      latitude: currentAddress?.checkAddressLocation?.latitude,
+      longitude: currentAddress?.checkAddressLocation?.longitude,
+    };
+
+    const isSame = isSameLocation(customerLocation, checkLocation, 10);
+
+    console.log("isSame:", isSame);
+
+    if (isSame) {
+      // ---- DEBOUNCE LOGIC ----
+      if (geocodeDebounceTimer) {
+        clearTimeout(geocodeDebounceTimer);
+      }
+
+      geocodeDebounceTimer = setTimeout(() => {
+        console.log("⏳ Debounce completed → Fetching Address…getCurrentAddressGeoCodes");
+
+        fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${latitude},${longitude}&key=${MAP_KEY}`
+        )
+          .then(response => response.json())
+          .then(responseJson => {
+            console.log("responseJson---", responseJson);
+
+            if (responseJson.status === "OK") {
+              const shortAddress = filterAddress(
+                responseJson?.results?.[0]?.formatted_address
+              );
+
+              const data = {
+                address: shortAddress
+                  ? shortAddress
+                  : responseJson?.results?.[0]?.formatted_address,
+                place_Id: responseJson?.results?.[0]?.place_id,
+                geo_location: responseJson?.results?.[0]?.geometry?.location,
+                checkAddressLocation: { latitude, longitude }
+              };
+
+              setCurrentAddress(data);
+              resolve(data);
+
+            } else {
+              reject("not found");
+            }
+          })
+          .catch(error => {
+            reject(error);
+          });
+
+      }, 500); // <-- Debounce 500ms
+    } else {
+      console.log("⚠️ Same location → Using cached address");
+      resolve(currentAddress);
+    }
+  });
+};
+
+
+
+
 export const getGeoCodes = (latitude, longitude) => {
   console.log('latitude, longitude', latitude, longitude);
-  const { setCurrentAddress } = rootStore.myAddressStore;
+  // const { setCurrentAddress, currentAddress } = rootStore.myAddressStore;
+  // ---- DEBOUNCE LOGIC ----
+
+  console.log("⏳ Debounce completed → Fetching Address… getGeoCodes");
   return new Promise((resolve, reject) => {
-    fetch(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=' +
-      latitude +
-      ',' +
-      longitude +
-      '&key=' +
-      myApiKey,
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log('responseJson---', responseJson);
-        if (responseJson.status === 'OK') {
-          console.log('responseJson---', responseJson?.results);
-          const shortAddress = filterAddress(responseJson?.results?.[0]?.formatted_address)
-          // console.log("shortAddress----", shortAddress);
-          const data = {
-            address: shortAddress ? shortAddress : responseJson?.results?.[0]?.formatted_address,
-            place_Id: responseJson?.results?.[0]?.place_id,
-            geo_location: responseJson?.results?.[0]?.geometry?.location,
-          };
-          setCurrentAddress(data);
-          resolve(data);
-          // resolve(responseJson?.results?.[0]?.formatted_address);
-        } else {
-          // resolve('not found')
-          reject('not found');
-        }
-      })
-      .catch(error => {
-        reject(error);
-      });
+    if (geoDebounceTimer) {
+      clearTimeout(geoDebounceTimer);
+    }
+
+    geoDebounceTimer = setTimeout(() => {
+      fetch(
+        'https://maps.googleapis.com/maps/api/geocode/json?address=' +
+        latitude +
+        ',' +
+        longitude +
+        '&key=' +
+        MAP_KEY,
+      )
+        .then(response => response.json())
+        .then(responseJson => {
+          console.log('responseJson---', responseJson);
+          if (responseJson.status === 'OK') {
+            console.log('responseJson---', responseJson?.results);
+            const shortAddress = filterAddress(responseJson?.results?.[0]?.formatted_address)
+            // console.log("shortAddress----", shortAddress);
+            const data = {
+              address: shortAddress ? shortAddress : responseJson?.results?.[0]?.formatted_address,
+              place_Id: responseJson?.results?.[0]?.place_id,
+              geo_location: responseJson?.results?.[0]?.geometry?.location,
+            };
+            // setCurrentAddress(data);
+            resolve(data);
+            // resolve(responseJson?.results?.[0]?.formatted_address);
+          } else {
+            // resolve('not found')
+            reject('not found');
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+
+    }, 500); // <-- Debounce 500ms
   });
 };
 

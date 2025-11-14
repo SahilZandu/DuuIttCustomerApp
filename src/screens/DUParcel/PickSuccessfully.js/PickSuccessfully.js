@@ -1,23 +1,16 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Text, TouchableOpacity, View, Image, Platform } from 'react-native';
-import { appImages, appImagesSvg } from '../../../commons/AppImages';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Text, TouchableOpacity, View, Image, } from 'react-native';
+import { appImages } from '../../../commons/AppImages';
 import { styles } from './styles';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fonts } from '../../../theme/fonts/fonts';
-import { colors } from '../../../theme/colors';
 import handleAndroidBackButton from '../../../halpers/handleAndroidBackButton';
 import { useFocusEffect } from '@react-navigation/native';
-import CTA from '../../../components/cta/CTA';
 import BTN from '../../../components/cta/BTN';
 import Spacer from '../../../halpers/Spacer';
 import socketServices from '../../../socketIo/SocketServices';
 import { Wrapper } from '../../../halpers/Wrapper';
 import { AppEvents } from '../../../halpers/events/AppEvents';
 import { rootStore } from '../../../stores/rootStore';
+import { stopKeepAwakeScreen } from '../../../components/ScreenKeepAlive';
 
 export default function PickSuccessfully({ navigation }) {
 
@@ -45,6 +38,7 @@ export default function PickSuccessfully({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      stopKeepAwakeScreen();
       handleAndroidBackButton('', 'parcel', 'parcel', navigation);
       socketServices.removeListener('update-location');
       socketServices.removeListener('remaining-distance');
