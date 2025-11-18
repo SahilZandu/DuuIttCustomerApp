@@ -337,7 +337,9 @@ export default function SideMenu({ navigation }) {
         StatusBar.setBarStyle("dark-content", true);
       }, 300)
       getCheckDevice();
-      socketServices.initailizeSocket();
+      if (!socketServices.isSocketConnected()) {
+        socketServices.initailizeSocket();
+      }
       checkInternet();
       handleAndroidBackButton(navigation);
       onUpdateUserInfo();

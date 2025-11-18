@@ -71,9 +71,14 @@ class WSServices {
     }
   };
 
+  // 🔥🔥 ADD THIS
+  isSocketConnected() {
+    console.log("isSocketConnected", this.socket?.connected, this.socket?.connected ?? false);
+    return this.socket?.connected || false;
+  }
   // Emit events to the server
   emit(event, data = {}) {
-    if (this.socket && this.socket.connected) {
+    if ((this.socket && this.socket.connected)) {
       this.socket.emit(event, data);
       console.log(`Emitted event: ${event} with data:`, data);
     } else {
@@ -83,7 +88,7 @@ class WSServices {
 
   // Listen for events from the server
   on(event, cb) {
-    if (this.socket) {
+    if ((this.socket && this.socket.connected)) {
       this.socket.on(event, cb); // Correcting to use 'on' for listening
       console.log(`Listening for event: ${event}`);
     } else {
@@ -92,7 +97,7 @@ class WSServices {
   }
 
   off(event, cb) {
-    if (this.socket) {
+    if ((this.socket && this.socket.connected)) {
       this.socket.off(event, cb); // Correcting to use 'on' for listening
       console.log(`Listening for event: ${event}`);
     } else {
@@ -102,7 +107,7 @@ class WSServices {
 
   // Remove a specific event listener
   removeListener(listenerName) {
-    if (this.socket) {
+    if ((this.socket && this.socket.connected)) {
       this.socket.removeListener(listenerName);
       console.log(`Removed listener: ${listenerName}`);
     } else {
@@ -115,7 +120,7 @@ class WSServices {
 
   // Remove all event listeners
   removeAllListeners() {
-    if (this.socket) {
+    if ((this.socket && this.socket.connected)) {
       this.socket.removeAllListeners();
       console.log('✅ All socket listeners removed');
     } else {
@@ -124,7 +129,7 @@ class WSServices {
   }
 
   disconnectSocket() {
-    if (this.socket) {
+    if ((this.socket && this.socket.connected)) {
       this.socket.disconnect();
       console.log('=== Socket disconnected ===11');
     } else {
@@ -132,9 +137,7 @@ class WSServices {
     }
   }
 
-  isSocketConnected() {
-    return this.socket?.connected || false;
-  }
+
 
 }
 

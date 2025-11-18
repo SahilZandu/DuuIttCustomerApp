@@ -134,7 +134,9 @@ export default function TrackOrderPreparing({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      socketServices.initailizeSocket();
+      if (!socketServices.isSocketConnected()) {
+        socketServices.initailizeSocket();
+      }
       setCurrentLocation();
       if (itemDetails?.rider?._id?.length > 0) {
         const intervalId = setInterval(() => {

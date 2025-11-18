@@ -94,7 +94,9 @@ const TrackingOrderForm = ({ navigation }) => {
       setChatNotificationStatus(true)
       handleAndroidBackButton(navigation);
       getTrackingOrder();
-      socketServices.initailizeSocket();
+      if (!socketServices.isSocketConnected()) {
+        socketServices.initailizeSocket();
+      }
       setCurrentLocation();
     }, [isTracking]),
   );
@@ -148,9 +150,9 @@ const TrackingOrderForm = ({ navigation }) => {
         if (appStateTimeoutRef.current) {
           clearTimeout(appStateTimeoutRef.current);
         }
-        
+
         appStateTimeoutRef.current = setTimeout(() => {
-          if (isMountedRef.current && !socketServices.isSocketConnected()) {
+          if ((isMountedRef.current && !socketServices.isSocketConnected())) {
             socketServices.initailizeSocket();
           }
           if (isMountedRef.current) {
@@ -175,10 +177,10 @@ const TrackingOrderForm = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       isMountedRef.current = true;
-      
+
       let intervalId = null;
       let locationTimeoutId = null;
-      
+
       if (trackedArray?.length > 0) {
         intervalId = setInterval(() => {
           if (!isMountedRef.current) return;
@@ -190,7 +192,7 @@ const TrackingOrderForm = ({ navigation }) => {
           }, 1500);
         }, 10000);
       }
-      
+
       return () => {
         isMountedRef.current = false;
         if (intervalId) {
@@ -550,7 +552,7 @@ const TrackingOrderForm = ({ navigation }) => {
       </ModalPopUp>
     </View>
   );
-  
+
   // Component unmount cleanup
   useEffect(() => {
     return () => {

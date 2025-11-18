@@ -9,6 +9,8 @@ export default class OrderStore {
   parcelOrderInProgress = [];
   rideOrderInProgress = [];
   h3PolyData = []
+  rootPolygonRide = []
+  rootPolygonParcel = []
 
 
   parcelsOfUser = async (order_type, limit, handleLoading) => {
@@ -345,6 +347,14 @@ export default class OrderStore {
     }
   };
 
+
+  setRootPolygonRide = (data) => {
+    this.rootPolygonRide = data;
+  }
+
+  setRootPolygonParcel = (data) => {
+    this.rootPolygonParcel = data;
+  }
 
 
 

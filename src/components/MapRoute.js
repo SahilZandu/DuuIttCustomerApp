@@ -26,7 +26,8 @@ import { MAP_KEY } from '../halpers/AppLink';
 
 
 const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderData }) => {
-  const { getCustomerWiseRiderLocation, ordersDirectionGooglemapHit } = rootStore.orderStore;
+  const { getCustomerWiseRiderLocation, ordersDirectionGooglemapHit,
+    setRootPolygonRide, rootPolygonRide, setRootPolygonParcel, rootPolygonParcel } = rootStore.orderStore;
   const mapRef = useRef(null);
   const hasAnimatedOnce = useRef(false);
   const hasAnimatedCameraRef = useRef(false)
@@ -257,54 +258,56 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
 
     // Create new AbortController for this request
     fetchAbortControllerRef.current = new AbortController();
+    if (coords?.length == 0) {
+      alert("yes")
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`,
+          { signal: fetchAbortControllerRef.current.signal }
+        );
 
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`,
-        { signal: fetchAbortControllerRef.current.signal }
-      );
+        const json = await response?.json();
+        ordersDirectionGooglemapHit(orderData, 'Route Directions')
 
-      const json = await response?.json();
-      ordersDirectionGooglemapHit(orderData, 'Route Directions')
+        if (json?.routes?.length > 0) {
+          // ✅ Find the shortest route based on total distance
+          let shortestRoute = json?.routes[0];
+          let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
 
-      if (json?.routes?.length > 0) {
-        // ✅ Find the shortest route based on total distance
-        let shortestRoute = json?.routes[0];
-        let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
+          json?.routes?.forEach(route => {
+            const distance = route?.legs[0]?.distance?.value;
+            if (distance < minDistance) {
+              minDistance = distance;
+              shortestRoute = route;
+            }
+          });
 
-        json?.routes?.forEach(route => {
-          const distance = route?.legs[0]?.distance?.value;
-          if (distance < minDistance) {
-            minDistance = distance;
-            shortestRoute = route;
+          // ✅ Decode the shortest route polyline
+          const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
+          const routeCoords = points?.map(point => ({
+            latitude: point[0],
+            longitude: point[1],
+          }));
+
+          // ✅ Update state only if component is still mounted
+          if (isMountedRef.current) {
+            setCoords(routeCoords);
+            console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
           }
-        });
-
-        // ✅ Decode the shortest route polyline
-        const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
-        const routeCoords = points?.map(point => ({
-          latitude: point[0],
-          longitude: point[1],
-        }));
-
-        // ✅ Update state only if component is still mounted
-        if (isMountedRef.current) {
-          setCoords(routeCoords);
-          console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
+        } else {
+          console.log('⚠️ No routes found.');
         }
-      } else {
-        console.log('⚠️ No routes found.');
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.log('Route fetch cancelled');
+        } else if (isMountedRef.current) {
+          console.log('❌ Error fetching route:', error);
+        }
+      } finally {
+        fetchAbortControllerRef.current = null;
       }
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        console.log('Route fetch cancelled');
-      } else if (isMountedRef.current) {
-        console.log('❌ Error fetching route:', error);
-      }
-    } finally {
-      fetchAbortControllerRef.current = null;
-    }
-  };
+    };
+  }
 
   const getBearing = (start, end) => {
     const lat1 = (start.lat * Math.PI) / 180;

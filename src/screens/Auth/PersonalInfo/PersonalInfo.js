@@ -38,7 +38,9 @@ export default function PersonalInfo({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       handleAndroidBackButton();
-      socketServices.initailizeSocket();
+      if (!socketServices.isSocketConnected()) {
+        socketServices.initailizeSocket();
+      }
     }, []),
   );
 

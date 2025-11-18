@@ -303,7 +303,9 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
-    socketServices.initailizeSocket();
+    if (!socketServices.isSocketConnected()) {
+      socketServices.initailizeSocket();
+    }
     // Initialize FCM
     // const initFCM = async () => {
     //   await requestUserPermission();

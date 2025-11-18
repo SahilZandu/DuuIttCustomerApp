@@ -94,7 +94,9 @@ export default function Chat({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      socketServices.initailizeSocket();
+      if (!socketServices.isSocketConnected()) {
+        socketServices.initailizeSocket();
+      }
       setChatNotificationStatus(false);
       handleAndroidBackButton(navigation)
       if (item?._id?.length > 0) {

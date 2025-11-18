@@ -246,7 +246,9 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
   }, []);
 
   useEffect(() => {
-    socketServices.initailizeSocket();
+    if (!socketServices.isSocketConnected()) {
+      socketServices.initailizeSocket();
+    }
     // ridePickupParcel()
   }, [isTracking]);
 
@@ -296,7 +298,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
   useEffect(() => {
     if (!isMountedRef.current) return;
-    
+
     // Clean up previous listeners
     socketListenersRef.current.forEach(({ event, handler }) => {
       socketServices.removeListener(event, handler);
@@ -305,7 +307,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
 
     const timeoutId = setTimeout(() => {
       if (!isMountedRef.current) return;
-      
+
       let query = {
         lat: getLocation('lat')?.toString(),
         lng: getLocation('lng')?.toString(),
@@ -372,9 +374,9 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         if (appStateTimeoutRef.current) {
           clearTimeout(appStateTimeoutRef.current);
         }
-        
+
         appStateTimeoutRef.current = setTimeout(() => {
-          if (isMountedRef.current && !socketServices.isSocketConnected()) {
+          if ((isMountedRef.current && !socketServices.isSocketConnected())) {
             socketServices.initailizeSocket();
           }
           if (isMountedRef.current) {
@@ -402,10 +404,10 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       checkUnseenMsg();
       setChatNotificationStatus(true);
       handleAndroidBackButton('', 'parcel', 'parcel', navigation);
-      
+
       let intervalId = null;
       let locationTimeoutId = null;
-      
+
       if (parcelInfo?.status == 'accepted' || parcelInfo?.status == 'picked') {
         intervalId = setInterval(() => {
           if (!isMountedRef.current) return;
@@ -417,7 +419,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
           }, 1500);
         }, 20000);
       }
-      
+
       return () => {
         isMountedRef.current = false;
         if (intervalId) {
@@ -471,7 +473,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
         item?.order_type?.toLowerCase() === 'parcel'
       );
       if (!isMountedRef.current) return;
-      
+
       if (resFilter?.length > 0) {
         checkRiderStatus = resFilter[0]
         if (resFilter[0]?.status !== "pending") {
@@ -1216,7 +1218,7 @@ const SearchingParcelForm = ({ navigation, route, screenName }) => {
       </View>
     </GestureHandlerRootView>
   );
-  
+
   // Component unmount cleanup
   useEffect(() => {
     return () => {

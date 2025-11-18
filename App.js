@@ -49,31 +49,10 @@ function App() {
     await notifee.cancelAllNotifications();
   }
 
-  const onStartBackgroundTask = async () => {
-    setTimeout(async () => {
-      try {
-        await startBackgroundTask();
-        console.log('✅ Background task started from app');
-      } catch (error) {
-        console.log('❌ Error starting background task:', error);
-      }
-    }, 2000)
-  };
-
-  const onStopBackgroundTask = async () => {
-    setTimeout(async () => {
-      try {
-        await stopBackgroundTask();
-        console.log('✅ Background task stop from app');
-      } catch (error) {
-        console.log('❌ Error stopping background task:', error);
-      }
-    }, 2000)
-  };
 
   useEffect(() => {
     onRemoveNotificationDrawer()
-    onStartBackgroundTask();
+    startBackgroundTask()
     const subscription = AppState.addEventListener("change", nextAppState => {
       // Prevent unnecessary calls if state hasn't changed
       if (appState.current === nextAppState) return;
@@ -95,9 +74,8 @@ function App() {
 
       }
 
-      if (nextAppState === "active") {
+      if (nextAppState === "active" && !socketServices.isSocketConnected()) {
         console.log("App became active: restarting services");
-        // onStopBackgroundTask();
         socketServices.initailizeSocket();
         // // Stop background task with delay
         // setTimeout(async () => {
@@ -118,7 +96,7 @@ function App() {
     return () => {
       subscription.remove();
       // Ensure cleanup
-      stopBackgroundTask().catch(console.error);
+      stopBackgroundTask()
       socketServices.removeAllListeners();
       socketServices.disconnectSocket();
       // 

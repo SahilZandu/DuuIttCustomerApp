@@ -692,7 +692,9 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
 
   console.log('paymentMethod--', paymentMethod, addParcelInfo, parcelInfo);
   useEffect(() => {
-    socketServices.initailizeSocket();
+      if(!socketServices.isSocketConnected()){
+       socketServices.initailizeSocket();
+      }
     // ridePickupParcel()
   }, [isTracking]);
 
@@ -1074,7 +1076,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         }
 
         appStateTimeoutRef.current = setTimeout(() => {
-          if (isMountedRef.current && !socketServices.isSocketConnected()) {
+          if ((isMountedRef.current && !socketServices.isSocketConnected())) {
             socketServices.initailizeSocket();
           }
           if (isMountedRef.current) {

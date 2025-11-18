@@ -24,6 +24,8 @@ import { MAP_KEY } from '../halpers/AppLink';
 import PopUpInProgess from './appPopUp/PopUpInProgess';
 import haversine from "haversine-distance";
 import { startKeepAwakeScreen, stopKeepAwakeScreen } from './ScreenKeepAlive';
+import { getCurrentLocation, locationPermission } from './helperFunction';
+
 
 
 let currentLiveRiderLocation = {}
@@ -169,7 +171,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
 
         const intervalId = setInterval(() => {
           onUpdateCutomerLocation(riderCustomerDetails);
-        }, 7000);
+        }, 60000);
 
         return () => {
           clearInterval(intervalId);
@@ -205,6 +207,8 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
 
   // Animate rotation smoothly
   const animateRotation = useCallback((newHeading) => {
+    console.log("newHeading--animateRotation",newHeading);
+    
     if (!isMountedRef.current || newHeading === null || newHeading === undefined || isNaN(newHeading)) {
       return;
     }
@@ -251,13 +255,16 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
     });
   }, [animatedRotation]);
 
+  
+
   const onUpdateCutomerLocation = async (order) => {
+    // if(!socketServices.isSocketConnected()){
     try {
       const res = await getCustomerWiseRiderLocation(order);
-      console.log("res?.rider?.current_location--", res?.rider,
-        res?.rider?.current_location?.root_coordinates
-      );
-
+      // console.log("res?.rider?.current_location--1", res?.rider,
+      //   res?.rider?.current_location?.root_coordinates
+      // );
+      // alert("yes--");
       if(res?.rider?.current_location?.root_coordinates?.length > 0){
          if ((res?.rider?.current_location?.distancekm <= 0.20 && !showPickDesPopUpModal && riderCustomerDetails?.status == 'picked')) {
           showPickDesPopUpModal = true;
@@ -272,8 +279,9 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
         
 
       const currentLoc = res?.rider?.current_location;
-      //  updateHeading = res?.rider?.current_location?.rider_moment ?? 0;
-      //  setHeading(res?.rider?.current_location?.rider_moment ?? 0);
+       updateHeading = res?.rider?.current_location?.rider_moment ?? 0;
+       setHeading(res?.rider?.current_location?.rider_moment ?? 0);
+        animateRotation(res?.rider?.current_location?.rider_moment ?? 0)
       let actualHeading = res?.rider?.current_location?.rider_moment ?? updateHeading;
       if (!actualHeading || isNaN(actualHeading) || actualHeading === 0) {
         const prevPos = prevLocationRef.current;
@@ -287,17 +295,17 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
           if (calculatedHeading !== null) {
             updateHeading = calculatedHeading;
             setHeading(calculatedHeading)
-            // animateRotation(calculatedHeading);
+            animateRotation(calculatedHeading);
             console.log('📐 Calculated heading from movement:', actualHeading.toFixed(1));
           } else {
             updateHeading = res?.rider?.current_location?.rider_moment ?? 0;
             setHeading(res?.rider?.current_location?.rider_moment ?? 0);
-            // animateRotation(res?.rider?.current_location?.rider_moment ?? 0)
+            animateRotation(res?.rider?.current_location?.rider_moment ?? 0)
           }
         } else {
           updateHeading = res?.rider?.current_location?.rider_moment ?? 0;
           setHeading(res?.rider?.current_location?.rider_moment ?? 0);
-          // animateRotation(res?.rider?.current_location?.rider_moment ?? 0)
+          animateRotation(res?.rider?.current_location?.rider_moment ?? 0)
         }
       }
 
@@ -336,38 +344,46 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
     } catch (error) {
       console.log("❌ Error updating customer location:", error);
     }
+  // }else{
+  //    getSocketUpdatedData();
+  //   }
   };
 
 
-  useEffect(() => {
-    socketServices.initailizeSocket();
+  const getSocketUpdatedData = async()=>{
+     if(socketServices.isSocketConnected()){
       try {
-    socketServices.on('getremainingdistance', data => {
-      console.log('Remaining distance data--:', data, data?.location);
-
+      socketServices.on('getremainingdistance', data => {
+      console.log('Remaining distance data--:', data, data?.location,data?.root_coordinates?.length);
+      // console.log("📍 Using getCurrentLocation:", locationData,data?.rider_moment);
       const newLocation = data?.location;
-
        if(data?.root_coordinates?.length > 0){
+         console.log('data?.root_coordinates--:', data?.root_coordinates,);
+            setCoords(data?.root_coordinates)
+           coordinateRoute = data?.root_coordinates
+           onUpdateRiderMoveValue(data?.distancekm)
+           onKmsTime(data?.distancekm ,data?.eta)
+
          if ((data?.distancekm <= 0.20 && !showPickDesPopUpModal && riderCustomerDetails?.status == 'picked')) {
           showPickDesPopUpModal = true;
           setShowPickDesPopUp(true);
-        }
-        setCoords(data?.root_coordinates)
-        coordinateRoute = data?.root_coordinates
-           onUpdateRiderMoveValue(data?.distancekm)
-        onKmsTime(data?.distancekm , data?.eta)
+           }
 
-      }
+        }
         
       
-      if(!newLocation && riderCustomerDetails){
-         onUpdateCutomerLocation(riderCustomerDetails)
+      if((!newLocation && riderCustomerDetails) 
+        || (newLocation?.lat === currentLiveRiderLocation?.lat && riderCustomerDetails)
+      ){
+        // console.log("!newLocation && riderCustomerDetails--",!newLocation && riderCustomerDetails);
+         onUpdateCutomerLocation(riderCustomerDetails);
       }
 
       if (!newLocation?.lat || !newLocation?.lng) return;
           currentLiveRiderLocation = newLocation
-      // updateHeading = data?.rider_moment ?? 0
-      //   setHeading(data?.rider_moment ?? 0)
+      updateHeading = data?.rider_moment ?? 0
+        setHeading(data?.rider_moment ?? 0)
+         animateRotation(data?.rider_moment  ?? 0)
 
       let actualHeading = data?.rider_moment ?? updateHeading ?? 0;
       if (!actualHeading || isNaN(actualHeading) || actualHeading === 0) {
@@ -382,19 +398,19 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
           if (calculatedHeading !== null) {
             updateHeading = calculatedHeading;
             setHeading(calculatedHeading)
-            // animateRotation(calculatedHeading)
+            animateRotation(calculatedHeading)
             console.log('📐 Calculated heading from movement newLocation:', actualHeading.toFixed(1));
           } else {
             updateHeading = data?.rider_moment ?? 0
-            setHeading(data?.rider_moment ?? 0)
-            // animateRotation(data?.rider_moment ?? 0)
+            setHeading( data?.rider_moment ?? 0)
+            animateRotation( data?.rider_moment ?? 0)
           }
         } else {
-          updateHeading = data?.rider_moment ?? 0
-          setHeading(data?.rider_moment ?? 0)
-          // animateRotation(data?.rider_moment ?? 0)
+          updateHeading =  data?.rider_moment ?? 0
+          setHeading( data?.rider_moment ?? 0)
+          animateRotation( data?.rider_moment ?? 0)
         }
-      }
+        }
 
       // If no previous location, set it immediately
       if (!prevLocationRef.current) {
@@ -426,12 +442,221 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
     return () => {
       socketServices.removeListener('getremainingdistance');
     };
-     } catch (error) {
+       } catch (error) {
       if(riderCustomerDetails){
       onUpdateCutomerLocation(riderCustomerDetails)
       }
-        
       }
+    }
+    else{
+       if(riderCustomerDetails){
+      onUpdateCutomerLocation(riderCustomerDetails)
+      }
+    }
+  }
+
+
+  useEffect(() => {
+    // setInterval(async()=>{
+    //    try {
+    //   let locationData = null;
+    //     const hasPermission = await locationPermission();
+    //       if (!hasPermission) return;
+
+    //     locationData = await getCurrentLocation();
+    //     console.log("📍 Using getCurrentLocation:", locationData);
+      
+
+    //   if (!locationData || !locationData.latitude || !locationData.longitude) {
+    //     console.log("❌ Invalid location data");
+    //     return;
+    //   }
+
+    //   // if (!isMountedRef.current) return;
+
+    //   const { latitude, longitude, heading = 0 } = locationData;
+    //   const newLocation = { lat: latitude, lng: longitude };
+    //    if (!prevLocationRef.current) {
+    //     prevLocationRef.current = newLocation;
+    //     currentLiveRiderLocation = newLocation;
+    //   //   animate(newLocation?.lat, newLocation?.lng, newLocation, destination);
+    //   //   return;
+    //   }
+
+    //   // Calculate distance moved
+    //   const distance = prevLocationRef.current
+    //     ? getDistanceInMeters(
+    //       prevLocationRef.current.lat,
+    //       prevLocationRef.current.lng,
+    //       latitude,
+    //       longitude
+    //     )
+    //     : 999; // Force update on first location
+
+    //   const threshold = updateTimerValue || 20; // Default to 20 meters
+
+    //   // console.log("📍 Location update check:", {
+    //   //   distance: distance.toFixed(2) + 'm',
+    //   //   threshold: threshold + 'm',
+    //   //   shouldUpdate: distance >= threshold || !prevLocationRef.current
+    //   // });
+
+    //   // // Only update marker and call APIs if moved >= updateTimerValue OR if first location
+    //   if (
+    //     // !prevLocationRef.current || 
+    //     distance >= threshold) {
+    //     if (!isMountedRef.current) return;
+
+    //     // Calculate heading from movement direction if GPS heading is not available
+    //     // ONLY calculate when distance >= threshold
+    //     let actualHeading = heading;
+    //     if (!actualHeading || isNaN(actualHeading) || actualHeading === 0) {
+    //       const prevPos = prevLocationRef.current;
+    //       if (prevPos) {
+    //         const calculatedHeading = calculateHeadingFromMovement(
+    //           prevPos.lat,
+    //           prevPos.lng,
+    //           latitude,
+    //           longitude
+    //         );
+    //         if (calculatedHeading !== null) {
+    //           actualHeading = calculatedHeading;
+    //           console.log('📐 Calculated heading from movement:', actualHeading.toFixed(1));
+    //         }
+    //       }
+    //     }
+
+    //     // Update heading and animate rotation - ONLY when distance >= threshold
+    //     if (actualHeading !== null && !isNaN(actualHeading) && actualHeading !== undefined) {
+    //       updateHeading = actualHeading;
+    //       setHeading(actualHeading);
+    //       animateRotation(actualHeading);
+    //     }
+
+    //     prevLocationRef.current = newLocation;
+
+    //     // Move marker and update heading - ONLY when distance >= threshold
+    //     animate(latitude, longitude, newLocation, destination, actualHeading);
+
+    //     // Call direction API and update server location
+    //     fetchRoute(newLocation, destination);
+    //     // getSocketLocation(latitude, longitude);
+    //     // onUpdateRiderLocation(riderCustomerDetails, latitude, longitude, actualHeading);
+
+    //     console.log("✅ Location updated - marker moved and APIs called (distance >= updateTimerValue)");
+    //   } else {
+    //     console.log("📍 Movement too small - skipping marker update and API calls:", {
+    //       distance: distance.toFixed(2) + 'm',
+    //       threshold: threshold + 'm',
+    //       required: (threshold - distance).toFixed(2) + 'm more needed'
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log('❌ Error in initializeLocationTracking:', error);
+    // }
+    // },5000)
+
+    if(!socketServices.isSocketConnected()){
+      socketServices.initailizeSocket();
+      getSocketUpdatedData();
+      //     try {
+    // socketServices.on('getremainingdistance', data => {
+    //   console.log('Remaining distance data--:', data, data?.location);
+
+    //   const newLocation = data?.location;
+
+    //    if(data?.root_coordinates?.length > 0){
+    //      if ((data?.distancekm <= 0.20 && !showPickDesPopUpModal && riderCustomerDetails?.status == 'picked')) {
+    //       showPickDesPopUpModal = true;
+    //       setShowPickDesPopUp(true);
+    //        }
+    //     setCoords(data?.root_coordinates)
+    //     coordinateRoute = data?.root_coordinates
+    //        onUpdateRiderMoveValue(data?.distancekm)
+    //     onKmsTime(data?.distancekm , data?.eta)
+
+    //     }
+        
+      
+    //   if(!newLocation && riderCustomerDetails){
+    //      onUpdateCutomerLocation(riderCustomerDetails)
+    //   }
+
+    //   if (!newLocation?.lat || !newLocation?.lng) return;
+    //       currentLiveRiderLocation = newLocation
+    //   // updateHeading = data?.rider_moment ?? 0
+    //   //   setHeading(data?.rider_moment ?? 0)
+
+    //   let actualHeading = data?.rider_moment ?? updateHeading ?? 0;
+    //   if (!actualHeading || isNaN(actualHeading) || actualHeading === 0) {
+    //     const prevPos = prevLocationRef.current;
+    //     if (prevPos) {
+    //       const calculatedHeading = calculateHeadingFromMovement(
+    //         prevPos.lat,
+    //         prevPos.lng,
+    //         newLocation?.lat,
+    //         newLocation?.lng,
+    //       );
+    //       if (calculatedHeading !== null) {
+    //         updateHeading = calculatedHeading;
+    //         setHeading(calculatedHeading)
+    //         // animateRotation(calculatedHeading)
+    //         console.log('📐 Calculated heading from movement newLocation:', actualHeading.toFixed(1));
+    //       } else {
+    //         updateHeading = data?.rider_moment ?? 0
+    //         setHeading(data?.rider_moment ?? 0)
+    //         // animateRotation(data?.rider_moment ?? 0)
+    //       }
+    //     } else {
+    //       updateHeading = data?.rider_moment ?? 0
+    //       setHeading(data?.rider_moment ?? 0)
+    //       // animateRotation(data?.rider_moment ?? 0)
+    //     }
+    //   }
+
+    //   // If no previous location, set it immediately
+    //   if (!prevLocationRef.current) {
+    //     prevLocationRef.current = newLocation;
+    //     currentLiveRiderLocation = newLocation;
+    //     animate(newLocation?.lat, newLocation?.lng, newLocation, destination);
+    //     return;
+    //   }
+
+    //   // Calculate distance between previous and current locations
+    //   const distance = getDistanceInMeters(
+    //     prevLocationRef?.current?.lat,
+    //     prevLocationRef?.current?.lng,
+    //     newLocation?.lat,
+    //     newLocation?.lng
+    //   );
+
+    //   console.log('Distance moved:', distance, 'meters');
+
+    //   // Only update if moved more than 50 meters
+    //   if (distance >= updateTimerValue ?? 50) {
+    //     prevLocationRef.current = newLocation;
+    //     currentLiveRiderLocation = newLocation;
+    //     animate(newLocation.lat, newLocation.lng, newLocation, destination);
+    //   } else {
+    //     console.log("Your are not cover the 50 meter distance socket", distance);
+    //   }
+    // })
+    // return () => {
+    //   socketServices.removeListener('getremainingdistance');
+    // };
+    //    } catch (error) {
+    //   if(riderCustomerDetails){
+    //   onUpdateCutomerLocation(riderCustomerDetails)
+    //   }
+    //   }
+    //   }else{
+    //      if(riderCustomerDetails){
+    //      onUpdateCutomerLocation(riderCustomerDetails)
+     //   }
+      }else{
+         getSocketUpdatedData();
+      }
+    
   }, [riderCustomerDetails]);
 
 
@@ -483,7 +708,9 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
 
 
   useEffect(() => {
-    if ((coords?.length > 1 && mapRef?.current && !hasAnimatedOnce?.current)) {
+    if ((coords?.length > 1 && mapRef?.current 
+      // && !hasAnimatedOnce?.current
+    )) {
       const edgePadding = {
         top: 50,
         right: 50,
@@ -499,6 +726,119 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
       hasAnimatedOnce.current = true;
     }
   }, [coords]);
+
+
+
+  // Smooth camera updates when route changes - FIXED to prevent repeated hits
+
+  // useEffect(() => {
+  //   if (!isMountedRef.current || appStateRef.current !== 'active') return;
+
+  //   if ((currentLiveRiderLocation?.lat ?? origin?.lat) && destination && mapRef?.current && coords?.length > 0) {
+  //     // Clear any pending camera animation
+  //     if (cameraAnimationTimeoutRef.current) {
+  //       clearTimeout(cameraAnimationTimeoutRef.current);
+  //       cameraAnimationTimeoutRef.current = null;
+  //     }
+
+  //     // Only animate camera when route first loads (not on every route update)
+  //     // This prevents the camera from jumping repeatedly
+  //     if (!hasAnimatedOnce.current && !isCameraAnimatingRef.current) {
+  //       const routeCameraTimeout = setTimeout(() => {
+  //         if (isMountedRef.current && appStateRef.current === 'active' && mapRef?.current && !isCameraAnimatingRef.current) {
+  //           try {
+  //             const currentLocation = currentLiveRiderLocation?.lat ? currentLiveRiderLocation : origin;
+  //             const bearing = getBearing(currentLocation, destination);
+  //             const firstCoord = coords[0];
+
+  //             isCameraAnimatingRef.current = true;
+
+  //             console.log('🎥 Animating camera to route start:', firstCoord);
+
+  //             mapRef.current.animateCamera(
+  //               {
+  //                 center: firstCoord,
+  //                 heading: bearing,
+  //                 pitch: 100,
+  //                 zoom: 17,
+  //                 altitude: 300,
+  //               },
+  //               { duration: 2000 }, // Smooth 2 second animation
+  //               () => {
+  //                 isCameraAnimatingRef.current = false;
+  //                 console.log('✅ Route camera animation completed');
+  //               }
+  //             );
+
+  //             lastCameraPositionRef.current = {
+  //               latitude: firstCoord.latitude,
+  //               longitude: firstCoord.longitude,
+  //               heading: bearing,
+  //             };
+  //           } catch (error) {
+  //             console.log('❌ Error animating route camera:', error);
+  //             isCameraAnimatingRef.current = false;
+  //           }
+  //         }
+  //       }, 500); // Small delay to ensure route is fully loaded
+
+  //       return () => clearTimeout(routeCameraTimeout);
+  //     }
+  //   }
+  // }, [coords, origin, destination, currentLiveRiderLocation]);
+
+  // useEffect(() => {
+  //   if (currentLiveRiderLocation && destination && mapRef?.current && coords) {
+  //     const bearing = getBearing(currentLiveRiderLocation ?? origin, destination);
+
+  //     let setZoomValue = 13;
+  //     if (kmValue >= 30) {
+  //       setZoomValue = 12
+  //     } else if (kmValue >= 25) {
+  //       setZoomValue = 12.5
+  //     } else if (kmValue >= 20) {
+  //       setZoomValue = 13
+  //     } else if (kmValue >= 15) {
+  //       setZoomValue = 13.5
+  //     } else if (kmValue >= 10) {
+  //       setZoomValue = 14
+  //     } else if (kmValue >= 5) {
+  //       setZoomValue = 14.5
+  //     } else if (kmValue >= 2) {
+  //       setZoomValue = 15
+  //     } else if (kmValue >= 1) {
+  //       setZoomValue = 15.5
+  //     } else if (kmValue >= 0.5) {
+  //       setZoomValue = 16
+  //     } else if (kmValue >= 0.1) {
+  //       setZoomValue = 17
+  //     } else {
+  //       setZoomValue = 18
+  //     }
+
+
+  //     // const lastCoord = coords[(coords?.length) / 2 - 1];
+  //     const lastCoord = coords[0];
+  //     mapRef?.current?.animateCamera(
+  //       {
+  //         center: lastCoord,
+  //         // { latitude: currentLiveRiderLocation?.lat ?? origin?.lat, longitude: currentLiveRiderLocation?.lng ?? origin?.lng },
+  //         heading: bearing, // rotate toward destination
+  //         pitch:Platform.OS === 'ios' ? 50 : 100,
+  //         zoom:setZoomValue ?? 17, // keep zoom fixed 
+  //         altitude: 300,
+  //         edgePadding: {
+  //           top: 50,
+  //           right: 50,
+  //           bottom: 50,
+  //           left: 50
+  //         },
+  //         animated: true,
+  //       },
+  //       { duration: 500 }
+  //     );
+  //   }
+  // }, [currentLiveRiderLocation, coords]);
 
 
   
@@ -545,7 +885,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
        animatedCoordinate.timing({
         latitude: newCoordinate.latitude,
         longitude: newCoordinate.longitude,
-        duration: 200,
+        duration: 100,
          easing: Easing.linear,
         useNativeDriver: false,
       }).start((finished) => {
@@ -568,119 +908,35 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
     }
 
     // Update camera if app is active
-    if (appStateRef.current === 'active' && mapRef?.current && currentDestination) {
-      if (cameraAnimationTimeoutRef.current) {
-        clearTimeout(cameraAnimationTimeoutRef.current);
-      }
+    // if (appStateRef.current === 'active' && mapRef?.current && currentDestination) {
+    //   if (cameraAnimationTimeoutRef.current) {
+    //     clearTimeout(cameraAnimationTimeoutRef.current);
+    //   }
 
-      cameraAnimationTimeoutRef.current = setTimeout(() => {
-        if (mapRef?.current) {
-          try {
-            const bearing = getBearing(newLocation, currentDestination);
+    //   cameraAnimationTimeoutRef.current = setTimeout(() => {
+    //     if (mapRef?.current) {
+    //       try {
+    //         const bearing = getBearing(newLocation, currentDestination);
             
-            mapRef.current.animateCamera(
-              {
-                center: newCoordinate,
-                heading: bearing,
-                pitch: 0,
-                zoom: 17,
-              },
-              { duration: 1000 },
-              () => {
-                console.log('✅ Camera animation completed');
-              }
-            );
-          } catch (error) {
-            console.log('❌ Error animating camera:', error);
-          }
-        }
-      }, 300);
-    }
+    //         mapRef.current.animateCamera(
+    //           {
+    //             center: newCoordinate,
+    //             heading: bearing,
+    //             pitch: 0,
+    //             zoom: 17,
+    //           },
+    //           { duration: 1000 },
+    //           () => {
+    //             console.log('✅ Camera animation completed');
+    //           }
+    //         );
+    //       } catch (error) {
+    //         console.log('❌ Error animating camera:', error);
+    //       }
+    //     }
+    //   }, 300);
+    // }
   }, []);
-
-
-  // Smooth camera updates when route changes - FIXED to prevent repeated hits
-
-  useEffect(() => {
-    if (!isMountedRef.current || appStateRef.current !== 'active') return;
-
-    if ((currentLiveRiderLocation?.lat ?? origin?.lat) && destination && mapRef?.current && coords?.length > 0) {
-      // Clear any pending camera animation
-      if (cameraAnimationTimeoutRef.current) {
-        clearTimeout(cameraAnimationTimeoutRef.current);
-        cameraAnimationTimeoutRef.current = null;
-      }
-
-      // Only animate camera when route first loads (not on every route update)
-      // This prevents the camera from jumping repeatedly
-      if (!hasAnimatedOnce.current && !isCameraAnimatingRef.current) {
-        const routeCameraTimeout = setTimeout(() => {
-          if (isMountedRef.current && appStateRef.current === 'active' && mapRef?.current && !isCameraAnimatingRef.current) {
-            try {
-              const currentLocation = currentLiveRiderLocation?.lat ? currentLiveRiderLocation : origin;
-              const bearing = getBearing(currentLocation, destination);
-              const firstCoord = coords[0];
-
-              isCameraAnimatingRef.current = true;
-
-              console.log('🎥 Animating camera to route start:', firstCoord);
-
-              mapRef.current.animateCamera(
-                {
-                  center: firstCoord,
-                  heading: bearing,
-                  pitch: 0,
-                  zoom: 17,
-                  altitude: 300,
-                },
-                { duration: 2000 }, // Smooth 2 second animation
-                () => {
-                  isCameraAnimatingRef.current = false;
-                  console.log('✅ Route camera animation completed');
-                }
-              );
-
-              lastCameraPositionRef.current = {
-                latitude: firstCoord.latitude,
-                longitude: firstCoord.longitude,
-                heading: bearing,
-              };
-            } catch (error) {
-              console.log('❌ Error animating route camera:', error);
-              isCameraAnimatingRef.current = false;
-            }
-          }
-        }, 500); // Small delay to ensure route is fully loaded
-
-        return () => clearTimeout(routeCameraTimeout);
-      }
-    }
-  }, [coords, origin, destination, currentLiveRiderLocation]);
-
-  // useEffect(() => {
-  //   if (currentLiveRiderLocation && destination && mapRef?.current && coords) {
-  //     const bearing = getBearing(currentLiveRiderLocation ?? origin, destination);
-  //     // const lastCoord = coords[(coords?.length) / 2 - 1];
-  //     const lastCoord = coords[0];
-  //     mapRef?.current?.animateCamera(
-  //       {
-  //         center: lastCoord,
-  //         // { latitude: currentLiveRiderLocation?.lat ?? origin?.lat, longitude: currentLiveRiderLocation?.lng ?? origin?.lng },
-  //         heading: bearing, // rotate toward destination
-  //         pitch: 0,
-  //         zoom: 17, // keep zoom fixed
-  //         edgePadding: {
-  //           top: 50,
-  //           right: 50,
-  //           bottom: 50,
-  //           left: 50
-  //         },
-  //         animated: true,
-  //       },
-  //       { duration: 500 }
-  //     );
-  //   }
-  // }, [currentLiveRiderLocation, coords]);
 
 
     const checkDistance = (current, destination) => {
@@ -930,12 +1186,18 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
         style={[styles.mapContainer, mapContainerView]}
         mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
         customMapStyle={DuuittMapTheme}
-        region={{
+        initialRegion={{
           latitude: Number(origin?.lat) || 30.7400,
           longitude: Number(origin?.lng) || 76.7900,
           latitudeDelta: 0.005,
           longitudeDelta: 0.005
         }}
+        // region={{
+        //   latitude: Number(origin?.lat) || 30.7400,
+        //   longitude: Number(origin?.lng) || 76.7900,
+        //   latitudeDelta: 0.005,
+        //   longitudeDelta: 0.005
+        // }}
         zoomEnabled={true}
         scrollEnabled={true}
         rotateEnabled={true}
@@ -971,6 +1233,9 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
             }
             //  source={appImages.markerMoveImage}
             style={[styles.markerBikeImage,
+            //    Platform.OS === 'ios' && { 
+            //   transform: [{ rotate: `${updateHeading ?? heading}deg` }] 
+            // }
               // { transform: [{ rotate: `${70}deg` }] }
             ]}
           />
