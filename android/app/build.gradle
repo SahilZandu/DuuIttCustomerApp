@@ -80,7 +80,7 @@ android {
         applicationId "com.duuittapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
+        versionCode 6
         versionName "1.0"
         
         // Support for 16 KB page sizes (required for Android 15+)
@@ -139,7 +139,9 @@ dependencies {
         implementation jscFlavor
     }
 }
-
+project.ext.react = [
+    enableHermes: true  // clean and rebuild if already false
+]
 
 project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf','AntDesign.ttf','Entypo.ttf','Feather.ttf','FontAwesome.ttf','Ionicons.ttf','MaterialCommunityIcons.ttf' ] 

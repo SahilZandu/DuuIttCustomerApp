@@ -47,6 +47,8 @@ export default function ParcelHome({ navigation }) {
     updateOrderStatus,
     setParcelTrackingOrder,
     setParcelOrderInProgress,
+    setRootPolygonParcel,
+    setOrderRideParcelLatLng
   } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
@@ -126,17 +128,6 @@ export default function ParcelHome({ navigation }) {
   const getCheckDevice = async () => {
     await getCheckDeviceId();
   }
-
-  // useEffect(() => {
-  //   const subscription = DeviceEventEmitter.addListener('dropped', data => {
-  //     console.log('dropped data -- Parcel ', data);
-  //     setIsReviewRider(true);
-  //   });
-
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
 
   useEffect(() => {
     const subscription = DeviceEventEmitter.addListener('newOrder', data => {
@@ -230,6 +221,8 @@ export default function ParcelHome({ navigation }) {
       setAddParcelInfo({});
       setIncompletedArray([]);
     }
+    setRootPolygonParcel([])
+    setOrderRideParcelLatLng({})
   };
 
   useEffect(() => {

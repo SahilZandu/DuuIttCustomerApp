@@ -41,6 +41,7 @@ const EditOrderLocation = ({ navigation, route }) => {
     const { appUser } = rootStore.commonStore;
     console.log('pickDrop--EditOrderLocation', pickDrop, item, orderItem);
     const { editParcelsRides } = rootStore.parcelStore;
+    // const { setRootPolygonRide } = rootStore.orderStore;
     const getLocation = type => {
         // console.log('gettt', getCurrentLocation());
         let d =
@@ -108,21 +109,6 @@ const EditOrderLocation = ({ navigation, route }) => {
         };
     }, []);
 
-    const mohaliChandigarhBounds = {
-        north: 30.8258,
-        south: 30.6600,
-        west: 76.6600,
-        east: 76.8500,
-    };
-
-    const isWithinBounds = (latitude, longitude) => {
-        return (
-            latitude <= mohaliChandigarhBounds.north &&
-            latitude >= mohaliChandigarhBounds.south &&
-            longitude >= mohaliChandigarhBounds.west &&
-            longitude <= mohaliChandigarhBounds.east
-        );
-    };
 
     const handleRegionChangeComplete = (region) => {
         onHandleConfirm()
@@ -149,29 +135,6 @@ const EditOrderLocation = ({ navigation, route }) => {
             location_id: LocationId
         };
         console.log('newItem---', newItem, pickDrop);
-        // const isSameLocation =
-        //     newItem?.location_id &&
-        //     ((pickDrop === 'pick') &&
-        //         (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.receiver_address?.geo_location?.lat) &&
-        //             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.receiver_address?.geo_location?.lng)) ||
-        //         (pickDrop !== 'pick') &&
-        //         (parseFloat(newItem?.geo_location?.lat) === parseFloat(orderItem?.sender_address?.geo_location?.lat) &&
-        //             parseFloat(newItem?.geo_location?.lng) === parseFloat(orderItem?.sender_address?.geo_location?.lng)));
-
-        // // console.log("isSameLocation--", isSameLocation);
-
-        // if (isSameLocation) {
-        //     alert("You can't choose the same location. Please choose another location.");
-        //     return;
-        // }
-
-        // console.log("isSameLocation--", isSameLocation);
-
-        // if (isSameLocation) {
-        //     alert("You can't choose the same location. Please choose another location.");
-        //     return;
-        // }
-
         if (
             (newItem?.location_id || newItem?.geo_location) &&
             pickDrop === 'pick' &&
@@ -192,8 +155,7 @@ const EditOrderLocation = ({ navigation, route }) => {
             return;
         }
 
-
-
+        // setRootPolygonRide([])
         const requestData = {
             weight: orderItem?.weight ?? 20,
             quantity: orderItem?.quantity ?? 1,

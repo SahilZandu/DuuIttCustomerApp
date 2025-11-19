@@ -823,7 +823,7 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
   useEffect(() => {
     // start interval that runs in foreground and background
     const intervalId = setInterval(() => {
-      console.log('Running every 7s in background');
+      console.log('Running every 10s in background');
       getCheckingIncompleteOrder();
       // update your ride progress state here
     }, 10000);

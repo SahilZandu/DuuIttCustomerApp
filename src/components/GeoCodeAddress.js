@@ -64,7 +64,7 @@ let manageRideDalta = {
 let geocodeDebounceTimer = null;
 let geoDebounceTimer = null
 
-export const isSameLocation = (pointA, pointB, threshold = 5) => {
+export const isSameLocation = (pointA, pointB, threshold = 20) => {
   if (!pointB?.latitude || !pointB?.longitude) return true; // first time
   const distance = haversine(pointA, pointB); // meters
   return distance >= threshold;
@@ -92,7 +92,7 @@ export const getCurrentAddressGeoCodes = (latitude, longitude) => {
       longitude: currentAddress?.checkAddressLocation?.longitude,
     };
 
-    const isSame = isSameLocation(customerLocation, checkLocation, 10);
+    const isSame = isSameLocation(customerLocation, checkLocation, 20);
 
     console.log("isSame:", isSame);
 

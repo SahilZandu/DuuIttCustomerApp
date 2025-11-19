@@ -290,7 +290,8 @@ const PriceDetailsForm = ({ navigation }) => {
               keyboardShouldPersistTaps={'handled'}>
               <MapRoute
                 orderData={{
-                  _id: "Without Order Id"
+                  _id: "Without Order Id",
+                  order_type:'parcel'
                 }}
                 origin={senderAddress?.geo_location}
                 destination={receiverAddress?.geo_location}

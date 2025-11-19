@@ -11,6 +11,8 @@ export default class OrderStore {
   h3PolyData = []
   rootPolygonRide = []
   rootPolygonParcel = []
+  orderRideParcelLatLng = {}
+
 
 
   parcelsOfUser = async (order_type, limit, handleLoading) => {
@@ -349,6 +351,8 @@ export default class OrderStore {
 
 
   setRootPolygonRide = (data) => {
+    console.log("data---setRootPolygonRide",data);
+    
     this.rootPolygonRide = data;
   }
 
@@ -356,6 +360,10 @@ export default class OrderStore {
     this.rootPolygonParcel = data;
   }
 
+
+  setOrderRideParcelLatLng = (data) => {
+    this.orderRideParcelLatLng = data
+  }
 
 
 }

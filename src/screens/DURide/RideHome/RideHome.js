@@ -42,7 +42,8 @@ let ratingData = {};
 export default function RideHome({ navigation }) {
   const { appUser } = rootStore.commonStore;
   const { setChatData } = rootStore.chatStore;
-  const { getPendingForCustomer, updateOrderStatus, setRideOrderInProgress, rideOrderInProgress } = rootStore.orderStore;
+  const { getPendingForCustomer, updateOrderStatus, setRideOrderInProgress,
+     rideOrderInProgress,setRootPolygonRide,setOrderRideParcelLatLng } = rootStore.orderStore;
   const { setAddParcelInfo } = rootStore.parcelStore;
   const { setSenderAddress, setReceiverAddress } = rootStore.myAddressStore;
   const { getCheckDeviceId } = rootStore.dashboardStore;
@@ -198,6 +199,8 @@ export default function RideHome({ navigation }) {
       setAddParcelInfo({});
       setIncompletedArray([]);
     }
+    setRootPolygonRide([])
+    setOrderRideParcelLatLng({})
   };
 
   useEffect(() => {
