@@ -74,7 +74,7 @@ const createOptions = (useIcon = true) => {
         color: colors.green,
         linkingURI: 'duuittapp://open',
         parameters: {
-            delay: 180000, // 3 minute
+            delay: 600000, // 10 minute
         },
     };
 

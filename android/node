@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "/Users/apple/.nvm/versions/node/v23.11.1/bin/node" "$@"

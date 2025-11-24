@@ -45,6 +45,9 @@
       <meta-data
           android:name="com.google.firebase.messaging.default_notification_icon"
           android:resource="@mipmap/ic_launcher"/>
+      <!-- Advertising ID Declaration: Firebase Analytics uses Advertising ID for analytics -->
+      <!-- You must declare this in Google Play Console: Policy > App content > Advertising ID -->
+      <!-- Select "Yes, my app uses advertising ID" with purpose "Analytics" -->
      <!-- <meta-data
         android:name="com.google.firebase.messaging.default_notification_color"
         android:resource="@color/notification_color" /> -->

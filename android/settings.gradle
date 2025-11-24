@@ -1,5 +1,139 @@
 rootProject.name = 'DuuIttApp'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+
+// Note: Node.js PATH setup is handled by init.gradle script
+// This ensures PATH is set before native_modules.gradle runs
+
+// Find Node.js and ensure it's available for native_modules.gradle
+def findNodeExecutable() {
+    // Check NODE_BINARY environment variable first
+    def nodeBinary = System.getenv('NODE_BINARY')
+    if (nodeBinary && new File(nodeBinary).exists()) {
+        return nodeBinary
+    }
+    
+    // Check local.properties for node path
+    def localProperties = new File(settingsDir, 'local.properties')
+    if (localProperties.exists()) {
+        localProperties.eachLine { line ->
+            if (line.startsWith('reactNative.nodeExecutable=')) {
+                def nodePath = line.split('=')[1]?.trim()
+                if (nodePath && new File(nodePath).exists()) {
+                    return nodePath
+                }
+            }
+        }
+    }
+    
+    // Check common Node.js locations
+    def commonPaths = [
+        '/opt/homebrew/bin/node',
+        '/usr/local/bin/node',
+        '/usr/bin/node'
+    ]
+    
+    // Check NVM paths
+    def homeDir = System.getProperty('user.home')
+    def nvmDir = new File(homeDir, '.nvm/versions/node')
+    if (nvmDir.exists() && nvmDir.isDirectory()) {
+        def versions = nvmDir.listFiles().findAll { it.isDirectory() }.sort().reverse()
+        if (versions) {
+            def latestVersion = versions[0]
+            def nvmNode = new File(latestVersion, 'bin/node')
+            if (nvmNode.exists()) {
+                commonPaths.add(0, nvmNode.absolutePath)
+            }
+        }
+    }
+    
+    for (path in commonPaths) {
+        def nodeFile = new File(path)
+        if (nodeFile.exists() && nodeFile.canExecute()) {
+            return path
+        }
+    }
+    
+    return null
+}
+
+def nodeExecutable = findNodeExecutable()
+if (!nodeExecutable) {
+    throw new GradleException("Could not find Node.js. Please install Node.js or set NODE_BINARY environment variable.")
+}
+
+// Create a node wrapper script in the android directory
+def nodeWrapper = new File(settingsDir, 'node')
+def wrapperContent = "#!/bin/sh\nexec \"${nodeExecutable}\" \"\$@\"\n"
+
+if (!nodeWrapper.exists() || nodeWrapper.text != wrapperContent) {
+    nodeWrapper.text = wrapperContent
+    nodeWrapper.setExecutable(true)
+    println "Created node wrapper at: ${nodeWrapper.absolutePath}"
+}
+
+// Get node's directory and android directory
+def nodeDir = new File(nodeExecutable).parent
+def androidDir = settingsDir.absolutePath
+def currentPath = System.getenv('PATH') ?: ''
+
+// Add both android directory (for wrapper) and node directory to PATH
+def newPath = androidDir + File.pathSeparator + nodeDir
+if (!currentPath.contains(androidDir)) {
+    newPath = newPath + File.pathSeparator + currentPath
+} else {
+    newPath = currentPath
+}
+
+// Set PATH as system property
+System.setProperty('PATH', newPath)
+System.setProperty('NODE_BINARY', nodeExecutable)
+
+// Try to modify the environment map directly (for subprocess execution)
+// This is critical for native_modules.gradle to find node
+try {
+    def env = System.getenv()
+    def envClass = env.getClass()
+    def field = envClass.getDeclaredField("m")
+    field.setAccessible(true)
+    def map = field.get(env)
+    map.put('PATH', newPath)
+    map.put('NODE_BINARY', nodeExecutable)
+    println "Successfully updated environment PATH"
+} catch (Exception e) {
+    println "Warning: Could not modify environment via reflection: ${e.message}"
+    // Try alternative approach using ProcessBuilder (for future subprocesses)
+    try {
+        def pb = new ProcessBuilder()
+        pb.environment().put('PATH', newPath)
+        pb.environment().put('NODE_BINARY', nodeExecutable)
+    } catch (Exception e2) {
+        println "Warning: Could not set environment via ProcessBuilder: ${e2.message}"
+    }
+}
+
+println "Found Node.js at: ${nodeExecutable}"
+println "Node wrapper created at: ${nodeWrapper.absolutePath}"
+println "Updated PATH to include: ${androidDir} and ${nodeDir}"
+
+// Patch native_modules.gradle to use full path to node
+// We need to modify the command execution to use the full path instead of just "node"
+def nativeModulesFile = file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+def nativeModulesContent = nativeModulesFile.text
+
+// Replace all occurrences of ["node", with [nodeExecutable, in command arrays
+// This ensures all node commands use the full path
+def patchedContent = nativeModulesContent.replaceAll(
+    /\["node",/,
+    "[\"${nodeExecutable}\","
+)
+
+// Create a temporary patched file
+def patchedFile = new File(settingsDir, "native_modules_patched.gradle")
+patchedFile.text = patchedContent
+
+println "Created patched native_modules.gradle with full node path"
+
+// Apply the patched native modules
+apply from: patchedFile; applyNativeModulesSettingsGradle(settings)
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 

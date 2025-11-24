@@ -3,6 +3,48 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services' // <- Add this line
 
+// Set React Native directory for all subprojects (including react-native-reanimated)
+// This prevents subprojects from trying to use "node" command directly
+project.ext.REACT_NATIVE_NODE_MODULES_DIR = file("../../node_modules/react-native")
+
+// Find Node.js executable for bundling tasks
+def findNodeExecutableForBundling() {
+    // Check NODE_BINARY environment variable first
+    def nodeBinary = System.getenv('NODE_BINARY')
+    if (nodeBinary && new File(nodeBinary).exists()) {
+        return nodeBinary
+    }
+    
+    // Check local.properties
+    def localProperties = new File(project.rootProject.projectDir, "android/local.properties")
+    if (localProperties.exists()) {
+        localProperties.eachLine { line ->
+            if (line.startsWith('reactNative.nodeExecutable=')) {
+                def nodePath = line.split('=')[1]?.trim()
+                if (nodePath && new File(nodePath).exists()) {
+                    return nodePath
+                }
+            }
+        }
+    }
+    
+    // Check common paths
+    def commonPaths = ['/opt/homebrew/bin/node', '/usr/local/bin/node', '/usr/bin/node']
+    for (path in commonPaths) {
+        def nodeFile = new File(path)
+        if (nodeFile.exists() && nodeFile.canExecute()) {
+            return path
+        }
+    }
+    
+    return null
+}
+
+def nodeExecutableForBundling = findNodeExecutableForBundling()
+if (!nodeExecutableForBundling) {
+    throw new GradleException("Could not find Node.js for bundling. Please install Node.js or set NODE_BINARY environment variable.")
+}
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -26,7 +68,8 @@ react {
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
-    // nodeExecutableAndArgs = ["node"]
+    // Use full path to node executable to avoid "command 'node'" errors
+    nodeExecutableAndArgs = [nodeExecutableForBundling]
     //
     //   The command to run when bundling. By default is 'bundle'
     // bundleCommand = "ram-bundle"
@@ -80,12 +123,23 @@ android {
         applicationId "com.duuittapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
+        versionCode 12
         versionName "1.0"
         
         // Support for 16 KB page sizes (required for Android 15+)
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+        
+        // Configure CMake for 16KB page size support
+        // This applies to all native libraries built with CMake
+        externalNativeBuild {
+            cmake {
+                // Add linker flags for 16KB ELF alignment
+                // This ensures all native libraries support 16KB page sizes
+                arguments "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=16384",
+                          "-DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384"
+            }
         }
     }
     signingConfigs {
@@ -114,6 +168,9 @@ android {
               shrinkResources false
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
     
@@ -121,6 +178,177 @@ android {
     packaging {
         jniLibs {
             useLegacyPackaging = false
+        }
+    }
+    
+    // Post-process native libraries to align them to 16KB boundaries
+    // This handles pre-built libraries from React Native and dependencies
+    applicationVariants.all { variant ->
+        def variantName = variant.name.capitalize()
+        
+        // Task to align native libraries to 16KB boundaries
+        def alignTask = tasks.register("align16Kb${variantName}") {
+            group = "build"
+            description = "Align native libraries to 16KB page boundaries for ${variantName} build"
+            
+            def ndkPath = android.ndkDirectory ?: file("${android.sdkDirectory}/ndk/${rootProject.ext.ndkVersion}")
+            def objcopy = file("${ndkPath}/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-objcopy")
+            
+            // Find the merged native libs directory (where libraries are extracted from AARs)
+            // The correct path for AGP 8.5+ is mergeReleaseNativeLibs/out/lib
+            def mergedLibsDir = file("${project.buildDir}/intermediates/merged_native_libs/${variant.name}/merge${variantName}NativeLibs/out/lib")
+            
+            onlyIf {
+                objcopy.exists()
+            }
+            
+            doFirst {
+                if (!objcopy.exists()) {
+                    throw new GradleException("llvm-objcopy not found at ${objcopy}. Cannot align libraries.")
+                }
+                println "Preparing to align native libraries for ${variantName} build..."
+            }
+            
+            // Align all .so files after they're extracted from AARs
+            doLast {
+                // Try to find the actual merged libs directory
+                def actualLibsDir = mergedLibsDir
+                def possiblePaths = [
+                    "${project.buildDir}/intermediates/merged_native_libs/${variant.name}/merge${variantName}NativeLibs/out/lib",
+                    "${project.buildDir}/intermediates/merged_native_libs/${variant.name}/out/lib",
+                    "${project.buildDir}/intermediates/stripped_native_libs/${variant.name}/out/lib"
+                ]
+                
+                for (path in possiblePaths) {
+                    def dir = file(path)
+                    if (dir.exists()) {
+                        def soFiles = fileTree(dir: dir, include: "**/*.so").files
+                        if (!soFiles.isEmpty()) {
+                            actualLibsDir = dir
+                            break
+                        }
+                    }
+                }
+                
+                if (!actualLibsDir.exists()) {
+                    println "  ⚠ Merged libs directory not found at ${actualLibsDir}"
+                    println "  ℹ Searching for .so files in build directory..."
+                    def allSoFiles = fileTree(dir: project.buildDir, include: "**/*.so").files
+                    if (allSoFiles.isEmpty()) {
+                        println "  ⚠ No .so files found. Libraries may already be packaged or not extracted yet."
+                        return
+                    }
+                    // Use the directory of the first .so file found
+                    actualLibsDir = allSoFiles[0].parentFile
+                    println "  ℹ Found libraries in: ${actualLibsDir}"
+                }
+                
+                println "Aligning native libraries in ${mergedLibsDir} to 16KB boundaries..."
+                def alignedCount = 0
+                def failedCount = 0
+                
+                fileTree(dir: mergedLibsDir, include: "**/*.so").each { lib ->
+                    try {
+                        // Use llvm-objcopy to align LOAD segments to 16KB
+                        // This is critical for 16KB page size support
+                        def result = exec {
+                            commandLine objcopy,
+                                "--set-section-alignment", ".text=16384",
+                                "--set-section-alignment", ".rodata=16384",
+                                "--set-section-alignment", ".data.rel.ro=16384",
+                                "--set-section-alignment", ".data=16384",
+                                "--set-section-alignment", ".bss=16384",
+                                "--set-section-alignment", ".init_array=16384",
+                                "--set-section-alignment", ".fini_array=16384",
+                                "--set-section-alignment", ".dynamic=16384",
+                                lib.absolutePath,
+                                "${lib.absolutePath}.aligned"
+                            ignoreExitValue = true
+                        }
+                        
+                        def alignedFile = file("${lib.absolutePath}.aligned")
+                        if (alignedFile.exists() && alignedFile.length() > 0) {
+                            // Verify alignment using readelf
+                            def verifyOutput = new ByteArrayOutputStream()
+                            try {
+                                exec {
+                                    commandLine "readelf", "-l", alignedFile.absolutePath
+                                    standardOutput = verifyOutput
+                                    errorOutput = new ByteArrayOutputStream()
+                                    ignoreExitValue = true
+                                }
+                                def output = verifyOutput.toString()
+                                // Check if LOAD segments are aligned to 16KB (0x4000)
+                                if (output.contains("Align 0x4000") || output.contains("Align 16384")) {
+                                    alignedFile.renameTo(lib)
+                                    alignedCount++
+                                    if (alignedCount % 10 == 0) {
+                                        println "  ✓ Aligned ${alignedCount} libraries..."
+                                    }
+                                } else {
+                                    // Try alternative: align all sections
+                                    exec {
+                                        commandLine objcopy,
+                                            "--set-section-alignment", ".=16384",
+                                            lib.absolutePath,
+                                            "${lib.absolutePath}.alt"
+                                        ignoreExitValue = true
+                                    }
+                                    def altFile = file("${lib.absolutePath}.alt")
+                                    if (altFile.exists()) {
+                                        altFile.renameTo(lib)
+                                        alignedCount++
+                                    } else {
+                                        failedCount++
+                                        println "  ⚠ Could not align: ${lib.name}"
+                                    }
+                                }
+                            } catch (Exception e) {
+                                // If readelf fails, just use the aligned file
+                                alignedFile.renameTo(lib)
+                                alignedCount++
+                            }
+                        } else {
+                            failedCount++
+                            println "  ⚠ Alignment failed for: ${lib.name}"
+                        }
+                    } catch (Exception e) {
+                        failedCount++
+                        println "  ⚠ Error aligning ${lib.name}: ${e.message}"
+                    }
+                }
+                
+                println "Done aligning libraries: ${alignedCount} aligned, ${failedCount} skipped/failed"
+                if (failedCount > 0) {
+                    println "  ⚠ Some libraries could not be aligned. This may be due to React Native 0.74.7's pre-built libraries."
+                    println "  Note: Google Play may still flag some libraries. Consider upgrading to React Native 0.77+ for built-in 16KB support."
+                }
+            }
+        }
+        
+        // Run alignment after native libs are merged but before packaging
+        // Hook into the mergeNativeLibs task
+        def mergeNativeLibsTask = tasks.findByName("merge${variantName}NativeLibs")
+        if (mergeNativeLibsTask != null) {
+            alignTask.configure {
+                dependsOn mergeNativeLibsTask
+                mustRunAfter mergeNativeLibsTask
+            }
+            // Make packaging depend on alignment
+            def packageTask = tasks.findByName("package${variantName}")
+            if (packageTask != null) {
+                packageTask.dependsOn(alignTask)
+            }
+            def packageBundleTask = tasks.findByName("package${variantName}Bundle")
+            if (packageBundleTask != null) {
+                packageBundleTask.dependsOn(alignTask)
+            }
+            
+            // Also hook into bundle task for AAB files
+            def bundleTask = tasks.findByName("bundle${variantName}")
+            if (bundleTask != null) {
+                bundleTask.dependsOn(alignTask)
+            }
         }
     }
 
@@ -149,4 +377,53 @@ project.ext.vectoricons = [
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+// Use the patched native_modules.gradle created by settings.gradle
+// This ensures all node commands use the full path to node executable
+def patchedFile = file("../native_modules_patched.gradle")
+if (!patchedFile.exists()) {
+    // Fallback: create patched file if it doesn't exist (shouldn't happen if settings.gradle ran first)
+    def nodeExecutable = null
+    
+    // Check NODE_BINARY environment variable
+    def nodeBinary = System.getenv('NODE_BINARY')
+    if (nodeBinary && new File(nodeBinary).exists()) {
+        nodeExecutable = nodeBinary
+    } else {
+        // Check local.properties
+        def localProperties = new File(project.rootProject.projectDir, "android/local.properties")
+        if (localProperties.exists()) {
+            localProperties.eachLine { line ->
+                if (line.startsWith('reactNative.nodeExecutable=')) {
+                    def nodePath = line.split('=')[1]?.trim()
+                    if (nodePath && new File(nodePath).exists()) {
+                        nodeExecutable = nodePath
+                    }
+                }
+            }
+        }
+        
+        // Check common paths
+        if (!nodeExecutable) {
+            def commonPaths = ['/opt/homebrew/bin/node', '/usr/local/bin/node', '/usr/bin/node']
+            for (path in commonPaths) {
+                def nodeFile = new File(path)
+                if (nodeFile.exists() && nodeFile.canExecute()) {
+                    nodeExecutable = path
+                    break
+                }
+            }
+        }
+    }
+    
+    if (!nodeExecutable) {
+        throw new GradleException("Could not find Node.js. Please install Node.js or set NODE_BINARY environment variable.")
+    }
+    
+    def nativeModulesFile = file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+    def nativeModulesContent = nativeModulesFile.text
+    def patchedContent = nativeModulesContent.replaceAll(/\["node",/, "[\"${nodeExecutable}\",")
+    patchedFile.text = patchedContent
+    println "Created patched native_modules.gradle in app/build.gradle"
+}
+
+apply from: patchedFile; applyNativeModulesAppBuildGradle(project)

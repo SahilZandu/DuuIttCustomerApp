@@ -1,0 +1,66 @@
+// Gradle init script to set up Node.js PATH
+// This script runs before settings.gradle is evaluated
+
+def findNodeExecutable() {
+    // Check NODE_BINARY environment variable first
+    def nodeBinary = System.getenv('NODE_BINARY')
+    if (nodeBinary && new File(nodeBinary).exists()) {
+        return nodeBinary
+    }
+    
+    // Check common Node.js locations
+    def commonPaths = [
+        '/opt/homebrew/bin/node',
+        '/usr/local/bin/node',
+        '/usr/bin/node'
+    ]
+    
+    // Check NVM paths
+    def homeDir = System.getProperty('user.home')
+    def nvmDir = new File(homeDir, '.nvm/versions/node')
+    if (nvmDir.exists() && nvmDir.isDirectory()) {
+        def versions = nvmDir.listFiles().findAll { it.isDirectory() }.sort().reverse()
+        if (versions) {
+            def latestVersion = versions[0]
+            def nvmNode = new File(latestVersion, 'bin/node')
+            if (nvmNode.exists()) {
+                commonPaths.add(0, nvmNode.absolutePath)
+            }
+        }
+    }
+    
+    for (path in commonPaths) {
+        def nodeFile = new File(path)
+        if (nodeFile.exists() && nodeFile.canExecute()) {
+            return path
+        }
+    }
+    
+    return null
+}
+
+def nodeExecutable = findNodeExecutable()
+if (nodeExecutable) {
+    def nodeDir = new File(nodeExecutable).parent
+    def currentPath = System.getenv('PATH') ?: ''
+    
+    // Add node directory to PATH
+    if (nodeDir && !currentPath.contains(nodeDir)) {
+        def newPath = nodeDir + File.pathSeparator + currentPath
+        
+        // Modify the environment map using reflection
+        try {
+            def env = System.getenv()
+            def envClass = env.getClass()
+            def field = envClass.getDeclaredField("m")
+            field.setAccessible(true)
+            def map = field.get(env)
+            map.put('PATH', newPath)
+            map.put('NODE_BINARY', nodeExecutable)
+            println "[init.gradle] Set PATH to include Node.js at: ${nodeDir}"
+        } catch (Exception e) {
+            println "[init.gradle] Warning: Could not modify PATH: ${e.message}"
+        }
+    }
+}
+

@@ -4,20 +4,30 @@ buildscript {
         minSdkVersion = 23
         compileSdkVersion = 35 // 34
         targetSdkVersion = 35
-        ndkVersion = "26.1.10909125" // NDK 26+ supports 16KB page sizes
-        kotlinVersion = "1.9.22"
+        ndkVersion = "26.1.10909125" // NDK 26+ supports 16KB page sizes (NDK 28/29 incompatible with React Native 0.74.7)
+        kotlinVersion = "1.9.24"
         googlePlayServicesVersion = "21.0.0" //add this line
-        
+        // Set React Native directory to avoid node calls in subprojects
+        // This should point to react-native package directory, not node_modules
+        REACT_NATIVE_NODE_MODULES_DIR = file("../node_modules/react-native")
+        // 16KB page size support - linker flags for all native libraries
+        cmakeFlags = [
+            "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=16384",
+            "-DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,max-page-size=16384"
+        ]
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        // Use AGP 8.5.1+ for 16KB page size support
+        classpath("com.android.tools.build:gradle:8.5.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
-        classpath'com.google.gms:google-services:4.4.2'
+        // FIXED — MUST include the Kotlin version
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        // FIXED — Correct syntax
+        classpath("com.google.gms:google-services:4.4.4")
 
     }
 }
