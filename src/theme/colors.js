@@ -32,6 +32,7 @@ export const colors = {
     color80:'#808080',
     color72:'#727272',
     colorAF:"#AFAFAF",
+     colorAF10:"#AFAFAF50",
     colorDo:'#D6FFE435',
     colorD6:'#D6FFE4',
     colorD45:'#D6FFE445',

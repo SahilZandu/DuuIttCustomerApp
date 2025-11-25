@@ -84,19 +84,44 @@ import { colors } from '../theme/colors';
 const NoInternet = ({ currentScreen, onReload, onAppJs }) => {
   if (onAppJs) {
     return (
+      // <View>
+      //   {Platform.OS === 'ios' ?
       <SafeAreaView
         style={{
           backgroundColor: setBarColor(currentScreen),
+          paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
           paddingVertical: '1%',
-          paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         }}
       >
         <Icon name={'sync-disabled'} size={18} color={colors.black} />
         <Text style={{ fontSize: RFValue(12), color: colors.black, marginLeft: 10 }}>No Internet Connection</Text>
+
       </SafeAreaView>
+      // :
+      // <View style={{
+      //   position: 'absolute',
+      //   left: 0,
+      //   right: 0,
+      //   top: 5,
+      //   backgroundColor: 'transparent',
+      //   zIndex: 9999, // Ensure it sits on top of all other content,
+      //   paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+      // }}>
+      //   <View style={{
+      //     flexDirection: 'row',
+      //     justifyContent: 'center',
+      //     alignItems: 'center',
+      //     paddingVertical: '1%',
+
+      //   }}>
+      //     <Icon name={'sync-disabled'} size={18} color={colors.black} />
+      //     <Text style={{ fontSize: RFValue(12), color: colors.black, marginLeft: 10 }}>No Internet Connection</Text>
+      //   </View>
+      // </View>}
+      // </View>
     );
   } else {
     return (

@@ -17,8 +17,6 @@ import { colors } from '../theme/colors';
 import { getMapManageRideDalta, setMapManageRideDalta, setMapManageRideDaltaInitials, setMpaDalta } from './GeoCodeAddress';
 import { useFocusEffect } from '@react-navigation/native';
 import { DuuittMapTheme } from './DuuittMapTheme';
-import MapViewDirections from 'react-native-maps-directions';
-import socketServices from '../socketIo/SocketServices';
 import { rootStore } from '../stores/rootStore';
 import { MAP_KEY } from '../halpers/AppLink';
 
@@ -28,10 +26,8 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
     rootPolygonParcel, setOrderRideParcelLatLng, orderRideParcelLatLng } = rootStore.orderStore;
   const mapRef = useRef(null);
   const hasAnimatedOnce = useRef(false);
-  const hasAnimatedCameraRef = useRef(false)
   const markerRef = useRef(null);
   const markerDesRef = useRef(null);
-  const bearingRef = useRef(0);
   const originRef = useRef(null);
   const destinationRef = useRef(null);
   const hasDirectionApiCalling = useRef(null)
@@ -65,7 +61,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
   );
 
   // Real-time tracking interval reference
-  const trackingIntervalRef = useRef(null);
   const currentPositionRef = useRef({
     latitude: Number(origin?.lat) || 30.7400,
     longitude: Number(origin?.lng) || 76.7900,
@@ -129,11 +124,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
       destinationRef?.current?.lat !== currentDestination?.lat ||
       destinationRef?.current?.lng !== currentDestination?.lng;
 
-    // console.log("check data--", originChanged, destinationChanged, originRef.current,
-    //   destinationRef?.current, newLocation, currentDestination, orderRideParcelLatLng,
-    //   rootPolygonRide, rootPolygonParcel);
-
-
     // If origin or destination changed → fetch route again
     if ((originChanged || destinationChanged)) {
       // console.log("11111111 - Fetching new route");
@@ -159,7 +149,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
         fetchRoute(newLocation, currentDestination);
       }
     }
-
 
     // Fetch new route (if needed)
     // fetchRoute(newLocation, currentDestination);
@@ -242,6 +231,70 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
     }
   }, [coords, isMapReady]);
 
+
+
+  // Generate curved arc between two coordinates with smooth Bezier curve
+  const generateArc = (start, end, numberOfPoints = 200) => {
+    let lat1 = start.latitude;
+    let lon1 = start.longitude;
+    let lat2 = end.latitude;
+    let lon2 = end.longitude;
+
+    let curveCoordinates = [];
+
+    // Calculate distance for better arc height
+    const latDiff = lat2 - lat1;
+    const lonDiff = lon2 - lon1;
+    const distance = Math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
+
+    // Arc height factor (adjust this to control curve intensity)
+    const arcHeight = distance * 0.3;
+
+    // Calculate midpoint
+    const midLat = (lat1 + lat2) / 2;
+    const midLon = (lon1 + lon2) / 2;
+
+    // Calculate perpendicular vector for arc control point
+    // Rotate the direction vector 90 degrees
+    const perpLat = -lonDiff;
+    const perpLon = latDiff;
+    const perpLength = Math.sqrt(perpLat * perpLat + perpLon * perpLon);
+
+    // Normalize and scale
+    const normalizedPerpLat = perpLength > 0 ? (perpLat / perpLength) * arcHeight : 0;
+    const normalizedPerpLon = perpLength > 0 ? (perpLon / perpLength) * arcHeight : 0;
+
+    // Control point for smooth arc
+    let controlPoint = {
+      latitude: midLat + normalizedPerpLat,
+      longitude: midLon + normalizedPerpLon,
+    };
+
+    // Generate smooth curve using Quadratic Bezier
+    for (let i = 0; i <= numberOfPoints; i++) {
+      let t = i / numberOfPoints;
+
+      // Quadratic Bezier formula for smooth arc
+      let lat =
+        (1 - t) * (1 - t) * lat1 +
+        2 * (1 - t) * t * controlPoint.latitude +
+        t * t * lat2;
+
+      let lon =
+        (1 - t) * (1 - t) * lon1 +
+        2 * (1 - t) * t * controlPoint.longitude +
+        t * t * lon2;
+
+      curveCoordinates.push({ latitude: lat, longitude: lon });
+    }
+
+    return curveCoordinates;
+  };
+
+
+
+
+
   // Fetch the route from Google Directions API
   const fetchRoute = async (origin, destination) => {
     // Cancel previous request if still in progress
@@ -255,63 +308,91 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
     hasDirectionApiCalling.current = setTimeout(async () => {
       // Create new AbortController for this request
       fetchAbortControllerRef.current = new AbortController();
+      const res = generateArc({
+        latitude: Number(origin?.lat),
+        longitude: Number(origin?.lng)
+      },
+        {
+          latitude: Number(destination?.lat),
+          longitude: Number(destination?.lng)
+        })
+
+      setCoords(res ?? []);
+      if (orderData?.order_type == "ride") {
+        setRootPolygonRide(res)
+      } else {
+        setRootPolygonParcel(res)
+      }
+
+
+      // setCoords([
+      //   {
+      //     latitude: Number(origin?.lat),
+      //     longitude: Number(origin?.lng)
+      //   },
+      //   {
+      //     latitude: Number(destination?.lat),
+      //     longitude: Number(destination?.lng)
+      //   }
+      // ]);
       // if (coords?.length == 0) {
       // alert("yes")
-      try {
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`,
-          { signal: fetchAbortControllerRef.current.signal }
-        );
+      // try {
+      //   const response = await fetch(
+      //     `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(origin?.lat)},${Number(origin?.lng)}&destination=${Number(destination?.lat)},${Number(destination?.lng)}&alternatives=true&key=${MAP_KEY}`,
+      //     { signal: fetchAbortControllerRef.current.signal }
+      //   );
 
-        const json = await response?.json();
-        ordersDirectionGooglemapHit(orderData, 'Route Directions')
+      //   const json = await response?.json();
+      //   ordersDirectionGooglemapHit(orderData, 'Route Directions')
 
-        if (json?.routes?.length > 0) {
-          // ✅ Find the shortest route based on total distance
-          let shortestRoute = json?.routes[0];
-          let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
+      //   if (json?.routes?.length > 0) {
+      //     // ✅ Find the shortest route based on total distance
+      //     let shortestRoute = json?.routes[0];
+      //     let minDistance = json?.routes[0]?.legs[0]?.distance?.value; // in meters
 
-          json?.routes?.forEach(route => {
-            const distance = route?.legs[0]?.distance?.value;
-            if (distance < minDistance) {
-              minDistance = distance;
-              shortestRoute = route;
-            }
-          });
+      //     json?.routes?.forEach(route => {
+      //       const distance = route?.legs[0]?.distance?.value;
+      //       if (distance < minDistance) {
+      //         minDistance = distance;
+      //         shortestRoute = route;
+      //       }
+      //     });
 
-          // ✅ Decode the shortest route polyline
-          const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
-          const routeCoords = points?.map(point => ({
-            latitude: point[0],
-            longitude: point[1],
-          }));
-          // ✅ Update state only if component is still mounted
-          // if (isMountedRef?.current) {
-          setCoords(routeCoords);
-          if (orderData?.order_type == "ride") {
-            setRootPolygonRide(routeCoords)
-          } else {
-            setRootPolygonParcel(routeCoords)
-          }
-          console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
-        }
-        // } else {
-        //   console.log('⚠️ No routes found.');
-        // }
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Route fetch cancelled');
-        } else if (isMountedRef.current) {
-          console.log('❌ Error fetching route:', error);
-        }
-      } finally {
-        fetchAbortControllerRef.current = null;
-      }
+      //     // ✅ Decode the shortest route polyline
+      //     const points = PolylineDecoder?.decode(shortestRoute?.overview_polyline?.points);
+      //     const routeCoords = points?.map(point => ({
+      //       latitude: point[0],
+      //       longitude: point[1],
+      //     }));
+      //     // ✅ Update state only if component is still mounted
+      //     // if (isMountedRef?.current) {
+      //     setCoords(routeCoords);
+      //     if (orderData?.order_type == "ride") {
+      //       setRootPolygonRide(routeCoords)
+      //     } else {
+      //       setRootPolygonParcel(routeCoords)
+      //     }
+      //     console.log(`✅ Shortest route selected — ${(minDistance / 1000).toFixed(2)} km`);
+      //   }
+      //   // } else {
+      //   //   console.log('⚠️ No routes found.');
+      //   // }
+      // } catch (error) {
+      //   if (error.name === 'AbortError') {
+      //     console.log('Route fetch cancelled');
+      //   } else if (isMountedRef.current) {
+      //     console.log('❌ Error fetching route:', error);
+      //   }
+      // } finally {
+      //   fetchAbortControllerRef.current = null;
+      // }
       // }
     }, 500); // 1000ms debounce delay
 
 
   }
+
 
 
   const handleMapReady = () => {
@@ -362,12 +443,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
           longitudeDelta: 0.005
 
         }}
-        // region={{
-        //   latitude: Number(origin?.lat) || 30.7400,
-        //   longitude: Number(origin?.lng) || 76.7900,
-        //   latitudeDelta: 0.005,
-        //   longitudeDelta: 0.005
-        // }}
         zoomEnabled={true}
         scrollEnabled={true}
         rotateEnabled={false}
@@ -376,7 +451,6 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
         minZoomLevel={10}
         maxZoomLevel={18}
         showsBuildings={false}
-        //  showsUserLocation={true}
         followsUserLocation={true}
         showsTraffic={false}
         onMapReady={handleMapReady}
@@ -422,51 +496,34 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
           />
         </Marker.Animated>
 
-        {/* Route Polyline */}
-        {/* {(Object.keys(origin)?.length > 0 &&
-         Object.keys(destination)?.length > 0)
-         && (<MapViewDirections
-          origin={{
-            latitude: Number(origin?.lat) || 30.7400,
-            longitude: Number(origin?.lng) || 76.7900,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005
-          }}
-          destination={
-            {
-              latitude: Number(destination?.lat),
-              longitude: Number(destination?.lng)
-            }
-          }
-          apikey={MAP_KEY}
-          strokeWidth={6}
-          strokeColor={colors.main}
-          optimizeWaypoints={true}
-          onStart={(params) => {
-            console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-          }}
-          onReady={result => {
-            console.log(`Distance: ${result.distance} km`)
-            console.log(`Duration: ${result.duration} min.`)
-            // fetchTime(result.distance, result.duration),
-            mapRef.current.fitToCoordinates(result?.coordinates, {
-              edgePadding: {
-                right: 50,
-                bottom: 50,
-                left: 50,
-                top: 50,
-              },
-            });
-          }}
-          onError={(errorMessage) => {
-            console.log('GOT AN ERROR', errorMessage);
-          }}
-        />)} */}
+
         {coords?.length > 0 && (
           <Polyline
             coordinates={coords}
-            strokeWidth={4}
+            strokeWidth={3}
             strokeColor={colors.main}
+            lineDashPattern={[25, 20]} // Creates dashed line effect
+            lineJoin='miter' // Smooth line joints
+            lineCap='square' // Smooth line ends
+            geodesic={true} // Follows the curvature of the Earth for smoother arcs
+            tappable={false}
+          />
+        )}
+        {coords?.length > 0 && (
+          <Polyline
+            coordinates={[{
+              latitude: Number(origin?.lat),
+              longitude: Number(origin?.lng)
+            },
+            {
+              latitude: Number(destination?.lat),
+              longitude: Number(destination?.lng)
+            }]}
+            strokeWidth={3}
+            strokeColor={colors.colorAF10}
+            lineJoin='miter' // Smooth line joints
+            lineCap='square' // Smooth line ends
+            lineDashPattern={[25, 20]} // Creates dashed line effect
           />
         )}
       </MapView>

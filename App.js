@@ -57,37 +57,20 @@ function App() {
       // Prevent unnecessary calls if state hasn't changed
       if (appState.current === nextAppState) return;
 
+      const previousState = appState.current;
+
       if (nextAppState === "background" || nextAppState === "inactive") {
         console.log("App went to background: stopping services");
         socketServices.removeAllListeners();
         socketServices.disconnectSocket();
         FastImage.clearMemoryCache();
-        // // Start background task with delay
-        // setTimeout(async () => {
-        //   try {
-        //     await startBackgroundTask();
-        //     console.log("✅ Background task started successfully");
-        //   } catch (error) {
-        //     console.log("❌ Error starting background task:", error);
-        //   }
-        // }, 2000);
-
       }
 
-      if (nextAppState === "active" && !socketServices.isSocketConnected()) {
+      if (nextAppState === "active" && previousState !== "active") {
         console.log("App became active: restarting services");
-        socketServices.initailizeSocket();
-        // // Stop background task with delay
-        // setTimeout(async () => {
-        //   try {
-        //     await stopBackgroundTask();
-        //     console.log("✅ Background task stopped successfully");
-        //   } catch (error) {
-        //     console.log("❌ Error stopping background task:", error);
-        //   }
-        // }, 2000);
-
-        // restart any background tasks if needed
+        if ((!socketServices?.isSocketConnected() && rootStore.commonStore.token)) {
+          socketServices.initailizeSocket();
+        }
       }
 
       appState.current = nextAppState;
@@ -148,77 +131,13 @@ function App() {
             setcurrentScreen(navigationRef.current.getCurrentRoute().name);
           }}
         >
-          {/* <SafeAreaView
-              style={{
-                flex: 0,
-                backgroundColor: setBarColor(currentScreen),
-                opacity: 1,
-              }}
-            /> */}
-          {/* <SafeAreaView
-            style={{
-              flex: 1,
-              backgroundColor:
-                currentScreen == 'splash'
-                  ? colors.bottomBarColor
-                  : colors.white
-            }}>
-            <StatusBar
-              animated={true}
-              backgroundColor={setBarColor(currentScreen)}
-              barStyle={
-                setStatusBar(currentScreen)
-              }
-            /> */}
-          {/* <SafeAreaInsetsHandler currentScreen={currentScreen}> */}
           {!isInternet && getonTab(currentScreen) && <NoInternet currentScreen={currentScreen} onAppJs={true} />}
           <Root />
-          {/* </SafeAreaInsetsHandler> */}
-          {/* </SafeAreaView> */}
         </NavigationContainer>
         <Toast />
       </GestureHandlerRootView>
     </PaperProvider>
   );
 }
-
-// Helper component to handle safe area insets
-function SafeAreaInsetsHandler({ children, currentScreen }) {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <>
-      <SafeAreaView
-        style={{
-          flex: 0,
-          backgroundColor: setBarColor(currentScreen),
-          opacity: 1,
-        }}
-      />
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor:
-            currentScreen == 'splash'
-              ? colors.bottomBarColor
-              // : colors.appBackground,
-              : Platform.OS == 'ios' ? colors.white :
-                (Platform.OS === 'android' && Platform.Version >= 35) ?
-                  colors.appBackground : colors.white,
-          paddingTop: insets.top,
-          paddingBottom: insets.bottom
-        }}>
-        <StatusBar
-          animated={true}
-          translucent={true}
-          backgroundColor={setBarColor(currentScreen)}
-          barStyle={setStatusBar(currentScreen)}
-        />
-        {children}
-      </SafeAreaView>
-    </>
-  );
-}
-
 
 export default App;

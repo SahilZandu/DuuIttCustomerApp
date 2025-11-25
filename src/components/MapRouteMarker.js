@@ -21,43 +21,6 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
   const [lat, setLat] = useState(Number(origin?.lat) ?? 30.7400);
   const [long, setLong] = useState(Number(origin?.lng) ?? 76.7900);
 
-  const mohaliChandigarhBounds = {
-    north: 30.8258,
-    south: 30.6600,
-    west: 76.6600,
-    east: 76.8500,
-  };
-
-  const isWithinBounds = (latitude, longitude) => {
-    return (
-      latitude <= mohaliChandigarhBounds.north &&
-      latitude >= mohaliChandigarhBounds.south &&
-      longitude >= mohaliChandigarhBounds.west &&
-      longitude <= mohaliChandigarhBounds.east
-    );
-  };
-
-
-  const handleRegionChangeComplete = (region) => {
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-
-    debounceTimeout.current = setTimeout(() => {
-      if (!isWithinBounds(region.latitude, region.longitude)) {
-        mapRef.current?.animateToRegion({
-          latitude: Number(30.7400 ?? lat) ?? 30.7400,
-          longitude: Number(76.7900 ?? long) ?? 76.7900,
-          latitudeDelta: getMpaDalta().latitudeDelta,
-          longitudeDelta: getMpaDalta().longitudeDelta,
-        });
-        Alert.alert("Restricted Area", "You can only explore within Mohali & Chandigarh.");
-      }
-    }, 50); // Delay in milliseconds
-
-
-  };
-
 
   useEffect(() => {
     if (markerArray?.length > 0 ||
@@ -82,7 +45,6 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
         <MapView
           onRegionChange={e => {
             setMpaDalta(e);
-            // handleRegionChangeComplete(e)
           }}
           provider={PROVIDER_GOOGLE}
           ref={mapRef}
@@ -91,16 +53,9 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
           scrollEnabled={false}
           showsScale={false}
           loadingEnabled={true}
-          // mapType={Platform.OS == 'ios' ? 'mutedStandard' : 'terrain'}
           mapType={Platform.OS === 'ios' ? 'standard' : 'standard'}
           customMapStyle={DuuittMapTheme}
           paddingAdjustmentBehavior={'automatic'}
-          // initialRegion={{
-          //   latitude: lat,
-          //   longitude: long,
-          //   latitudeDelta: getMpaDalta().latitudeDelta,
-          //   longitudeDelta: getMpaDalta().longitudeDelta,
-          // }}
           region={{
             latitude: lat,
             longitude: long,
@@ -128,8 +83,6 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
                 <Image
                   resizeMode="contain"
                   source={searchingRideParcel
-                    // source={appImages.searchingParcel}
-                    // source={appImages.searchingRide}
                   }
                   style={styles.markerRiderImage}
                 />

@@ -50,3 +50,5 @@ The alignment task may not work for all pre-built libraries from React Native 0.
 - ✅ Automatic alignment task
 - ⚠️ React Native 0.74.7 pre-built libraries (may not be fully alignable)
 
+
+
