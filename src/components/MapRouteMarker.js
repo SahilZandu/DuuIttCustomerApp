@@ -93,7 +93,7 @@ const MapRouteMarker = ({ mapContainerView, origin, markerArray, searchingRidePa
               coordinate={{ latitude: lat, longitude: long }}>
               <Image
                 resizeMode="contain"
-                source={appImages.markerImage}
+                source={appImages.pickMap}
                 style={styles.markerImage}
               />
             </Marker>

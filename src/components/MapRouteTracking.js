@@ -1039,9 +1039,7 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
         >
           <Image
             resizeMode='contain'
-            source={appImages.moveBike
-            }
-
+            source={appImages.moveBike}
             style={styles.markerBikeImage}
           />
         </Marker.Animated>
@@ -1051,12 +1049,13 @@ const MapRouteTracking = ({ mapContainerView, origin, destination,
           ref={markerDesRef}
           coordinate={animatedDesCoordinate}
           tracksViewChanges={!isMapReady}
-          centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
-          anchor={{ x: 0.5, y: 0.5 }}
+          // centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
+          // anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image
             resizeMode="contain"
-            source={appImages.markerImage}
+            source={appImages.dropMap
+            }
             style={styles.markerImage}
           />
         </Marker.Animated>
@@ -1100,12 +1099,12 @@ const styles = StyleSheet.create({
   markerImage: {
     height: 30,
     width: 30,
-    marginTop: Platform.OS === 'ios' ? '25%' : 0,
+    marginTop: Platform.OS === 'ios' ? '25%' : '10%',
   },
   markerBikeImage: {
     height: 60,  //30,
     width: 60,   //30,
-    marginTop: Platform.OS === 'ios' ? '25%' : 0,
+    // marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 })
 

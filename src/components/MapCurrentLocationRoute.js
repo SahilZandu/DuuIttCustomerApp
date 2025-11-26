@@ -211,7 +211,9 @@ const MapCurrentLocationRoute = ({
             >
               <Image
                 resizeMode="contain"
-                source={appImages.markerImage}
+                source={appImages.pickMap
+                  // markerImage
+                }
                 style={styles.markerImage}
               />
 
@@ -248,7 +250,7 @@ const styles = StyleSheet.create({
   markerImage: {
     height: 30,
     width: 30,
-    marginTop: Platform.OS === 'ios' ? '25%' : 0,
+    // marginTop: Platform.OS === 'ios' ? '25%' : 0,
   },
 });
 

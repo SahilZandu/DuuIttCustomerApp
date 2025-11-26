@@ -467,7 +467,9 @@ const MapLocationRoute = React.memo(({
   const centerMarker = useMemo(() => (
     isMapReady && (
       <Image
-        source={appImages.markerImage}
+        source={appImages.pickMap
+          // markerImage
+        }
         style={styles.centerMarker}
         resizeMode="contain"
       />
@@ -538,7 +540,7 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
     marginLeft: -15,
-    marginTop: -30,
+    marginTop: Platform.OS == 'ios' ? '-15%' : '-10%',
     height: 35,
     width: 32,
     zIndex: 999,
