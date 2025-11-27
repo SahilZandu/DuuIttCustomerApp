@@ -882,6 +882,7 @@ export const appImages = {
   parcelImageWhite: require('../assets/parcelImageWhite.png'),
   pickIconSet: require('../assets/setPickIcon.png'),
   dropIconSet: require('../assets/setDropIcon.png'),
+  dropSet: require('../assets/dest.png'),
   locationHistoryIcon: require('../assets/locationHistoryIcon.png'),
   currentLocationIcon: require('../assets/currentLocationIcon.png'),
   weightIcon: require('../assets/weightIcon.png'),
@@ -987,5 +988,7 @@ export const appImages = {
   IndianFlag: require('../assets/indianFlag.png'),
   markerMoveImage: require('../assets/markerMoveImage.png'),
   moveBike: require('../assets/moveBike.png'),
+  pickMap: require('../assets/pickMap.png'),
+  dropMap: require('../assets/dropMap.png'),
 
 };

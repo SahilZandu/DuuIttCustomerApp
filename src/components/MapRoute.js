@@ -471,12 +471,11 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
           ref={markerRef}
           coordinate={animatedCoordinate}
           tracksViewChanges={!isMapReady}
-          centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
-          anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image
-            resizeMode="cover"
-            source={appImages.markerRideImage}
+            resizeMode='contain'
+            source={appImages.pickMap
+            }
             style={styles.markerBikeImage}
           />
         </Marker.Animated>
@@ -486,12 +485,12 @@ const MapRoute = ({ mapContainerView, origin, destination, isPendingReq, orderDa
           ref={markerDesRef}
           coordinate={animatedDesCoordinate}
           tracksViewChanges={!isMapReady}
-          centerOffset={{ x: 0, y: -10 }} // Adjust Y offset to position properly
-          anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image
             resizeMode="contain"
-            source={appImages.markerImage}
+            source={appImages.dropMap
+              // markerImage
+            }
             style={styles.markerImage}
           />
         </Marker.Animated>
@@ -548,12 +547,14 @@ const styles = StyleSheet.create({
   markerImage: {
     height: 30,
     width: 30,
-    marginTop: Platform.OS === 'ios' ? '25%' : 0,
+    // marginTop: Platform.OS === 'ios' ? '25%' : '10%',
+    zIndex: 9999,
   },
   markerBikeImage: {
     height: 30,
     width: 30,
-    marginTop: Platform.OS === 'ios' ? '25%' : 0,
+    // marginTop: Platform.OS === 'ios' ? '25%' : '10%',
+    zIndex: 9999,
   },
 });
 

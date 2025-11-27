@@ -1134,7 +1134,8 @@ const SearchingRideForm = ({ navigation, route, screenName }) => {
         if (!isMountedRef.current) return;
         console.log('near-by-riders data--:', data, data?.data);
         if (data?.data?.length > 0 && data?.data[0]?.geo_location) {
-          setNearByRider(data);
+          // setNearByRider(data);
+          setNearByRider([]);
         } else {
           setNearByRider([]);
         }

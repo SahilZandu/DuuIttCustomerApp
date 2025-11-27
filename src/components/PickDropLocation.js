@@ -259,8 +259,10 @@ const PickDropLocation = ({
             // disabled={pickUpLocation == '' ? true : false}
             style={styles.dropTouch(pickUpLocation)}>
             <Image
-              style={{ width: 25, height: 25, top: hp('-0.3%') }}
-              source={appImages.dropIconSet}
+              style={{ width: 24, height: 24, top: hp('-0.3%') }}
+              source={appImages.dropSet
+                // dropIconSet
+              }
             />
             <View style={{ flexDirection: 'column' }}>
               <View style={{ flexDirection: 'row', top: dropLocation?.length > 0 ? hp('-4%') : hp('-1%') }}>
